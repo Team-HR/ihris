@@ -1,0 +1,1641 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"ac",
+				"activityProcess"
+			],
+			[
+				"_",
+				"_POST"
+			],
+			[
+				"edit",
+				"editFunc"
+			],
+			[
+				"moda",
+				"modal"
+			],
+			[
+				"modal",
+				"modal_edit"
+			],
+			[
+				"json",
+				"json"
+			],
+			[
+				"re",
+				"remarks"
+			],
+			[
+				"expe",
+				"expectedOutputs"
+			],
+			[
+				"ve",
+				"Venue"
+			],
+			[
+				"print",
+				"printOnly"
+			],
+			[
+				"alloc",
+				"allocatedBudget"
+			],
+			[
+				"act",
+				"act_id"
+			],
+			[
+				"lo",
+				"lorem\tLorem ipsum"
+			],
+			[
+				"load",
+				"loadYear"
+			],
+			[
+				"pax",
+				"paxNum"
+			],
+			[
+				"mar",
+				"margin-top\tproperty"
+			],
+			[
+				"loa",
+				"load\t.load()"
+			],
+			[
+				"inlin",
+				"inline-block\tdisplay"
+			],
+			[
+				"row",
+				"row_id"
+			],
+			[
+				"table",
+				"tableBody"
+			],
+			[
+				"paddig",
+				"padding-right\tproperty"
+			],
+			[
+				"marg",
+				"margin-right\tproperty"
+			],
+			[
+				"margin",
+				"margin-right\tproperty"
+			],
+			[
+				"employees",
+				"employees_ids"
+			],
+			[
+				"em",
+				"empty"
+			],
+			[
+				"date",
+				"dateFormatted"
+			],
+			[
+				"remar",
+				"remarks_view_form"
+			],
+			[
+				"remark",
+				"remarks_new_form"
+			],
+			[
+				"remarks",
+				"remarks_new_form"
+			],
+			[
+				"carr",
+				"carriedBy"
+			],
+			[
+				"remars",
+				"remarks_new_form"
+			],
+			[
+				"P",
+				"_POST"
+			],
+			[
+				"save",
+				"saveRemarks"
+			],
+			[
+				"min",
+				"min-height\tproperty"
+			],
+			[
+				"first",
+				"firstName"
+			],
+			[
+				"employee",
+				"employees"
+			],
+			[
+				"emp",
+				"employees_id"
+			],
+			[
+				"empl",
+				"employees_ids"
+			],
+			[
+				"p",
+				"php\t<?php … ?>"
+			],
+			[
+				"others",
+				"others"
+			],
+			[
+				"emplo",
+				"employees_id"
+			],
+			[
+				"depae",
+				"department"
+			],
+			[
+				"depa",
+				"department"
+			],
+			[
+				"depar",
+				"department_id"
+			],
+			[
+				"depart",
+				"department_id"
+			],
+			[
+				"d",
+				"department_ids"
+			],
+			[
+				"null",
+				"null"
+			],
+			[
+				"view",
+				"view2"
+			],
+			[
+				"di",
+				"div\tTag"
+			],
+			[
+				"field",
+				"field"
+			],
+			[
+				"other",
+				"othersArray"
+			],
+			[
+				"ech",
+				"each\t$.each()"
+			],
+			[
+				"arra",
+				"array2"
+			],
+			[
+				"esle",
+				"elseif\telseif …"
+			],
+			[
+				"fe",
+				"fetch_assoc"
+			],
+			[
+				"str_re",
+				"str_replace"
+			],
+			[
+				"editIn",
+				"editInputOther"
+			],
+			[
+				"othersDiv",
+				"editOthersDiv"
+			],
+			[
+				"othersContainer",
+				"editOthersContainer"
+			],
+			[
+				"listToAdd",
+				"listToAddEdit"
+			],
+			[
+				"dele",
+				"deleteFunc"
+			],
+			[
+				"editInp",
+				"editInputMeeting"
+			],
+			[
+				"ed",
+				"editInputVenue"
+			],
+			[
+				"is",
+				"isMeeting"
+			],
+			[
+				"sub",
+				"subject"
+			],
+			[
+				"reu",
+				"result"
+			],
+			[
+				"conr",
+				"controlNumber"
+			],
+			[
+				"m",
+				"mysqli"
+			],
+			[
+				"cont",
+				"controlNumber"
+			],
+			[
+				"for",
+				"foreach\tforeach …"
+			],
+			[
+				"mb_cas",
+				"mb_convert_case"
+			],
+			[
+				"arr",
+				"array\t$… = array (…)"
+			],
+			[
+				"html",
+				"html\t.html()"
+			],
+			[
+				"le",
+				"length"
+			],
+			[
+				"clear",
+				"clear"
+			],
+			[
+				"oter",
+				"othersContainer"
+			],
+			[
+				"remove",
+				"remove\t.remove()"
+			],
+			[
+				"strto",
+				"strtoupper"
+			],
+			[
+				"req",
+				"reqsandcoms_proc"
+			],
+			[
+				"ad",
+				"addModalFunc"
+			],
+			[
+				"paddin",
+				"padding\tproperty"
+			],
+			[
+				"n",
+				"normal\tword-wrap"
+			],
+			[
+				"s",
+				"style\tAttr"
+			],
+			[
+				"qu",
+				"query"
+			],
+			[
+				"department_d",
+				"department_ids"
+			],
+			[
+				"de",
+				"department_ids"
+			],
+			[
+				"read",
+				"ready\t$(document).ready"
+			],
+			[
+				"padd",
+				"padding\tproperty"
+			],
+			[
+				"shadow",
+				"box-shadow\tproperty"
+			],
+			[
+				"border",
+				"border-style\tproperty"
+			],
+			[
+				"pers",
+				"personneltrainingspreview_proc"
+			],
+			[
+				"htm",
+				"html\t.html()"
+			],
+			[
+				"perso",
+				"personneltrainings_id"
+			],
+			[
+				"php",
+				"php"
+			],
+			[
+				"val",
+				"val\t.val()"
+			],
+			[
+				"asse",
+				"assessment_text"
+			],
+			[
+				"as",
+				"assessment_text"
+			],
+			[
+				"add",
+				"addslashes"
+			],
+			[
+				"ass",
+				"assessment_index"
+			],
+			[
+				"assess",
+				"assessment_"
+			],
+			[
+				"tex",
+				"teaxtAreaAss"
+			],
+			[
+				"require",
+				"required"
+			],
+			[
+				"sql",
+				"sql"
+			],
+			[
+				"adds",
+				"addslashes"
+			],
+			[
+				"check",
+				"checkUnchecked"
+			],
+			[
+				"training",
+				"training"
+			],
+			[
+				"sem",
+				"segment"
+			],
+			[
+				"from",
+				"fromIndex"
+			],
+			[
+				"comm",
+				"comment1"
+			],
+			[
+				"backgroun",
+				"background-color\tproperty"
+			],
+			[
+				"eac",
+				"each\t$.each()"
+			],
+			[
+				"pos",
+				"positive"
+			],
+			[
+				"rem",
+				"removeClass\t.removeClass()"
+			],
+			[
+				"ea",
+				"each\t.each()"
+			],
+			[
+				"back",
+				"background-color\tproperty"
+			],
+			[
+				"get",
+				"getValues"
+			],
+			[
+				"in",
+				"input\tTag"
+			],
+			[
+				"this",
+				"this\t$(this)"
+			],
+			[
+				"margi",
+				"margin-left\tproperty"
+			],
+			[
+				"num",
+				"num_rows"
+			],
+			[
+				"text-a",
+				"text-align\tproperty"
+			],
+			[
+				"per",
+				"personneltrainings_id"
+			],
+			[
+				"sq",
+				"sql"
+			],
+			[
+				"list",
+				"listAdded"
+			],
+			[
+				"padding",
+				"padding-right\tproperty"
+			],
+			[
+				"remo",
+				"remove\t.remove()"
+			],
+			[
+				"e",
+				"employees_id"
+			],
+			[
+				"over",
+				"overflow\tproperty"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "index.php",
+			"settings":
+			{
+				"buffer_size": 6283,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "ldprofile.php",
+			"settings":
+			{
+				"buffer_size": 3508,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "reqsandcoms.php",
+			"settings":
+			{
+				"buffer_size": 29668,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "personneltrainingspreview.php",
+			"settings":
+			{
+				"buffer_size": 27560,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "personnelCompetenciesSurveyEncoder.php",
+			"settings":
+			{
+				"buffer_size": 75319,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "_connect.db.php",
+			"settings":
+			{
+				"buffer_size": 373,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/C/xampp/phpMyAdmin/config.inc.php",
+			"settings":
+			{
+				"buffer_size": 2083,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/C/xampp/apache/conf/extra/httpd-xampp.conf",
+			"settings":
+			{
+				"buffer_size": 2643,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/xampp/apache/conf/httpd.conf",
+			"settings":
+			{
+				"buffer_size": 21185,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/xampp/mysql/bin/my.ini",
+			"settings":
+			{
+				"buffer_size": 5576,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "lgusponsoredtraining.php",
+			"settings":
+			{
+				"buffer_size": 10738,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "capabilitydevelopmentprogram.php",
+			"settings":
+			{
+				"buffer_size": 10753,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "ldactivities_proc.php",
+			"settings":
+			{
+				"buffer_size": 1626,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "lgusponsoredtraining_proc.php",
+			"settings":
+			{
+				"buffer_size": 5823,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "lguSponsoredTraining.php",
+			"settings":
+			{
+				"buffer_size": 10738,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "reqsandcoms_proc.php",
+			"settings":
+			{
+				"buffer_size": 16059,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "ldprofile_proc.php",
+			"settings":
+			{
+				"buffer_size": 2165,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: List Packages"
+			],
+			[
+				"Package Control: insta",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 182.0,
+		"history":
+		[
+			"div",
+			"npm -v",
+			"npm",
+			"npm install"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/C/xampp/htdocs/hris"
+	],
+	"file_history":
+	[
+		"/C/Windows/System32/drivers/etc/hosts",
+		"/C/Program Files (x86)/Driver-Soft/DriverGenius/DriverGenius.cfg",
+		"/C/Users/NukaCola/Desktop/DriverGenius.cfg",
+		"/C/xampp/htdocs/hris/ldactivities.php",
+		"/C/xampp/htdocs/hris/lguSponsoredTraining_addRow.php",
+		"/C/Users/NukaCola/Downloads/ldactivitieslist (2).sql",
+		"/C/xampp/htdocs/hrmo/capabilitydevelopmentprogram.php",
+		"/C/xampp/htdocs/hrmo/capabilitydevelopmentprogram_proc.php",
+		"/C/xampp/htdocs/hrmo/lgusponsoredtraining.php",
+		"/C/xampp/htdocs/hrmo/lgusponsoredtraining_proc.php",
+		"/C/xampp/htdocs/hris/ldprofile_proc.php",
+		"/C/xampp/htdocs/hris/ldprofile.php",
+		"/C/xampp/htdocs/hrmo/reqsandcoms.php.bak.php",
+		"/C/Users/NukaCola/Downloads/requestandcoms (1).sql",
+		"/C/Users/NukaCola/Desktop/reqsandcoms.sql",
+		"/C/Users/NukaCola/Downloads/trainingrequestslist (2).sql",
+		"/C/xampp/htdocs/hrmo/ui/dist/semantic.min.css",
+		"/C/xampp/htdocs/hrmo/personneltrainingspreview_proc.php",
+		"/C/xampp/htdocs/hrmo/departmentsetup.php",
+		"/C/xampp/htdocs/hrmo/departmentsetup_proc.php",
+		"/C/xampp/htdocs/hrmo/positionsetup.php",
+		"/C/xampp/htdocs/hrmo/personneltrainings_proc.php",
+		"/C/xampp/htdocs/hrmo/personneltrainingsevaluation.php",
+		"/C/xampp/htdocs/hrmo/personneltrainingsevaluation_proc.php",
+		"/C/xampp/htdocs/hrmo/personneltrainingspreview.php",
+		"/C/xampp/htdocs/hrmo/personneltrainings.php",
+		"/C/xampp/htdocs/hrmo/employeeinfo.php",
+		"/C/xampp/htdocs/hrmo/employeeinfo_position_proc.php DELETE",
+		"/C/xampp/htdocs/hrmo/employeeinfo_proc.php",
+		"/C/xampp/htdocs/hrmo/employeelist.php",
+		"/C/xampp/htdocs/hrmo/employeelist_proc.php",
+		"/C/xampp/htdocs/hrmo/header.php",
+		"/C/xampp/htdocs/hrmo/index.php",
+		"/C/xampp/htdocs/hrmo/login.php",
+		"/C/xampp/htdocs/hrmo/login_proc.php",
+		"/C/xampp/htdocs/hrmo/navbar.php",
+		"/C/xampp/htdocs/hrmo/ui/dist/semantic.css",
+		"/C/Users/NukaCola/Downloads/requestandcoms.sql",
+		"/C/Users/NukaCola/Downloads/requestandcomslist.sql",
+		"/C/xampp/htdocs/hris/header.php",
+		"/C/xampp/htdocs/hris/personnelTrainingsEvaluationReport.php",
+		"/C/Users/NukaCola/Documents/DH61WW_Desktop.txt",
+		"/C/Users/NukaCola/Documents/VGP-MIRAFLOR.txt",
+		"/C/Users/NukaCola/Documents/VGP-MIRAFLOR2.txt",
+		"/C/xampp/htdocs/hrmo/_connect.db.php",
+		"/C/xampp/htdocs/hris/trainingRequests.php",
+		"/C/xampp/htdocs/hris/trainingRequests.addNew.php",
+		"/C/xampp/htdocs/hrmo/footer.php",
+		"/C/Users/NukaCola/Downloads/hris (4).sql",
+		"/C/xampp/htdocs/hrmo/reqsandcoms.php",
+		"/C/xampp/htdocs/hris/personnelCompetenciesSurvey.php",
+		"/C/Users/NukaCola/Desktop/test.html",
+		"/C/xampp/htdocs/hrmo/positionsetup_proc.php",
+		"/C/Users/NukaCola/Downloads/css.css",
+		"/C/xampp/htdocs/hrmo/test.php",
+		"/C/xampp/htdocs/hrmo/sql.php",
+		"/C/Users/NukaCola/Desktop/test",
+		"/C/xampp/htdocs/hris/personnelTrainingsEvaluationForm.php",
+		"/C/xampp/htdocs/hrmo/personneltrainingseval.sql",
+		"/C/Users/NukaCola/Downloads/personneltrainings.sql",
+		"/C/xampp/htdocs/hrmo/updateTrainingEval.sql",
+		"/C/xampp/htdocs/hris/footer.php",
+		"/C/xampp/htdocs/hris/personnelTrainingsEdit_proc.php",
+		"/C/xampp/htdocs/hris/personnelTrainingsEdit.php",
+		"/C/xampp/htdocs/hrmo/test2.php",
+		"/C/xampp/htdocs/hris/semantic/semantic.min.css",
+		"/C/xampp/htdocs/hrmo/Semantic-UI-CSS-master/semantic.min.css",
+		"/C/xampp/htdocs/hrmo/hrmo-project.sublime-project",
+		"/C/Users/NukaCola/Downloads/hris (2).sql",
+		"/C/xampp/htdocs/hris/_addNewTraining.db.php",
+		"/C/xampp/htdocs/hrmo/trainings_proc.php",
+		"/C/xampp/htdocs/hrmo/trainings.php",
+		"/C/xampp/htdocs/hrmo/positionsetup.js",
+		"/C/xampp/htdocs/hrmo/departmentsetup.js",
+		"/C/xampp/htdocs/hrmo/bak.php",
+		"/C/xampp/htdocs/hrmo/employeelist.js",
+		"/C/xampp/htdocs/hris/Employee_List.php",
+		"/C/xampp/htdocs/hris/Employee_List_Edit.php",
+		"/I/HRMO/hris.sql",
+		"/I/HRMO/employeelist.php",
+		"/C/xampp/htdocs/hrmo/employeeinfo_position_proc.php",
+		"/C/xampp/htdocs/hris/autocompleteName.php",
+		"/C/xampp/htdocs_backup/raffler/index.php",
+		"/C/xampp/htdocs_backup/raffler/test_proc.php",
+		"/C/xampp/htdocs/hrmo/employeeinfo.js",
+		"/D/hris (3).sql",
+		"/C/xampp/htdocs_backup/raffler/index_proc.php",
+		"/C/xampp/htdocs/hris/_renameEmployee.php",
+		"/C/xampp/htdocs/hris/setupPosition.php",
+		"/C/xampp/htdocs/hris/personnelCompetenciesSurvey - Copy.php",
+		"/C/xampp/htdocs/login/register.php",
+		"/C/xampp/htdocs/raffler/index.php",
+		"/C/Users/NukaCola/Desktop/Videoke Collections",
+		"/C/xampp/htdocs/hris2/header.php",
+		"/G/Program Files/TxGameAssistant/AppMarket/AppMarket.exe",
+		"/C/xampp/htdocs/hris2/Departments.php",
+		"/C/xampp/htdocs/hris2/Employee_List_Multiple_Selection.php",
+		"/C/xampp/htdocs/hris2/index.php",
+		"/C/xampp/htdocs/hris2/hi.php",
+		"/C/xampp/htdocs/login/jobCompetencyProfile.php",
+		"/C/xampp/htdocs/hris2/Employee_List_Edit_attendedTrainings.php",
+		"/C/xampp/htdocs/eraffle/index_proc.php",
+		"/C/xampp/htdocs/raffler/test_proc.php",
+		"/C/xampp/htdocs/eraffle/eraffle_proc.php",
+		"/C/xampp/htdocs/eraffle/test.php",
+		"/C/xampp/htdocs/login/index.php",
+		"/C/xampp/htdocs/login/login.php",
+		"/C/xampp/htdocs/login/logout.php",
+		"/C/xampp/htdocs/login/welcome.php",
+		"/C/xampp/htdocs/login/test.php",
+		"/C/xampp/htdocs/login/reset-password.php",
+		"/C/xampp/htdocs/login/employee_list.php",
+		"/C/xampp/htdocs/prime/hris/footer.php",
+		"/C/xampp/htdocs/prime/hris/employee_masterlist.php",
+		"/C/xampp/htdocs/prime/hris/proc/employee_list/getEmployeesData.php",
+		"/C/xampp/htdocs/prime/hris/includes/db/connect.db.php",
+		"/C/xampp/htdocs/prime/hris/index.php",
+		"/C/Program Files/Adobe/Adobe Illustrator CS6 (64 Bit)/Support Files/Contents/Windows/Illustrator.exe",
+		"/C/xampp/htdocs/prime/hris/includes/css/font-awesome.min.css",
+		"/C/Users/NukaCola/Music/Michael Bubble/08 It's the Most Wonderful Time of the Year.flac",
+		"/C/xampp/htdocs/raffler/test2.php",
+		"/C/xampp/htdocs/raffler/test3.php",
+		"/C/xampp/htdocs/raffler/test.php",
+		"/C/xampp/htdocs/eraffle/index.php",
+		"/C/xampp/htdocs/hris/hi.php",
+		"/C/xampp/htdocs/hris/index.php",
+		"/C/xampp/htdocs/hris/Employee_List_Edit_attendedTrainings.php",
+		"/C/xampp/htdocs/hris/test.php"
+	],
+	"find":
+	{
+		"height": 24.0
+	},
+	"find_in_files":
+	{
+		"height": 158.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"cancelSurvey",
+			"done.php",
+			"<header class=\"ui block header\"",
+			"<th></th>",
+			"<th style=\"text-align: center; vertical-align: middle;\">BEHAVIORAL INDICATORS</th>",
+			"PROFICIENCY/MASTERY LEVEL",
+			"job competen",
+			"print_title",
+			"add",
+			"deleteModal",
+			"delete",
+			"></",
+			"delete",
+			"date_view",
+			"dateFormatted",
+			"trainingrequests",
+			"update",
+			"loadViewRemarks",
+			"update",
+			"saveRemarks",
+			" style=\"min-height: 80px;\"",
+			"listsField",
+			"getListsForView",
+			"Agency/Organization:",
+			"<tt",
+			"tt>",
+			"<tt",
+			"tt>",
+			"teal",
+			"require_once \"_connect.db.php\";",
+			"teal",
+			"#2185D0",
+			"blue",
+			"getRowData",
+			"controlNumber",
+			"viewFunc",
+			"view",
+			"editControlNumber",
+			"alert(others);",
+			"employeesArray",
+			"elseif",
+			"edit",
+			"Memory Frequency",
+			"Frequency",
+			"DRAM",
+			"DRAM Frequency",
+			"DRAM Freequency",
+			"memory",
+			"loadListToAddEdit",
+			"#607D8B",
+			"teal",
+			"nameUp",
+			"addOther",
+			"addInputOther",
+			"listAddedEdit",
+			"addToListEdit",
+			"addToList",
+			"loadListToAddEdit",
+			"editInputDepartments",
+			"addDeptsList",
+			"editInputDepartments",
+			"editInputSource",
+			"inputAddMeeting",
+			"editInputMeeting",
+			"editInputVenue",
+			"inputAddVenue",
+			"editInputDate0",
+			"addInput",
+			"delete",
+			"deleteFunc",
+			"view",
+			"insert_id",
+			"insert-id",
+			"#00B5AD",
+			"00B5AD",
+			"teal",
+			"menu",
+			"addInputSubject",
+			"dateReceived",
+			"addQueries",
+			"addInputDepartments",
+			"othersArray",
+			"\"\")",
+			"otherArray",
+			"removeOther",
+			"addOther",
+			"addInputOther",
+			"trainings_search",
+			"stringDate",
+			"date",
+			"trainingrequestlist_id",
+			"trainingrequestslist",
+			"trainingrequests",
+			"break",
+			"no-break",
+			"add entr",
+			"getAssessmentText",
+			"teaxtAreaAss",
+			"personneltrainingseval",
+			"deleteTraining",
+			"require",
+			"rows=\"5\"",
+			"<td rowspan=\"2\"><textarea rows=\"5\"></textarea></td>",
+			"myChart",
+			"echo $num_rows = $result->num_rows;",
+			"More",
+			"clear",
+			"save",
+			"searchNameAdded",
+			"input>",
+			"/input",
+			"input",
+			"<input>",
+			"</input>",
+			"CSWDO Personnel",
+			"clearBtn",
+			"editFunc",
+			"editModal",
+			"numHrs",
+			"tiny",
+			"depar",
+			"serializedComptScore",
+			"Inactive",
+			"active",
+			"statusModal",
+			"blue",
+			"saveMsg",
+			"fullName"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"<header class=\"ui header\"",
+			"<th>(CHECK)</th>",
+			"<!-- <th style=\"text-align: center; vertical-align: middle;\">BEHAVIORAL INDICATORS</th> -->",
+			"LEVEL",
+			"Edit",
+			"requestandcoms",
+			"",
+			"Source (Agency/Organization):",
+			"<span",
+			"span>",
+			"<span",
+			"span",
+			"blue",
+			"#4075a9",
+			"#ffdf06",
+			"editInput",
+			"#607D8B",
+			"employeesArray",
+			"table_search",
+			"dateToStr",
+			"requestandcomslist_id",
+			"requestandcomslist",
+			"requestandcoms",
+			"style=\"width: 100%;\" rows=\"10\"",
+			"rows=\"10\"",
+			"<td rowspan=\"2\"><textarea rows=\"10\"></textarea></td>",
+			"<td rowspan=\"2\"><textarea rows=\"20\"></textarea></td>",
+			"inputHrs",
+			"mini",
+			"row"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 5,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "index.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6283,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3201,
+								3201
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1003.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "ldprofile.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3508,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3460,
+								3460
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 855.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "reqsandcoms.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 29668,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 10599.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 11,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "personneltrainingspreview.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 27560,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 439.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "personnelCompetenciesSurveyEncoder.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 75319,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6070,
+								6070
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2811.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "_connect.db.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 373,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								180,
+								196
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "/C/xampp/phpMyAdmin/config.inc.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2083,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								432,
+								432
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "/C/xampp/apache/conf/extra/httpd-xampp.conf",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2643,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 180.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "/C/xampp/apache/conf/httpd.conf",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 21185,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 765.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "/C/xampp/mysql/bin/my.ini",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5576,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3747,
+								3747
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1350.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "lgusponsoredtraining.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10738,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1238,
+								1238
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 466.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "capabilitydevelopmentprogram.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10753,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 3774.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 12,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 12,
+					"file": "ldactivities_proc.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1626,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1601,
+								1601
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 13,
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "lgusponsoredtraining_proc.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5823,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2704,
+								2704
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 450.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 14,
+					"file": "lguSponsoredTraining.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10738,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 581.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 14,
+					"type": "text"
+				},
+				{
+					"buffer": 15,
+					"file": "reqsandcoms_proc.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 16059,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 78.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 15,
+					"type": "text"
+				},
+				{
+					"buffer": 16,
+					"file": "ldprofile_proc.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2165,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1175,
+								1175
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 16,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 24.0
+	},
+	"input":
+	{
+		"height": 68.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.482359679693,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "hrmo-project.sublime-project",
+	"replace":
+	{
+		"height": 44.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"C:\\xampp\\htdocs\\hrmo\\hrmo-project.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 176.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

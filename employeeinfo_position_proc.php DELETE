@@ -1,0 +1,28 @@
+<?php
+  
+  require_once '_connect.db.php';
+
+	$json=array();
+	$inside_json=array();
+
+	$sql = "SELECT * FROM `positiontitles`";
+	$result = $mysqli->query($sql);
+	while($row = $result->fetch_assoc()) {
+	// get position name start
+		$position_id	=	$row["position_id"];
+		$position = $row["position"];
+		$position = $position;
+		$functional = $row["functional"];
+		$functional = $functional;
+		$level = $row["level"];
+		$category = $row["category"];
+		$salaryGrade = $row["salaryGrade"];
+	// get position name start
+		$inside_json = array('position_id' => $position_id,'value' => $position." - ".$functional, 'level' => $level, 'category' => $category, 'salaryGrade' => $salaryGrade);
+	  array_push($json, $inside_json);
+	  // $json[$fullName] = $row["department_id"];
+
+		echo json_encode($json);
+
+    }
+?>

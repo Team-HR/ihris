@@ -1,0 +1,160 @@
+<?php 
+$title = "Training Report"; 
+require_once "header.php";
+?>
+<script type="text/javascript">
+	$(document).ready(function() {
+		
+		var sortBbyDept = "all",
+		departmentText = "All Departments",
+		sortBbyYear = "all",
+		loading_el = $("#loading_el"),
+		tbody = $("#tbody");
+		// $("#reportDepartment").html("All Departments");
+		tbody.html(loading_el.show());
+
+		$(load(sortBbyDept,sortBbyYear));
+
+		$("#sortYear").dropdown({
+			onChange: function(value,text){
+				tbody.html(loading_el.show());
+				sortBbyYear = value;
+				console.log('check', sortBbyDept+" and "+sortBbyYear);
+				if (sortBbyDept === "all" && sortBbyYear !== "all") {
+					$("#reportDepartment").html(departmentText + " of "+ sortBbyYear);
+				} else if(sortBbyDept !== "all" && sortBbyYear === "all"){
+					$("#reportDepartment").html(departmentText + " of all years");
+				} else if (sortBbyDept !== "all" && sortBbyYear !== "all") {
+					$("#reportDepartment").html(departmentText +" of "+ sortBbyYear);
+				} else {
+					$("#reportDepartment").html(departmentText + " of all years");
+				}
+				load(sortBbyDept,sortBbyYear);
+				}
+			});
+		$("#sortDept").dropdown({
+			onChange: function(value,text){
+				tbody.html(loading_el.show());
+				sortBbyDept = value;
+				if (text !== "all") {
+					departmentText = text;
+				} else {
+					departmentText = "All Departments";	
+				}
+				
+				load(sortBbyDept,sortBbyYear);
+				if (sortBbyYear !== "all") {
+					html = departmentText + " of "+sortBbyYear;
+					console.log(sortBbyYear)
+				} else {
+					html = departmentText + " of all years";
+				}
+				$("#reportDepartment").html(html);
+			}
+		});
+	});
+
+	function load (department_id, year) {
+
+		$("#tbody").load('trainingreport_proc.php',{
+			load: true,
+			department_id: department_id,
+			year: year
+		} ,
+		function(){
+			/* Stuff to do after the page is loaded */
+			$(load2(department_id));
+		});	
+	}
+
+	function load2 (department_id){
+		$("#load2Container").load('trainingreport_proc.php',{
+			load2: true,
+			department_id: department_id
+		} ,
+		function(){
+			/* Stuff to do after the page is loaded */
+		});
+
+	}
+
+</script>
+<div class="ui container">
+	<div class="ui borderless blue inverted mini menu noprint">
+		<div class="left item" style="margin-right: 0px !important;">
+			<button onclick="window.history.back();" class="blue ui icon button" title="Back" style="width: 65px;">
+				<i class="icon chevron left"></i> Back
+			</button>
+		</div>
+		<div class="item">
+			<h3><i class="users icon"></i> Training Report</h3>
+		</div>
+		<div class="right item">
+
+			<div class="ui right input">
+				<button onclick="print()" class="blue ui icon mini button" title="Print" style="margin-right: 5px;">
+					<i class="icon print"></i> Print
+				</button>
+
+				<select id="sortYear" class="ui dropdown"> 
+					<option value="">Filter by Year</option>
+					<option value="all">All</option>
+					<?php
+					include "_connect.db.php";
+					$sql = "SELECT DISTINCT year(startDate) AS year FROM `personneltrainings` UNION SELECT DISTINCT year(fromDate) AS year FROM `requestandcoms` ORDER BY year DESC";
+					$result = $mysqli->query($sql);
+					while ($row = $result->fetch_assoc()) {
+						$year = $row["year"];
+						echo "<option value=\"$year\">$year</option>";
+					}
+					?>
+				</select>
+
+				<div style="width: 500px; margin-left: 10px;">
+					<select id="sortDept" class="ui compact fluid dropdown">
+						<option value="">Filter by Department</option>
+						<option value="all">All</option>
+						<?php
+			// include "_connect.db.php";
+						$sql = "SELECT * FROM `department`";
+						$result = $mysqli->query($sql);
+						while ($row = $result->fetch_assoc()) {
+							$department_id = $row["department_id"];
+							$department = $row["department"];
+							echo "<option value=\"$department_id\">$department</option>";
+						}
+						?>
+					</select>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="" style="padding: 20px;">
+
+	<h2 class="ui blue header center aligned" id="reportDepartment">All Departments of all years</h2>
+	<div id="tbody"></div>
+	<br>
+	<!-- <div id="load2Container"></div> -->
+</div>
+
+		<div id="loading_el" class="ui container" style="display: none;">
+			<div style="text-align: center; font-size: 32px; color: lightgrey; padding: 100px;"><!-- FETCHING DATA... -->
+				<img src="assets/images/loading.gif" style="height: 50px; margin-top: -100px; margin-bottom: 20px; margin-left: 10px;">
+				<br>
+				<span>Fetching Data...</span>
+			</div>
+		</div>
+
+<?php 
+require_once "footer.php";
+?>
+
+
+
+
+
+
+
