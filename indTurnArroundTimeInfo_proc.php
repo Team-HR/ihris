@@ -129,31 +129,41 @@ elseif (isset($_POST["deleteEntry"])) {
 
 elseif (isset($_POST["compactDates"])) {
 	//save changes to all dates
-	if (isset($_POST["datesAll"]) && $_POST["datesAll"]) {
-		$rspvac_id = $_POST["rspvac_id"];
-		$datesAll = $_POST["datesAll"];
-		$sql = "UPDATE `rsp_indturnarroundtime` SET `itat0`=?,`itat1`=?,`itat2`=?,`itat3`=?,`itat4`=?,`itat5`=?,`itat6`=?,`itat7`=?,`timestamp`= CURRENT_TIMESTAMP WHERE `rspvac_id` = ?";
-
-		$stmt = $mysqli->prepare($sql);
-		
-		foreach ($datesAll as $key => $value) {
-			$datesAll[$key] = serialize($value);
-		}
-
-		$stmt->bind_param("ssssssssi",$datesAll[0],$datesAll[1],$datesAll[2],$datesAll[3],$datesAll[4],$datesAll[5],$datesAll[6],$datesAll[7],$rspvac_id);
-
-		$stmt->execute();
-	}
-
-	if (isset($_POST["dates"]) && $_POST["dates"]) {
-
-		// compact individual dates;
-		$dates = $_POST["dates"];
-		echo $dateCompactor->compactDates($dates);
-	} else {
-		echo "<i style='color: lightgrey;'>N/A</i>";
-	}
+	// var_dump($_POST["datesAll"]);
+	echo count($_POST["datesAll"]);
 }
+
+// elseif (isset($_POST["compactDates"])) {
+// 	//save changes to all dates
+// 	if (!isset($_POST["datesAll"]) && !$_POST["datesAll"]) {
+// 		$datesAll = array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+// 	} else {
+// 		$datesAll = $_POST["datesAll"];
+// 	}
+// 		$rspvac_id = $_POST["rspvac_id"];
+		
+
+// 		$sql = "UPDATE `rsp_indturnarroundtime` SET `itat0`=?,`itat1`=?,`itat2`=?,`itat3`=?,`itat4`=?,`itat5`=?,`itat6`=?,`itat7`=?,`timestamp`= CURRENT_TIMESTAMP WHERE `rspvac_id` = ?";
+
+// 		$stmt = $mysqli->prepare($sql);
+		
+// 		foreach ($datesAll as $key => $value) {
+// 			$datesAll[$key] = serialize($value);
+// 		}
+
+// 		$stmt->bind_param("ssssssssi",$datesAll[0],$datesAll[1],$datesAll[2],$datesAll[3],$datesAll[4],$datesAll[5],$datesAll[6],$datesAll[7],$rspvac_id);
+
+// 		$stmt->execute();
+// 	// }
+
+// 	if (isset($_POST["dates"]) && $_POST["dates"]) {
+// 		// compact individual dates;
+// 		$dates = $_POST["dates"];
+// 		echo $dateCompactor->compactDates($dates);
+// 	} else {
+// 		echo "<i style='color: lightgrey;'>N/A</i>";
+// 	}
+// }
 
 elseif (isset($_POST["getITATDates"])) {
 	$rspvac_id = $_POST["rspvac_id"];

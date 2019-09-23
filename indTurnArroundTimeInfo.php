@@ -29,7 +29,7 @@ if ($rspvac_id = $_GET["rspvac_id"]) {
 
 
  
-var datesArr = [],
+var datesArr = ["","","","","","","",""],
     datePickerBtn = [],
     dateContainer = [];
  $(document).ready(function() {
@@ -55,8 +55,6 @@ var datesArr = [],
 // $.each($('.dateContainer'), function(index, val) {
    
 // });
-
-
 
 
 
@@ -146,22 +144,36 @@ function loadDatePicker (){
   numDays = Array.prototype.slice.call(arrLikeNumDays);
 
 $.each(datePickerBtn, function(index, val) {
+
   $(this).datepick({
     showOnFocus: false,
     dateFormat: 'yyyy-mm-dd',
     multiSelect: 999,
     onSelect: function (){
       dates = $(this).datepick("getDate");
-      arr = [];  
-      for (var i = 0; i < dates.length; i++) { 
-        arr.push($.datepick.formatDate('yyyy-mm-dd',dates[i])); 
+      arr = [];
+
+      
+      console.log("Dates: ", dates.length);
+      
+      if (dates.length !== 0) {
+        for (var i = 0; i < dates.length; i++) { 
+          arr.push($.datepick.formatDate('yyyy-mm-dd',dates[i]));
+        } 
       }
+        
+
+      console.log("Init_Dates_Arr: ",arr);
 
       datesArr[index] = arr;
 
       // console.log("datesArr:"+index, datesArr[index]);
       // console.log("AllDatesArr: ", datesArr);
-// $(numDays[index]).html(datesArr[index].length);
+      // $(numDays[index]).html(datesArr[index].length);
+
+      console.log("Dates_Arr: ",datesArr);
+
+
       $.post('indTurnArroundTimeInfo_proc.php', {
         rspvac_id: <?=$rspvac_id?>,
         compactDates: true,
@@ -176,6 +188,7 @@ $.each(datePickerBtn, function(index, val) {
               totalDays += val.length;
            }
         });
+
         $(".totalDays").html(totalDays);
 
         // console.log("numDays",numDays[index]);
