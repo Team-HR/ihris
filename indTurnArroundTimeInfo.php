@@ -18,26 +18,18 @@ if ($rspvac_id = $_GET["rspvac_id"]) {
 }
 
 
-
 ?>
 
 <link href="jquery_datepick_5.1.0/css/redmond.datepick.css" rel="stylesheet"> 
 <script src="jquery_datepick_5.1.0/js/jquery.plugin.min.js"></script>
 <script src="jquery_datepick_5.1.0/js/jquery.datepick.js"></script>
-
 <script type="text/javascript">
-
-
  
-var datesArr = ["","","","","","","",""],
+var datesArr = [],
     datePickerBtn = [],
     dateContainer = [];
  $(document).ready(function() {
 
-
-
-
-// newMyClass.myPublicMethod();
     $("#table_search").on("keyup", function() {
       var value = $(this).val().toLowerCase();
       $("#tableBody tr").filter(function() {
@@ -46,55 +38,11 @@ var datesArr = ["","","","","","","",""],
     });
 
     $(load);
-    // $("#office").html(office.render());
+
     $("#sortYear").dropdown();
-
-
     $('#officeDropdown').dropdown();
-// var dateContainer = [];
-// $.each($('.dateContainer'), function(index, val) {
-   
-// });
-
-
-
-
-// $.each(datePickerBtn, function(index, val) {
-//   $(this).datepick({
-//     showOnFocus: false,
-//     dateFormat: 'yyyy-mm-dd',
-//     multiSelect: 999,
-//     onSelect: function (){
-//       dates = $(this).datepick("getDate");
-//       arr = [];  
-//       for (var i = 0; i < dates.length; i++) { 
-//         arr.push($.datepick.formatDate('yyyy-mm-dd',dates[i])); 
-//       }
-      
-
-//       console.log(arr);
-//       if (arr.length === 0) {
-//         // alert();
-//         // console.log("Cleared!");
-//       }
-//       compactDates(arr,index);
-
-
-//       // loadList();
-//     },
-//       showTrigger: '<button type="button" class="ui basic mini button icon trigger">' + 
-//     '<img src="jquery_datepick_5.1.0/img/calendar.gif" alt="Popup"></button>'
-//   })
-
-  
-
-//   // console.log(datesArr);
-// });
-
-
 
  });
-
 
 
 function load(){
@@ -125,9 +73,7 @@ function loadList(){
   },function(data){
     $("#tableBody").html(data);
 
-
     loadDatePicker();
-
 
   });
 }
@@ -144,35 +90,26 @@ function loadDatePicker (){
   numDays = Array.prototype.slice.call(arrLikeNumDays);
 
 $.each(datePickerBtn, function(index, val) {
-
+  datesArr[index] = [];
   $(this).datepick({
     showOnFocus: false,
     dateFormat: 'yyyy-mm-dd',
-    multiSelect: 999,
+    multiSelect: 999, 
     onSelect: function (){
+      
       dates = $(this).datepick("getDate");
       arr = [];
-
-      
-      console.log("Dates: ", dates.length);
       
       if (dates.length !== 0) {
+
         for (var i = 0; i < dates.length; i++) { 
           arr.push($.datepick.formatDate('yyyy-mm-dd',dates[i]));
         } 
+        datesArr[index] = arr;
+      } else {
+        datesArr[index] = [];
+
       }
-        
-
-      console.log("Init_Dates_Arr: ",arr);
-
-      datesArr[index] = arr;
-
-      // console.log("datesArr:"+index, datesArr[index]);
-      // console.log("AllDatesArr: ", datesArr);
-      // $(numDays[index]).html(datesArr[index].length);
-
-      console.log("Dates_Arr: ",datesArr);
-
 
       $.post('indTurnArroundTimeInfo_proc.php', {
         rspvac_id: <?=$rspvac_id?>,
@@ -180,20 +117,20 @@ $.each(datePickerBtn, function(index, val) {
         datesAll: datesArr,
         dates: arr,
       }, function(data, textStatus, xhr) {
-        $(dateContainer[index]).html(data);
-        $(numDays[index]).html(datesArr[index].length);
-        totalDays = 0;
-        $.each(datesArr, function(index, val) {
-           if (val.length !== 0) {
-              totalDays += val.length;
-           }
+        if (data) {
+
+            $(dateContainer[index]).html("");
+            $(dateContainer[index]).html(data);
+
+          } else {
+
+            $(dateContainer[index]).html("");
+
+          }
+
+          updateNumberOfDays(index);
+
         });
-
-        $(".totalDays").html(totalDays);
-
-        // console.log("numDays",numDays[index]);
-        // console.log("datesArr",datesArr[index].length);
-      });
 
     },
       showTrigger: '<button type="button" class="ui basic mini button icon trigger">' + 
@@ -204,7 +141,6 @@ $.each(datePickerBtn, function(index, val) {
 });
 
 
-
 $.post('indTurnArroundTimeInfo_proc.php',{
     getITATDates: true, 
     rspvac_id: <?=$rspvac_id?>
@@ -213,12 +149,14 @@ $.post('indTurnArroundTimeInfo_proc.php',{
   function(data){
     var json = jQuery.parseJSON(data);
     datesArr = json;
+    console.log(datesArr);
     $.each(datePickerBtn, function(index, val) {
       if (datesArr[index] !== null) {
         $(this).datepick('setDate',datesArr[index]);
       } else {
         $(dateContainer[index]).html("<i style='color: lightgrey;'>N/A</i>");
       }
+      updateNumberOfDays(index);
     });
 
     loadCos();
@@ -226,42 +164,25 @@ $.post('indTurnArroundTimeInfo_proc.php',{
 });
 
 
-
-
 }
 
-  function deleteEntry(id){
-    $("#deleteModal").modal({
-      onApprove: function (){
-        $.post('indTurnArroundTimeInfo_proc.php', {
-          deleteEntry: true,
-          rspcomp_id: id,
-        }, function(data, textStatus, xhr) {
-          $(loadList);
-        });
-      },
-    }).modal('show');
+
+function updateNumberOfDays(index){
+  if (datesArr[index] !== null) {
+    $(numDays[index]).html(datesArr[index].length);  
+  } else {
+    $(numDays[index]).html("0");
   }
-
-  function dateInterviewed(id,interviewed){
-    // alert(id)
-    $("#inputDateInterviewed").val(interviewed);
-
-    $('#dateInterviewedModal').modal({
-      closable: false,
-      onApprove: function(){
-        // alert(id);
-        $.post('indTurnArroundTimeInfo_proc.php', {
-          dateInterviewed: true,
-          id: id,
-          date: $("#inputDateInterviewed").val()
-        }, function(data, textStatus, xhr) {
-          loadList();
-        });
-
+  
+  totalDays = 0;  
+  $.each(datesArr, function(index1, value) {
+      if (value !== null) {
+        totalDays += value.length;
       }
-    }).modal("show");
-  }
+  });
+
+  $(".totalDays").html(totalDays);
+}
 
 function editCostOfSourcing(option){
  if (option === 'edit') {
