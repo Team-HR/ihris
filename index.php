@@ -85,6 +85,7 @@
 						<!-- 		<a class="item" href="vacantpositionsetup.php">Setup Vacant Positions</a> -->
 								<!-- <a class="item" href="applicantsProfile.php">Applicants' Profile</a> -->
 								<a class="item" href="comparativeData.php">Comparative Data</a>
+								<a class="item" href="indTurnAroundTime.php">Individual Turn Around Time</a>
 								<a class="item" href="">System of Ranking Position</a>
 								<a class="item" href="">Staffing Plan</a>
 								<a class="item" href="">Turn Around</a>
