@@ -110,9 +110,13 @@ require "rsp_addApplicant_modal.php";
      <h3><i class="pie chart icon"></i> Comparative Data <i class="caret right icon"></i> <?=$positiontitle;?></h3>
    </div>
     <div class="right item noprint">
-      <button onclick="print()" class="blue ui icon button" title="Print" style="margin-right: 5px;">
+<!--       
+default print button
+
+<button onclick="print()" class="blue ui icon button" title="Print" style="margin-right: 5px;">
         <i class="icon print"></i> Print
-      </button>
+</button>
+ -->
 <!--      <a class="ui blue icon button" title="Evaluation Report" style="margin-right: 5px;">
         <i class="icon chart bar"></i> Evaluation Report
       </a> -->

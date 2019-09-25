@@ -63,7 +63,7 @@ $num_rows = $stmt->num_rows;
 	if ($num_rows === 0) {
 ?>
 <tr>
-	<td colspan="13" style="color: lightgrey; text-align: center; padding: 20px;"><i>No Applicants!</i></td>
+	<td colspan="14" style="color: lightgrey; text-align: center; padding: 20px;"><i>No Applicants!</i></td>
 </tr>
 <?php
 	} else {
@@ -78,6 +78,7 @@ $counter = 0;
 <tr style="vertical-align: top; text-align: center;">
 	<td><?=$counter;?></td>
 	<td style="white-space: nowrap;"><?=$name?></td>
+	<td rowspan="<?=$num_rows?>"><div class="dateContainer"></div></td> 
 	<td rowspan="<?=$num_rows?>"><div class="dateContainer"></div></td> 
 	<td rowspan="<?=$num_rows?>"><div class="dateContainer"></div></td>
 	<td rowspan="<?=$num_rows?>"><div class="dateContainer"></div></td>
@@ -113,6 +114,7 @@ $counter = 0;
 	<td class="numDays"></td>
 	<td class="numDays"></td>
 	<td class="numDays"></td>
+	<td class="numDays"></td>
 </tr>
 <?php
 
@@ -124,12 +126,12 @@ elseif (isset($_POST["compactDates"])) {
 	if (isset($_POST["datesAll"]) ) {
 		$datesAll = $_POST["datesAll"];
 	} else {
-		$datesAll = array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+		$datesAll = array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 	}
 		$rspvac_id = $_POST["rspvac_id"];
 		
 
-		$sql = "UPDATE `rsp_indturnarroundtime` SET `itat0`=?,`itat1`=?,`itat2`=?,`itat3`=?,`itat4`=?,`itat5`=?,`itat6`=?,`itat7`=?,`timestamp`= CURRENT_TIMESTAMP WHERE `rspvac_id` = ?";
+		$sql = "UPDATE `rsp_indturnarroundtime` SET `itat0`=?,`itat1`=?,`itat2`=?,`itat3`=?,`itat4`=?,`itat5`=?,`itat6`=?,`itat7`=?,`itat8`=?,`timestamp`= CURRENT_TIMESTAMP WHERE `rspvac_id` = ?";
 
 		$stmt = $mysqli->prepare($sql);
 		
@@ -137,7 +139,7 @@ elseif (isset($_POST["compactDates"])) {
 			$datesAll[$key] = serialize($value);
 		}
 
-		$stmt->bind_param("ssssssssi",$datesAll[0],$datesAll[1],$datesAll[2],$datesAll[3],$datesAll[4],$datesAll[5],$datesAll[6],$datesAll[7],$rspvac_id);
+		$stmt->bind_param("sssssssssi",$datesAll[0],$datesAll[1],$datesAll[2],$datesAll[3],$datesAll[4],$datesAll[5],$datesAll[6],$datesAll[7],$datesAll[8],$rspvac_id);
 
 		$stmt->execute();
 	
@@ -155,10 +157,10 @@ elseif (isset($_POST["getITATDates"])) {
 	$sql0 = "SELECT * FROM `rsp_indTurnArroundTime` WHERE `rspvac_id` = '$rspvac_id'";
 	$result = $mysqli->query($sql0);
 	if ($result->num_rows === 0) {
-		$sql1 = "INSERT INTO `rsp_indTurnArroundTime` (`rsp_indTATid`, `rspvac_id`, `itat0`, `itat1`, `itat2`, `itat3`, `itat4`, `itat5`, `itat6`, `itat7`, `costOfSourcing`) VALUES (NULL, '$rspvac_id', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)";
+		$sql1 = "INSERT INTO `rsp_indTurnArroundTime` (`rsp_indTATid`, `rspvac_id`, `itat0`, `itat1`, `itat2`, `itat3`, `itat4`, `itat5`, `itat6`, `itat7`, `itat8`, `costOfSourcing`) VALUES (NULL, '$rspvac_id', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)";
 		$mysqli->query($sql1);
 		$arr = array();
-		for ($i=0; $i < 9; $i++) { 
+		for ($i=0; $i < 10; $i++) { 
 			$arr[] = "";
 		}
 		echo json_encode($arr);
@@ -172,7 +174,8 @@ elseif (isset($_POST["getITATDates"])) {
  			!$row['itat4'] ? "" : unserialize($row['itat4']),
  			!$row['itat5'] ? "" : unserialize($row['itat5']),
  			!$row['itat6'] ? "" : unserialize($row['itat6']),
- 			!$row['itat7'] ? "" : unserialize($row['itat7'])
+ 			!$row['itat7'] ? "" : unserialize($row['itat7']),
+ 			!$row['itat8'] ? "" : unserialize($row['itat8']),
 		);
 		echo json_encode($arr);
 	}
