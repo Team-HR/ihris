@@ -356,6 +356,7 @@ require "rsp_addApplicant_modal.php";
       <tr style="text-align: center; font-size: 12px;" class="printCompactText">
         <th class="heads">No.</th>
         <th class="heads">NAME OF APPLICANTS</th>
+        <th class="heads">PUBLICATION PERIOD</th>
         <th class="heads">SCREENING OF APPLICANT (Paper Reliberation)</th>
         <th class="heads">SENDING OF NOTIFICATION/ DISQUALIFICATION</th>
         <th class="heads">POSTING OF QUALIFIED APPLICANTS</th>
@@ -370,6 +371,7 @@ require "rsp_addApplicant_modal.php";
       <tr>
         <th class="thDP" colspan=""></th>
         <th class="thDP" colspan=""></th>
+        <th class="thDP"><button class="datePickerBtn" hidden="" style="vertical-align: bottom;"></button></th>
         <th class="thDP"><button class="datePickerBtn" hidden="" style="vertical-align: bottom;"></button></th>
         <th class="thDP"><button class="datePickerBtn" hidden="" style="vertical-align: bottom;"></button></th>
         <th class="thDP"><button class="datePickerBtn" hidden="" style="vertical-align: bottom;"></button></th>
@@ -393,7 +395,7 @@ require "rsp_addApplicant_modal.php";
     </thead>
     <tbody id="tableBody" class="">
         <tr id="loading_el">
-          <td colspan="13" style="text-align: center; font-size: 32px; color: lightgrey; padding: 100px;">
+          <td colspan="14" style="text-align: center; font-size: 32px; color: lightgrey; padding: 100px;">
             <img src="assets/images/loading.gif" style="height: 50px; margin-top: -100px;">
             <br>
             <span>Fetching data...</span>

@@ -1,26 +1,41 @@
 <?php
-// $title = "Testing";
-require '_connect.db.php';
-$sql = "SELECT * FROM `employees` WHERE `employees`.`employees_id`IN (SELECT `employees_id` FROM `individualassreport`) AND `employees`.`employees_id` NOT IN (SELECT `employees_id` FROM `competency`) ORDER BY `lastName` ASC
-";
+require('fpdf/fpdf.php');
 
-$result = $mysqli->query($sql);
-while ($row = $result->fetch_assoc()) {
-    $employees_id = $row['employees_id'];
-    if ($employees_id != 0) {
-// get name start
-      if (!empty($row['extName'])) {
-        $extName = ", ".$row['extName'];
-      } else {
-        $extName = "";
-      }
-
-      $fullName = $row['lastName'].", ".$row['firstName']." ".$row['middleName']." ".$extName." ";
-
-    } else {
-      $fullName = "Unidentified! Please see input in db...";
-    }
-
-    echo "$fullName<br>";
-
+class PDF extends FPDF
+{
+// Page header
+function Header()
+{
+    // Logo
+    $this->Image('assets/images/bayawanLogo.png',10,6,30);
+    // Arial bold 15
+    $this->SetFont('Arial','B',15);
+    // Move to the right
+    $this->Cell(80);
+    // Title
+    $this->Cell(30,10,'Title',1,0,'C');
+    // Line break
+    $this->Ln(20);
 }
+
+// Page footer
+function Footer()
+{
+    // Position at 1.5 cm from bottom
+    $this->SetY(-15);
+    // Arial italic 8
+    $this->SetFont('Arial','I',8);
+    // Page number
+    $this->Cell(0,10,'Page '.$this->PageNo().'/{nb}',0,0,'C');
+}
+}
+
+// Instanciation of inherited class
+$pdf = new PDF();
+$pdf->AliasNbPages();
+$pdf->AddPage();
+$pdf->SetFont('Times','',12);
+for($i=1;$i<=40;$i++)
+    $pdf->Cell(0,10,'Printing line number '.$i,0,1);
+$pdf->Output();
+?>

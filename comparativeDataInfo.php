@@ -154,6 +154,12 @@ require "rsp_addApplicant_modal.php";
    </div>
 
     <div class="right item noprint">
+
+<!-- <a href="comparativeDataInfoPrint.php?rspvac_id=<?php echo $rspvac_id?>&compData=<?php echo $positiontitle?>" target="_blank" class="blue ui icon button" title="Print" style="margin-right: 5px;">
+  <i class="icon print"></i> Print
+</a> -->
+
+
       <button onclick="print()" class="blue ui icon button" title="Print" style="margin-right: 5px;">
         <i class="icon print"></i> Print
       </button>
