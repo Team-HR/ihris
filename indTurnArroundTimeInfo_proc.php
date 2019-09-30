@@ -50,7 +50,7 @@ if (isset($_POST["load"])) {
 		$gender,
 		$num_years_in_gov,
 		$civil_status,
-		$education,
+		$education,	
 		$training,
 		$experience,
 		$eligibility,
