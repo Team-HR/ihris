@@ -21,7 +21,7 @@ $mysqli->set_charset("utf8");
  	private $host = "localhost";
 	private $user = "root";
 	private $password = "";
-	private $database = "hristest";
+	private $database = "hris";
  	
  	function __construct()
  	{

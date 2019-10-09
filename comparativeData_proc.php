@@ -8,9 +8,9 @@ if (isset($_POST["load"])) {
 	$year = $_POST["yearState"];
 	if ($year === "all") {
 		$year = 1000;
-		$sql = "SELECT * FROM `rsp_vacant_positions` WHERE year(`dateVacated`) != ?";
+		$sql = "SELECT * FROM `rsp_vacant_positions` WHERE year(`dateVacated`) != ? ORDER BY `itemNo` ASC";
 	} else {
-		$sql = "SELECT * FROM `rsp_vacant_positions` WHERE year(`dateVacated`) = ?";
+		$sql = "SELECT * FROM `rsp_vacant_positions` WHERE year(`dateVacated`) = ? ORDER BY `itemNo` ASC";
 	}
 
 	

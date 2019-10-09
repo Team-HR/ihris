@@ -148,7 +148,7 @@ function createYosList($serial){
 			$counter++;
 		}
 	}
-	if ($counter === 4) {
+	if ($counter === count($arr)) {
 		$list = "* NONE";
 	}	
 	return $list;

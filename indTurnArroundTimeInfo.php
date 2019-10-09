@@ -169,7 +169,15 @@ $.post('indTurnArroundTimeInfo_proc.php',{
 
 function updateNumberOfDays(index){
   if (datesArr[index] !== null) {
-    $(numDays[index]).html(datesArr[index].length);  
+    if (index === 0) {
+      if (datesArr[0].length === 0) {
+        $(numDays[0]).html(0);
+      } else {
+        $(numDays[0]).html(datesArr[0].length-1);  
+      }
+    } else {
+      $(numDays[index]).html(datesArr[index].length);    
+    }
   } else {
     $(numDays[index]).html("0");
   }
@@ -295,7 +303,7 @@ require "rsp_addApplicant_modal.php";
 </div>
 
   <!-- <div class="ui segments"> -->
-    <style type="text/css">
+    <style type="text/css"> 
       .actives{
         text-align: right !important;
         width: 175px;
