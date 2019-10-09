@@ -52,7 +52,7 @@ class VacantPost
 			<a class="ui mini icon basic button" title="Go to" href="'.$file.'?rspvac_id='.$rspvac_id.'"><i class="open folder blue icon"></i></a>
 		</td>
 		<td>'.$position.'</td>
-		<td class="center aligned">';
+		<td class="center aligned" style="white-space: nowrap;">';
 
 				if (!$itemNo) {
 					$view .= "---";
