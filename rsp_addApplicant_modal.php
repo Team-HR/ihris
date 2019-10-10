@@ -10,7 +10,7 @@
         awards = new Lister("Awards"),
         records = new Lister("Records"),
         experience = [],
-        yosArr = {Temporary:"",JOW:"",Casual:"",Contractual:"",Permanent:""},
+        yosArr = {Temporary:"",JOW:"",Casual:"",Contractual:"",Permanent:"",Elective:""},
         fields = {
 		          name: {
 		            identifier  : 'name',
@@ -241,7 +241,7 @@ function editApplicant(applicant_id){
 		 $("textarea").val("");
 		$(".ui.dropdown").dropdown("restore defaults");
 		experience = [];
-		yosArr = {Temporary:"", JOW:"",Casual:"",Contractual:"",Permanent:""};
+		yosArr = {Temporary:"", JOW:"",Casual:"",Contractual:"",Permanent:"",Elective:""};
 		training.resetLister();
 		eligibility.resetLister();
 		awards.resetLister();
@@ -276,7 +276,7 @@ function editApplicant(applicant_id){
   	name = $("#searchInput").val();
   	// $("input [name='name']").val(name);
   	console.log(name);
-  	console.log($(setInputs([name,null,"","","","","","",[],{Temporary:"",JOW: "", Casual: "", Contractual: "", Permanent: ""},[],[],[],[],""])));
+  	console.log($(setInputs([name,null,"","","","","","",[],{Temporary:"",JOW: "", Casual: "", Contractual: "", Permanent: "",Elective:""},[],[],[],[],""])));
 	// $(addNewApplicant());
   	$("#applicantForm").form({
 				on: "submit",
