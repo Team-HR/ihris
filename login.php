@@ -17,7 +17,13 @@ if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true && $_SESSION["
   <script src="jquery/jquery-3.3.1.min.js"></script>
   <script src="ui/dist/semantic.min.js"></script>
 </head>
-<body class="noprint" style="background-image: url(assets/bgs/ihris_bg.png); background-repeat: no-repeat; background-attachment: fixed;">
+<body class="noprint" style="
+    background: url(assets/bgs/ihris_bg.png) no-repeat center center fixed;
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+">
 
 
   <script type="text/javascript">
