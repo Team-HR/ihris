@@ -13,10 +13,7 @@
           }
       });
     });
-
     cmpEmpView(<?=$_GET['cmr']?>);
-
-
   });
 </script>
  <div class="ui borderless blue inverted mini menu noprint">
@@ -30,7 +27,7 @@
    </div>
    <div class="right item">
     <div class="ui right input">
-    </div>  
+    </div>
   </div>
 </div>
   <div class="ui action input" style="width:500PX;margin-left: 25%">
@@ -47,6 +44,7 @@
 <table class="ui celled table">
   <thead style="text-align: center">
     <tr>
+      <th rowspan="2"></th>
       <th colspan="4">Fullname</th>
       <th rowspan="2">Department</th>
       <th rowspan="2">Position</th>
@@ -59,7 +57,7 @@
       <th style="font-size:11px">Ext.<br>Name</th>
     </tr>
   </thead>
-  <tbody id="cmpEmpView"> 
+  <tbody id="cmpEmpView">
     <tr>
       <td colspan="7" style="text-align: center">
         <img src="assets/images/loading.gif" style="transform:scale(0.1);margin-top:-100px">

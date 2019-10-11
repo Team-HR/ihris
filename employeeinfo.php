@@ -405,7 +405,10 @@ if (isset($_GET["spms"])) {
 			 ?>
     </div>
     <div class="ui tab segment" data-tab="third/c">
-    	Coaching and Mentoring will be implemented here...
+    	<!-- Coaching and Mentoring will be implemented here... -->
+			<?php
+				require_once "umbra/cmr/empCrmInfo.php";
+			 ?>
     </div>
     <div class="ui tab segment" data-tab="third/d">
     	Feedback Mechanism will be implemented here...
