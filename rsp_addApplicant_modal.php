@@ -10,7 +10,7 @@
         awards = new Lister("Awards"),
         records = new Lister("Records"),
         experience = [],
-        yosArr = {Temporary:"",JOW:"",Casual:"",Contractual:"",Permanent:"",Elective:""},
+        yosArr = {Temporary:"",JOW:"",Casual:"",Contractual:"",Permanent:"",Elective:"",Coterminus:""},
         fields = {
 		          name: {
 		            identifier  : 'name',
@@ -241,7 +241,7 @@ function editApplicant(applicant_id){
 		 $("textarea").val("");
 		$(".ui.dropdown").dropdown("restore defaults");
 		experience = [];
-		yosArr = {Temporary:"", JOW:"",Casual:"",Contractual:"",Permanent:"",Elective:""};
+		yosArr = {Temporary:"", JOW:"",Casual:"",Contractual:"",Permanent:"",Elective:"",Coterminus:""};
 		training.resetLister();
 		eligibility.resetLister();
 		awards.resetLister();
@@ -520,7 +520,7 @@ function createYosField(){
 		 /* iterate through array or object */
 		 // console.log(index);
 		 if (val) {
-			html += '<div class="two wide field" id="jowField" style="display: inline-block;">';
+			html += '<div class="three wide field" id="jowField" style="display: inline-block;">';
 			html += '<label>'+index+': <i class="icon right link times" onclick="removeField(\''+index+'\')"></i></label>';
 			// html += '<input name="'+index+'" type="text" placeholder="No of.." value="'+val+'" onkeyup="yosOnChangeSave(\''+index+'\',$(this).val());">';
 			html += '<input name="'+index+'" type="text" placeholder="No of.." value="'+val+'" onkeyup="yosOnChangeSave(\''+index+'\',$(this).val());">';
@@ -534,10 +534,10 @@ function createYosField(){
 
 
 <div class="fields">
-	<div class="four wide field">
+	<div class="six wide field">
 		<label>Years of Gov't Service:</label>
 		<div class="ui action input inputListerYos">
-		  <input id="inputAdder" type="text" placeholder="No">
+		  <input id="inputAdder" type="text" placeholder="No. of Years">
 		  <select class="ui selection compact dropdown" id="yearsOfService"></select>
 		  <div onclick="addYearsOfService()" class="ui white basic icon button inputListerYosBtn"><i class="icon add"></i></div>
 		</div>
