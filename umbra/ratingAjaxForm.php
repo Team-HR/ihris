@@ -36,7 +36,17 @@ if(isset($_POST['prrList'])){
 		  <div class="fields">
 		    <div class="seven wide field">
 			  <label>Appraisal Type</label>
-		      <input type="text" name="appraisalType" value="<?=$row['appraisal_type']?>">
+			  <?php 
+			  	if($row['appraisal_type']){
+			  		?>
+		      		<input type="text" name="appraisalType" value="<?=$row['appraisal_type']?>">
+			  		<?php
+			  	}else{
+			  		?>
+		      		<input type="text" name="appraisalType" value="Semestral">
+		      <?php
+			  	}
+			   ?>
 		    </div>
 		    <div class="seven wide field">
 			  <label>Date Appraised</label>
