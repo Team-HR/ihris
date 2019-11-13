@@ -66,7 +66,7 @@
   }
 
   function load(filters){
-    console.log("load");
+    // console.log("load");
     // $("#tableBody").load('personnelCompetenciesReport_proc.php',{
     //   load: true,
     // },
@@ -117,7 +117,10 @@
     }
   }
 </script>
-<div class="ui container">
+
+
+
+<div class="ui container" style="width: 1300px; margin-bottom: 20px;">
   <div class="ui borderless blue inverted mini menu noprint">
     <div class="left item" style="margin-right: 0px !important;">
       <button onclick="window.history.back();" class="blue ui icon button" title="Back" style="width: 65px;">
@@ -127,43 +130,23 @@
     <div class="item">
      <h3><i class="icon chart line"></i>Competency Report</h3>
    </div>
-
-  <div class="right item" style="width: 45%;">
-    
-  </div>
-
-
+    <div class="right item" style="width: 45%;"></div>
   </div>
 </div>
-<div class="ui container" style="padding: 20px;">
-  <style type="text/css">
-    table {
-      border-collapse: collapse;
-    }
-    td {
-      border: 1px solid lightgrey ;
-      text-align: center;
-    }
-    th.rotate {
-      height: 140px;
-      white-space: nowrap;
-    }
-    th.rotate > div {
-      transform: 
-        translate(18px, 51px)
-        rotate(315deg);
-      width: 30px;
-    }
-    th.rotate > div > span {
-      border-bottom: 1px solid #ccc;
-      padding: 5px 10px;
-    }
-  </style>
+
+<div class="ui container" style="background-color: white; width: 1300px;">
+<div class="ui segment">
 <div class="ui top attached tabular menu" id="tabs">
-  <a class="item active" data-tab="report">Survey Report</a>
+  <a class="item active" data-tab="reportindepth">In-Depth Survey Report</a>
+  <a class="item" data-tab="report">Survey Report</a>
   <a class="item" data-tab="job_c">Job Competecy</a>
 </div>
-<div class="ui bottom attached tab active" data-tab="report">
+<div class="ui bottom attached tab active" data-tab="reportindepth">
+  <?php
+    require_once 'personnelCompetenciesReport_indepth_report.php';
+  ?>
+</div>
+<div class="ui bottom attached tab" data-tab="report">
   <div id="snum_rows" class="ui basic segment" style="font-size: 24px;">
     <i class="icon info blue tiny circle"></i><span id="num_rows" style="font-size: 13px; color: grey; font-style: italic;"><div class="ui active mini inline loader"></div> Loading...</span>
   </div>
@@ -259,6 +242,37 @@
 </div>
 <!-- end filter -->
 
+  <style type="text/css">
+    table {
+      border-collapse: collapse;
+    }
+    .datatr:hover {
+      background-color: #cbffc0;
+    }
+    td {
+      border: 1px solid #5ea3ff;
+      text-align: center;
+    }
+    th.rotate {
+      height: 83px;
+      white-space: nowrap;
+    }
+    th.rotate > div {
+      transform: 
+        translate(18px, 51px)
+        rotate(315deg);
+      width: 30px;
+
+    }
+    th.rotate > div > span {
+      border-bottom: 1px solid #5ea3ff;
+      padding: 5px 10px;
+    }
+    tr:nth-child(even) {
+      background-color: #edf3fb;
+    }
+
+  </style>
 
   <table class="" style="margin-top: 50px;">
     <thead>
@@ -370,5 +384,7 @@
       </tr>
     </tbody>
   </table>
+</div>
+</div>
 </div>
 <?php require_once "footer.php";?>

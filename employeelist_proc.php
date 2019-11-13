@@ -17,6 +17,7 @@ if (isset($_POST["load"])) {
 
 		$firstName	=	$row["firstName"];
 		$lastName	=	$row["lastName"];
+		
 		if ($row["middleName"] == ".") {
 			$middleName = "";
 		} else {

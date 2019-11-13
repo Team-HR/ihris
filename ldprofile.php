@@ -91,7 +91,7 @@
   </div>
 </div>
 </div>
-<div class="ui container" style="padding: 20px;">
+<div class="ui container" style="padding: 20px; background-color: white;">
   <h4 class="ui header printOnly" style="text-align: center;"><tt>LEARNING AND DEVELOPMENT PROFILE </tt><tt id="year"></tt></h4>
   <table id="_table" class="ui very basic compact small table">
     <thead>

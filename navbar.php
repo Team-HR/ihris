@@ -1,4 +1,5 @@
     <style>
+
     @page {
       margin-top: 2cm;
       margin-bottom: 1cm;
@@ -23,7 +24,7 @@
     }
     
   </style>
-  <div class="noprint ui stackable menu mini" style="margin-top: 10px;">
+  <div class="noprint ui stackable menu mini" style="margin-top: 10px; ">
     <a title="Home" href="index.php" class="item" title="Home" style="padding: 7px;">
       <!-- <img src="assets/ico/favicon.ico" style="width: 25px; height: 25px;"> -->
       <img src="assets/ico/ihris.svg" style="width: 88px; height: 36px;" title="Integrated Human Resource System">

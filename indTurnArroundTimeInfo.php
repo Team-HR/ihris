@@ -358,7 +358,7 @@ require "rsp_addApplicant_modal.php";
     }
   </style>
 
-  <button onclick="addApplicant()" class="ui basic tiny green button noprint" title="Add applicant to the list"><i class="icon add"></i> Add Applicant</button>
+  <button onclick="addApplicant()" class="ui tiny green button noprint" title="Add applicant to the list"><i class="icon add"></i> Add Applicant</button>
   <table id="trTable" class="ui blue structured celled very compact table" style="font-size: /*12px*/;">
     <thead>
       <tr style="text-align: center; font-size: 12px;" class="printCompactText">

@@ -351,10 +351,10 @@ if (isset($_GET["scrollTo"])) {
 	  </div>
 	</div>
 
-<div class="ui multiple dropdown" id="mulitipleFilters">
+<div class="ui multiple dropdown" id="mulitipleFilters" style="color: white;">
   <input type="hidden" name="filters">
   <button id="clearFilter" style="display: none;" class="ui mini button">Clear</button>
-  <i class="filter blue icon"></i>
+  <i class="filter icon"></i>
   <span class="text">Filter Table</span>
   <div class="menu">
     <div class="ui icon search input">

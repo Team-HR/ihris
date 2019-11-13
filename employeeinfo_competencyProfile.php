@@ -1,6 +1,8 @@
-            <div class="ui container" style="width: 1000px; margin-right: auto; margin-left: auto;">
-                <canvas id="comptChart"></canvas>
-            </div>
+           <?php
+if (!empty($serializedComptScore)) {
+
+           ?>
+           <h3>DEFINITIONS</h3>
             <table class="ui very basic collapsing celled striped table center aligned" style="font-family: Playfair Display; ">
                 <tr>
                     <th style="text-align: center;">Competency</th>
@@ -1566,14 +1568,29 @@
                     ?>
                 </tr>
             </table>
+<?php
+}
+?>
 
+            <script defer>
 
-            <script>
+                <?php
 
-                <?php 
                 if (!empty($unserializedComptScore)) {
+                    $compData = json_encode($unserializedComptScore);
+                    // $compData = json_encode(array(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23));
+                } else {
+                    $ar = array();
+                    for ($i=0; $i <=23 ; $i++) { 
+                        array_push($ar, 0);
+                    }
+
+                    $compData = json_encode($ar);
+                }
                     ?>
 
+
+                    // console.log("CompData: ",<?=$compData?>);
                     var ctx = document.getElementById("comptChart");
                     var comptChart = new Chart(ctx, {
                         type: 'horizontalBar',
@@ -1608,14 +1625,10 @@
                                 label: 'Proficiency/Mastery Level',
                                 data: 
                                 <?php     
-                                echo "[";
-                                foreach ($unserializedComptScore as $value) {
-                                    echo "\"".$value."\",";
-                                }
-                                echo "]";
+                                    echo $compData;
                                 ?>,
                                 backgroundColor: [
-                                'rgba(64, 117, 169, 1)','rgba(64, 117, 169, 1)','rgba(64, 117, 169, 1)','rgba(64, 117, 169, 1)','rgba(64, 117, 169, 1)','rgba(64, 117, 169, 1)','rgba(64, 117, 169, 1)','rgba(64, 117, 169, 1)','rgba(64, 117, 169, 1)','rgba(64, 117, 169, 1)','rgba(64, 117, 169, 1)','rgba(64, 117, 169, 1)','rgba(64, 117, 169, 1)','rgba(64, 117, 169, 1)','rgba(64, 117, 169, 1)','rgba(64, 117, 169, 1)','rgba(64, 117, 169, 1)','rgba(64, 117, 169, 1)','rgba(64, 117, 169, 1)','rgba(64, 117, 169, 1)','rgba(64, 117, 169, 1)','rgba(64, 117, 169, 1)','rgba(64, 117, 169, 1)','rgba(64, 117, 169, 1)'
+                                'rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)'
                                 ],
                                 borderColor: [
                                 'rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)','rgba(75, 192, 192, 1)'
@@ -1649,6 +1662,6 @@
 });
 
             <?php
-        }
+        // }
         ?>
     </script>

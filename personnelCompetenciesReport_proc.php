@@ -89,34 +89,10 @@ if (isset($_POST["load"])) {
     $compTotal[23] += $comp23;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ?>
-    <tr>
+    <tr class="datatr">
       <td><?php echo "$counter. ";?></td>
-      <td><i class="icon clock outline popup" data-content="<?php echo dateToStr($datetime)?>"></i></td>
+      <td><i class="icon clock outline popup" title="<?php echo dateToStr($datetime)?>"></i><a href="employeeinfo.php?employees_id=<?=$employees_id?>" target="_blank"><i class="blue address book icon"></i></a></td>
       <td style="text-align: left;"><?php echo $fullName;?></td>
       <?php
       for ($i=0; $i < 24 ; $i++) {
@@ -144,7 +120,7 @@ if (isset($_POST["load"])) {
  }
 
  ?>
-<tr style="font-weight: bold; color: green">
+<tr class="datatr" style="font-weight: bold; color: green">
   <td colspan="3">AVERAGE:</td>
         <?php
       for ($i=0; $i < 24 ; $i++) {
@@ -304,7 +280,7 @@ while ($row = $result->fetch_array(MYSQLI_NUM)) {
     $total  = $row[27];
 
     ?>
-    <tr>
+    <tr class="datatr">
       <td><?php echo "$counter. ";?></td>
       <td><i class="icon clock outline popup" data-content="<?php echo dateToStr($datetime)?>"></i></td>
       <td style="text-align: left;"><?php echo $fullName;?></td>

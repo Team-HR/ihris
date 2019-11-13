@@ -395,7 +395,7 @@ var content = [],
 </div>
 
 
-<div class="ui top attached tabular menu" id="tabs">
+<div class="ui top attached tabular menu" id="tabs" style="background-color: white;">
   <a class="item active" data-tab="tna">TNA</a>
   <a class="item" data-tab="targetPart">Target Participants</a>
 </div>

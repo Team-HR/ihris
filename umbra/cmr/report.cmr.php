@@ -30,7 +30,7 @@
     </div>
   </div>
 </div>
-  <div class="ui action input" style="width:500PX;margin-left: 25%">
+  <div class="ui action input" style="width:500PX;margin-left: 25%;">
           <div class="ui fluid search selection dropdown" id="drp">
           <input type="hidden" name="Employee">
           <i class="dropdown icon"></i>
@@ -41,7 +41,7 @@
           </div>
         <div class="ui primary button" id="addEmp">ADD</div>
   </div>
-<table class="ui celled table">
+<table class="ui celled table" >
   <thead style="text-align: center">
     <tr>
       <th rowspan="2"></th>

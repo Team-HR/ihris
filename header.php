@@ -20,12 +20,15 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true && $_SESSION[
   <script src="ui/dist/semantic.min.js"></script>
   <script src="node_modules/chart.js/dist/Chart.js"></script>
   <script src="node_modules/chart.js/dist/Chart.min.js"></script>
+  
+  <!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
 
   <link href='fullcalendar4/packages/core/main.css' rel='stylesheet' />
   <link href='fullcalendar4/packages/daygrid/main.css' rel='stylesheet' />
   <script src='fullcalendar4/packages/core/main.js'></script>
   <script src='fullcalendar4/packages/interaction/main.js'></script>
   <script src='fullcalendar4/packages/daygrid/main.js'></script>
+
 
   <style>
     @page {
@@ -38,6 +41,11 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true && $_SESSION[
       display : none;
     }
     @media print{
+      body {
+        background: none !important;
+        background-image: none !important;
+      }
+
       .printCompactText{
         font-size: 11px !important;
       }
@@ -65,7 +73,13 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true && $_SESSION[
 
 </head>
 <!-- <body class="" style="background-image: url(assets/bgs/ihris_bg2.png); background-repeat: no-repeat; background-attachment: fixed;"> -->
-  <body>
+  <body style="
+    background: url(assets/bgs/bg.jpg) no-repeat center center fixed;
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+">
   <script type="text/javascript">
     var addQueries_cal = [];
     var calendar;

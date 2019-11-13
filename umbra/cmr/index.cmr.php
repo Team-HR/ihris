@@ -14,7 +14,7 @@
       </button>
     </div>
     <div class="item">
-     <h3><i class="icon line chart"></i> COACHING AND MONITORING REPORT <span></span></h3>
+     <h3><i class="icon line chart"></i> COACHING AND MENTORING REPORT <span></span></h3>
    </div>
    <div class="right item">
     <div class="ui right input">
@@ -24,7 +24,7 @@
   </div>
 </div>
                         <!-- PERIOD ADDING MODAL -->
-<div class="ui modal" id="addPeriodModal">
+<div class="ui modal" id="addPeriodModal" style="background-color: white">
   <div class="header">Period for Coaching and Monitoring Report</div>
   <div class="content">
     <form class="ui form" name='cmrform'>
@@ -42,6 +42,7 @@
   </div>
 </div>
                         <!-- end PERIOD ADDING MODAL -->
+<div class="ui segment">
 <table id="_table" class="ui very basic compact selectable small table">
   <thead>
     <tr>
@@ -57,7 +58,7 @@
     </tr>
   </tbody>
 </table>
-
+</div>
 <?php 
   function opyear(){
     $syear = date("Y");

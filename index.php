@@ -54,6 +54,7 @@
 						<hr>
 						<div class="content">
 							<div class="ui animated list">
+					<a class="item" href="personnelrecognition.php">Personnel Recognition</a>
           			<a class="item" href="">R&R Plan (Yearly)</a>
           			<a class="item" href="">System Review</a>
           			<a class="item" href="">Search for Outstanding Employees</a>
@@ -149,6 +150,7 @@
           			<a class="item" href="ldactivities.php">L&D Activities</a>
           			<a class="item" href="tna.php">L&D Training Needs Assessment</a>
           			<a class="item" href="trainingreport.php">Training Report</a>
+          			<a class="item" href="">Talent Assessment Report</a>
           			<!-- <a class="item" href="">System Review</a> -->
 							</div>
 						</div>

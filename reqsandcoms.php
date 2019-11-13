@@ -941,9 +941,9 @@ function removeOther(elementid){
 <div style="padding: 20px;">
 
 <button id="clearFilter" style="display: none;" class="ui mini button">Clear</button>
-<div class="ui multiple dropdown" id="filter_deptConerned">
+<div class="ui multiple dropdown" id="filter_deptConerned" style="color: white">
   <input type="hidden" name="filters">
-  <i class="icon blue filter"></i>
+  <i class="icon filter"></i>
   <span class="text">Select Department/s to filter</span>
   <div class="menu">
     <div class="ui icon search input">
@@ -971,7 +971,7 @@ function removeOther(elementid){
     </div>
   </div>
 
-  <table id="trTable" class="ui blue selectable structured celled very compact table" style="font-size: 12px;">
+  <table id="trTable" class="ui blue selectable striped structured celled very compact table" style="font-size: 12px;">
     <!-- <thead> -->
       <tr style="text-align: center;">
         <th>Control No.</th>

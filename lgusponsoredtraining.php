@@ -331,12 +331,12 @@ $act_id = $_GET["act_id"];
 <div class="ui container">
 	<div class="ui basic segment">
 		<div class="noprint">
-			<label>Allocated Budget: </label>
+			<label style="color: white;">Allocated Budget: </label>
 			<div class="ui right labeled action input">
 				<label for="amount" class="ui label">&#8369;</label>
 				<input type="text" placeholder="Amount" id="allocatedBudget" readonly="">
 				<!-- <div class="ui basic label">.00</div> -->
-				<button onclick="editBudget('<?php echo $act_id;?>')" class="ui icon basic button" title="Edit"><i class="edit outline icon"></i></button>
+				<button onclick="editBudget('<?php echo $act_id;?>')" class="ui icon button" title="Edit"><i class="edit outline icon"></i></button>
 			</div>
 		</div>
 		<h4 class="printOnly" id="print_title" style="text-align: center;"></h4>

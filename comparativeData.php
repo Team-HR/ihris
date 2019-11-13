@@ -448,7 +448,7 @@ function clearFormData(){
   }
 </style>
 
-  <table id="trTable" class="ui blue selectable structured celled very compact table" style="font-size: 12px;">
+  <table id="trTable" class="ui striped blue selectable structured celled very compact table" style="font-size: 12px;">
     <thead>
       <tr style="text-align: center;">
 

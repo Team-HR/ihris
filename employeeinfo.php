@@ -266,9 +266,13 @@ if (isset($_GET["spms"])) {
 <div class="ui container" style="min-height: 600px;">
 	<div class="ui borderless blue inverted mini menu">
     <div class="left item" style="margin-right: 0px !important;">
-      <a href="employeelist.php?scrollTo=<?php echo $employees_id;?>" class="blue ui icon button" title="Back" style="width: 65px;">
+      <!-- <a href="employeelist.php?scrollTo=<?php echo $employees_id;?>" class="blue ui icon button" title="Back" style="width: 65px;">
         <i class="icon chevron left"></i> Back
-      </a>
+      </a> -->
+      <button onclick="window.history.back(); console.log(window.history);" class="blue ui icon button" title="Back" style="width: 65px;">
+        <i class="icon chevron left"></i> Back
+      </button>
+      
     </div>
 		<div class="item">
 			<h3 style="color: white;"><i class="user circle icon"></i> <i id="employeeName"></i></h3>
@@ -323,7 +327,25 @@ if (isset($_GET["spms"])) {
 			</tr>
 		</table>
 	</div>
-	<div class="ui basic segment" style="min-height: 500px;">
+
+
+<div class="ui segment">
+	<div class="ui grid">
+	  <div class="eight wide column">
+		<!-- <div class="ui container" style="width: 100%; margin-right: auto; margin-left: auto;"> -->
+			<!-- <h5 class="ui blue header centered ">Job Competency Profile</h5> -->
+			<canvas id="comptChart" height="210"></canvas>
+		<!-- </div> -->
+	  </div>
+	  <div class="eight wide column">
+<!-- 	  	            <div class="ui container" style="margin-right: auto; margin-left: auto;"> -->
+               <canvas id="ldnLsaChart" height="210"></canvas>
+            <!-- </div> -->
+	  </div>
+	</div>
+</div>
+
+<div class="ui basic segment" style="min-height: 500px;">
 
 <div id="context1">
   <div class="ui top attached pointing blue inverted menu">
@@ -335,6 +357,7 @@ if (isset($_GET["spms"])) {
   <div id="rsp0" class="ui bottom attached tab segment active" data-tab="first">
     <div class="ui pointing secondary blue menu">
       <a class="active item" data-tab="first/a">Competency Profile</a>
+      <a class="item" data-tab="first/b">Learning Style</a>
 <!--       <a class="item" data-tab="first/b">1B</a>
       <a class="item" data-tab="first/c">1C</a> -->
     </div>
@@ -366,11 +389,49 @@ if (isset($_GET["spms"])) {
     <p style="padding: 20px; background-color: lightgrey; color: white;">Personnel has not yet taken the survey.</p>
 </div>
 <?php
-	} else {
-			require_once "employeeinfo_competencyProfile.php";
-	}
+}
+	// } else {
+			require "employeeinfo_competencyProfile.php";
+	// }
 ?>
     </div>
+<div class="ui tab segment" data-tab="first/b">
+	
+	<?php
+		
+		$employees_id = $_GET["employees_id"];
+		$sql = "SELECT * FROM `ldn_lsa` WHERE `employees_id` = '$employees_id'";
+		$result = $mysqli->query($sql);
+		$lsa_rows = $result->num_rows;
+		 if (!$lsa_rows) {
+		 	# code...
+		?>
+			<div style="text-align: center;">
+		    	<p style="padding: 20px; background-color: lightgrey; color: white;">Personnel has not yet taken the survey.</p>
+			</div>
+		<?php
+			$activist = 0;
+		 	$reflector = 0;
+		 	$theorist = 0;
+		 	$pragmatist = 0;
+			
+
+
+		 } else {
+
+		 	$row = $result->fetch_assoc();
+		 	$activist = $row['activist'];
+		 	$reflector = $row['reflector'];
+		 	$theorist = $row['theorist'];
+		 	$pragmatist = $row['pragmatist'];
+		 	$date_surveyed = $row['date_surveyed'];
+		 }
+		 require_once "employeeinfo_ldn_lsa.php";
+	?>
+
+</div>
+
+
 <!--     <div class="ui tab segment" data-tab="first/b">1B</div>
     <div class="ui tab segment" data-tab="first/c">1C</div> -->
   </div>

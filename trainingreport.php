@@ -134,7 +134,7 @@ require_once "header.php";
 
 <div class="" style="padding: 20px;">
 
-	<h2 class="ui blue header center aligned" id="reportDepartment">All Departments of all years</h2>
+	<h2 class="ui header center aligned" id="reportDepartment" style="color: white;">All Departments of all years</h2>
 	<div id="tbody"></div>
 	<br>
 	<!-- <div id="load2Container"></div> -->
