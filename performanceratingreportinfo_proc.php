@@ -177,6 +177,13 @@ function addempprr(i){
 }
 </script>
 <div class="ui sticky noprint" style="background:white;padding: 10px">
+  
+       <div class="ui icon fluid input noprint" style="width: 300px;margin:auto;z-index: 10px">
+        <input id="_search" type="text" placeholder="Search..." onkeyup="find(this)">
+        <i class="search icon"></i>
+      </div><br>
+ 
+
   <h1 style="text-align: center">Add Employee</h1>
   <div class="ui fluid action input" >
     <div class="ui fluid search selection dropdown">

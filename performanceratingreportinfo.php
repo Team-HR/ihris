@@ -26,7 +26,7 @@ $title = title($mysqli);
   </div>
 </div>
 </div>
-<div class="ui container" style="padding: 20px; min-height: 14500px;">
+<div class="ui container" style="padding: 20px;">
   <style type="text/css">
   .customTable, tr,th,td{
     border: 1px solid grey;
@@ -59,11 +59,14 @@ $title = title($mysqli);
       <div style="color:yellow"><b>yellow</b> - reviewed</div>
       <div style="color:white"><b>white</b> - validated</div>
     </div>
-    <div class="ui icon fluid input noprint" style="width: 300px;margin:auto">
-      <input id="_search" type="text" placeholder="Search..." onkeyup="find(this)">
-      <i class="search icon"></i>
-    </div><br>
-    <div style="text-align: center">
+
+<!--
+       <div class="ui icon fluid input noprint" style="width: 300px;margin:auto;z-index: 10px">
+        <input id="_search" type="text" placeholder="Search..." onkeyup="find(this)">
+        <i class="search icon"></i>
+      </div><br>
+ -->
+     <div style="text-align: center">
       <div style="width: 100%">
         <center>
           <div style="float:left;width:37%;">
@@ -170,7 +173,7 @@ $(document).ready(function() {
   $(load);
   $(Depshow)
   $('.menu .item').tab();
-
+  $('.ui.sticky').sticky();
 });
 function _(el){
   return document.getElementById(el)
