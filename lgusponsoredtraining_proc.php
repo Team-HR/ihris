@@ -20,7 +20,7 @@ if (isset($_POST["load"])) {
 		</tr>
 		<?php
 	}
-
+	$count = 1;
 	while ($row = $result->fetch_assoc()) {
 		$row_id = $row["row_id"];
 		$activityProcess = $row["activityProcess"];
@@ -36,6 +36,7 @@ if (isset($_POST["load"])) {
 		$remarks = $row["remarks"];
 		?>
 		<tr>
+			<td><?php echo $count++;?></td>
 			<td><?php echo $activityProcess;?></td>
 			<td><?php echo $accountablePerson;?></td>
 			<td><?php echo $daysNum;?></td>
@@ -59,7 +60,7 @@ if (isset($_POST["load"])) {
 		<td colspan="10"><button class="ui mini fluid green button noprint" onclick="addNew('<?php echo $act_id;?>')">Add</button></td>
 	</tr> -->
 	<tr style="text-align: right;">
-		<th colspan="3">TOTAL NO. OF EMPLOYEES WITH L&D INTERVENTION:</th>
+		<th colspan="4">TOTAL NO. OF EMPLOYEES WITH L&D INTERVENTION:</th>
 		<th><?php echo $paxTotal;?></th>
 		<th colspan="2">TOTAL AMOUNT:</th>
 		<th><?php echo "&#8369;".number_format($budgetTotal,2,".",",");?></th>

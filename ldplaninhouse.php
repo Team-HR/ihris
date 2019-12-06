@@ -176,6 +176,7 @@
   <table class="ui very compact celled structured small selectable table">
     <thead>
       <tr style="text-align: center;"> 
+        <th class="headers">No.</th>
         <th class="headers">Title of Training</th>
         <th class="headers">Training Goal/Objectives</th>
         <th class="headers">No. Hours</th>

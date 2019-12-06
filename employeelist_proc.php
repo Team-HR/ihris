@@ -35,7 +35,7 @@ if (isset($_POST["load"])) {
 			$extName = " ".$extName;
 		}
 
-		$fullname =  mb_convert_case("$firstName $middleName $lastName",MB_CASE_TITLE, "UTF-8").$extName;//$lastName.", ".$firstName." ".$middleName." ".$extName;
+		$fullname =  mb_convert_case("$lastName, $firstName $middleName",MB_CASE_TITLE, "UTF-8").$extName;//$lastName.", ".$firstName." ".$middleName." ".$extName;
 
 
 		$gender = $row["gender"];

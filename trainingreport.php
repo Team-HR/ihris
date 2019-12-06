@@ -3,6 +3,9 @@ $title = "Training Report";
 require_once "header.php";
 ?>
 <script type="text/javascript">
+
+	var json = [];
+	var ldnLsaCharts;
 	$(document).ready(function() {
 		
 		var sortBbyDept = "all",
@@ -17,6 +20,8 @@ require_once "header.php";
 
 		$("#sortYear").dropdown({
 			onChange: function(value,text){
+				ldnLsaCharts.destroy();
+				ldnLsaCharts2.destroy();
 				tbody.html(loading_el.show());
 				sortBbyYear = value;
 				console.log('check', sortBbyDept+" and "+sortBbyYear);
@@ -34,6 +39,8 @@ require_once "header.php";
 			});
 		$("#sortDept").dropdown({
 			onChange: function(value,text){
+				ldnLsaCharts.destroy();
+				ldnLsaCharts2.destroy();
 				tbody.html(loading_el.show());
 				sortBbyDept = value;
 				if (text !== "all") {
@@ -53,8 +60,108 @@ require_once "header.php";
 			}
 		});
 	});
-
+	
 	function load (department_id, year) {
+  		
+
+		$.post('trainingreport_proc.php', {
+			load_graph: true,
+			department_id: department_id,
+			year: year,
+		}, function(data, textStatus, xhr) {
+			/*optional stuff to do after success */
+			json = $.parseJSON(data);
+			console.log(json[0]);
+
+
+			
+
+
+var ctx = $("#graph_permanent");
+var ctx2 = $("#graph_casual");
+var config = {
+				type: 'horizontalBar',
+                        data: {
+                            labels: [
+                            "Male w/ TR",
+                            "Female w/ TR",
+                            "Male w/o TR",
+                            "Female w/o TR",
+                            ],
+                            datasets: [{
+                                label: 'Personnels',
+                                data: json[0],
+                                backgroundColor: [
+                                  '#4075a9',
+                                  '#4075a9',
+                                  '#989da2',
+                                  '#989da2',
+                                ],
+                                borderColor: [
+                                // '#00000',
+                                // '#00000',
+                                // '#055bc8',
+                                // '#055bc8',
+                                ],
+                                fill: true,
+                                borderWidth: 2,
+                            }]
+                        },
+                        options: {
+                            
+                                title: {
+                                    display: true,
+                                    text: "Permanent With and Without Trainings"
+                                },
+                                legend: {
+                                    display: false,  
+                                },
+    }
+};
+var config2 = {
+				type: 'horizontalBar',
+                        data: {
+                            labels: [
+                            "Male w/ TR",
+                            "Female w/ TR",
+                            "Male w/0 TR",
+                            "Female w/0 TR",
+                            ],
+                            datasets: [{
+                                label: 'Personnels',
+                                data: json[1],
+                                backgroundColor: [
+                                  '#4075a9',
+                                  '#4075a9',
+                                  '#989da2',
+                                  '#989da2',
+                                ],
+                                borderColor: [
+                                // '#00000',
+                                // '#00000',
+                                // '#055bc8',
+                                // '#055bc8',
+                                ],
+                                fill: true,
+                                borderWidth: 2,
+                            }]
+                        },
+                        options: {
+                            
+                                title: {
+                                    display: true,
+                                    text: "Casual With and Without Trainings"
+                                },
+                                legend: {
+                                    display: false,  
+                                },
+    }
+};
+	ldnLsaCharts = new Chart(ctx, config);
+	ldnLsaCharts2 = new Chart(ctx2, config2);
+
+		});
+
 
 		$("#tbody").load('trainingreport_proc.php',{
 			load: true,
@@ -134,7 +241,28 @@ require_once "header.php";
 
 <div class="" style="padding: 20px;">
 
+
+
+
 	<h2 class="ui header center aligned" id="reportDepartment" style="color: white;">All Departments of all years</h2>
+
+<!-- graph start -->
+
+	<div class="ui grid">
+	  <div class="eight wide column">
+	  	<div class="ui segment">
+	  		<canvas id="graph_permanent" height="70"></canvas>
+	  	</div>
+	  </div>
+	  <div class="eight wide column">
+	  	<div class="ui segment">
+	  		<canvas id="graph_casual" height="70"></canvas>
+	  	</div>
+	  </div>
+	</div>
+<!-- graph end -->
+
+
 	<div id="tbody"></div>
 	<br>
 	<!-- <div id="load2Container"></div> -->
@@ -144,9 +272,16 @@ require_once "header.php";
 			<div style="text-align: center; font-size: 32px; color: lightgrey; padding: 100px;"><!-- FETCHING DATA... -->
 				<img src="assets/images/loading.gif" style="height: 50px; margin-top: -100px; margin-bottom: 20px; margin-left: 10px;">
 				<br>
-				<span>Fetching Data...</span>
+				<span>Generating Table...</span>
 			</div>
 		</div>
+
+<script type="text/javascript">
+
+
+
+</script>
+
 
 <?php 
 require_once "footer.php";

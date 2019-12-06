@@ -353,6 +353,7 @@ $act_id = $_GET["act_id"];
   		<table class="ui very compact celled structured small selectable table">
 			<thead> 
 				<tr style="text-align: center;">
+					<th class="headers" rowspan="2">No.</th>
 					<th class="headers" rowspan="2">Activities/Processess</th>
 					<th class="headers" rowspan="2">Accountable Person</th>
 					<th class="headers" colspan="3">Activity</th>

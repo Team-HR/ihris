@@ -3,9 +3,9 @@
 $title = "Comparative Data";
 require "_connect.db.php"; 
 require "header.php";
-
-if ($rspvac_id = $_GET["rspvac_id"]) {
-  
+$rspvac_id = 0;
+if (isset($_GET["rspvac_id"])) {
+  $rspvac_id = $_GET["rspvac_id"];
   $sql = "SELECT * FROM `rsp_vacant_positions` WHERE `rspvac_id` = ?";
   $stmt = $mysqli->prepare($sql);
   $stmt->bind_param("i",$rspvac_id);
@@ -14,7 +14,7 @@ if ($rspvac_id = $_GET["rspvac_id"]) {
   $stmt->bind_result($rspvac_id, $positiontitle, $itemNo, $sg, $office, $dateVacated, $dateOfInterview, $education, $training, $experience, $eligibility, $datetime_added);
   $stmt->fetch();
   $stmt->close();
-}
+} 
 
 
 
@@ -23,6 +23,18 @@ if ($rspvac_id = $_GET["rspvac_id"]) {
 <!-- <script type="text/javascript" src="scripts/Departments.js"></script> -->
 
 <script type="text/javascript">
+  $(document).on('keydown', function(e) {
+    if(e.ctrlKey && (e.key == "p" || e.charCode == 16 || e.charCode == 112 || e.keyCode == 80) ){
+        // alert("Please use the Print PDF button below for a better rendering on the document");
+        e.cancelBubble = true;
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        // window.location.href = "http://stackoverflow.com";
+        window.open("comparativeDataInfo.pdf.php?rspvac_id=<?=$rspvac_id?>");
+
+    }  
+});
  $(document).ready(function() {
   // $.each($(".inputLister"), function(index, val) {
      /* iterate through array or object */
@@ -53,6 +65,7 @@ function load(){
     arr = JSON.parse(data);
     $("#itemNoTitle").html(arr.itemNo);
     $("#positiontitle").html(arr.position);
+    // console.log(arr.education);
     $("#educationTitle").html(arr.education);
     $("#officeTitle").html(arr.office);
     $("#trainingTitle").html(arr.training);
@@ -160,9 +173,9 @@ require "rsp_addApplicant_modal.php";
 </a> -->
 
 
-      <button onclick="print()" class="blue ui icon button" title="Print" style="margin-right: 5px;">
+      <a class="blue ui icon button" title="Print" href="comparativeDataInfo.pdf.php?rspvac_id=<?=$rspvac_id?>" style="margin-right: 5px;" target="_blank">
         <i class="icon print"></i> Print
-      </button>
+      </a>
 <!--      <a class="ui blue icon button" title="Evaluation Report" style="margin-right: 5px;">
         <i class="icon chart bar"></i> Evaluation Report
       </a> -->

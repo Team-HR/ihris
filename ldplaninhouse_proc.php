@@ -9,11 +9,12 @@ if (isset($_POST["load"])) {
 ?>
 
 <tr>
-  <td colspan="10" style="color: lightgrey; text-align: center;">No Data Available</td>
+  <td colspan="11" style="color: lightgrey; text-align: center;">No Data Available</td>
 </tr>
 
 <?php
     } else {
+      $count = 1;
     while ($row = $result->fetch_assoc()) {
       $ldpinhousetrainings_id = $row["ldpinhousetrainings_id"];
       $ldplan_id = $row["ldplan_id"];
@@ -35,6 +36,7 @@ if (isset($_POST["load"])) {
       $partner = $row["partner"];
 ?>
 <tr>
+  <td><?php echo $count++?></td>
   <td style="font-weight: bold;"><?php echo $training;?></td>
   <td><?php echo $goal;?></td>
   <td style="text-align: center;"><?php echo $numHours." hrs";?></td>

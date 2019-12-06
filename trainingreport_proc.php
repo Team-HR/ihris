@@ -11,6 +11,28 @@ if (isset($_POST["load"])) {
 	createTable2($mysqli,$department_id,$year);
 }
 
+elseif (isset($_POST["load_graph"])) {
+	$department_id = $_POST["department_id"];
+	$year = $_POST["year"];
+
+	$permanent = array(
+		get_num($mysqli,$department_id,"PERMANENT","MALE",$year,true),
+		get_num($mysqli,$department_id,"PERMANENT","FEMALE",$year,true),
+		get_num($mysqli,$department_id,"PERMANENT","MALE",$year,false),
+		get_num($mysqli,$department_id,"PERMANENT","FEMALE",$year,false)
+	);
+
+	$casual = array(
+		get_num($mysqli,$department_id,"CASUAL","MALE",$year,true),
+		get_num($mysqli,$department_id,"CASUAL","FEMALE",$year,true),
+		get_num($mysqli,$department_id,"CASUAL","MALE",$year,false),
+		get_num($mysqli,$department_id,"CASUAL","FEMALE",$year,false)
+	);
+
+	echo json_encode(array($permanent, $casual));
+
+}
+
 function createSummaryTable($mysqli,$department_id,$year){
 	$permanent = array(
 		get_num($mysqli,$department_id,"PERMANENT","MALE",$year,true),
