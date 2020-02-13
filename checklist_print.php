@@ -448,7 +448,7 @@ $tbl = <<<EOD
         <td width="26%" colspan="2"><b>Disapproved/Invalidated</b></td>
     </tr>
     <tr>
-        <td width="70%"><cite>Created & used on $dateOfUse</cite></td>
+        <td width="70%"><cite><i>Created & used on November 8, 2019</i></cite></td>
         <td width="30%" borderbottom="1" colspan="3"><b>Reasons:</b>_________________________________</td>
     </tr>
     <tr>
