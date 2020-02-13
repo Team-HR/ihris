@@ -46,6 +46,7 @@ if ($result->num_rows>0) {
       </div>
   </div>
 <style type="text/css">
+  
   input {
     width: 100%;
     border: 1px solid lightgrey;
@@ -69,6 +70,18 @@ if ($result->num_rows>0) {
 </style>
 <script type="text/javascript">
   $(document).ready(function() {
+
+  $(document).on('keydown', function(e) {
+      if(e.ctrlKey && (e.key == "p" || e.charCode == 16 || e.charCode == 112 || e.keyCode == 80) ){
+          e.cancelBubble = true;
+          e.preventDefault();
+          e.stopImmediatePropagation();
+
+          // alert("Please use the Print PDF button below for a better rendering on the document");
+          $(saveData(false));
+      }  
+  });
+
 
   $(function(){
         var printReady = <?=$printReady?>;
