@@ -189,7 +189,7 @@ if ($result->num_rows>0) {
     </tr>
     <tr class="drow">
         <td width="15%" colspan="4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. Experience</td>
-        <td width="55%"><?=lister(unserialize($education_cri))?></td>
+        <td width="55%"><?=lister(unserialize($experience_cri))?></td>
     </tr>
     <tr class="drow">
         <td width="15%" colspan="4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. Training</td>
