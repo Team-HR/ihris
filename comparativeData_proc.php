@@ -39,7 +39,6 @@ if (isset($_POST["load"])) {
 		<td class="center aligned"><?=$counter++?></td>
 		<td class="center aligned">
 			  <a class="ui mini icon button" title="Go to" href="comparativeDataInfo.php?rspvac_id=<?=$rspvac_id?>"><i class="open folder blue icon"></i></a>
-			  <div class="or"></div>
 		</td>
 		<td><?=$position;?></td>
 		<td class="center aligned" style="white-space: nowrap;">
