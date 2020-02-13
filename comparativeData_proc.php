@@ -38,11 +38,11 @@ if (isset($_POST["load"])) {
 	<tr>
 		<td class="center aligned"><?=$counter++?></td>
 		<td class="center aligned">
-			<div class="ui mini basic icon buttons" >
+			<!-- <div class="ui mini basic icon buttons" > -->
 			  <a class="ui mini icon button" title="Go to" href="comparativeDataInfo.php?rspvac_id=<?=$rspvac_id?>"><i class="open folder blue icon"></i></a>
 			  <div class="or"></div>
-			  <a class="ui mini icon button" title="Print Checklist" target="_blank" href="apc.php?rspvac_id=<?=$rspvac_id?>"><i class="icon green print"></i></a>
-			</div>
+			  <!-- <a class="ui mini icon button" title="Print Checklist" target="_blank" href="apc.php?rspvac_id=<?=$rspvac_id?>"><i class="icon green print"></i></a> -->
+			<!-- </div> -->
 		</td>
 		<td><?=$position;?></td>
 		<td class="center aligned" style="white-space: nowrap;">
