@@ -30,11 +30,11 @@ if ($result->num_rows>0) {
 
 ?>
 
-<div class="ui containerA container" style="padding-left: 20px; padding-right: 20px;">
+<div class="ui container" style="padding-left: 20px; padding-right: 20px;">
   <div class="printOnly" style="padding-top: 5px !important;"></div>
   <div class="ui borderless blue inverted mini menu">
     <div class="left item" style="margin-right: 0px !important;">
-      <button onclick="window.location.href='comparativeData.php';" class="blue ui icon button noprint" title="Back" style="width: 65px;">
+      <button onclick="window.history.back();" class="blue ui icon button noprint" title="Back" style="width: 65px;">
         <i class="icon chevron left"></i> Back
       </button>
     </div>
@@ -49,10 +49,18 @@ if ($result->num_rows>0) {
   input {
     width: 100%;
     border: 1px solid lightgrey;
+    padding: 3px;
   }
 
   tr,td {
     padding: 0px none !important;
+  }
+/*tr:has(input:hover){
+  background-color: green;
+}*/
+  tr:hover {
+   background-color: #376ba9;
+   color: white;
   }
 
   th {
@@ -91,7 +99,7 @@ if ($result->num_rows>0) {
           '<label><input style="transform: scale(2)" type="checkbox" name="checkbox'+b+'" class="list-item-checkbox2 chb'+index+'" value="0" '+checker(0,polarity)+'/></label>'+
         '</td>';
     if (index != 0) {
-      html += '<td width="4%" align="center">'+
+      html += '<td width="22%" align="center">'+
           '<input style="width:100%" type="text" class="remarks'+index+'" value="'+remarks_val+'"/>'+
           '</td>';
     }
@@ -157,9 +165,10 @@ if ($result->num_rows>0) {
 
   }
 </script>
+
 <button class="ui button green" onclick="saveData(true)"><i class="icon save"></i> Save</button>
 <a  id="printBTN" class="ui button green disabled" target="_blank" onclick="saveData(false)"><i class="icon print"></i> Save & Print</a>
-<table class="ui table very small compact" width="100%">
+<table class="ui table very compact" width="100%">
   <thead>
     <tr>
       <th colspan="8"></th>
@@ -174,11 +183,12 @@ if ($result->num_rows>0) {
     </tbody>
 </table>
 
-<table class="ui table very compact selectable" id="mainTable" width="100%">
+<table class="ui table very compact" id="mainTable" width="100%" style="padding: 10px;">
+  <tbody>
   <tr>
         <td width="15%" colspan="2">Position Title</td>
         <td width="55%" colspan="3  "><?=strtoupper($positiontitle)?></td>
-        <td width="8%">SG/Step</td>
+        <td width="2%">SG/Step</td>
         <td width="22%" colspan="2"><?=$sg?></td>
     </tr>
     <tr>
@@ -191,9 +201,9 @@ if ($result->num_rows>0) {
     </tr>
     <tr>
         <th width="70%" colspan="5"><i>CRITERIA</i></th>
-        <th width="4%" align="center">YES</th>
-        <th width="4%" align="center">NO</th>
-        <th width="22%" align="center"><i>REMARKS</i></th>
+        <th width="" align="center">YES</th>
+        <th width="" align="center">NO</th>
+        <th width="" align="center"><i>REMARKS</i></th>
     </tr>
     <tr class="drow">
         <td width="15%" colspan="4">QS: 1. Education</td>
@@ -339,6 +349,7 @@ if ($result->num_rows>0) {
     <tr class="drow">
         <td width="70%" colspan="5">S-card completely filled out back to back? Not multiple s-card?</td>
     </tr>
+    </tbody>
 </table>
 <!-- table end -->
 
