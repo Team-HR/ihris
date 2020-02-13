@@ -410,7 +410,8 @@ function clearFormData(){
    </div>
    <div class="right item">
     <div class="ui right input">
-      <button class="ui icon mini green button" onclick="addModalFunc()" style="margin-right: 5px;"><i class="icon plus"></i>Add New Vacant Position</button>
+      <a href="apc.php" target="_blank" class="ui icon mini green button" style="margin-right: 5px;"><i class="icon print"> </i>Print Checklists</a>
+      <button class="ui icon mini green button" onclick="addModalFunc()" style="margin-right: 5px;"><i class="icon plus"> </i>Add New Vacant Position</button>
       <div style="padding: 0px; margin: 0px; margin-right: 5px;">
       <select id="sortYear" class="ui floating dropdown"> 
         <option value="">Filter by Year</option>

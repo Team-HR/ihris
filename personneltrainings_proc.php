@@ -152,7 +152,7 @@ elseif (isset($_POST["loadListToAdd"])) {
 }
 
 elseif (isset($_POST["loadListToAdd_cal"])) {
-  $sql = "SELECT * FROM `employees` ORDER BY `lastName` ASC";
+  $sql = "SELECT * FROM `employees` WHERE `status` = 'ACTIVE' ORDER BY `lastName` ASC";
   $result = $mysqli->query($sql);
   while ($row = $result->fetch_assoc()) {
         $employees_id = $row["employees_id"];

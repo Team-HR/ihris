@@ -11,10 +11,15 @@ $employees_id = $_GET["employees_id"];
         // });
     });
 </script>
+<button class="mini teal ui button" onclick="addTraining()"><i class="icon add"></i> Add Training</button>
+<br>
+<br>
+
   <table id="myTable" class="ui very basic celled table tablesorter" style="font-size: 12px">
     <thead>
     <tr>
-        <th></th>
+        <th></th> 
+        <!-- <th>Link</th> -->
         <th>Title of Training</th>
         <!-- <th>Remarks</th> -->
         <th>Date</th>
@@ -22,138 +27,176 @@ $employees_id = $_GET["employees_id"];
         <th>Venue</th>
     </tr>
     </thead>
-    <tbody>
-<?php
-
-
-$trainings_arr = createTrainings($mysqli, $employees_id, "all");
-
-if (empty($trainings_arr)) {
-?>
-  <tr>
-    <td colspan="6" style="text-align: center; color: grey; font-style: italic;">No Trainings Attended</td>
-  </tr>
-<?php
-} else {
-$counter = 1;
-foreach ($trainings_arr as $key => $value) {
-  $numHours = $value["numHours"];
-  $startDate = $value["startDate"];
-  $endDate = $value["endDate"];
-?>
-<tr>
-    <td><?=$counter++.".)"?></td>
-    <td><?=$value["training"]?></td>
-    <td style="text-align: center;">
-<?php
-      if ($numHours === "8") {
-        echo date("F d, Y", strtotime($startDate));
-      } else {
-        echo date("F d", strtotime($startDate))." - ".date("d, Y", strtotime($endDate));
-      }
-?>
-    </td>
-    <td style="text-align: center;"><?=$numHours?></td>
-    <td><?=$value["venue"]?></td>
-</tr>
-<?php
-  }
-}
-?>
-    </tbody>                       
+    <tbody id="table-body"></tbody> 
   </table>
+  
 
-<?php
+<!-- add training start -->
+<div id="modal_add_tr" class="ui small modal">
+  <div class="header">
+    Add Training
+  </div>
+  <div class="content">
+    <div class="ui grid">
+      <div class="row">
+        <div class="column">
+            <!-- form start -->
+          <form id="formAddTraining" class="ui form">
+            <div class="field">
+              <label>Training Title:</label>
+              <div class="ui action input">
+                <input required="" list="trainingsList_cal" id="inputTrainingsAttended" name="inputTrainingsAttended" type="text" placeholder="Training Title">
+                <button id="clearBtn_cal" class="ui button icon mini" title="Clear"><i class="icon large times"></i></button>
+                <datalist id="trainingsList_cal">
+                  <?php
+                  require_once "_connect.db.php";
+                  $result = $mysqli->query("SELECT * FROM `trainings`");
+                  while ($row = $result->fetch_assoc()) {
+                    print "<option value=\"{$row['training']}\">";
+                  }
+                  ?>
+                </datalist>
+              </div>
+            </div>
+            <div class="fields">
+              <div class="seven wide field">
+                <label>Start Date:</label>
+                <input required="" id="inputDate1TrainingsAttended" type="date" name="inputDate1TrainingsAttended">
+              </div>
+              <div class="seven wide field">
+                <label>End Date:</label>
+                <input required="" id="inputDate2TrainingsAttended" type="date" name="inputDate2TrainingsAttended">
+              </div>
+              <div class="three wide field">
+                <label>Hrs:</label>
+                <input id="inputHrsTrainingsAttended" type="text" name="inputHrsTrainingsAttended" placeholder="No. Hours">
+              </div>
+            </div>
+            <div class="fields">
+              <div class="six wide field">
+                <label>Time to Start:</label>
+                <input id="inputTime1TrainingsAttended" type="time" name="inputTime1TrainingsAttended" value="08:00">
+              </div>
+              <div class="six wide field">
+                <label>Time to End:</label>
+                <input id="inputTime2TrainingsAttended" type="time" name="inputTime2TrainingsAttended" value="17:00">
+              </div>
+            </div>
+            <div class="field">
+              <label>Venue:</label>
+              <input required="" id="inputVenueTrainingsAttended" type="text" name="inputVenueTrainingsAttended" placeholder="Venue">
+            </div>
+            <div class="field">
+              <label>Remarks:</label>
+              <input id="inputRemarksTrainingsAttended" type="text" name="inputRemarksTrainingsAttended" placeholder="Remarks">
+            </div>
+          </form>
+          <!-- form end -->
+        </div>
+      </div>
+    </div>
 
-function getNumHours($date_early,$date_late){
-    $date1 = strtotime($date_early);
-    $date2 = strtotime($date_late);
-    $dateDiff = $date2 - $date1;
-    $numHrs = (($dateDiff/ (60 * 60 * 24))*8)+8;
-    return $numHrs;
-}
 
-function createTrainings($mysqli,$employees_id,$year){
-
-  if ($year !== "all") {
-    $filterByYear  = "AND year(personneltrainings.startDate) = '$year'";
-    $filterByYear2  = "AND year(`requestandcoms`.`fromDate`) = '$year'";
-  } else {
-    $filterByYear = "";
-    $filterByYear2 = "";
-  }
+  </div>
+  <div class="actions"> 
+    <button onclick="$('#formAddTraining')[0].reset();" class="ui deny button mini">
+      Cancel
+    </button>
+    <button form="formAddTraining" class="ui approve blue right labeled icon button mini">
+      Save
+      <i class="checkmark icon"></i>
+    </button>
+  </div>
+</div>
+<!-- add training end -->
 
 
-    $arrMaster = array();
-    $sql1 = "SELECT * FROM `personneltrainingslist`
-        LEFT JOIN personneltrainings
-            ON personneltrainingslist.personneltrainings_id = personneltrainings.personneltrainings_id
-        LEFT JOIN trainings
-            ON personneltrainings.training_id = trainings.training_id
-        WHERE `personneltrainingslist`.`employees_id` = '$employees_id' $filterByYear";
 
-    $result1 = $mysqli->query($sql1);
-    while ($row1 = $result1->fetch_assoc()) {
-        $training = $row1["training"];
-        $startDate = $row1["startDate"];
-        $endDate = $row1["endDate"];
-        $numHours = $row1["numHours"];
-        $remarks = $row1["remarks"];
-        $venue = $row1["venue"];
+  <script type="text/javascript">
+      jQuery(document).ready(function($) {
+            
+            $(getRows);
 
-        $insertArr = array(
-            'training' => $training,
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-            'numHours' => $numHours,
-            'remarks' => $remarks,
-            'venue' => $venue
-        );
+        $("#inputDate1TrainingsAttended").change(function(){
+            var date1 = $("#inputDate1TrainingsAttended").val(),
+            date2 = $("#inputDate2TrainingsAttended").val(),
+            hrs = date_diff_indays_cal(date1,date2);
+            $("#inputHrsTrainingsAttended").val(hrs)
+          });
 
-        array_push($arrMaster, $insertArr);
-    }
+          $("#inputDate2TrainingsAttended").change(function(){
+            var date1 = $("#inputDate1TrainingsAttended").val(),
+            date2 = $("#inputDate2TrainingsAttended").val(),
+            hrs = date_diff_indays_cal(date1,date2);
+            $("#inputHrsTrainingsAttended").val(hrs)
+          });
 
 
-    $sql2 = "SELECT * FROM `requestandcoms`
-    LEFT JOIN `requestandcomslist`
-        ON `requestandcoms`.`controlNumber` = `requestandcomslist`.`controlNumber`
-        WHERE `requestandcomslist`.`employees_id` = '$employees_id' AND `requestandcoms`.`isMeeting` != 'yes' $filterByYear2";
-    $result2 = $mysqli->query($sql2);
-    while ($row2 = $result2->fetch_assoc()) {
-        $training = $row2["subject"];
-        $startDate = $row2["fromDate"];
-        $endDate = $row2["toDate"];
-        $numHours = getNumHours($startDate,$endDate);
-        $remarks = $row2["remarks"];
-        $venue = $row2["venue"];
-        $insertArr = array(
-            'training' => $training,
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-            'numHours' => $numHours,
-            'remarks' => $remarks,
-            'venue' => $venue
-        );
+          // on submit formAddTraining
 
-        array_push($arrMaster, $insertArr);
-    } 
-        usort($arrMaster, function($a, $b) {
-            return $b['startDate'] <=> $a['startDate'];
+          $('#formAddTraining').submit(function(event) {
+              /* Act on the event */
+              event.preventDefault();
+
+    $.post('personneltrainings_proc.php', {
+      addTraining: true,
+      training: $("#inputTrainingsAttended").val(),
+      startDate: $("#inputDate1TrainingsAttended").val(),
+      endDate: $("#inputDate2TrainingsAttended").val(),
+      numHours: $("#inputHrsTrainingsAttended").val(),
+      venue: $("#inputVenueTrainingsAttended").val(),
+      remarks: $("#inputRemarksTrainingsAttended").val(),
+      timeStart: $("#inputTime1TrainingsAttended").val(),
+      timeEnd: $("#inputTime2TrainingsAttended").val(),
+      addQueries: [<?=$employees_id?>],
+    }, function(data, textStatus, xhr) {
+        $('#formAddTraining')[0].reset();
+        $(getRows);
+        $('#modal_add_tr').modal('hide');
+    });
+              // $('#modal_add_tr').modal('hide');
+
+            // console.log($(this).serializeArray());
+
+          });
+      });
+
+      function addTraining(){
+
+        $('#modal_add_tr').modal({
+                closable: false,
+                onApprove: function(){
+                    return false;
+                },
+                onDeny: function(){
+            
+                },
+            }).modal("show");
+      }
+
+      function getRows(){
+
+        $.post('employeeinfo_trainingsAttended_proc.php', {'getTrainingRows': true , 'employees_id': <?=$employees_id?>}, function(data, textStatus, xhr) {
+            /*optional stuff to do after success */
+            // console.log('done: ',data);
+            if (data) {
+                json = $.parseJSON(data);
+                $('#table-body').html(json);    
+            }
+            
         });
-        
-    return $arrMaster;
-}
+      }
 
-function dateToStr1($numeric_date){
-    if ($numeric_date) {
-      $date = new DateTime($numeric_date);
-      $strDate = $date->format('F d, Y');
-    } else {
-      $strDate = "<i style=\"color:grey\">N/A</i>";
-    }
-      
-    return $strDate;
-}
-
-
-?>
+      function date_diff_indays_cal(date1, date2) {
+          dt1 = new Date(date1);
+          dt2 = new Date(date2);
+          days = Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate()) ) /(1000 * 60 * 60 * 24));
+          if (days == 0) {
+            return 8;
+          } else if (days > 0){
+            return Math.floor((days+1)*(8));
+          } else {
+            return 0;
+          }
+        }
+  </script>

@@ -141,7 +141,7 @@ if (isset($_POST["load"])) {
 	}
 } elseif (isset($_POST["loadListToAdd"])) {
 	$personneltrainings_id = $_POST["personneltrainings_id"];
-	$sql = "SELECT * FROM `employees` WHERE `employees_id` NOT IN (SELECT `employees_id` FROM `personneltrainingslist` WHERE `personneltrainings_id` = '$personneltrainings_id') ORDER BY `lastName` ASC";
+	$sql = "SELECT * FROM `employees` WHERE `employees_id` NOT IN (SELECT `employees_id` FROM `personneltrainingslist` WHERE `personneltrainings_id` = '$personneltrainings_id') AND `status` = 'ACTIVE' ORDER BY `lastName` ASC";
 	$result = $mysqli->query($sql);
 	while ($row = $result->fetch_assoc()) {
 				$employees_id = $row["employees_id"];

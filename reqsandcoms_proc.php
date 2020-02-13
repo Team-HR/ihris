@@ -111,7 +111,7 @@ if (isset($_POST["load"])) {
 }
 
 elseif (isset($_POST["loadListToAdd"])) {
-	$sql = "SELECT * FROM `employees` ORDER BY `lastName` ASC";
+	$sql = "SELECT * FROM `employees` WHERE `status` = 'ACTIVE' ORDER BY `lastName` ASC";
 	$result = $mysqli->query($sql);
 	while ($row = $result->fetch_assoc()) {
 		$employees_id = $row["employees_id"];
@@ -287,7 +287,7 @@ elseif (isset($_POST["getRowData"])) {
 }
 elseif (isset($_POST["loadListToAddEdit"])) {
 	$controlNumber = $_POST["controlNumber"];
-	$sql = "SELECT * FROM `employees` WHERE `employees_id` NOT IN (SELECT `employees_id` FROM `requestandcomslist` WHERE `controlNumber` = '$controlNumber' AND `employees_id` IS NOT NULL) ORDER BY `lastName` ASC";
+	$sql = "SELECT * FROM `employees` WHERE `employees_id` NOT IN (SELECT `employees_id` FROM `requestandcomslist` WHERE `controlNumber` = '$controlNumber' AND `employees_id` IS NOT NULL) AND `status` = 'ACTIVE' ORDER BY `lastName` ASC";
 	$result = $mysqli->query($sql);
 	while ($row = $result->fetch_assoc()) {
 		$employees_id = $row["employees_id"];

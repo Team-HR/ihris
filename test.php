@@ -1,392 +1,437 @@
-<?php $title = "Competency Report"; require_once "header.php"; require_once "_connect.db.php";?>
-<script type="text/javascript">
-
-  var dept_filters = "";
-
-  $(document).ready(function() {
-    var loading = $('#loading_el');
-    $('.popup').popup();
-    $("#tabs .item").tab();
-    $("#position_drop").dropdown({
-      fullTextSearch: true,
-      onChange: function(value, text, $choice){
-        $("#function_drop_menu").load('personnelCompetenciesReport_proc.php', {
-          load_functions: true,
-          position: value
-        }, function(data, textStatus, xhr) {
-          $("#function_drop").dropdown("restore defaults");
-        });
-      }
-    });
-    $("#position_drop_menu").load('personnelCompetenciesReport_proc.php', {
-      load_positions: true,
-    });
-    
-    $("#mulitipleFilters").dropdown({
-      onChange: function (){
-        loadingBtn = '<div class="ui active mini inline loader"></div> Loading...';
-        $("#num_rows").html(loadingBtn);
-        $("#clearFilter").show();
-        $("#clearFilter").addClass('loading');
-        $("#tableBody").html(loading); 
-        dept_filters = $(this).dropdown('get values');
-        $(load(dept_filters));
-        $("#employee_search").val("");
-        if ($(this).dropdown("get value") == "") {
-          dept_filters = "";
-          $("#clearFilter").hide();
-        }
-      },
-    });
-
-
-    $("#clearFilter").click(function(event) {
-      $('#mulitipleFilters').dropdown('restore defaults');
-      $(this).hide();
-      dept_filters = "";
-    });
-
-    // $(load);
-    $(load(dept_filters));
-
-
-
-
-
-  });
-
-  function getNumOfStatus(filters){
-    $.post('personnelCompetenciesReport_proc.php', {
-      getNumOfStatus: true,
-      filters: filters
-    }, function(data, textStatus, xhr) {
-      // $("#total_rows").html(array.total);
-      $("#num_rows").html(data);
-    });
-  }
-
-  function load(filters){
-    console.log("load");
-    // $("#tableBody").load('personnelCompetenciesReport_proc.php',{
-    //   load: true,
-    // },
-    //   function(){
-    //     // $("#num_rows").load('personnelCompetenciesReport_proc.php',{
-    //     //   get_rows: true,
-    //     // }
-    // });
-
-
-      $.post('personnelCompetenciesReport_proc.php', {
-        load: true,
-        filters: filters,
-      }, function(data, textStatus, xhr) {
-        /*optional stuff to do after success */
-        $("#tableBody").html(data);
-        $(getNumOfStatus(filters));
-        $("#clearFilter").removeClass('loading');
-      });
-
-
-    // $("#num_rows").load('personnelCompetenciesReport_proc.php',{
-    //   get_rows: true,
-    // },
-    //   function(){
-    //     // $("#num_rows").load('personnelCompetenciesReport_proc.php',{
-    //     //   get_rows: true,
-    //     // }
-    // });
-  }
-  function btn_search(){
-    var position = $("#position_drop").dropdown("get value"),
-        functional = $("#function_drop").dropdown("get value");
-    if (position === '' && functional === '') {
-      alert('Please select a position and function to start search.');
-    } 
-    // else if (functional === '') {
-    //   alert('Please select a function to start search.');
-    // }
-    else {
-      $.post('personnelCompetenciesReport_proc.php', {
-        getResults: true,
-        position: position,
-        function: functional,
-      }, function(data, textStatus, xhr) {
-        $("#tableBody1").html(data);
-      });
-    }
-  }
-</script>
-
-
-
-<div class="ui fluid basic segment" style="/**width: 1300px**/">
-  <div class="ui borderless blue inverted mini menu noprint">
-    <div class="left item" style="margin-right: 0px !important;">
-      <button onclick="window.history.back();" class="blue ui icon button" title="Back" style="width: 65px;">
-        <i class="icon chevron left"></i> Back
-      </button>
-    </div>
-    <div class="item">
-     <h3><i class="icon chart line"></i>Competency Report</h3>
-   </div>
-
-  <div class="right item" style="width: 45%;">
-    
-  </div>
-
-
-  </div>
-</div>
-<div class="ui fluid basic segment" style="background-color: white; margin: 20px;">
-
-<div class="ui top attached tabular menu" id="tabs">
-  <a class="item active" data-tab="reportindepth">In-Depth Survey Report</a>
-  <a class="item" data-tab="report">Survey Report</a>
-  <a class="item" data-tab="job_c">Job Competecy</a>
-</div>
-<div class="ui bottom attached tab active" data-tab="reportindepth">
-  <?php
-    require_once 'personnelCompetenciesReport_indepth_report.php';
-  ?>
-</div>
-<div class="ui bottom attached tab" data-tab="report">
-  <div id="snum_rows" class="ui basic segment" style="font-size: 24px;">
-    <i class="icon info blue tiny circle"></i><span id="num_rows" style="font-size: 13px; color: grey; font-style: italic;"><div class="ui active mini inline loader"></div> Loading...</span>
-  </div>
-<!-- start filter -->
-
-<div class="ui multiple dropdown" id="mulitipleFilters" style="margin-left: 20px;">
-  <input type="hidden" name="filters">
-  <button id="clearFilter" style="display: none;" class="ui mini button">Clear</button>
-  <i class="filter blue icon"></i>
-  <span class="text">Filter Table</span>
-  <div class="menu">
-    <div class="ui icon search input">
-      <i class="search icon"></i>
-      <input type="text" placeholder="Search tags...">
-    </div>
-    <div class="divider"></div>
-    <div class="header">
-      <i class="tags icon"></i>
-      Tag Label
-    </div>
-    <div class="scrolling menu">
-
-      <div class="item" data-value="gender=MALE">
-        <div class="ui blue empty circular label"></div>
-        Male
-      </div>
-      <div class="item" data-value="gender=FEMALE">
-        <div class="ui pink empty circular label"></div>
-        Female
-      </div>
-      <div class="item" data-value="type=PERMANENT">
-        <div class="ui yellow empty circular label"></div>
-        Permanent
-      </div>
-      <div class="item" data-value="type=CASUAL">
-        <div class="ui orange empty circular label"></div>
-        Casual
-      </div>
-      <div class="item" data-value="level=1">
-        <div class="ui purple empty circular label"></div>
-        Level 1
-      </div>
-      <div class="item" data-value="level=2">
-        <div class="ui purple empty circular label"></div>
-        Level 2
-      </div>
-      <div class="item" data-value="nature=RANK & FILE">
-        <div class="ui purple empty circular label"></div>
-        Rank & File
-      </div>
-      <div class="item" data-value="nature=SUPERVISORY">
-        <div class="ui purple empty circular label"></div>
-        Supervisory
-      </div>
-      <div class="item" data-value="category=Technical">
-        <div class="ui purple empty circular label"></div>
-        Technical
-      </div>
-      <div class="item" data-value="category=Aministrative">
-        <div class="ui purple empty circular label"></div>
-        Aministrative
-      </div>
-      <div class="item" data-value="category=Key Position">
-        <div class="ui purple empty circular label"></div>
-        Key Position
-      </div>
-      <div class="item" data-value="ldn2018=ldn2018">
-        <div class="ui purple empty circular label"></div>
-        LDN ASSESSMENT 2018
-      </div>
-
 <?php
-  
-  require '_connect.db.php';
-  $sql = "SELECT * FROM `department` ORDER BY `department` ASC";
-  $result = $mysqli->query($sql);
-  while ($row = $result->fetch_assoc()) {
-?>
+//============================================================+
+// File name   : example_048.php
+// Begin       : 2009-03-20
+// Last Update : 2013-05-14
+//
+// Description : Example 048 for TCPDF class
+//               HTML tables and table headers
+//
+// Author: Nicola Asuni
+//
+// (c) Copyright:
+//               Nicola Asuni
+//               Tecnick.com LTD
+//               www.tecnick.com
+//               info@tecnick.com
+//============================================================+
 
-      <div class="item" data-value="<?= "dept_id=".$row['department_id']?>">
-        <div class="ui green empty circular label"></div>
-        <?= $row['department']?>
-      </div>
+/**
+ * Creates an example PDF TEST document using TCPDF
+ * @package com.tecnick.tcpdf
+ * @abstract TCPDF - Example: HTML tables and table headers
+ * @author Nicola Asuni
+ * @since 2009-03-20
+ */
 
-<?php }
+// Include the main TCPDF library (search for installation path).
+require_once('TCPDF-master/tcpdf.php');
 
+// create new PDF document
+$width=215.9;
+$height=330.2;
+$pageLayout = array($width, $height); //  or array($height, $width) 
+// $pdf = new TCPDF('p', 'pt', $pageLayout, true, 'UTF-8', false);
+// $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, $pageLayout, true, 'UTF-8', false);
 
-?>
+// set document information
 
+$pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor('FranzDev');
+$pdf->SetTitle('Appointment Processing Checklist');
 
-    </div>
-  </div>
-</div>
-<!-- end filter -->
+// $pdf->SetSubject('TCPDF Tutorial');
+// $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
 
-  <style type="text/css">
-    table {
-      border-collapse: collapse;
-    }
-    .datatr:hover {
-      background-color: #cbffc0;
-    }
-    td {
-      border: 1px solid #5ea3ff;
-      text-align: center;
-    }
-    th.rotate {
-      height: 140px;
-      white-space: nowrap;
-    }
-    th.rotate > div {
-      transform: 
-        translate(18px, 51px)
-        rotate(315deg);
-      width: 30px;
+// set default header data
+// $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 048', PDF_HEADER_STRING);
 
-    }
-    th.rotate > div > span {
-      border-bottom: 1px solid #5ea3ff;
-      padding: 5px 10px;
-    }
-    tr:nth-child(even) {
-      background-color: #edf3fb;
-    }
+// set header and footer fonts
+$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 
-  </style>
+// set default monospaced font
+$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
-  <table class="" style="margin-top: 50px;">
-    <thead>
-      <tr>
-        <th class="rotate"></th>
-        <th style="vertical-align: bottom;"></th>
-        <th style="vertical-align: bottom;"></th>
-        <th class="rotate"><div><span>Adaptability</span></div></th>
-        <th class="rotate"><div><span>Continous Learning</span></div></th>
-        <th class="rotate"><div><span>Communication</span></div></th>
-        <th class="rotate"><div><span>Organizational Awareness</span></div></th>
-        <th class="rotate"><div><span>Creative Thinking</span></div></th>
-        <th class="rotate"><div><span>Networking/Relationship Building</span></div></th>
-        <th class="rotate"><div><span>Conflict Management</span></div></th>
-        <th class="rotate"><div><span>Stewardship of Resources</span></div></th>
-        <th class="rotate"><div><span>Risk Management</span></div></th>
-        <th class="rotate"><div><span>Stress Management</span></div></th>
-        <th class="rotate"><div><span>Influence</span></div></th>
-        <th class="rotate"><div><span>Initiative</span></div></th>
-        <th class="rotate"><div><span>Team Leadership</span></div></th>
-        <th class="rotate"><div><span>Change Leadership</span></div></th>
-        <th class="rotate"><div><span>Client Focus</span></div></th>
-        <th class="rotate"><div><span>Partnering</span></div></th>
-        <th class="rotate"><div><span>Developing Others</span></div></th>
-        <th class="rotate"><div><span>Planning and Organizing</span></div></th>
-        <th class="rotate"><div><span>Decision Making</span></div></th>
-        <th class="rotate"><div><span>Analytical Thinking</span></div></th>
-        <th class="rotate"><div><span>Results Orientation</span></div></th>
-        <th class="rotate"><div><span>Teamwork</span></div></th>
-        <th class="rotate"><div><span>Values and Ethics</span></div></th>
-        <th class="rotate"><div><span>Visioning and Strategic Direction</span></div></th>
-      </tr>
-    </thead>
-    <tbody id="tableBody">
-        <tr id="loading_el">
-          <td colspan="27" style="width: 1087px; text-align: center; font-size: 32px; color: lightgrey; padding: 100px;"><!-- FETCHING DATA... -->
-            <img src="assets/images/loading.gif" style="height: 50px; margin-top: -100px;">
-            <br>
-            <span>Fetching data...</span>
-          </td>
-        </tr>
+// set margins
+$pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT);
+// $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
 
-    </tbody>
-  </table>
-</div>
-<div class="ui bottom attached tab container" data-tab="job_c" style="min-height: 500px;">
-<div class="ui form" style="margin-top: 20px;">
-<div class="fields">
-  <div class="eight wide field">
-    <label>Select Position:</label>
-    <div class="ui fluid search selection dropdown" id="position_drop">
-      <input type="hidden" name="position">
-        <i class="dropdown icon"></i>
-        <div class="default text">
-          Select Position
-        </div>
-      <div class="menu" id="position_drop_menu"></div>
-    </div>
-  </div>
-  <div class="four wide field">
-    <label>Select Function:</label>
-    <div class="ui fluid search selection dropdown" id="function_drop">
-      <input type="hidden" name="position">
-        <i class="dropdown icon"></i>
-        <div class="default text">
-          Select Function
-        </div>
-      <div class="menu" id="function_drop_menu"></div>
-    </div>
-  </div>
-</div>
-  <button class="ui mini button blue" onclick="btn_search()">Search</button>
-</div>
-  <table class="" style="margin-top: 50px;">
-    <thead>
-      <tr>
-        <th class="rotate"></th>
-        <th style="vertical-align: bottom;"></th>
-        <th style="vertical-align: bottom; min-width: 200px;"></th>
-        <th class="rotate"><div><span>Adaptability</span></div></th>
-        <th class="rotate"><div><span>Continous Learning</span></div></th>
-        <th class="rotate"><div><span>Communication</span></div></th>
-        <th class="rotate"><div><span>Organizational Awareness</span></div></th>
-        <th class="rotate"><div><span>Creative Thinking</span></div></th>
-        <th class="rotate"><div><span>Networking/Relationship Building</span></div></th>
-        <th class="rotate"><div><span>Conflict Management</span></div></th>
-        <th class="rotate"><div><span>Stewardship of Resources</span></div></th>
-        <th class="rotate"><div><span>Risk Management</span></div></th>
-        <th class="rotate"><div><span>Stress Management</span></div></th>
-        <th class="rotate"><div><span>Influence</span></div></th>
-        <th class="rotate"><div><span>Initiative</span></div></th>
-        <th class="rotate"><div><span>Team Leadership</span></div></th>
-        <th class="rotate"><div><span>Change Leadership</span></div></th>
-        <th class="rotate"><div><span>Client Focus</span></div></th>
-        <th class="rotate"><div><span>Partnering</span></div></th>
-        <th class="rotate"><div><span>Developing Others</span></div></th>
-        <th class="rotate"><div><span>Planning and Organizing</span></div></th>
-        <th class="rotate"><div><span>Decision Making</span></div></th>
-        <th class="rotate"><div><span>Analytical Thinking</span></div></th>
-        <th class="rotate"><div><span>Results Orientation</span></div></th>
-        <th class="rotate"><div><span>Teamwork</span></div></th>
-        <th class="rotate"><div><span>Values and Ethics</span></div></th>
-        <th class="rotate"><div><span>Visioning and Strategic Direction</span></div></th>
-      </tr>
-    </thead>
-    <tbody id="tableBody1">
-      <tr>
-        <td colspan="27" style="padding: 20px; font-weight: bold; color: grey;">Please make a search.</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-<?php require_once "footer.php";?>
+// $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+// $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+$pdf->SetPrintHeader(false);
+$pdf->SetPrintFooter(false);
+// $pdf->SetFooterMargin(1);
+// set auto page breaks
+$pdf->SetAutoPageBreak(TRUE, 1);
+
+// set image scale factor
+$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+// set some language-dependent strings (optional)
+if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+	require_once(dirname(__FILE__).'/lang/eng.php');
+	$pdf->setLanguageArray($l);
+}
+
+// ---------------------------------------------------------
+
+// set font
+$pdf->SetFont('helvetica', 'B', 12);
+
+// add a page
+$pdf->AddPage();
+
+$pdf->Write(0, 'Appointment Processing Checklist', '', 0, 'C', true, 0, false, false, 0);
+$pdf->Write(0, 'CSCFO-Negros Oriental', '', 0, 'C', true, 0, false, false, 0);
+
+$pdf->SetFont('helvetica', '', 8);
+
+// -----------------------------------------------------------------------------
+$position_title="";
+$tbl = <<<EOD
+<table cellspacing="0" cellpadding="2" border="1">
+    <tr>
+        <td width="10%"><b>Name</b></td>
+        <td width="60%" colspan="2"></td>
+        <td width="22%"><b>Same name in PDS</b></td>
+        <td width="4%" align="center">Yes</td>
+        <td width="4%" align="center">No</td>
+    </tr>
+    <tr>
+        <td width="15%" colspan="2"><b>Position Title</b></td>
+        <td width="55%">$position_title</td>
+        <td width="22%"><b>SG/Step</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+    </tr>
+    <tr>
+        <td width="10%"><b>Agency</b></td>
+        <td width="60%" colspan="2"></td>
+        <td width="22%"><b>Compensation</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><i><b>CRITERIA</b></i></td>
+        <td width="4%" align="center"><b>YES</b></td>
+        <td width="4%" align="center"><b>NO</b></td>
+        <td width="22%" align="center"><b><i>REMARKS</i></b></td>
+    </tr>
+    <tr>
+        <td width="15%" colspan="2"><b>QS: 1. Education</b></td>
+        <td width="55%"><small>(specify course, date graduated)</small></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="15%" colspan="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. Experience</b></td>
+        <td width="55%"></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="15%" colspan="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. Training</b></td>
+        <td width="55%"></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="15%" colspan="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4. Elig.</b></td>
+        <td width="55%"><small>If practice of profession, is the licese valid?</small></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4a. If  practice of profession -valid license;drivers-Cert allowed</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>5.&nbsp;&nbsp;&nbsp;&nbsp; -Other reqts: Residency (LGU Dept Heads)</b> <cite>Localization w/n 6 mos residency</cite></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>5a. Check if info in PUBLICATION is correct (plantilla item#, QS, etc)</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="100%"><i><b>COMMON REQUIREMENTS</b></i></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>6. CS Form in triplicate</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>7. Employment Status</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>8. Nature of Appointment</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>9. Signature of Appointing Authority (all original)</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>10. Date of Signing</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>11. Certification by HRMO: in order, Publ./Posting of Vacany</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>12. Certification by PSB Chair at back of apntmt (or Copy of PSB mins.)</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>13. Same Item No, and Position Title in POP?</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>14. PDS.</b> <small>(new form) completely filled out, w/ signature of swearing officer, date subscribed , no blank (write n/a)</small></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>14a. PDF-QS for position, not of appointee; Actual duties/fuunctions</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>15. If accredited, submitted within 30 days of succeeding month?</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>16. If regulated, submitted within 30 days from issuance?</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="100%"><i><b>ADDITIONAL REQUIREMENTS</b></i></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>17. If w/ erasures - initialed & w/ Cert of Erasures/Alterations by AA</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>18. If w/ decided admin/crim case-CTC of decision from deciding body</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%" align="center"><small>As declared in the appointee's PDS</small></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>19. If with discrepancy in personal info: CSC Reso or Order</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%" align="center"><small></small></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>19a. If promotion & employee been found guilty of admin case & suspension or fine was imposed: Cert by appointing autho as to when decisions became final & when penalty was served</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%" align="center"><small></small></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>20. COMELEC ban: COMELEC exemption</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%" align="center"><small></small></td>
+    </tr>
+    <tr>
+        <td width="10%" rowspan="4"><b>21. LGU:</b></td>
+        <td width="60%"><b>Cert by AA-aptmt issued in accordance w/ limitns in RA 7160</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="60%"><b>Cert by Accountant-funds available</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="60%"><b>Dept Head: Sanggunian Reso-concurrence of majority; or Cert by Sasnggunian Sec/HRMO confirm'g non-action by Sanggunian w/n 15 days from date of submission</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="60%"><b>If creation/recals & w/ appropriation: Sang.ordinance-subj to review by SP if component cities/muni; by DBM if province</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>22. Appointment involving change of status from temp to perm under cats.in MC 11s1996:CAT.I TESDA cert; CAT.II-Perf rating 2 periods;CAT.IV-license</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%" align="center"><small></small></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>23. Non-Disciplinary Demotion: Cert by AA that demotion is not a result of an admin case PLUS written consent of appointee</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%" align="center"><small></small></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>24. Oath of Office (Gov't ID, ID# & Date issued) & Assumption</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%" align="center"><small></small></td>
+    </tr>
+    <tr>
+        <td width="100%"><i><b>OTHER REQUIREMENTS</b></i></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>Temporary/Provisional aptmt: Cert by AA vouching absence of eligible</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%" align="center"><small></small></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>Reclassification: NOSCA approved by DBM/Memo Order by GCG</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%" align="center"><small></small></td>
+    </tr>
+    <tr>
+        <td width="10%" rowspan="4"><b>Nature</b></td>
+        <td width="60%"><cite>If Orig. first-time perm from noncareer, reap frm temp to perm, reemp under perm, first time to closed career, provisional, cat.3:</cite> <b>"The appointee shall undergo probationary period..."</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="60%"><b>If Promotion, VS rating for 1 rating period in present position</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="60%"><b>If Promotion, not more than 3 SGs higher - JUSTIFICATION</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="60%"><b>If Transfer, copy of previous appointment</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%"></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>Plantilla info: name of replaced employee, Plantilla Item# and Page</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%" align="center"><small></small></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>Issued after election up to June 30 by outgoing elective AA</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%" align="center"><small></small></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>Lost in the last election, except Brgy Election</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%" align="center"><small></small></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>Citizenship (if dual, should renounce & not use foreign passport, unless acquired by birth)</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%" align="center"><small></small></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>Appointment received by the appointee - Name, Signature, Date</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%" align="center"><small></small></td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>S-card completely filled out back to back? Not multiple s-card?</b></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%" align="center"><small></small></td>
+    </tr>
+</table>
+<table cellpadding="2">
+    <tr>
+        <td width="70%" colspan="3"></td>
+        <td width="4%"></td>
+        <td width="4%"></td>
+        <td width="22%" align="center"><small></small></td>
+    </tr>
+    <tr>
+        <td width="10%" border="1"></td>
+        <td width="60%"><b>Approved/Validated</b></td>
+        <td width="4%" border="1"></td>
+        <td width="26%" colspan="2"><b>Disapproved/Invalidated</b></td>
+    </tr>
+    <tr>
+        <td width="70%"><cite>Created & used on December 8,2019</cite></td>
+        <td width="30%" borderbottom="1" colspan="3"><b>Reasons:</b>_________________________________</td>
+    </tr>
+    <tr>
+        <td width="70%" border="1"><b>Evaluated by:<br><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PHOEBE P. TUPAS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<cite>Supervising HR Specialist</cite>
+        </b></td>
+        <td width="30%" border="1">
+        <b>Approved/Signed by:<br><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTY. GINA A. CRUCIO &nbsp;&nbsp;&nbsp;&nbsp;Date:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<cite>Director II</cite>
+        </b></td>
+    </tr>
+</table>
+EOD;
+
+$pdf->writeHTML($tbl, true, false, false, false, '');
+
+// $pdf->writeHTML($tbl, true, false, false, false, '');
+// -----------------------------------------------------------------------------
+
+//Close and output PDF document
+$pdf->Output('Appointment_Checklist.pdf', 'I');
+
+//============================================================+
+// END OF FILE
+//============================================================+

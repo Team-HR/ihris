@@ -3,6 +3,8 @@
 // Include the main TCPDF library (search for installation path).
 require_once('TCPDF-master/tcpdf_import.php');
 require_once('_connect.db.php');
+require 'libs/Department.php';
+$deparment = new Department();
 
   $rspvac_id = $_GET["rspvac_id"];
 
@@ -175,7 +177,7 @@ $pdf->SetFont('times', '', 9);
 
 // ------------------------------------------------------------------------------
 $pageWidth = $pdf->getPageWidth();
-
+$dept = $deparment->getDepartment($office);
 $education_list = listdis($data["education"]);
 $training_list = listdis($data["training"]);
 $experience_list = listdis($data["experience"]);
@@ -189,7 +191,7 @@ $tbl = <<< EOD
         <td width="9%"><b>CSC ITEM NO:</b></td>
         <td width="11%">$itemNo</td>
         <td width="5%"><b>OFFICE:</b></td>
-        <td width="25%">$office</td>
+        <td width="25%">$dept</td>
       </tr>
       <tr>
         <td><b>EDUCATION:</b></td>
@@ -240,6 +242,8 @@ function listdis($arr){
   return $list;
 }
 
+
+
 function createList($arr,$bool = true){
   $list = "";
   if ($arr) {
@@ -259,7 +263,7 @@ function createList($arr,$bool = true){
         } else {
           $dates = "(".formatDate($value[3]) ." - ".formatDate($value[4]).")";
         }
-        $list .= "[".($key+1).".] $value[2] <i>as</i>  <span style='color:#025214; font-weight: bold;'>$value[0]</span> $dates ";
+        $list .= "[".($key+1).".] $value[2] <i>as</i>  <span style=\"color:#025214; font-weight: bold;\">$value[0]</span> $dates ";
 
       }
     }

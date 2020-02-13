@@ -1,102 +1,99 @@
 <?php
-// require_once 'libs/Competency.php';
-require_once '_connect.db.php';
-require_once 'libs/NameFormatter.php';
+//============================================================+
+// File name   : example_014.php
+// Begin       : 2008-03-04
+// Last Update : 2009-09-09
+// 
+// Description : Example 014 for TCPDF class
+//               Javascript Form and user rights (only works on Adobe Acrobat)
+// 
+// Author: Nicola Asuni
+// 
+// (c) Copyright:
+//               Nicola Asuni
+//               Tecnick.com s.r.l.
+//               Via Della Pace, 11
+//               09044 Quartucciu (CA)
+//               ITALY
+//               www.tecnick.com
+//               info@tecnick.com
+//============================================================+
+
+/**
+ * Creates an example PDF TEST document using TCPDF
+ * @package com.tecnick.tcpdf
+ * @abstract TCPDF - Example: Javascript Form and user rights (only works on Adobe Acrobat)
+ * @author Nicola Asuni
+ * @copyright 2004-2009 Nicola Asuni - Tecnick.com S.r.l (www.tecnick.com) Via Della Pace, 11 - 09044 - Quartucciu (CA) - ITALY - www.tecnick.com - info@tecnick.com
+ * @link http://tcpdf.org
+ * @license http://www.gnu.org/copyleft/lesser.html LGPL
+ * @since 2008-03-04
+ */
+
+require_once('TCPDF-master/tcpdf.php');
 
 
+// create new PDF document
+$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false); 
 
-$types = array(
-'Adaptability',
-'ContinousLearning',
-'Communication',
-'OrganizationalAwareness',
-'CreativeThinking',
-'NetworkingRelationshipBuilding',
-'ConflictManagement',
-'StewardshipofResources',
-'RiskManagement',
-'StressManagement',
-'Influence',
-'Initiative',
-'TeamLeadership',
-'ChangeLeadership',
-'ClientFocus',
-'Partnering',
-'DevelopingOthers',
-'PlanningandOrganizing',
-'DecisionMaking',
-'AnalyticalThinking',
-'ResultsOrientation',
-'Teamwork',
-'ValuesandEthics',
-'VisioningandStrategicDirection'
-);
+// set document information
+$pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor('Nicola Asuni');
+$pdf->SetTitle('TCPDF Example 014');
+$pdf->SetSubject('TCPDF Tutorial');
+$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
 
+// set default header data
+$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
 
+// set header and footer fonts
+$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 
+// set default monospaced font
+$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
-$competencies = array();
+//set margins
+$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
-// print_r($competencies);
+//set auto page breaks
+$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 
+//set image scale factor
+$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO); 
 
-foreach ($types as $type) {
-  $levels = array(
-      1 => array(),
-      2 => array(),
-      3 => array(),
-      4 => array(),
-      5 => array()
-    );
+//set some language-dependent strings
+$pdf->setLanguageArray("FR"); 
 
-  foreach ($levels as $level => $ids) {
+// ---------------------------------------------------------
 
-    
-    // $sql = "SELECT `employees_id`,`firstName`,`lastName`,`middleName`,`extName` FROM `competency` LEFT JOIN `employees` ON `competency`.`employees_id` = `employees`.`employees_id` WHERE `$competency` = '$level'";
-    $sql = "SELECT `competency`.`employees_id`,`employees`.`firstName`,`employees`.`lastName`,`employees`.`middleName`,`employees`.`extName` FROM `competency` LEFT JOIN `employees` ON `competency`.`employees_id` = `employees`.`employees_id` WHERE `competency`.`$type` = '$level' ORDER BY `employees`.`lastName` ASC";
+// set font
+$pdf->SetFont('helvetica', '', 10);
 
-    //     SELECT `competency`.`employees_id`,`employees`.`firstName`,`employees`.`lastName`,`employees`.`middleName`,`employees`.`extName` FROM `competency` LEFT JOIN `employees` ON `competency`.`employees_id` = `employees`.`employees_id` WHERE `competency`.`Adaptability` = '2'  
-    // ORDER BY `employees`.`lastName` ASC
-    
-    $result = $mysqli->query($sql);
-      while ($row = $result->fetch_assoc()) {
-        $employees_id = $row["employees_id"];
-        array_push($levels[$level], array('employees_id'=>$employees_id,'fullName'=>(new NameFormatter($row["firstName"],$row["lastName"],$row["middleName"],$row["extName"]))->getFullName()));
-    }
-    
-  }
+// add a page
+$pdf->AddPage();
+
+/*
+It is possible to create text fields, combo boxes, check boxes and buttons.
+Fields are created at the current position and are given a name.
+This name allows to manipulate them via JavaScript in order to perform some validation for instance.
+*/
+
+// set default form properties
+$pdf->setFormDefaultProp(array('lineWidth'=>1, 'borderStyle'=>'solid', 'fillColor'=>array(255, 255, 200), 'strokeColor'=>array(255, 128, 128)));
 
 
-  $competencies[$type] = $levels;
-
-}
+$pdf->CheckBox('newsletter', 5, true, array(), array(), 'OK');
 
 
-// return $competencies;
+// ---------------------------------------------------------
 
-// var_dump($competencies['Adaptability'][3]);
+//Close and output PDF document
+$pdf->Output('example_014.pdf', 'I');
 
-
-// foreach ($competencies as $competency => $lvls) {
-//   echo "COMPETENCY: $competency";
-//   echo "<br>";
-
-// foreach ($lvls as $key => $value) {
-//   echo "LEVEL: $key COUNT: ".count($value);
-//   echo "<br>";
-//   foreach ($value as $employees) {
-//     // foreach ($employees as $id => $val) {
-//     //     echo $id."  =>  ".$val;
-//     //     echo "<br>";
-//     //   }  
-//     print_r($employees);
-//     echo "<br>";
-//   }
-  
-// }
-
-
-
-// }
-
+//============================================================+
+// END OF FILE                                                 
+//============================================================+
 ?>

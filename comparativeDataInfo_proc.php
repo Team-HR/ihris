@@ -68,6 +68,9 @@ $counter = 1;
 ?>
 <tr style="vertical-align: top;">
 	<td><?=$counter++;?></td>
+	<td>
+		<a href="checklist.php?rspcomp_id=<?=$rspcomp_id?>" class="ui button basic icon"><i class="icon list ol <?=(check_if_exist($mysqli,$rspcomp_id)?'green':'red')?> "></i></a>
+	</td>
 	<td><?=$name;?></td>
 	<td><?=$age?></td>
 	<td><?=$gender?></td>
@@ -159,5 +162,19 @@ function formatDate($numeric_date){
 	 	$date = new DateTime($numeric_date);
 	 	$strDate = $date->format('M d, Y');
 		return $strDate;
+}
+
+function check_if_exist($mysqli,$rspcomp_id){
+	// check if rspcomp_id has already a checklist
+	$exist = false;
+	$sql = "SELECT * FROM `rsp_comp_checklist` WHERE `rspcomp_id` = $rspcomp_id";
+	$result = $mysqli->query($sql);
+	$row = $result->fetch_assoc();
+	if ($result->num_rows>0) {
+	  $exist = true;
+	}
+
+	return $exist;
+
 }
 ?>
