@@ -10,6 +10,7 @@ $result = $mysqli->query($sql);
 $row = $result->fetch_assoc();
 
 $name = $row['name'];
+$sg = $row['sg'];
 $positiontitle = $row['positiontitle'];
 $education_cri = $row['education_cri'];
 $experience_cri = $row['experience_cri'];
@@ -47,7 +48,7 @@ if ($result->num_rows>0) {
 <style type="text/css">
   input {
     width: 100%;
-    border: none;
+    border: 1px solid lightgrey;
   }
 
   tr,td {
@@ -107,11 +108,14 @@ if ($result->num_rows>0) {
 
     });
 
+    $('.remarksCompensation').val(data[44].remarks);
+
   });
 
   function fetchData(){
 
     data = <?=json_encode($data)?>;
+    console.log(data);
     return data;
   }
 
@@ -122,33 +126,39 @@ if ($result->num_rows>0) {
       return '';
   }
 
-  function saveData(){
+  function saveData(reload){
     rows = [];
     $.each($('.drow'), function(index, val) {
       value0 = $('.chb'+index+':checked').val();
       value1 = "";
       if (index != 0) {
-        value1 = $('.remarks'+index).val(); 
+        value1 = $('.remarks'+index).val().replace('"', '&quot;');
       }
-      // if (typeof value0 == 'undefined') {
-      //   value0 = 3;
-      // }
       arr = {'polarity':value0,'remarks':value1};
       rows.push(arr);
     });
 
+      val = $('.remarksCompensation').val();
+      arr = {'polarity':"undefined",'remarks':val};
+      rows.push(arr);
 
+      console.log(rows);
     $.post('checklist_proc.php', {saveData: true, data: rows, rspcomp_id:<?=$rspcomp_id?>}, function(data, textStatus, xhr) {
       arr = $.parseJSON(data);
-      location. reload();
+      if (reload) {
+        location. reload(); 
+      } else {
+        window.open('checklist_print.php?rspcomp_id=<?=$rspcomp_id?>','_blank');
+      }
+      
     });
     
 
 
   }
 </script>
-<button class="ui button green" onclick="saveData()"><i class="icon save"></i> Save</button>
-<a  id="printBTN" class="ui button green disabled" target="_blank" href="checklist_print.php?rspcomp_id=<?=$rspcomp_id?>"><i class="icon print"></i> Print</a>
+<button class="ui button green" onclick="saveData(true)"><i class="icon save"></i> Save</button>
+<a  id="printBTN" class="ui button green disabled" target="_blank" onclick="saveData(false)"><i class="icon print"></i> Save & Print</a>
 <table class="ui table very small compact" width="100%">
   <thead>
     <tr>
@@ -169,13 +179,15 @@ if ($result->num_rows>0) {
         <td width="15%" colspan="2">Position Title</td>
         <td width="55%" colspan="3  "><?=strtoupper($positiontitle)?></td>
         <td width="8%">SG/Step</td>
-        <td width="22%" colspan="2"></td>
+        <td width="22%" colspan="2"><?=$sg?></td>
     </tr>
     <tr>
         <td width="10%">Agency</td>
-        <td width="60%" colspan="4"></td>
+        <td width="60%" colspan="4"> LGU BAYAWAN CITY</td>
         <td width="8%">Compensation</td>
-        <td width="22%" colspan="2"></td>
+        <td width="22%" colspan="2">
+          <input style="width:100%" type="text" class="remarksCompensation" value="">
+        </td>
     </tr>
     <tr>
         <th width="70%" colspan="5"><i>CRITERIA</i></th>

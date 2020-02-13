@@ -51,6 +51,7 @@ $result = $mysqli->query($sql);
 $row = $result->fetch_assoc();
 
 $name = $row['name'];
+$sg = $row['sg'];
 $positiontitle = $row['positiontitle'];
 $education_cri = $row['education_cri'];
 $experience_cri = $row['experience_cri'];
@@ -75,7 +76,7 @@ foreach ($data as $key => $value) {
     $file_title ="";      
     $file_title = $positiontitle." - ";
     $position_title = $positiontitle;
-    $sg = 'sg';
+    
 
     $education = lister(unserialize($education_cri));
     $training = lister(unserialize($training_cri));
@@ -136,24 +137,22 @@ $tbl = <<<EOD
 <table cellspacing="0" cellpadding="2" border="1">
     <tr>
         <td width="10%"><b>Name</b></td>
-        <td width="60%" colspan="2">$name</td>
-        <td editable width="22%"><b>Same name in PDS</b></td>
-        <td width="4%" align="center">{$func(checker("1",(isset($data[0]['polarity'])?$data[0]['polarity']:'none')))}</td>
-        <td width="4%" align="center">{$func(checker("0",(isset($data[0]['polarity'])?$data[0]['polarity']:'none')))}</td>
+        <td width="60%" colspan="2"> {$func(strtoupper($name))}</td>
+        <td editable width="16%"><b>Same name in PDS</b></td>
+        <td width="7%" align="center">{$func(checker("1",(isset($data[0]['polarity'])?$data[0]['polarity']:'none')))} YES</td>
+        <td width="7%" align="center">{$func(checker("0",(isset($data[0]['polarity'])?$data[0]['polarity']:'none')))} NO</td>
     </tr>
     <tr>
         <td width="15%" colspan="2"><b>Position Title</b></td>
-        <td width="55%" colspan="2">$position_title</td>
-        <td width="22%"><b>SG/Step</b></td>
-        <td width="4%" class=""></td>
-        <td width="4%"></td>
+        <td width="55%" colspan="2"> {$func(strtoupper($position_title))}</td>
+        <td width="16%"><b>SG/Step</b></td>
+        <td width="14%" colspan="2" align="center"> $sg</td>
     </tr>
     <tr>
         <td width="10%"><b>Agency</b></td>
-        <td width="60%" colspan="2">LGU BAYAWAN CITY</td>
-        <td width="22%"><b>Compensation</b></td>
-        <td width="4%"></td>
-        <td width="4%"></td>
+        <td width="60%" colspan="2"> LGU BAYAWAN CITY</td>
+        <td width="16%"><b>Compensation</b></td>
+        <td width="14%" colspan="2" align="center">{$func((isset($data[44]['remarks'])?$data[44]['remarks']:''))}</td>
     </tr>
     <tr>
         <td width="70%" colspan="3"><i><b>CRITERIA</b></i></td>
