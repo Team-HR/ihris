@@ -62,7 +62,6 @@ if (isset($_POST["load"])) {
     $total  = $row['totalPoints'];
 
 
-
     $compTotal[0] += $comp0;
     $compTotal[1] += $comp1;
     $compTotal[2] += $comp2;
@@ -143,6 +142,79 @@ if (isset($_POST["load"])) {
 
  <?php
 
+}
+
+elseif (isset($_POST["get_average_data"])) {
+  // wip get average data
+  $filters = $_POST["filters"];
+  $sql = construct_sql($filters);
+  $result = $mysqli->query($sql);
+  $compTotal = array();
+  for ($i=0; $i < 24 ; $i++) {
+    $compTotal[] = 0;
+  }
+   $num_rows = $result->num_rows;
+ while ($row = $result->fetch_assoc()) {
+    $datetime = $row['datetime'];
+    $comp0 = $row['Adaptability'];
+    $comp1 = $row['ContinousLearning'];
+    $comp2 = $row['Communication'];
+    $comp3 = $row['OrganizationalAwareness'];
+    $comp4 = $row['CreativeThinking'];
+    $comp5 = $row['NetworkingRelationshipBuilding'];
+    $comp6 = $row['ConflictManagement'];
+    $comp7 = $row['StewardshipofResources'];
+    $comp8 = $row['RiskManagement'];
+    $comp9 = $row['StressManagement'];
+    $comp10 = $row['Influence'];
+    $comp11 = $row['Initiative'];
+    $comp12 = $row['TeamLeadership'];
+    $comp13 = $row['ChangeLeadership'];
+    $comp14 = $row['ClientFocus'];
+    $comp15 = $row['Partnering'];
+    $comp16 = $row['DevelopingOthers'];
+    $comp17 = $row['PlanningandOrganizing'];
+    $comp18 = $row['DecisionMaking'];
+    $comp19 = $row['AnalyticalThinking'];
+    $comp20 = $row['ResultsOrientation'];
+    $comp21 = $row['Teamwork'];
+    $comp22 = $row['ValuesandEthics'];
+    $comp23 = $row['VisioningandStrategicDirection'];
+    $total  = $row['totalPoints'];
+
+
+    $compTotal[0] += $comp0;
+    $compTotal[1] += $comp1;
+    $compTotal[2] += $comp2;
+    $compTotal[3] += $comp3;
+    $compTotal[4] += $comp4;
+    $compTotal[5] += $comp5;
+    $compTotal[6] += $comp6;
+    $compTotal[7] += $comp7;
+    $compTotal[8] += $comp8;
+    $compTotal[9] += $comp9;
+    $compTotal[10] += $comp10;
+    $compTotal[11] += $comp11;
+    $compTotal[12] += $comp12;
+    $compTotal[13] += $comp13;
+    $compTotal[14] += $comp14;
+    $compTotal[15] += $comp15;
+    $compTotal[16] += $comp16;
+    $compTotal[17] += $comp17;
+    $compTotal[18] += $comp18;
+    $compTotal[19] += $comp19;
+    $compTotal[20] += $comp20;
+    $compTotal[21] += $comp21;
+    $compTotal[22] += $comp22;
+    $compTotal[23] += $comp23;
+}
+  $data = array();
+
+  for ($i=0; $i < 24 ; $i++) {
+    $data[] = round($compTotal[$i]/$num_rows);
+  }
+
+  echo json_encode($data);
 }
 
 elseif (isset($_POST['load_positions'])) {

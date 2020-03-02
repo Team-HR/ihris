@@ -2,7 +2,8 @@
 <script type="text/javascript">
 
   var dept_filters = "";
-
+  var overall_chart_data = [];
+  var overall_chart;
   $(document).ready(function() {
     var loading = $('#loading_el');
     $('.popup').popup();
@@ -18,6 +19,7 @@
         });
       }
     });
+
     $("#position_drop_menu").load('personnelCompetenciesReport_proc.php', {
       load_positions: true,
     });
@@ -47,13 +49,88 @@
     });
 
     // $(load);
+    
     $(load(dept_filters));
 
-
-
-
+     overall_chart = $("#overall_chart");
+     var config = {
+                        type: 'line',
+                        data: {
+                            labels: [
+                              'Adaptability',
+                              'ContinousLearning',
+                              'Communication',
+                              'OrganizationalAwareness',
+                              'CreativeThinking',
+                              'NetworkingRelationshipBuilding',
+                              'ConflictManagement',
+                              'StewardshipofResources',
+                              'RiskManagement',
+                              'StressManagement',
+                              'Influence',
+                              'Initiative',
+                              'TeamLeadership',
+                              'ChangeLeadership',
+                              'ClientFocus',
+                              'Partnering',
+                              'DevelopingOthers',
+                              'PlanningandOrganizing',
+                              'DecisionMaking',
+                              'AnalyticalThinking',
+                              'ResultsOrientation',
+                              'Teamwork',
+                              'ValuesandEthics',
+                              'VisioningandStrategicDirection'
+                            ],
+                            datasets: [{
+                                label: 'Level',
+                                data: overall_chart_data,
+                                backgroundColor: [
+                                  '#055bc821',
+                                ],
+                                borderColor: [
+                                  '#055bc8',
+                                ],
+                                fill: false,
+                                borderWidth: 1,
+                                lineTension: 0,
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            title: {
+                                    display: false,
+                                    text: "Overall "
+                            },
+                            legend: {
+                                    display: true,  
+                            },
+                            scales: {
+                                yAxes: [{
+                                    scaleLabel: {
+                                        display: false,
+                                        labelString: 'Level'
+                                    },
+                                    ticks: {
+                                        beginAtZero:false,
+                                        stepSize: 1
+                                    }
+                                }],
+                                xAxes: [{
+                                display: true,
+                                ticks:{
+                                  autoSkip: false
+                                }
+                              }],
+                            },
+    }
+};
+    
+    overallChart = new Chart(overall_chart, config);
 
   });
+
+
 
   function getNumOfStatus(filters){
     $.post('personnelCompetenciesReport_proc.php', {
@@ -66,17 +143,6 @@
   }
 
   function load(filters){
-    // console.log("load");
-    // $("#tableBody").load('personnelCompetenciesReport_proc.php',{
-    //   load: true,
-    // },
-    //   function(){
-    //     // $("#num_rows").load('personnelCompetenciesReport_proc.php',{
-    //     //   get_rows: true,
-    //     // }
-    // });
-
-
       $.post('personnelCompetenciesReport_proc.php', {
         load: true,
         filters: filters,
@@ -85,6 +151,17 @@
         $("#tableBody").html(data);
         $(getNumOfStatus(filters));
         $("#clearFilter").removeClass('loading');
+
+        $.post('personnelCompetenciesReport_proc.php', {
+            get_average_data: true,
+            filters: filters
+          }, function(data, textStatus, xhr) {
+            /*optional stuff to do after success */
+            overall_chart_data = data;
+            console.log(overall_chart_data);
+            overallChart.update();
+          });
+
       });
 
 
@@ -137,20 +214,28 @@
 <div class="ui container" style="background-color: white; width: 1300px;">
 <div class="ui segment">
 <div class="ui top attached tabular menu" id="tabs">
-  <a class="item active" data-tab="reportindepth">In-Depth Survey Report</a>
-  <a class="item" data-tab="report">Survey Report</a>
+  <a class="item" data-tab="reportindepth">In-Depth Survey Report</a>
+  <a class="item active" data-tab="report">Survey Report</a>
   <a class="item" data-tab="job_c">Job Competecy</a>
 </div>
-<div class="ui bottom attached tab active" data-tab="reportindepth">
+<div class="ui bottom attached tab" data-tab="reportindepth">
   <?php
     require_once 'personnelCompetenciesReport_indepth_report.php';
   ?>
 </div>
-<div class="ui bottom attached tab" data-tab="report">
+<div class="ui bottom attached tab active" data-tab="report">
   <div id="snum_rows" class="ui basic segment" style="font-size: 24px;">
     <i class="icon info blue tiny circle"></i><span id="num_rows" style="font-size: 13px; color: grey; font-style: italic;"><div class="ui active mini inline loader"></div> Loading...</span>
   </div>
 <!-- start filter -->
+
+
+<!-- <h1>charthere!</h1> -->
+<!-- <div class="ui grid center aligned">
+  <div class="eight wide column"> -->
+    <canvas id="overall_chart"></canvas>
+  <!-- </div>
+</div> -->
 
 <div class="ui multiple dropdown" id="mulitipleFilters" style="margin-left: 20px;">
   <input type="hidden" name="filters">
@@ -387,4 +472,5 @@
 </div>
 </div>
 </div>
+
 <?php require_once "footer.php";?>
