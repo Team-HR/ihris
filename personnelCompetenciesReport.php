@@ -2,8 +2,7 @@
 <script type="text/javascript">
 
   var dept_filters = "";
-  var overall_chart_data = [];
-  var overall_chart;
+
   $(document).ready(function() {
     var loading = $('#loading_el');
     $('.popup').popup();
@@ -52,44 +51,36 @@
     
     $(load(dept_filters));
 
-     overall_chart = $("#overall_chart");
-     var config = {
-                        type: 'line',
+     
+
+  });
+
+  function createChart(overall_chart_data){
+
+    var overall_chart_data_label = [];
+    var overall_chart_data_data = [];
+    var overall_chart = $("#overall_chart");
+    var bgColor = [];
+
+    $.each(overall_chart_data, function(index, val) {
+       overall_chart_data_label.push(val.competency.split("_").join(" "));
+       overall_chart_data_data.push(val.value);
+    });
+
+      for (var i = 24 - 1; i >= 0; i--) {
+        bgColor.push('#055bc8');
+      }
+
+      var config = {
+                        type: 'horizontalBar',
                         data: {
-                            labels: [
-                              'Adaptability',
-                              'ContinousLearning',
-                              'Communication',
-                              'OrganizationalAwareness',
-                              'CreativeThinking',
-                              'NetworkingRelationshipBuilding',
-                              'ConflictManagement',
-                              'StewardshipofResources',
-                              'RiskManagement',
-                              'StressManagement',
-                              'Influence',
-                              'Initiative',
-                              'TeamLeadership',
-                              'ChangeLeadership',
-                              'ClientFocus',
-                              'Partnering',
-                              'DevelopingOthers',
-                              'PlanningandOrganizing',
-                              'DecisionMaking',
-                              'AnalyticalThinking',
-                              'ResultsOrientation',
-                              'Teamwork',
-                              'ValuesandEthics',
-                              'VisioningandStrategicDirection'
-                            ],
+                            labels: overall_chart_data_label,
                             datasets: [{
                                 label: 'Level',
-                                data: overall_chart_data,
-                                backgroundColor: [
-                                  '#055bc821',
-                                ],
+                                data: overall_chart_data_data,
+                                backgroundColor: bgColor,
                                 borderColor: [
-                                  '#055bc8',
+                                  // '#055bc8'
                                 ],
                                 fill: false,
                                 borderWidth: 1,
@@ -103,7 +94,7 @@
                                     text: "Overall "
                             },
                             legend: {
-                                    display: true,  
+                                    display: false,  
                             },
                             scales: {
                                 yAxes: [{
@@ -112,25 +103,26 @@
                                         labelString: 'Level'
                                     },
                                     ticks: {
-                                        beginAtZero:false,
-                                        stepSize: 1
+                                        fontSize:12,
+                                        beginAtZero: true,
+                                        stepSize:1
                                     }
                                 }],
                                 xAxes: [{
                                 display: true,
                                 ticks:{
-                                  autoSkip: false
+                                  beginAtZero:true,
+                                  stepSize: 1,
+                                  autoSkip: false,
+                                  max: 5
                                 }
                               }],
                             },
     }
 };
     
-    overallChart = new Chart(overall_chart, config);
-
-  });
-
-
+    var overallChart = new Chart(overall_chart, config);
+  }
 
   function getNumOfStatus(filters){
     $.post('personnelCompetenciesReport_proc.php', {
@@ -156,24 +148,28 @@
             get_average_data: true,
             filters: filters
           }, function(data, textStatus, xhr) {
-            /*optional stuff to do after success */
-            overall_chart_data = data;
-            console.log(overall_chart_data);
-            overallChart.update();
+            /* optional stuff to do after success */
+            var overall_chart_data = [];
+            if (data) {
+              overall_chart_data = jQuery.parseJSON(data);  
+            } else {
+              overall_chart_data = [];
+            }
+            
+            // sorting indexed array start 
+              overall_chart_data.sort(function(a,b){
+                if(a.value > b.value) return -1;
+                if(a.value < b.value) return 1;
+                return 0;
+              });
+            // sorting indexed array end 
+
+            createChart(overall_chart_data);
           });
 
       });
-
-
-    // $("#num_rows").load('personnelCompetenciesReport_proc.php',{
-    //   get_rows: true,
-    // },
-    //   function(){
-    //     // $("#num_rows").load('personnelCompetenciesReport_proc.php',{
-    //     //   get_rows: true,
-    //     // }
-    // });
   }
+
   function btn_search(){
     var position = $("#position_drop").dropdown("get value"),
         functional = $("#function_drop").dropdown("get value");
@@ -227,15 +223,6 @@
   <div id="snum_rows" class="ui basic segment" style="font-size: 24px;">
     <i class="icon info blue tiny circle"></i><span id="num_rows" style="font-size: 13px; color: grey; font-style: italic;"><div class="ui active mini inline loader"></div> Loading...</span>
   </div>
-<!-- start filter -->
-
-
-<!-- <h1>charthere!</h1> -->
-<!-- <div class="ui grid center aligned">
-  <div class="eight wide column"> -->
-    <canvas id="overall_chart"></canvas>
-  <!-- </div>
-</div> -->
 
 <div class="ui multiple dropdown" id="mulitipleFilters" style="margin-left: 20px;">
   <input type="hidden" name="filters">
@@ -326,6 +313,13 @@
   </div>
 </div>
 <!-- end filter -->
+
+<div class="ui grid center aligned" style="margin-bottom: 100px;">
+  <div class="ten wide column">
+    <canvas id="overall_chart"></canvas>
+  </div>
+</div>
+
 
   <style type="text/css">
     table {
