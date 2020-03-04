@@ -1,6 +1,7 @@
 <?php
 require 'libs/FormatDateTime.php';
 require 'libs/Department.php';
+require 'libs/DateCompactor.php';
 
 class VacantPost
 {
@@ -11,6 +12,9 @@ class VacantPost
 		$this->mysqli = $mysqli;
 	}
 
+
+// START LOAD
+
 	public function load($yr,$file){
 
 	$year = $yr;
@@ -18,20 +22,23 @@ class VacantPost
 
 	if ($year === "all") {
 		$year = 1000;
-		$sql = "SELECT * FROM `rsp_vacant_positions` WHERE year(`dateVacated`) != ? ORDER BY `itemNo` ASC";
+		// $sql = "SELECT * FROM `rsp_vacant_positions` WHERE year(`dateVacated`) != ? ORDER BY `itemNo` ASC";
+		$sql = "SELECT `rsp_vacant_positions`.`rspvac_id`, `positiontitle`, `itemNo`, `sg`, `office`, `dateVacated`, `dateOfInterview`, `education`, `training`, `experience`, `eligibility`, `datetime_added`,`itat0` FROM `rsp_vacant_positions` LEFT JOIN `rsp_indturnarroundtime` ON `rsp_vacant_positions`.`rspvac_id` = `rsp_indturnarroundtime`.`rspvac_id` WHERE year(`dateVacated`) != ? ORDER BY `rsp_indturnarroundtime`.`itat0` DESC";
 	} else {
-		$sql = "SELECT * FROM `rsp_vacant_positions` WHERE year(`dateVacated`) = ? ORDER BY `itemNo` ASC";
+		// $sql = "SELECT * FROM `rsp_vacant_positions` WHERE year(`dateVacated`) = ? ORDER BY `itemNo` ASC";
+		$sql = "SELECT `rsp_vacant_positions`.`rspvac_id`, `positiontitle`, `itemNo`, `sg`, `office`, `dateVacated`, `dateOfInterview`, `education`, `training`, `experience`, `eligibility`, `datetime_added`,`itat0` FROM `rsp_vacant_positions` LEFT JOIN `rsp_indturnarroundtime` ON `rsp_vacant_positions`.`rspvac_id` = `rsp_indturnarroundtime`.`rspvac_id` WHERE year(`dateVacated`) = ? ORDER BY `rsp_indturnarroundtime`.`itat0` DESC";
 	}
 
 	
 	$deparment = new Department();
 	$dateTime = new FormatDateTime();
+	$dateCompactor = new DateCompactor;
 
 	$stmt = $this->mysqli->prepare($sql);
 	$stmt->bind_param("i", $year);
 	$stmt->execute();
 	$stmt->store_result();
-	$stmt->bind_result($rspvac_id,$position,$itemNo,$sg,$office,$dateVacated,$dateOfInterview,$education,$training,$experience,$eligibility,$datetime_added);
+	$stmt->bind_result($rspvac_id,$position,$itemNo,$sg,$office,$dateVacated,$dateOfInterview,$education,$training,$experience,$eligibility,$datetime_added,$itat0);
 	$counter = 1;
 	if ($stmt->num_rows === 0) {
 
@@ -49,7 +56,7 @@ class VacantPost
 			<tr>
 		<td class="center aligned">'.$counter++.'</td>
 		<td class="center aligned">
-			<a class="ui mini icon basic button" title="Go to" href="'.$file.'?rspvac_id='.$rspvac_id.'"><i class="open folder blue icon"></i></a>
+			<a class="ui mini icon basic button" title="Go to" href="'.$file.'?rspvac_id='.$rspvac_id.'"><i class="open folder'.($itat0?' green':' blue').' icon"></i></a>
 		</td>
 		<td>'.$position.'</td>
 		<td class="center aligned" style="white-space: nowrap;">';
@@ -86,6 +93,7 @@ class VacantPost
 			}
 	
 		$view .= '</td>
+		<td>'.(unserialize($itat0)?$dateCompactor->compactDates(unserialize($itat0)):'---').'</td>
 		<td class="center aligned" style="width: 50px;">
 
 		<div class="ui mini basic icon buttons" >
@@ -101,6 +109,11 @@ class VacantPost
 		$stmt->close();
 		return $view;
 	}
+
+
+// END LOAD
+
+
 
 	public function addNew($data0,$data1){
 		$data0 = $data0;
