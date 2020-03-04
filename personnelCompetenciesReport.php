@@ -2,6 +2,7 @@
 <script type="text/javascript">
 
   var dept_filters = "";
+  var overallChart;
 
   $(document).ready(function() {
     var loading = $('#loading_el');
@@ -18,6 +19,7 @@
         });
       }
     });
+
     $("#position_drop_menu").load('personnelCompetenciesReport_proc.php', {
       load_positions: true,
     });
@@ -47,13 +49,81 @@
     });
 
     // $(load);
+    
     $(load(dept_filters));
 
-
-
-
+     
 
   });
+
+  function createChart(overall_chart_data){
+
+    var overall_chart_data_label = [];
+    var overall_chart_data_data = [];
+    var overall_chart = $("#overall_chart");
+    var bgColor = [];
+    $.each(overall_chart_data, function(index, val) {
+       overall_chart_data_label.push(val.competency.split("_").join(" "));
+       overall_chart_data_data.push(val.value);
+    });
+
+      for (var i = 24 - 1; i >= 0; i--) {
+        bgColor.push('#055bc8');
+      }
+
+      var config = {
+                        type: 'horizontalBar',
+                        data: {
+                            labels: overall_chart_data_label,
+                            datasets: [{
+                                label: 'Level',
+                                data: overall_chart_data_data,
+                                backgroundColor: bgColor,
+                                borderColor: [
+                                  // '#055bc8'
+                                ],
+                                fill: false,
+                                borderWidth: 1,
+                                lineTension: 0,
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            title: {
+                                    display: false,
+                                    text: "Overall "
+                            },
+                            legend: {
+                                    display: false,  
+                            },
+                            scales: {
+                                yAxes: [{
+                                    scaleLabel: {
+                                        display: false,
+                                        labelString: 'Level'
+                                    },
+                                    ticks: {
+                                        fontSize:12,
+                                        beginAtZero: true,
+                                        stepSize:1
+                                    }
+                                }],
+                                xAxes: [{
+                                display: true,
+                                ticks:{
+                                  beginAtZero:true,
+                                  stepSize: 1,
+                                  autoSkip: false,
+                                  max: 5
+                                }
+                              }],
+                            },
+    }
+};
+    // console.log(overallChart instanceof Object);
+    overallChart = new Chart(overall_chart, config);
+    // console.log(overallChart instanceof Object);
+  }
 
   function getNumOfStatus(filters){
     $.post('personnelCompetenciesReport_proc.php', {
@@ -66,17 +136,6 @@
   }
 
   function load(filters){
-    // console.log("load");
-    // $("#tableBody").load('personnelCompetenciesReport_proc.php',{
-    //   load: true,
-    // },
-    //   function(){
-    //     // $("#num_rows").load('personnelCompetenciesReport_proc.php',{
-    //     //   get_rows: true,
-    //     // }
-    // });
-
-
       $.post('personnelCompetenciesReport_proc.php', {
         load: true,
         filters: filters,
@@ -85,18 +144,37 @@
         $("#tableBody").html(data);
         $(getNumOfStatus(filters));
         $("#clearFilter").removeClass('loading');
+
+        $.post('personnelCompetenciesReport_proc.php', {
+            get_average_data: true,
+            filters: filters
+          }, function(data, textStatus, xhr) {
+            /* optional stuff to do after success */
+            var overall_chart_data = [];
+            if (data) {
+              overall_chart_data = jQuery.parseJSON(data);  
+            } else {
+              overall_chart_data = [];
+            }
+            
+            // sorting indexed array start 
+              overall_chart_data.sort(function(a,b){
+                if(a.value > b.value) return -1;
+                if(a.value < b.value) return 1;
+                return 0;
+              });
+            // sorting indexed array end 
+            if (overallChart instanceof Object) {
+              overallChart.destroy();  
+            }
+            
+            createChart(overall_chart_data);
+            // overallChart.update();
+          });
+
       });
-
-
-    // $("#num_rows").load('personnelCompetenciesReport_proc.php',{
-    //   get_rows: true,
-    // },
-    //   function(){
-    //     // $("#num_rows").load('personnelCompetenciesReport_proc.php',{
-    //     //   get_rows: true,
-    //     // }
-    // });
   }
+
   function btn_search(){
     var position = $("#position_drop").dropdown("get value"),
         functional = $("#function_drop").dropdown("get value");
@@ -137,20 +215,19 @@
 <div class="ui container" style="background-color: white; width: 1300px;">
 <div class="ui segment">
 <div class="ui top attached tabular menu" id="tabs">
-  <a class="item active" data-tab="reportindepth">In-Depth Survey Report</a>
-  <a class="item" data-tab="report">Survey Report</a>
+  <a class="item active" data-tab="report">Overall Survey Report</a>
+  <a class="item" data-tab="reportindepth">In-Depth Survey Report</a>
   <a class="item" data-tab="job_c">Job Competecy</a>
 </div>
-<div class="ui bottom attached tab active" data-tab="reportindepth">
+<div class="ui bottom attached tab" data-tab="reportindepth">
   <?php
     require_once 'personnelCompetenciesReport_indepth_report.php';
   ?>
 </div>
-<div class="ui bottom attached tab" data-tab="report">
+<div class="ui bottom attached tab active" data-tab="report">
   <div id="snum_rows" class="ui basic segment" style="font-size: 24px;">
     <i class="icon info blue tiny circle"></i><span id="num_rows" style="font-size: 13px; color: grey; font-style: italic;"><div class="ui active mini inline loader"></div> Loading...</span>
   </div>
-<!-- start filter -->
 
 <div class="ui multiple dropdown" id="mulitipleFilters" style="margin-left: 20px;">
   <input type="hidden" name="filters">
@@ -241,6 +318,13 @@
   </div>
 </div>
 <!-- end filter -->
+
+<div class="ui grid center aligned" style="margin-bottom: 100px;">
+  <div class="ten wide column">
+    <canvas id="overall_chart"></canvas>
+  </div>
+</div>
+
 
   <style type="text/css">
     table {
@@ -387,4 +471,5 @@
 </div>
 </div>
 </div>
+
 <?php require_once "footer.php";?>

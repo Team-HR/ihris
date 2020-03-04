@@ -62,7 +62,6 @@ if (isset($_POST["load"])) {
     $total  = $row['totalPoints'];
 
 
-
     $compTotal[0] += $comp0;
     $compTotal[1] += $comp1;
     $compTotal[2] += $comp2;
@@ -143,6 +142,88 @@ if (isset($_POST["load"])) {
 
  <?php
 
+}
+
+elseif (isset($_POST["get_average_data"])) {
+  // wip get average data
+  $filters = $_POST["filters"];
+  $sql = construct_sql($filters);
+  $result = $mysqli->query($sql);
+  // $compTotal = array();
+  // for ($i=0; $i < 24 ; $i++) {
+  //   $compTotal[] = 0;
+  // }
+   $num_rows = $result->num_rows;
+   $compTotal = array(
+    'Adaptability'=>0,
+    'Continous_Learning'=>0,
+    'Communication'=>0,
+    'Organizational_Awareness'=>0,
+    'Creative_Thinking'=>0,
+    'Networking_Relationship_Building'=>0,
+    'Conflict_Management'=>0,
+    'Stewardship_of_Resources'=>0,
+    'Risk_Management'=>0,
+    'Stress_Management'=>0,
+    'Influence'=>0,
+    'Initiative'=>0,
+    'Team_Leadership'=>0,
+    'Change_Leadership'=>0,
+    'Client_Focus'=>0,
+    'Partnering'=>0,
+    'Developing_Others'=>0,
+    'Planning_and_Organizing'=>0,
+    'Decision_Making'=>0,
+    'Analytical_Thinking'=>0,
+    'Results_Orientation'=>0,
+    'Teamwork'=>0,
+    'Values_and_Ethics'=>0,
+    'Visioning_and_Strategic_Direction'=>0
+   );
+ while ($row = $result->fetch_assoc()) {
+    $datetime = $row['datetime'];
+    $compTotal['Adaptability'] += $row['Adaptability'];
+    $compTotal['Continous_Learning'] += $row['ContinousLearning'];
+    $compTotal['Communication'] += $row['Communication'];
+    $compTotal['Organizational_Awareness'] += $row['OrganizationalAwareness'];
+    $compTotal['Creative_Thinking'] += $row['CreativeThinking'];
+    $compTotal['Networking_Relationship_Building'] += $row['NetworkingRelationshipBuilding'];
+    $compTotal['Conflict_Management'] += $row['ConflictManagement'];
+    $compTotal['Stewardship_of_Resources'] += $row['StewardshipofResources'];
+    $compTotal['Risk_Management'] += $row['RiskManagement'];
+    $compTotal['Stress_Management'] += $row['StressManagement'];
+    $compTotal['Influence'] += $row['Influence'];
+    $compTotal['Initiative'] += $row['Initiative'];
+    $compTotal['Team_Leadership'] += $row['TeamLeadership'];
+    $compTotal['Change_Leadership'] += $row['ChangeLeadership'];
+    $compTotal['Client_Focus'] += $row['ClientFocus'];
+    $compTotal['Partnering'] += $row['Partnering'];
+    $compTotal['Developing_Others'] += $row['DevelopingOthers'];
+    $compTotal['Planning_and_Organizing'] += $row['PlanningandOrganizing'];
+    $compTotal['Decision_Making'] += $row['DecisionMaking'];
+    $compTotal['Analytical_Thinking'] += $row['AnalyticalThinking'];
+    $compTotal['Results_Orientation'] += $row['ResultsOrientation'];
+    $compTotal['Teamwork'] += $row['Teamwork'];
+    $compTotal['Values_and_Ethics'] += $row['ValuesandEthics'];
+    $compTotal['Visioning_and_Strategic_Direction'] += $row['VisioningandStrategicDirection'];
+    $total  = $row['totalPoints'];
+}
+    $data = array();
+
+foreach ($compTotal as $key => $value) {
+  if ($num_rows != 0) {
+    $data[] = array(
+      'competency' => $key,
+      'value'=>round($value/$num_rows)
+    );
+  } else {
+    $data[] = array(
+      'competency' => $key,
+      'value'=>0
+    );
+  }
+}
+  echo json_encode($data);
 }
 
 elseif (isset($_POST['load_positions'])) {
