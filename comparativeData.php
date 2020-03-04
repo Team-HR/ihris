@@ -195,7 +195,7 @@ function getInputValues(){
 function setInputValues(dataArr){
   $("input[name='position']").val(dataArr[0]);
   $("input[name='itemNo']").val(dataArr[1]);
-  $("input[name='sg']").val(dataArr[3]);
+  $("input[name='sg']").val(dataArr[2]);
   $("#officeDropdown").dropdown("set selected",dataArr[3]);
   $("input[name='dateVacated']").val(dataArr[4]);
   $("input[name='dateOfInterview']").val(dataArr[5]);
@@ -306,8 +306,8 @@ function clearFormData(){
     Are you sure you want to delete this vacant position?
   </div>
   <div class="actions">
-    <button class="ui tiny basic button approve"><i class="icon check"></i> Yes</button>
-    <button class="ui tiny basic button deny"><i class="icon cancel"></i> No</button>
+    <button class="ui tiny basic blue button approve"><i class="icon check"></i> Yes</button>
+    <button class="ui tiny basic red button deny"><i class="icon cancel"></i> No</button>
   </div>
 </div>
 
@@ -392,8 +392,8 @@ function clearFormData(){
 
   </div>
   <div class="actions">
-    <button form="addNewForm" type="button" onclick="$('#'+this.form.id).form('submit');" class="ui tiny basic button approve"><i class="icon save"></i> Save</button>
-    <button class="ui tiny basic button deny"><i class="icon cancel"></i> Cancel</button>
+    <button form="addNewForm" type="button" onclick="$('#'+this.form.id).form('submit');" class="ui tiny basic button blue approve"><i class="icon save"></i> Save</button>
+    <button class="ui tiny basic button red deny"><i class="icon cancel"></i> Cancel</button>
   </div>
 </div>
 <!-- modal add new vacant position end -->
