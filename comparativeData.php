@@ -306,8 +306,8 @@ function clearFormData(){
     Are you sure you want to delete this vacant position?
   </div>
   <div class="actions">
-    <button class="ui tiny basic button approve"><i class="icon check"></i> Yes</button>
-    <button class="ui tiny basic button deny"><i class="icon cancel"></i> No</button>
+    <button class="ui tiny basic blue button approve"><i class="icon check"></i> Yes</button>
+    <button class="ui tiny basic red button deny"><i class="icon cancel"></i> No</button>
   </div>
 </div>
 
@@ -392,8 +392,8 @@ function clearFormData(){
 
   </div>
   <div class="actions">
-    <button form="addNewForm" type="button" onclick="$('#'+this.form.id).form('submit');" class="ui tiny basic button approve"><i class="icon save"></i> Save</button>
-    <button class="ui tiny basic button deny"><i class="icon cancel"></i> Cancel</button>
+    <button form="addNewForm" type="button" onclick="$('#'+this.form.id).form('submit');" class="ui tiny basic button blue approve"><i class="icon save"></i> Save</button>
+    <button class="ui tiny basic button red deny"><i class="icon cancel"></i> Cancel</button>
   </div>
 </div>
 <!-- modal add new vacant position end -->
