@@ -215,8 +215,8 @@
 <div class="ui container" style="background-color: white; width: 1300px;">
 <div class="ui segment">
 <div class="ui top attached tabular menu" id="tabs">
-  <a class="item" data-tab="reportindepth">In-Depth Survey Report</a>
   <a class="item active" data-tab="report">Overall Survey Report</a>
+  <a class="item" data-tab="reportindepth">In-Depth Survey Report</a>
   <a class="item" data-tab="job_c">Job Competecy</a>
 </div>
 <div class="ui bottom attached tab" data-tab="reportindepth">
