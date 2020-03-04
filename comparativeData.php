@@ -195,7 +195,7 @@ function getInputValues(){
 function setInputValues(dataArr){
   $("input[name='position']").val(dataArr[0]);
   $("input[name='itemNo']").val(dataArr[1]);
-  $("input[name='sg']").val(dataArr[3]);
+  $("input[name='sg']").val(dataArr[2]);
   $("#officeDropdown").dropdown("set selected",dataArr[3]);
   $("input[name='dateVacated']").val(dataArr[4]);
   $("input[name='dateOfInterview']").val(dataArr[5]);
