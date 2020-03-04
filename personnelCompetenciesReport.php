@@ -98,12 +98,9 @@
                             },
                             scales: {
                                 yAxes: [{
-                                    scaleLabel: {
-                                        display: false,
-                                        labelString: 'Level'
-                                    },
+
                                     ticks: {
-                                        fontSize:12,
+                                        fontSize:14,
                                         beginAtZero: true,
                                         stepSize:1
                                     }
@@ -229,11 +226,11 @@
     <i class="icon info blue tiny circle"></i><span id="num_rows" style="font-size: 13px; color: grey; font-style: italic;"><div class="ui active mini inline loader"></div> Loading...</span>
   </div>
 
-<div class="ui multiple dropdown" id="mulitipleFilters" style="margin-left: 20px;">
+<div class="ui multiple dropdown" id="mulitipleFilters" style="margin-left: 20px; background-color: #4075a9; color: white; border-radius: 5px;">
   <input type="hidden" name="filters">
   <button id="clearFilter" style="display: none;" class="ui mini button">Clear</button>
-  <i class="filter blue icon"></i>
-  <span class="text">Filter Table</span>
+  <i class="filter icon"></i>
+  <span class="text"><strong>Filter Table</strong></span>
   <div class="menu">
     <div class="ui icon search input">
       <i class="search icon"></i>
@@ -320,7 +317,7 @@
 <!-- end filter -->
 
 <div class="ui grid center aligned" style="margin-bottom: 100px;">
-  <div class="ten wide column">
+  <div class="ten wide column" height="10vh">
     <canvas id="overall_chart"></canvas>
   </div>
 </div>
