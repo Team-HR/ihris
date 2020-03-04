@@ -2,6 +2,7 @@
 <script type="text/javascript">
 
   var dept_filters = "";
+  var overallChart;
 
   $(document).ready(function() {
     var loading = $('#loading_el');
@@ -61,7 +62,6 @@
     var overall_chart_data_data = [];
     var overall_chart = $("#overall_chart");
     var bgColor = [];
-
     $.each(overall_chart_data, function(index, val) {
        overall_chart_data_label.push(val.competency.split("_").join(" "));
        overall_chart_data_data.push(val.value);
@@ -120,8 +120,9 @@
                             },
     }
 };
-    
-    var overallChart = new Chart(overall_chart, config);
+    // console.log(overallChart instanceof Object);
+    overallChart = new Chart(overall_chart, config);
+    // console.log(overallChart instanceof Object);
   }
 
   function getNumOfStatus(filters){
@@ -163,8 +164,12 @@
                 return 0;
               });
             // sorting indexed array end 
-
+            if (overallChart instanceof Object) {
+              overallChart.destroy();  
+            }
+            
             createChart(overall_chart_data);
+            // overallChart.update();
           });
 
       });
