@@ -89,7 +89,12 @@ if (isset($_POST["load"])) {
 					$isMeeting = "Orientation";
 				} elseif ($isMeeting === "conference") {
 					$isMeeting = "Conference";
+				} elseif ($isMeeting === "workshop") {
+					$isMeeting = "Workshop";
+				} elseif ($isMeeting === "others") {
+					$isMeeting = "Others";
 				}
+				
 				else {
 					$isMeeting = "<div title='Please identify the type of communication!' style='color: red;'><i class='icon circle info'></i><i>n/a</i></div";
 				}

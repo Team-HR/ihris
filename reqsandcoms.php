@@ -673,8 +673,10 @@ function removeOther(elementid){
                   <option value="no">Training</option>
                   <option value="yes">Meeting</option>
                   <option value="seminar">Seminar</option>
+                  <option value="workshop">Workshop</option>
                   <option value="orientation">Orientation</option>
                   <option value="conference">Conference/Convention</option>
+                  <option value="others">Others</option>
                 </select>
               </div>
             </div>
@@ -809,8 +811,10 @@ function removeOther(elementid){
                   <option value="no">Training</option>
                   <option value="yes">Meeting</option>
                   <option value="seminar">Seminar</option>
+                  <option value="workshop">Workshop</option>
                   <option value="orientation">Orientation</option>
                   <option value="conference">Conference/Convention</option>
+                  <option value="others">Others</option>
                 </select>
               </div>
             </div>
