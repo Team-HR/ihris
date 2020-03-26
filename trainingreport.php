@@ -6,6 +6,9 @@ require_once "header.php";
 
 	var json = [];
 	var ldnLsaCharts;
+	var ldnLsaCharts2;
+	var ldnLsaCharts_total;
+	var ldnLsaCharts2_total;
 	$(document).ready(function() {
 		
 		var sortBbyDept = "all",
@@ -21,7 +24,9 @@ require_once "header.php";
 		$("#sortYear").dropdown({
 			onChange: function(value,text){
 				ldnLsaCharts.destroy();
+				ldnLsaCharts_total.destroy();
 				ldnLsaCharts2.destroy();
+				ldnLsaCharts2_total.destroy();
 				tbody.html(loading_el.show());
 				sortBbyYear = value;
 				console.log('check', sortBbyDept+" and "+sortBbyYear);
@@ -40,7 +45,9 @@ require_once "header.php";
 		$("#sortDept").dropdown({
 			onChange: function(value,text){
 				ldnLsaCharts.destroy();
+				ldnLsaCharts_total.destroy();
 				ldnLsaCharts2.destroy();
+				ldnLsaCharts2_total.destroy();
 				tbody.html(loading_el.show());
 				sortBbyDept = value;
 				if (text !== "all") {
@@ -72,13 +79,13 @@ require_once "header.php";
 			/*optional stuff to do after success */
 			json = $.parseJSON(data);
 			console.log(json[0]);
-
-
+			console.log([json[0][0]+json[0][1],json[0][2]+json[0][3]]);
 			
 
-
 var ctx = $("#graph_permanent");
+var ctx_total = $("#graph_permanent_total");
 var ctx2 = $("#graph_casual");
+var ctx2_total = $("#graph_casual_total");
 var config = {
 				type: 'horizontalBar',
                         data: {
@@ -111,7 +118,40 @@ var config = {
                             
                                 title: {
                                     display: true,
-                                    text: "Permanent With and Without Trainings"
+                                    text: "Permanent With and Without Trainings (M/F)"
+                                },
+                                legend: {
+                                    display: false,  
+                                },
+    }
+};
+var config_total = {
+				type: 'horizontalBar',
+                        data: {
+                            labels: [
+                            "Employees w/ TR",
+                            "Employees w/o TR",
+                            ],
+                            datasets: [{
+                                label: 'Personnels',
+                                data: [json[0][0]+json[0][1],json[0][2]+json[0][3]],
+                                backgroundColor: [
+                                  '#4075a9',
+                                  '#4075a9',
+                                ],
+                                borderColor: [
+                                // '#00000',
+                                // '#00000',
+                                ],
+                                fill: true,
+                                borderWidth: 2,
+                            }]
+                        },
+                        options: {
+                            
+                                title: {
+                                    display: true,
+                                    text: "Permanent Employees With vs Without Trainings"
                                 },
                                 legend: {
                                     display: false,  
@@ -150,7 +190,40 @@ var config2 = {
                             
                                 title: {
                                     display: true,
-                                    text: "Casual With and Without Trainings"
+                                    text: "Casual With and Without Trainings (M/F)"
+                                },
+                                legend: {
+                                    display: false,  
+                                },
+    }
+};
+var config2_total = {
+				type: 'horizontalBar',
+                        data: {
+                            labels: [
+                            "Employees w/ TR",
+                            "Employees w/o TR",
+                            ],
+                            datasets: [{
+                                label: 'Personnels',
+                                data: [json[1][0]+json[1][1],json[1][2]+json[1][3]],
+                                backgroundColor: [
+                                  '#4075a9',
+                                  '#4075a9',
+                                ],
+                                borderColor: [
+                                // '#00000',
+                                // '#00000',
+                                ],
+                                fill: true,
+                                borderWidth: 2,
+                            }]
+                        },
+                        options: {
+                            
+                                title: {
+                                    display: true,
+                                    text: "Casual Employees With vs Without Trainings"
                                 },
                                 legend: {
                                     display: false,  
@@ -158,7 +231,9 @@ var config2 = {
     }
 };
 	ldnLsaCharts = new Chart(ctx, config);
+	ldnLsaCharts_total = new Chart(ctx_total, config_total);
 	ldnLsaCharts2 = new Chart(ctx2, config2);
+	ldnLsaCharts2_total = new Chart(ctx2_total, config2_total);
 
 		});
 
@@ -251,10 +326,16 @@ var config2 = {
 	<div class="ui grid">
 	  <div class="eight wide column">
 	  	<div class="ui segment">
+	  		<canvas id="graph_permanent_total" height="70"></canvas>
+	  	</div>
+	  	<div class="ui segment">
 	  		<canvas id="graph_permanent" height="70"></canvas>
 	  	</div>
 	  </div>
 	  <div class="eight wide column">
+	  <div class="ui segment">
+	  		<canvas id="graph_casual_total" height="70"></canvas>
+	  	</div>
 	  	<div class="ui segment">
 	  		<canvas id="graph_casual" height="70"></canvas>
 	  	</div>
