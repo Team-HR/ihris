@@ -205,8 +205,8 @@ var content = [],
     }, function(data, textStatus, xhr) {
       var array = jQuery.parseJSON(data);
       $("#editDeptsList").dropdown({
-        showOnFocus: false
-      }).dropdown("set selected", array.department_id);
+        showOnFocus: false,
+      }).dropdown("set selected", array.department_id).addClass('disabled');
       
       $.each(array.manager_arr, function(index, val) {
         $("#ol_edit_manager").append("<li><i class='icon times' onclick='list_remove_manager_edit(\""+index+"\")' style='cursor: pointer;'></i>"+val+"</li>");
