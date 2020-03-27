@@ -12,6 +12,21 @@ var content = [],
     tools_arr_edit = [];
   
   $(document).ready(function() {
+    $("#targetParticipantsSearchForm").on('submit', function (e) {  
+      e.preventDefault();
+  
+      var keyword = $("#search_by_training_input").val();
+      $.post('tna_proc.php', {
+        search_by_training: true,
+        keyword: keyword
+      }, function(data, textStatus, xhr) {
+        /*optional stuff to do after success */
+        $("#search_by_training_result").html(data);
+        $('.accordion').accordion();
+      });
+
+
+    });
     $("#addDeptsList").dropdown({showOnFocus: false});
     $("#findDeptDrop").dropdown({
       onChange: function (value,text){ 
@@ -344,7 +359,6 @@ var content = [],
     tools_arr_edit = [];
   }
 
-
   function populate_findDeptDrop (){
     $.post('tna_proc.php', {
       populate_findDeptDrop: true},
@@ -352,24 +366,6 @@ var content = [],
         $("#findDeptDrop").html(data);
     });
   }
-
-  function search_by_training(){
-    var keyword = $("#search_by_training_input").val();
-    // alert(keyword);
-    // search_by_training_result
-    $.post('tna_proc.php', {
-      search_by_training: true,
-      keyword: keyword
-    }, function(data, textStatus, xhr) {
-      /*optional stuff to do after success */
-      $("#search_by_training_result").html(data);
-      $('.accordion').accordion();
-    });
-
-
-
-  }
-
 </script>
 
 <?php
@@ -377,8 +373,7 @@ var content = [],
 ?>
 
 <div class="ui container">
-
-  <div class="ui borderless blue inverted mini menu noprint">
+  <!-- <div class="ui borderless blue inverted mini menu noprint">
     <div class="left item" style="margin-right: 0px !important;">
       <button onclick="window.history.back();" class="blue ui icon mini button" title="Back" style="width: 65px;">
         <i class="icon chevron left"></i> Back
@@ -392,7 +387,26 @@ var content = [],
     <button class="ui icon green mini button" onclick="addNew()" style="margin-right: 5px;"><i class="icon plus"></i>Add</button>
     </div>
    </div>
-</div>
+</div> -->
+<div class="ui borderless blue inverted mini menu">
+    <div class="left item" style="margin-right: 0px !important;">
+      <button onclick="window.history.back();" class="blue ui icon button" title="Back" style="width: 65px;">
+        <i class="icon chevron left"></i> Back
+      </button>
+    </div>
+	  <div class="item">
+	  	<h3><i class="users icon"></i> L&D Training Needs Assessment</h3>
+	  </div>
+	  <div class="right item">
+	  	<button onclick="addNew()" class="green ui icon button" style="margin-right: 10px; width: 100px;" title="Add Personnel">
+			<i class="icon user plus"></i> Add
+			</button>
+			<div class="ui icon input">
+			  <input id="employee_search" type="text" placeholder="Search...">
+			  <i class="search icon"></i>
+			</div>
+	  </div>
+	</div>
 
 
 <div class="ui top attached tabular menu" id="tabs" style="background-color: white;">
@@ -418,10 +432,9 @@ var content = [],
 </div>
 <div class="ui bottom attached tab segment" data-tab="targetPart">
   <!-- Target Participants... -->
-<div class="ui form">
+<form class="ui form" novalidate id="targetParticipantsSearchForm">
     <div class="eight wide field">
-  <!--     <label>Search by Training:</label>
-      <input type="text" id="searchBytraining_input" placeholder="Training Title..."> -->
+    franz jshua cawww<>..
       <label>Search by Training:</label>
       <div class="ui search" id="search_by_training">
         <div class="ui icon input">
@@ -431,8 +444,8 @@ var content = [],
         <div class="results"></div>
       </div>
     </div>
-    <button class="ui mini button blue" onclick="search_by_training()">Search</button>
-</div>
+    <button type="submit" class="ui mini button blue">Search</button>
+</form`>
 
   <div id="search_by_training_result" class="ui basic segment fluid" style="min-height: 300px;">
     <h1 style="color: lightgrey; text-align: center; margin-top: 100px;">...SEARCH TRAINING...</h1>
