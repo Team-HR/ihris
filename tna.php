@@ -373,7 +373,7 @@ var content = [],
 ?>
 
 <div class="ui container">
-  <!-- <div class="ui borderless blue inverted mini menu noprint">
+  <div class="ui borderless blue inverted mini menu noprint">
     <div class="left item" style="margin-right: 0px !important;">
       <button onclick="window.history.back();" class="blue ui icon mini button" title="Back" style="width: 65px;">
         <i class="icon chevron left"></i> Back
@@ -384,29 +384,10 @@ var content = [],
    </div>
    <div class="right item">
     <div class="ui right input">
-    <button class="ui icon green mini button" onclick="addNew()" style="margin-right: 5px;"><i class="icon plus"></i>Add</button>
+    <button class="ui icon green mini button" onclick="addNew()" style="margin-right: 5px;"><i class="icon plus"></i>Add New</button>
     </div>
    </div>
-</div> -->
-<div class="ui borderless blue inverted mini menu">
-    <div class="left item" style="margin-right: 0px !important;">
-      <button onclick="window.history.back();" class="blue ui icon button" title="Back" style="width: 65px;">
-        <i class="icon chevron left"></i> Back
-      </button>
-    </div>
-	  <div class="item">
-	  	<h3><i class="users icon"></i> L&D Training Needs Assessment</h3>
-	  </div>
-	  <div class="right item">
-	  	<button onclick="addNew()" class="green ui icon button" style="margin-right: 10px; width: 100px;" title="Add Personnel">
-			<i class="icon user plus"></i> Add
-			</button>
-			<div class="ui icon input">
-			  <input id="employee_search" type="text" placeholder="Search...">
-			  <i class="search icon"></i>
-			</div>
-	  </div>
-	</div>
+</div>
 
 
 <div class="ui top attached tabular menu" id="tabs" style="background-color: white;">
@@ -434,7 +415,6 @@ var content = [],
   <!-- Target Participants... -->
 <form class="ui form" novalidate id="targetParticipantsSearchForm">
     <div class="eight wide field">
-    franz jshua cawww<>..
       <label>Search by Training:</label>
       <div class="ui search" id="search_by_training">
         <div class="ui icon input">
