@@ -1,3 +1,2 @@
 <?php
-
-echo "updated! testing update 2";
+header('Location: ldn-resources/');
