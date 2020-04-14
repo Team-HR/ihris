@@ -1,5 +1,5 @@
-const competencies = [
-    {
+const competencies = {
+    Adaptability: {
         name:"Adaptability",
         description:"Adjusting own behaviors to work efficiently and effectively in light of new information, changing situations and/or different environments.",
         levels: [
@@ -45,7 +45,7 @@ const competencies = [
             }
         ]
     },
-    {
+    Continous_Learning: {
         name:"Continuous Learning",
         description:"Identifying and addressing individual strengths and weaknesses, developmental needs and changing circumstances to enhance personal and organizational performance.",
         levels: [
@@ -88,7 +88,7 @@ const competencies = [
             }
         ]
     },
-    {
+    Communication: {
         name:"Communication",
         description:"Listening to others and communicating in an effective manner that fosters open communication.",
         levels: [
@@ -139,7 +139,7 @@ const competencies = [
             }
         ]
     },
-    {
+    Organizational_Awareness:{
         name:"Organizational Awareness",
         description:"Understanding the workings, structure and culture of the organization as well as the political, social and economic issues, to achieve results.",
         levels: [
@@ -184,7 +184,7 @@ const competencies = [
             }
         ]
     },
-    {
+    Creative_Thinking: {
         name:"Creative Thinking",
         description:"Questioning conventional approaches, exploring alternatives and responding to challenges with innovative solutions or services, using intuition, experimentation and fresh perspectives.",
         levels: [
@@ -231,7 +231,7 @@ const competencies = [
             }
         ]
     },
-    {
+    Networking_Relationship_Building: {
         name:"Networking/Relationship Building",
         description:"Building and actively maintaining working relationships and/or networks of contacts to further the organization’s goals.",
         levels: [
@@ -276,7 +276,7 @@ const competencies = [
             }
         ]
     },
-    {
+    Conflict_Management: {
         name:"Conflict Management",
         description:"Preventing, managing and resolving conflicts.",
         levels: [
@@ -317,7 +317,7 @@ const competencies = [
             }
         ]
     },
-	{
+	Stewardship_of_Resources: {
 	    name:"Stewardship of Resources",
 	    description:"Ensures the effective, efficient and sustainable use of government resources and assets (physical, human and financial resources).",
 	    levels: [
@@ -363,7 +363,7 @@ const competencies = [
 	        }
 	    ]
 	},
-	{
+	Risk_Management: {
 	    name:"Risk Management",
 	    description:"Identifying, assessing and managing risk while striving to attain objectives.",
 	    levels: [
@@ -412,7 +412,7 @@ const competencies = [
 	        }
 	    ]
 	},
-	{
+	Stress_Management: {
 	    name:"Stress Management",
 	    description:"Maintaining effectiveness in the face of stress.",
 	    levels: [
@@ -459,7 +459,7 @@ const competencies = [
 	        }
 	    ]
 	},
-	{
+	Influence: {
 	    name:"Influence",
 	    description:"Gaining support from and convincing others to advance the objectives of the organization.",
 	    levels: [
@@ -506,7 +506,7 @@ const competencies = [
 	        }
 	    ]
 	},
-	{
+	Initiative: {
 	    name:"Initiative",
 	    description:"Identifying and dealing with issues proactively and persistently; seizing opportunities that arise.",
 	    levels: [
@@ -552,7 +552,7 @@ const competencies = [
 	        }
 	    ]
 	},
-	{
+	Team_Leadership: {
 	    name:"Team Leadership",
 	    description:"Leading and supporting a team to achieve results.",
 	    levels: [
@@ -603,7 +603,7 @@ const competencies = [
 	        }
 	    ]
 	},
-	{
+	Change_Leadership: {
 	    name:"Change Leadership",
 	    description:"Managing, leading and enabling the process of change and transition while helping others deal with their effects.",
 	    levels: [
@@ -648,7 +648,7 @@ const competencies = [
 	        }
 	    ]
 	},
-	{
+	Client_Focus: {
 	    name:"Client Focus",
 	    description:"Identifying and responding to current and future client needs; providing service excellence to internal and external clients.",
 	    levels: [
@@ -707,7 +707,7 @@ const competencies = [
 	        }
 	    ]
 	},
-	{
+	Partnering: {
 	    name:"Partnering",
 	    description:"Seeking and building strategic alliances and collaborative arrangements through partnerships to advance the objectives of the organization.",
 	    levels: [
@@ -759,7 +759,7 @@ const competencies = [
 	        }
 	    ]
 	},
-	{
+	Developing_Others: {
 	    name:"Developing Others",
 	    description:"Fostering the development of others by providing a supportive environment for enhanced performance and professional growth.",
 	    levels: [
@@ -806,7 +806,7 @@ const competencies = [
 	        }
 	    ]
 	},
-	{
+	Planning_and_Organizing: {
 	    name:"Planning and Organizing",
 	    description:"Defining tasks and milestones to achieve objectives, while ensuring the optimal use of resources to meet those objectives.",
 	    levels: [
@@ -860,7 +860,7 @@ const competencies = [
 	        }
 	    ]
 	},
-	{
+	Decision_Making: {
 	    name:"Decision-Making",
 	    description:"Making decisions and solving problems involving varied levels of complexity, ambiguity and risk.",
 	    levels: [
@@ -920,7 +920,7 @@ const competencies = [
 	        }
 	    ]
 	},
-	{
+	Analytical_Thinking: {
 	    name:"Analytical Thinking",
 	    description:"Interpreting, linking, and analyzing information in order to understand issues.",
 	    levels: [
@@ -967,7 +967,7 @@ const competencies = [
 	        }
 	    ]
 	},
-	{
+	Results_Orientation: {
 	    name:"Results Orientation",
 	    description:"Focusing personal efforts on achieving results consistent with the organization’s objectives.",
 	    levels: [
@@ -1012,7 +1012,7 @@ const competencies = [
 	        }
 	    ]
 	},
-	{
+	Teamwork: {
 	    name:"Teamwork",
 	    description:"Working collaboratively with others to achieve common goals and positive results.",
 	    levels: [
@@ -1069,7 +1069,7 @@ const competencies = [
 	        }
 	    ]
 	},
-	{
+	Values_and_Ethics: {
 	    name:"Values and Ethics",
 	    description:"Fostering and supporting the principles and values of the organization and public service as a whole.",
 	    levels: [
@@ -1116,7 +1116,7 @@ const competencies = [
 	        }
 	    ]
 	},
-	{
+	Visioning_and_Strategic_Direction: {
 	    name:"Visioning and Strategic Direction",
 	    description:"Developing and inspiring commitment to a vision of success; supporting, promoting and ensuring alignment with the organization’s vision and values.",
 	    levels: [
@@ -1167,5 +1167,5 @@ const competencies = [
 	            ]
 	        }
 	    ]
-	},
-];
+	}
+}
