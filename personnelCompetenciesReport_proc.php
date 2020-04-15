@@ -210,21 +210,32 @@ elseif (isset($_POST["get_average_data"])) {
 }
     $data = array();
 
-foreach ($compTotal as $key => $value) {
-  if ($num_rows != 0) {
-    $data[] = array(
-      'competency' => $key,
-      'value'=>round($value/$num_rows)
-    );
-  } else {
-    $data[] = array(
-      'competency' => $key,
-      'value'=>0
-    );
+  foreach ($compTotal as $key => $value) {
+    if ($num_rows != 0) {
+      $data[] = array(
+        'competency' => $key,
+        'value'=>round($value/$num_rows)
+      );
+    } else {
+      $data[] = array(
+        'competency' => $key,
+        'value'=>0
+      );
+    }
   }
-}
+
   echo json_encode($data);
 }
+// get data by gender start
+elseif (isset($_POST["get_average_data_by_gender"])) {
+  $filters = $_POST["filters"];
+  $data = array(
+    'male' => getData($filters,"MALE",$mysqli),
+    'female' => getData($filters,"FEMALE",$mysqli)
+  );
+  echo json_encode($data);
+}
+// get data by gender end
 
 elseif (isset($_POST['load_positions'])) {
   $sql = "SELECT DISTINCT `position` FROM `positiontitles` ORDER BY `position` ASC";
@@ -331,7 +342,6 @@ while ($row = $result->fetch_array(MYSQLI_NUM)) {
     } else {
       $fullName = "Unidentified! Please see input in db...";
     }
-
 
     $datetime = $row[2];
     $comp0 = $row[3];
@@ -462,9 +472,7 @@ function dateToStr($numeric_date){
 }
 
 
-
-function construct_sql ($filters){
-
+function construct_sql ($filters, $sortByGender=""){
   $gender_arr = array();
   $type_arr = array();
   $level_arr = array();
@@ -472,9 +480,9 @@ function construct_sql ($filters){
   $category_arr = array();
   $ldn2018_arr = array();
   $dept_arr = array();
-
+  
   $filters_sql = '';
-
+  
   if ($filters) {
     foreach ($filters as $value) {
       $value_arr = explode("=", $value);
@@ -496,30 +504,35 @@ function construct_sql ($filters){
         array_push($dept_arr, $el);
       }
     } 
-
+  
     $sql_arr = array();
-    if ($gender_arr) {
-      array_push($sql_arr, "employees.gender IN(".filter_val($gender_arr).")");
-    } 
+    if ($gender_arr && !$sortByGender) {
+      array_push($sql_arr, "employees.gender IN (".filter_val($gender_arr).")");
+    } elseif (!$gender_arr && $sortByGender) {
+      array_push($sql_arr, "employees.gender IN ('".$sortByGender."')");
+    } elseif ($gender_arr && $sortByGender) {
+      array_push($sql_arr, "employees.gender IN ('".$sortByGender."')");
+    }
+  
     if ($type_arr) {
-      array_push($sql_arr, "employees.employmentStatus IN(".filter_val($type_arr).")");
+      array_push($sql_arr, "employees.employmentStatus IN (".filter_val($type_arr).")");
     } 
     if ($level_arr) {
-      array_push($sql_arr, "positiontitles.level IN(".filter_val($level_arr).")");
+      array_push($sql_arr, "positiontitles.level IN (".filter_val($level_arr).")");
     } 
     if ($nature_arr) {
-      array_push($sql_arr, "employees.natureOfAssignment IN(".filter_val($nature_arr).")");
+      array_push($sql_arr, "employees.natureOfAssignment IN (".filter_val($nature_arr).")");
     }
     if ($category_arr) {
-      array_push($sql_arr, "positiontitles.category IN(".filter_val($category_arr).")");
+      array_push($sql_arr, "positiontitles.category IN (".filter_val($category_arr).")");
     }
     if ($ldn2018_arr) {
-      array_push($sql_arr, "employees.employees_id IN(SELECT `employees_id` FROM `individualAssReport`)");
+      array_push($sql_arr, "employees.employees_id IN (SELECT `employees_id` FROM `individualAssReport`)");
     }
     if ($dept_arr) {
-      array_push($sql_arr, "employees.department_id IN(".filter_val($dept_arr).")");
+      array_push($sql_arr, "employees.department_id IN (".filter_val($dept_arr).")");
     }
-
+  
     $i = 0;
     $filters_sql = " WHERE ";
     foreach ($sql_arr as $value) {
@@ -529,21 +542,110 @@ function construct_sql ($filters){
         $filters_sql .= " AND ";
       }
     }
+  } elseif (!$filters && $sortByGender) {
+      $filters_sql = " WHERE employees.gender IN ('".$sortByGender."')";
   }
-/*
-  $sql = "SELECT * FROM `employees` LEFT JOIN `department` ON employees.department_id = department.department_id LEFT JOIN `positiontitles` ON employees.position_id = positiontitles.position_id 
-  $filters_sql
-  ORDER BY `lastName` ASC";
-
-  $sql = "SELECT * FROM `department` WHERE `department_id` IN (SELECT `department_id` FROM `employees` WHERE `employees_id` IN (SELECT `employees_id` FROM `competency`))
-  ORDER BY `lastName` ASC";
-*/
+  
   $sql = "SELECT * FROM `competency` LEFT JOIN `employees` ON `competency`.`employees_id` = `employees`.`employees_id` LEFT JOIN `positiontitles` ON `employees`.`position_id` = `positiontitles`.`position_id` 
   $filters_sql
   ORDER BY `lastName` ASC";
-
+  
   return $sql;
+  }
+
+
+
+function getData($filters,$sortByGender,$mysqli){
+  $sql = construct_sql($filters,$sortByGender);
+  $result = $mysqli->query($sql);
+   $num_rows = $result->num_rows;
+   $compTotal = array(
+    'Adaptability'=>0,
+    'Continous_Learning'=>0,
+    'Communication'=>0,
+    'Organizational_Awareness'=>0,
+    'Creative_Thinking'=>0,
+    'Networking_Relationship_Building'=>0,
+    'Conflict_Management'=>0,
+    'Stewardship_of_Resources'=>0,
+    'Risk_Management'=>0,
+    'Stress_Management'=>0,
+    'Influence'=>0,
+    'Initiative'=>0,
+    'Team_Leadership'=>0,
+    'Change_Leadership'=>0,
+    'Client_Focus'=>0,
+    'Partnering'=>0,
+    'Developing_Others'=>0,
+    'Planning_and_Organizing'=>0,
+    'Decision_Making'=>0,
+    'Analytical_Thinking'=>0,
+    'Results_Orientation'=>0,
+    'Teamwork'=>0,
+    'Values_and_Ethics'=>0,
+    'Visioning_and_Strategic_Direction'=>0
+   );
+ while ($row = $result->fetch_assoc()) {
+    $datetime = $row['datetime'];
+    $compTotal['Adaptability'] += $row['Adaptability'];
+    $compTotal['Continous_Learning'] += $row['ContinousLearning'];
+    $compTotal['Communication'] += $row['Communication'];
+    $compTotal['Organizational_Awareness'] += $row['OrganizationalAwareness'];
+    $compTotal['Creative_Thinking'] += $row['CreativeThinking'];
+    $compTotal['Networking_Relationship_Building'] += $row['NetworkingRelationshipBuilding'];
+    $compTotal['Conflict_Management'] += $row['ConflictManagement'];
+    $compTotal['Stewardship_of_Resources'] += $row['StewardshipofResources'];
+    $compTotal['Risk_Management'] += $row['RiskManagement'];
+    $compTotal['Stress_Management'] += $row['StressManagement'];
+    $compTotal['Influence'] += $row['Influence'];
+    $compTotal['Initiative'] += $row['Initiative'];
+    $compTotal['Team_Leadership'] += $row['TeamLeadership'];
+    $compTotal['Change_Leadership'] += $row['ChangeLeadership'];
+    $compTotal['Client_Focus'] += $row['ClientFocus'];
+    $compTotal['Partnering'] += $row['Partnering'];
+    $compTotal['Developing_Others'] += $row['DevelopingOthers'];
+    $compTotal['Planning_and_Organizing'] += $row['PlanningandOrganizing'];
+    $compTotal['Decision_Making'] += $row['DecisionMaking'];
+    $compTotal['Analytical_Thinking'] += $row['AnalyticalThinking'];
+    $compTotal['Results_Orientation'] += $row['ResultsOrientation'];
+    $compTotal['Teamwork'] += $row['Teamwork'];
+    $compTotal['Values_and_Ethics'] += $row['ValuesandEthics'];
+    $compTotal['Visioning_and_Strategic_Direction'] += $row['VisioningandStrategicDirection'];
+    $total  = $row['totalPoints'];
 }
+    $data = array();
+
+  foreach ($compTotal as $key => $value) {
+    if ($num_rows != 0) {
+      $data[] = array(
+        'competency' => $key,
+        'value'=>round($value/$num_rows)
+      );
+    } else {
+      $data[] = array(
+        'competency' => $key,
+        'value'=>0
+      );
+    }
+  }
+  
+  return $data;
+  // $total = 0;
+  // foreach ($data as $competency) {
+  //   $total += $competency['value'];
+  // }
+  // return $total;
+}
+
+
+
+
+
+
+
+
+
+
 
 function filter_val($arr){
   if (count($arr)>0) {
