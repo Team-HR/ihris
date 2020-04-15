@@ -1,4 +1,5 @@
 <?php $title = "Competency Report"; require_once "header.php"; require_once "_connect.db.php";?>
+<script src="js/competencies_array.js"></script>
 <script type="text/javascript">
 
   var dept_filters = "";
@@ -51,7 +52,6 @@
     // $(load);
     
     $(load(dept_filters));
-
      
 
   });
@@ -115,12 +115,43 @@
                                 }
                               }],
                             },
+                            // label tooltips
+                            // tooltips:{
+                            //   callbacks: {
+                            //       label: function(tooltipItem, data) {
+                            //           var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                            //           if (label) {
+                            //               label += ': ';
+                            //           }
+                            //           label += '';
+                            //           return label;
+                            //       }
+                            //   }
+                            // },
+                            onClick:function(evt, items){
+                                
+                              var firstPoint = this.getElementAtEvent(evt)[0];
+
+                              if (firstPoint) {
+                                  var label = this.data.labels[firstPoint._index];
+                                  var value = this.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+
+                                  // console.log(firstPoint);
+                                  // console.log(label+': '+value);
+                                  showCompInfo(label,value);
+                                  
+                              }
+                              
+                            }
+
     }
 };
     // console.log(overallChart instanceof Object);
     overallChart = new Chart(overall_chart, config);
     // console.log(overallChart instanceof Object);
   }
+
 
   function getNumOfStatus(filters){
     $.post('personnelCompetenciesReport_proc.php', {
@@ -317,7 +348,7 @@
 <!-- end filter -->
 
 <div class="ui grid center aligned" style="margin-bottom: 100px;">
-  <div class="ten wide column" height="10vh">
+  <div class="eleven wide column" height="">
     <canvas id="overall_chart"></canvas>
   </div>
 </div>
@@ -331,7 +362,7 @@
       background-color: #cbffc0;
     }
     td {
-      border: 1px solid #5ea3ff;
+      /* border: 1px solid #5ea3ff; */
       text-align: center;
     }
     th.rotate {
@@ -349,13 +380,13 @@
       border-bottom: 1px solid #5ea3ff;
       padding: 5px 10px;
     }
-    tr:nth-child(even) {
+    .reportTb tr:nth-child(even) {
       background-color: #edf3fb;
     }
 
   </style>
 
-  <table class="" style="margin-top: 50px;">
+  <table class="reportTb" style="margin-top: 50px;">
     <thead>
       <tr>
         <th class="rotate"></th>
@@ -427,7 +458,7 @@
 </div>
   <button class="ui mini button blue" onclick="btn_search()">Search</button>
 </div>
-  <table class="" style="margin-top: 50px;">
+  <table class="reportTb" style="margin-top: 50px;">
     <thead>
       <tr>
         <th class="rotate"></th>
@@ -467,6 +498,24 @@
   </table>
 </div>
 </div>
+</div>
+
+<div class="ui modal" id="competencyModal">
+  <div class="content">
+  <h4 class="header"></h4>
+    <p></p>
+    <div class="levels">
+      <table class="ui very small compact table">
+        <thead>
+          <tr class="success">
+            <th>Proficiency/Mastery</th>
+            <th>Behavioral Indicators</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <?php require_once "footer.php";?>

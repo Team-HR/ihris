@@ -1168,4 +1168,36 @@ const competencies = {
 	        }
 	    ]
 	}
-}
+};
+
+function showCompInfo(label,value) {
+    var label = label.replace(/ /g,"_");
+	var name = competencies[label].name;
+	var description = competencies[label].description;
+	var levels = competencies[label].levels;
+
+	$("#competencyModal").modal("show");
+	$("#competencyModal .header").html(name);
+	$("#competencyModal .content p").html(description);
+
+	var html = "";
+	var selected = "background: #4075a9;color:white";
+	$.each(levels, function (indexInArray, valueOfElement) { 
+		
+		html += "<tr style='"+((indexInArray+1)===value?selected:'')+"'>";
+			html += "<td style='vertical-align:middle'><div style='text-align:center;'>Level "+(indexInArray+1)+" - "+valueOfElement.proficiency+"</div></td>";
+			html += "<td>";
+				html += "<ul>";
+					// html += "<li>Lorem ipsum two</li>";
+					$.each(valueOfElement.behaviors, function (i, behavior) { 
+						html += "<li>"+behavior+"</li>";
+					});
+				html += "</ul>";
+			html += "</td>";
+		html += "</tr>";
+		// console.log(valueOfElement.proficiency);
+	});
+	// console.log(html);
+	$("#competencyModal .content .levels table tbody").html(html);
+	
+  }
