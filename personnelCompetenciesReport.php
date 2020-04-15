@@ -4,6 +4,7 @@
 
   var dept_filters = "";
   var overallChart;
+  var genderChart;
 
   $(document).ready(function() {
     var loading = $('#loading_el');
@@ -164,6 +165,7 @@
   }
 
   function load(filters){
+    console.log(filters); 
       $.post('personnelCompetenciesReport_proc.php', {
         load: true,
         filters: filters,
@@ -178,9 +180,11 @@
             filters: filters
           }, function(data, textStatus, xhr) {
             /* optional stuff to do after success */
+            // console.log(data);
             var overall_chart_data = [];
             if (data) {
               overall_chart_data = jQuery.parseJSON(data);  
+              // console.log(overall_chart_data);
             } else {
               overall_chart_data = [];
             }
@@ -200,8 +204,161 @@
             // overallChart.update();
           });
 
+        // getting average data for male and male
+        $.post('personnelCompetenciesReport_proc.php', {
+            get_average_data_by_gender: true,
+            filters: filters
+          }, function(data, textStatus, xhr) {
+            /* optional stuff to do after success */
+            // console.log(data);
+
+            var overall_chart_data_by_gender = [];
+            if (data) {
+              overall_chart_data_by_gender = jQuery.parseJSON(data);  
+              console.log(overall_chart_data_by_gender);
+            } else {
+              overall_chart_data_by_gender = [];
+            }
+            
+            // sorting indexed array start 
+              // overall_chart_data_by_gender.sort(function(a,b){
+              //   if(a.value > b.value) return -1;
+              //   if(a.value < b.value) return 1;
+              //   return 0;
+              // });
+            // sorting indexed array end
+            
+            if (genderChart instanceof Object) {
+              genderChart.destroy();  
+            }
+            
+            createGenderChart(overall_chart_data_by_gender);
+            // overallChart.update();
+          });
+
+
       });
   }
+
+function createGenderChart(overall_chart_data_by_gender){
+
+var chart_data_label = [];
+var chart_data_data = {
+  male:[],
+  female:[]
+};
+var gender_chart = $("#gender_chart");
+var bgColor = [];
+
+
+$.each(overall_chart_data_by_gender.male, function(index, val) {
+   chart_data_label.push(val.competency.split("_").join(" "));
+   chart_data_data.male.push(val.value);
+});
+$.each(overall_chart_data_by_gender.female, function(index, val) {
+  //  chart_data_label.push(val.competency.split("_").join(" "));
+   chart_data_data.female.push(val.value);
+});
+
+  for (var i = 24 - 1; i >= 0; i--) {
+    bgColor.push('#055bc8');
+  }
+
+  var config = {
+                    type: 'horizontalBar',
+                    data: {
+                        labels: chart_data_label,
+                        datasets: [{
+                            label: 'Male',
+                            data: chart_data_data.male,
+                            backgroundColor: bgColor,
+                            borderColor: [
+                              // '#055bc8'
+                            ],
+                            fill: false,
+                            borderWidth: 1,
+                            lineTension: 0,
+                        },{
+                            label: 'Female',
+                            data: chart_data_data.female,
+                            backgroundColor: [
+                              
+                              '#ff80ff',
+                              '#ff80ff',
+                              '#ff80ff',
+                              '#ff80ff',
+                              '#ff80ff',
+                              '#ff80ff',
+                              '#ff80ff',
+                              '#ff80ff',
+                              '#ff80ff',
+                              '#ff80ff',
+                              '#ff80ff',
+                              '#ff80ff',
+                              '#ff80ff',
+                              '#ff80ff',
+                              '#ff80ff',
+                              '#ff80ff',
+                              '#ff80ff',
+                              '#ff80ff',
+                              '#ff80ff',
+                              '#ff80ff',
+                              '#ff80ff',
+                              '#ff80ff',
+                              '#ff80ff',
+                              '#ff80ff',
+                            ],
+                            borderColor: [
+                              // '#e03997'
+                            ],
+                            fill: false,
+                            borderWidth: 1,
+                            lineTension: 0,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        title: {
+                                display: false,
+                                text: "Overall "
+                        },
+                        legend: {
+                                display: false,  
+                        },
+                        scales: {
+                            yAxes: [{
+
+                                ticks: {
+                                    fontSize:14,
+                                    beginAtZero: true,
+                                    stepSize:1
+                                }
+                            }],
+                            xAxes: [{
+                            display: true,
+                            ticks:{
+                              beginAtZero:true,
+                              stepSize: 1,
+                              autoSkip: false,
+                              max: 5
+                            }
+                          }],
+                        },
+                        onClick:function(evt, items){  
+                          var firstPoint = this.getElementAtEvent(evt)[0];
+                          if (firstPoint) {
+                              var label = this.data.labels[firstPoint._index];
+                              var value = this.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+                              showCompInfo(label,value);
+                          }
+                        }
+                    }
+  };
+// console.log(overallChart instanceof Object);
+genderChart = new Chart(gender_chart, config);
+// console.log(overallChart instanceof Object);
+}
+
 
   function btn_search(){
     var position = $("#position_drop").dropdown("get value"),
@@ -256,7 +413,7 @@
   <div id="snum_rows" class="ui basic segment" style="font-size: 24px;">
     <i class="icon info blue tiny circle"></i><span id="num_rows" style="font-size: 13px; color: grey; font-style: italic;"><div class="ui active mini inline loader"></div> Loading...</span>
   </div>
-
+<!-- start filter -->
 <div class="ui multiple dropdown" id="mulitipleFilters" style="margin-left: 20px; background-color: #4075a9; color: white; border-radius: 5px;">
   <input type="hidden" name="filters">
   <button id="clearFilter" style="display: none;" class="ui mini button">Clear</button>
@@ -324,7 +481,6 @@
       </div>
 
 <?php
-  
   require '_connect.db.php';
   $sql = "SELECT * FROM `department` ORDER BY `department` ASC";
   $result = $mysqli->query($sql);
@@ -348,8 +504,11 @@
 <!-- end filter -->
 
 <div class="ui grid center aligned" style="margin-bottom: 100px;">
-  <div class="eleven wide column" height="">
+  <div class="eight wide column" height="">
     <canvas id="overall_chart"></canvas>
+  </div>
+  <div class="eight wide column" height="">
+    <canvas id="gender_chart"></canvas>
   </div>
 </div>
 
