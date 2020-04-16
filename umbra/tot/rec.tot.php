@@ -18,7 +18,7 @@
 			<tr>
 				<th colspan ="4">Name</th>
 				<th rowspan ="2">Date-Submited</th>
-				<th rowspan ="2">Date-Recieved</th>
+				<th rowspan ="2">Date-Appraised</th>
 				<th rowspan ="2">Total</th>
 			</tr>
 			<tr>
@@ -39,7 +39,13 @@
 					$emp = $emp->fetch_assoc();
 					$d1 = date_create($row['date_submitted']);
 					$d2 =date_create($row['date_appraised']);
-					$dif = date_diff($d1,$d2);
+					$check = explode('-', $row['date_appraised']);
+					$total = "0";
+
+					if($check[0]!='0000'){
+						$total = date_diff($d1,$d2);
+						$total = $total->format('%a');
+					}
 					$view .= "
 						<tr>
 							<td>$emp[lastName]</td>
@@ -48,7 +54,7 @@
 							<td>$emp[extName]</td>
 							<td>$row[date_submitted]</td>
 							<td>$row[date_appraised]</td>
-							<td>".$dif->format('%a')."</td>
+							<td>".$total." days</td>
 						</tr>
 					";
 				}
