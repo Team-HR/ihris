@@ -35,7 +35,7 @@
     <!-- <a class="item" href="accountsetup.php"><i class="user icon"></i>Account Setup</a> -->
     <a class="item" onclick="_calendar()"><i class="calendar outline icon"></i>Calendar</a>
     <div class="right menu">
-    <a title="Lead Deliver Nurture" href="test.php" class="item" style="padding: 7px;">
+    <a title="Lead Deliver Nurture" href="ldn-resources" class="item" style="padding: 7px;">
       <!-- <img src="assets/ico/favicon.ico" style="width: 25px; height: 25px;"> -->
       <img src="assets/ico/ldn.jpg" style="border-radius: 360px; width: 25px; height: 25px; margin-right: 5px;" title="Lead Deliver Nurture">
        LDN Resource Materials
