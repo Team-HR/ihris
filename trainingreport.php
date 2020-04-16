@@ -274,7 +274,10 @@ var config2_total = {
 		<div class="right item">
 
 			<div class="ui right input">
-				<button onclick="print()" class="blue ui icon mini button" title="Print" style="margin-right: 5px;">
+				<a href="trainingreport_gen.php" class="green ui icon mini button" title="Generate Report" style="margin-right: 5px;">
+					<i class="icon print"></i> Common Trainings
+				</a>
+				<button onclick="print()" class="green ui icon mini button" title="Print" style="margin-right: 5px;">
 					<i class="icon print"></i> Print
 				</button>
 
