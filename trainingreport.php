@@ -123,6 +123,13 @@ var config = {
                                 legend: {
                                     display: false,  
                                 },
+								scales:{
+									xAxes:[{
+										ticks:{
+											beginAtZero: true
+										}
+									}]
+								}
     }
 };
 var config_total = {
@@ -156,6 +163,13 @@ var config_total = {
                                 legend: {
                                     display: false,  
                                 },
+								scales:{
+									xAxes:[{
+										ticks:{
+											beginAtZero: true
+										}
+									}]
+								}
     }
 };
 var config2 = {
@@ -195,6 +209,13 @@ var config2 = {
                                 legend: {
                                     display: false,  
                                 },
+								scales:{
+									xAxes:[{
+										ticks:{
+											beginAtZero: true
+										}
+									}]
+								}
     }
 };
 var config2_total = {
@@ -228,6 +249,13 @@ var config2_total = {
                                 legend: {
                                     display: false,  
                                 },
+								scales:{
+									xAxes:[{
+										ticks:{
+											beginAtZero: true
+										}
+									}]
+								}
     }
 };
 	ldnLsaCharts = new Chart(ctx, config);
