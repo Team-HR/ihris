@@ -149,7 +149,8 @@
           			<a class="item" href="ldprofile.php">L&D Profile</a>
           			<a class="item" href="ldplan.php">L&D Plan</a>
           			<a class="item" href="ldactivities.php">L&D Activities</a>
-          			<a class="item" href="tna.php">L&D Training Needs Assessment</a>
+          			<!-- <a class="item" href="tna.php">L&D Training Needs Assessment</a> -->
+					  <a class="item" href="dna.php">Development Needs Assessment</a>
           			<a class="item" href="trainingreport.php">Training Report</a>
           			<a class="item" href="">Talent Assessment Report</a>
           			<!-- <a class="item" href="">System Review</a> -->
