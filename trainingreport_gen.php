@@ -2,9 +2,6 @@
 $title = "Common Trainings";
 require_once 'header.php';
 ?>
-<!-- development version, includes helpful console warnings -->
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="moment.js"></script>
 
 <!-- production version, optimized for size and speed -->
 <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->

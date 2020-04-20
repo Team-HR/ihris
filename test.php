@@ -1,52 +1,45 @@
 <?php
-require_once '_connect.db.php';
+require '_connect.db.php';
 
-// SELECT DISTINCT `training_id` FROM `personneltrainings`
-$training_ids = array();
-$trainings = array();
+$data = array();
+$sql = <<<SQL
 
-$sql = "SELECT DISTINCT `training_id` FROM `personneltrainings`";
-$res = $mysqli->query($sql);
-$rows = $res->num_rows;
-while($row = $res->fetch_assoc()){
-    $training_id = $row['training_id'];
-    $training_ids[] = $training_id;
-    // echo $training_id.'<br>';
-}
-// SELECT * FROM `personneltrainings` WHERE `training_id` = '$training_id'
-foreach ($training_ids as $training_id) {
-    // get information about the training
-    $insert = array(
-        'title' => '',
-        'total' => 0,
-        'trainings' => array()
-    );
-    
-    $sql = "SELECT * FROM `trainings` WHERE `training_id` = '$training_id'";
-    $res = $mysqli->query($sql);
-    $row = $res->fetch_assoc();
-    $title = $row['training'];
-    $insert['title'] = $title;
+    SELECT
+        employees.employees_id,
+        UPPER(CONCAT( employees.lastName, ', ', employees.firstName, ' ', employees.middleName, ' ', employees.extName )) AS fullName,
+        CONCAT_WS(', ',prr.period, prr.year) AS period,
+        prr.type,
+        prrlist.comments 
+    FROM
+        employees
+    LEFT JOIN prrlist ON employees.employees_id = prrlist.employees_id
+    LEFT JOIN prr ON prrlist.prr_id = prr.prr_id
+    WHERE
+        employees.`status` = 'ACTIVE' 
+        -- AND prrlist.comments <> '' 
+    ORDER BY
+        employees.lastName ASC,
+        prr.period DESC
 
-    // get number of each training
-    $sql = "SELECT * FROM `personneltrainings` WHERE `training_id` = '$training_id'";
-    $res = $mysqli->query($sql);
-    $num_rows = $res->num_rows;
-    $insert['total'] = $num_rows;
-    
-    $insert_trainings = array();
-    while ($row = $res->fetch_assoc()) {
-        $insert_trainings['startDate'] = $row['startDate'];
-        $insert_trainings['endDate'] = $row['endDate'];
-        $insert_trainings['numHours'] = $row['numHours'];
-        $insert_trainings['venue'] = $row['venue'];
-        $insert_trainings['remarks'] = $row['remarks'];
+SQL;
 
-        array_push($insert['trainings'],$insert_trainings);
-        // $insert['trainings'] = $insert_trainings;
-        
-    }
-    $trainings[$training_id] = $insert;
+$result = $mysqli->query($sql);
+$id0 = 'id_0';
+while($row = $result->fetch_assoc()){
+    $id = $row['employees_id'];
+    $prr = [
+        'period' => $row['period'],
+        'type' => $row['type'],
+        'comments' => $row['comments']
+    ];
+
+    if (!array_key_exists('id_'.$id,$data)){
+        $data['id_'.$id] = [
+        'id' => $id,
+        'fullName' => $row['fullName'],
+        'prr' => [$prr]
+        ];
+    } else $data['id_'.$id]['prr'][] = $prr;
 }
 
-echo json_encode($trainings);
+print("<pre>".print_r($data,true)."</pre>");

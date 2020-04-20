@@ -1,5 +1,9 @@
 <?php $title = "Development Needs Assessment"; require_once "header.php";?>
 
+<!-- development version, includes helpful console warnings -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="moment.js"></script>
+
 <script type="text/javascript">
 var content = [],
     manager_arr = [],
@@ -16,7 +20,7 @@ var content = [],
       e.preventDefault();
   
       var keyword = $("#search_by_training_input").val();
-      $.post('tna_proc.php', {
+      $.post('dna_proc.php', {
         search_by_training: true,
         keyword: keyword
       }, function(data, textStatus, xhr) {
@@ -49,7 +53,7 @@ var content = [],
   });
 
   function load(){
-    $("#load_container").load('tna_proc.php',{
+    $("#load_container").load('dna_proc.php',{
       load: true,
     } ,
       function(){
@@ -60,7 +64,7 @@ var content = [],
   }
 
   function getTrainings(){
-    $.post('tna_proc.php', {
+    $.post('dna_proc.php', {
         getTrainings: true}, 
       function(data, textStatus, xhr) {
       content = jQuery.parseJSON(data);
@@ -71,7 +75,7 @@ var content = [],
   }
 
   function getDepartments(){
-    $.post('tna_proc.php', {
+    $.post('dna_proc.php', {
       getDepartments: true}, 
     function(data, textStatus, xhr) {
         
@@ -178,7 +182,7 @@ var content = [],
         $(clear);
       },
       onApprove: function(){
-        $.post('tna_proc.php', {
+        $.post('dna_proc.php', {
           addNew: true,
           department_id: $("#addDeptsList").dropdown("get value"),
           manager_arr: manager_arr,
@@ -199,7 +203,7 @@ var content = [],
     $("#ol_edit_all").html("");
     $("#ol_edit_tools").html("");
 
-    $.post('tna_proc.php', {
+    $.post('dna_proc.php', {
       getEditValues: true,
       tna_id: tna_id,
     }, function(data, textStatus, xhr) {
@@ -238,7 +242,7 @@ var content = [],
           $(clear);        
       },
       onApprove: function(){
-        $.post('tna_proc.php', {
+        $.post('dna_proc.php', {
           edit: true,
           tna_id: tna_id,
           department_id: $("#editDeptsList").dropdown("get value"),
@@ -360,7 +364,7 @@ var content = [],
   }
 
   function populate_findDeptDrop (){
-    $.post('tna_proc.php', {
+    $.post('dna_proc.php', {
       populate_findDeptDrop: true},
       function(data, textStatus, xhr) {
         $("#findDeptDrop").html(data);
@@ -393,8 +397,9 @@ var content = [],
 <div class="ui top attached tabular menu" id="tabs" style="background-color: white;">
   <a class="item active" data-tab="tna">TNA</a>
   <a class="item" data-tab="targetPart">Target Participants</a>
+  <a class="item" data-tab="spms">SPMS Recommendations</a>
 </div>
-<div class="ui bottom attached tab segment active" data-tab="tna">
+<div class="ui bottom attached tab segment --active" data-tab="tna">
 
   <div class="ui secondary small menu noprint">
    <div class="right item">
@@ -411,8 +416,9 @@ var content = [],
 
   <div class="ui container" id="load_container"></div>
 </div>
+<!-- Target Participants starts -->
 <div class="ui bottom attached tab segment" data-tab="targetPart">
-  <!-- Target Participants... -->
+  
 <form class="ui form" novalidate id="targetParticipantsSearchForm">
     <div class="eight wide field">
       <label>Search by Training:</label>
@@ -430,8 +436,78 @@ var content = [],
   <div id="search_by_training_result" class="ui basic segment fluid" style="min-height: 300px;">
     <h1 style="color: lightgrey; text-align: center; margin-top: 100px;">...SEARCH TRAINING...</h1>
   </div>
+</div>
+<!-- Target Participants ends -->
+<!-- SPMS Recs starts -->
+<div class="ui bottom attached tab segment active" data-tab="spms">
+
+<div id="app">
+<div class="ui icon input" style="min-width: 500px !important">
+  <input type="text" placeholder="Search..." v-model="spms_input_search" @keyup="searchSpms">
+  <i class="search icon"></i>
+</div>
+
+<ol>
+  <template v-for="employee in prr">
+    <li class="prr_li">
+      <div>
+        {{employee.fullName}}
+        <ul>
+          <li v-for="prr in employee.prr">
+            <i v-if="!prr.comments" style="color:lightgrey">n/a</i><span v-else>{{prr.comments}}</span><i style="color:grey">- As of period: {{prr.period}} as: {{prr.type}}</i>
+          </li>
+        </ul>
+      </div>
+    </li>
+  </template>
+</ol>
 
 </div>
+</div>
+<script>
+
+new Vue({
+  el: '#app',
+  data: {
+    spms_input_search:'',
+    prr: [],
+  },
+  
+  // watch: function () {
+	//   this.getPrr()
+  // },
+
+  created: function () {
+	  this.getPrr()
+  },
+  methods: {
+    searchSpms: function(){ 
+      var input, filter, ol, li, a, i, txtValue;
+      input = this.spms_input_search
+      var value = input.toLowerCase();
+		  $(".prr_li").filter(function() {
+		    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+		  });
+    },
+	  getPrr: function (){
+      $.post("dna_proc.php",{
+          get_prr: true
+        }, (data)=>{
+            this.prr = data
+            // console.log(data);
+          },
+        "json"
+      );
+    },
+    formatDate: function(date){
+      var a = moment(date); 
+      return a.format("MMM Do YY")
+    }
+  },
+})
+</script>
+<!-- SPMS Recs ends -->
+
 <!-- menu end -->
 
 <!-- add modal start -->
