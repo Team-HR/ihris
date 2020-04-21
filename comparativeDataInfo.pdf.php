@@ -167,38 +167,38 @@ $experience_list = listdis($data[experience]);
 $eligibility_list = listdis($data[eligibility]);
 
 $tbl = <<< EOD
-    <table border="" cellpadding="" cellspacing="" >
-      <tr>
-        <td width="12%"><b>VACANT POSITION:</b></td>
-        <td width="38%">$position</td>
-        <td width="9%"><b>CSC ITEM NO:</b></td>
-        <td width="11%">$itemNo</td>
-        <td width="5%"><b>OFFICE:</b></td>
-        <td width="25%">$dept</td>
-      </tr>
-      <tr>
-        <td><b>EDUCATION:</b></td>
-        <td colspan="5">$education_list</td>
-      </tr>
-      <tr>
-        <td><b>EXPERIENCE:</b></td>
-        <td colspan="5">$experience_list</td>
-      </tr>
-      <tr>
-        <td><b>TRAINING:</b></td>
-        <td colspan="5">$training_list</td>
-      </tr>
-      <tr>
-        <td><b>ELIGIBILITY:</b></td>
-        <td colspan="5">$eligibility_list</td>
-      </tr> 
-    </table>
-    <table border="0">
-    <tr style="line-height: 40%;" > 
-    <td></td>
-    </tr>
-    </table>
-    $applicants_table
+<table border="" cellpadding="" cellspacing="" >
+  <tr>
+    <td width="12%"><b>VACANT POSITION:</b></td>
+    <td width="38%">$position</td>
+    <td width="9%"><b>CSC ITEM NO:</b></td>
+    <td width="11%">$itemNo</td>
+    <td width="5%"><b>OFFICE:</b></td>
+    <td width="25%">$dept</td>
+  </tr>
+  <tr>
+    <td><b>EDUCATION:</b></td>
+    <td colspan="5">$education_list</td>
+  </tr>
+  <tr>
+    <td><b>EXPERIENCE:</b></td>
+    <td colspan="5">$experience_list</td>
+  </tr>
+  <tr>
+    <td><b>TRAINING:</b></td>
+    <td colspan="5">$training_list</td>
+  </tr>
+  <tr>
+    <td><b>ELIGIBILITY:</b></td>
+    <td colspan="5">$eligibility_list</td>
+  </tr> 
+</table>
+<table border="0">
+<tr style="line-height: 40%;" > 
+<td></td>
+</tr>
+</table>
+$applicants_table
 EOD;
 
 
