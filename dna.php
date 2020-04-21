@@ -399,7 +399,7 @@ var content = [],
   <a class="item" data-tab="targetPart">Target Participants</a>
   <a class="item" data-tab="spms">SPMS Recommendations</a>
 </div>
-<div class="ui bottom attached tab segment --active" data-tab="tna">
+<div class="ui bottom attached tab segment active" data-tab="tna">
 
   <div class="ui secondary small menu noprint">
    <div class="right item">
@@ -439,7 +439,7 @@ var content = [],
 </div>
 <!-- Target Participants ends -->
 <!-- SPMS Recs starts -->
-<div class="ui bottom attached tab segment active" data-tab="spms">
+<div class="ui bottom attached tab segment" data-tab="spms">
 
 <div id="app">
 <div class="ui icon input" style="min-width: 500px !important">
