@@ -67,67 +67,50 @@ while ($stmt->fetch()) {
   $rec_inf = createList(unserialize($records_infractions));
   // $applicants_table .= "<br>";
   $applicants_table .= <<<EOD
-    <hr>
-    <table border="" cellspacing="">
-      <tr>
-        <td colspan="6"></td>
-      </tr>
-      <tr nobr="true" bgcolor="#e5f2ff">
-        <td width="9%"><b>Applicant #$counter:</b></td>
-        <td width="20%">$name</td>
-        <td width="5%"><b>Age:</b> $age</td>
-        <td width="9%"><b>Gender:</b> $gender</td>
-        <td width="12%"><b>Civil Status:</b> $civil_status</td>
-        <td width="45%"><b>Years in Government Service:</b> $yrsgov</td>
-      </tr>
-      <tr>
-        <td><b>Education:</b></td>
-        <td colspan="5">$education in $school</td>
-      </tr>
-      <tr>
-        <td><b>Training:</b></td>
-        <td colspan="5">$tr</td>
-      </tr>
-      <tr>
-        <td><b>Experience:</b></td>
-        <td colspan="5">$exp</td>
-      </tr>
-      <tr>
-        <td><b>Eligibility:</b></td>
-        <td colspan="5">$elig</td>
-      </tr>
-      <tr>
-        <td><b>Awards:</b></td>
-        <td colspan="5">$awards</td>
-      </tr>
-      <tr>
-        <td width="13%"><b>Records of Infractions:</b></td>
-        <td colspan="5">$rec_inf</td>
-      </tr>
-      <tr>
-        <td colspan="6"></td>
-      </tr>
-    </table>
-    EOD;
-//   $applicants_table .= <<<EOD
-// <table>
-// <tr>
-//   <td>$counter. </td>
-//   <td>$name</td>
-//   <td>$age</td>
-//   <td>$gender</td>
-//   <td style="white-space: nowrap;">$yrsgov</td>
-//   <td>$civil_status</td>
-//   <td>$education</td>
-//   <td>$tr</td>
-//   <td>$exp</td>
-//   <td>$elig</td>
-//   <td>$awards</td>
-//   <td>$rec_inf</td>
-// </tr>
-// </table>
-// EOD;
-}
+<hr>
+<table border="" cellspacing="">
+  <tr>
+    <td colspan="6"></td>
+  </tr>
+  <tr nobr="true" bgcolor="#e5f2ff">
+    <td width="9%"><b>Applicant #$counter:</b></td>
+    <td width="20%">$name</td>
+    <td width="5%"><b>Age:</b> $age</td>
+    <td width="9%"><b>Gender:</b> $gender</td>
+    <td width="12%"><b>Civil Status:</b> $civil_status</td>
+    <td width="45%"><b>Years in Government Service:</b> $yrsgov</td>
+  </tr>
+  <tr>
+    <td><b>Education:</b></td>
+    <td colspan="5">$education in $school</td>
+  </tr>
+  <tr>
+    <td><b>Training:</b></td>
+    <td colspan="5">$tr</td>
+  </tr>
+  <tr>
+    <td><b>Experience:</b></td>
+    <td colspan="5">$exp</td>
+  </tr>
+  <tr>
+    <td><b>Eligibility:</b></td>
+    <td colspan="5">$elig</td>
+  </tr>
+  <tr>
+    <td><b>Awards:</b></td>
+    <td colspan="5">$awards</td>
+  </tr>
+  <tr>
+    <td width="13%"><b>Records of Infractions:</b></td>
+    <td colspan="5">$rec_inf</td>
+  </tr>
+  <tr>
+    <td colspan="6"></td>
+  </tr>
+</table>
+EOD;
+
+  }
 
 // create new PDF document
 $pdf = new TCPDF('L', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -178,44 +161,44 @@ $pdf->SetFont('times', '', 9);
 // ------------------------------------------------------------------------------
 $pageWidth = $pdf->getPageWidth();
 $dept = $deparment->getDepartment($office);
-$education_list = listdis($data["education"]);
-$training_list = listdis($data["training"]);
-$experience_list = listdis($data["experience"]);
-$eligibility_list = listdis($data["eligibility"]);
+$education_list = listdis($data[education]);
+$training_list = listdis($data[training]);
+$experience_list = listdis($data[experience]);
+$eligibility_list = listdis($data[eligibility]);
 
 $tbl = <<< EOD
-    <table border="" cellpadding="" cellspacing="" >
-      <tr>
-        <td width="12%"><b>VACANT POSITION:</b></td>
-        <td width="38%">$position</td>
-        <td width="9%"><b>CSC ITEM NO:</b></td>
-        <td width="11%">$itemNo</td>
-        <td width="5%"><b>OFFICE:</b></td>
-        <td width="25%">$dept</td>
-      </tr>
-      <tr>
-        <td><b>EDUCATION:</b></td>
-        <td colspan="5">$education_list</td>
-      </tr>
-      <tr>
-        <td><b>EXPERIENCE:</b></td>
-        <td colspan="5">$experience_list</td>
-      </tr>
-      <tr>
-        <td><b>TRAINING:</b></td>
-        <td colspan="5">$training_list</td>
-      </tr>
-      <tr>
-        <td><b>ELIGIBILITY:</b></td>
-        <td colspan="5">$eligibility_list</td>
-      </tr> 
-    </table>
-    <table border="0">
-    <tr style="line-height: 40%;" > 
-    <td></td>
-    </tr>
-    </table>
-    $applicants_table
+<table border="" cellpadding="" cellspacing="" >
+  <tr>
+    <td width="12%"><b>VACANT POSITION:</b></td>
+    <td width="38%">$position</td>
+    <td width="9%"><b>CSC ITEM NO:</b></td>
+    <td width="11%">$itemNo</td>
+    <td width="5%"><b>OFFICE:</b></td>
+    <td width="25%">$dept</td>
+  </tr>
+  <tr>
+    <td><b>EDUCATION:</b></td>
+    <td colspan="5">$education_list</td>
+  </tr>
+  <tr>
+    <td><b>EXPERIENCE:</b></td>
+    <td colspan="5">$experience_list</td>
+  </tr>
+  <tr>
+    <td><b>TRAINING:</b></td>
+    <td colspan="5">$training_list</td>
+  </tr>
+  <tr>
+    <td><b>ELIGIBILITY:</b></td>
+    <td colspan="5">$eligibility_list</td>
+  </tr> 
+</table>
+<table border="0">
+<tr style="line-height: 40%;" > 
+<td></td>
+</tr>
+</table>
+$applicants_table
 EOD;
 
 
@@ -293,8 +276,12 @@ function createYosList($serial){
   return $list;
 }
 
-function formatDate($numeric_date){
+
+function formatDate($numeric_date)
+{
     $date = new DateTime($numeric_date);
     $strDate = $date->format('M d, Y');
     return $strDate;
 }
+
+
