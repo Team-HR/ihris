@@ -1,9 +1,4 @@
 <?php $title = "Development Needs Assessment"; require_once "header.php";?>
-
-<!-- development version, includes helpful console warnings -->
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="moment.js"></script>
-
 <script type="text/javascript">
 var content = [],
     manager_arr = [],

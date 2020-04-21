@@ -3,9 +3,6 @@ $title = "Common Trainings";
 require_once 'header.php';
 ?>
 
-<!-- production version, optimized for size and speed -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
-
 <div class="ui container">
 	<div class="ui borderless blue inverted mini menu noprint">
 		<div class="left item" style="margin-right: 0px !important;">
@@ -62,13 +59,6 @@ require_once 'header.php';
 </div>
 
 <script>
-// $(document).ready(function () {
-// 	load();
-// });
-
-// function load(){
-
-// }
 
 var app = new Vue({
   el: '#app',
