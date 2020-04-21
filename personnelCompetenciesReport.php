@@ -62,24 +62,19 @@
     var overall_chart_data_label = [];
     var overall_chart_data_data = [];
     var overall_chart = $("#overall_chart");
-    var bgColor = [];
     $.each(overall_chart_data, function(index, val) {
        overall_chart_data_label.push(val.competency.split("_").join(" "));
        overall_chart_data_data.push(val.value);
     });
 
-      for (var i = 24 - 1; i >= 0; i--) {
-        bgColor.push('#055bc8');
-      }
-
       var config = {
-                        type: 'horizontalBar',
+                        type: 'bar',
                         data: {
                             labels: overall_chart_data_label,
                             datasets: [{
-                                label: 'Level',
+                                label: 'Average Mastery is ',
                                 data: overall_chart_data_data,
-                                backgroundColor: bgColor,
+                                backgroundColor: '#055bc8',
                                 borderColor: [
                                   // '#055bc8'
                                 ],
@@ -89,24 +84,39 @@
                             }]
                         },
                         options: {
+                          tooltips: {
+                              callbacks: {
+                                  label: function(tooltipItem, data) {
+                                      var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                                      if (label) {
+                                          label += 'Level ';
+                                      }
+                                      label += tooltipItem.yLabel;
+                                      return label;
+                                  }
+                              }
+                          },
                             responsive: true,
                             title: {
-                                    display: false,
-                                    text: "Overall "
+                                    display: true,
+                                    text: "General Average"
                             },
                             legend: {
                                     display: false,  
                             },
                             scales: {
-                                yAxes: [{
-
+                                xAxes: [{
                                     ticks: {
-                                        fontSize:14,
-                                        beginAtZero: true,
-                                        stepSize:1
+                                        // fontSize:14,
+                                        // min: 0,
+                                        // max: 25,
+                                        // beginAtZero: true,
+                                        // stepSize:1
+                                        autoSkip: false,
                                     }
                                 }],
-                                xAxes: [{
+                                yAxes: [{
                                 display: true,
                                 ticks:{
                                   beginAtZero:true,
@@ -116,20 +126,6 @@
                                 }
                               }],
                             },
-                            // label tooltips
-                            // tooltips:{
-                            //   callbacks: {
-                            //       label: function(tooltipItem, data) {
-                            //           var label = data.datasets[tooltipItem.datasetIndex].label || '';
-
-                            //           if (label) {
-                            //               label += ': ';
-                            //           }
-                            //           label += '';
-                            //           return label;
-                            //       }
-                            //   }
-                            // },
                             onClick:function(evt, items){
                                 
                               var firstPoint = this.getElementAtEvent(evt)[0];
@@ -248,8 +244,6 @@ var chart_data_data = {
   female:[]
 };
 var gender_chart = $("#gender_chart");
-var bgColor = [];
-
 
 $.each(overall_chart_data_by_gender.male, function(index, val) {
    chart_data_label.push(val.competency.split("_").join(" "));
@@ -260,18 +254,14 @@ $.each(overall_chart_data_by_gender.female, function(index, val) {
    chart_data_data.female.push(val.value);
 });
 
-  for (var i = 24 - 1; i >= 0; i--) {
-    bgColor.push('#055bc8');
-  }
-
   var config = {
-                    type: 'horizontalBar',
+                    type: 'bar',
                     data: {
                         labels: chart_data_label,
                         datasets: [{
-                            label: 'Male',
+                            label: 'Male:',
                             data: chart_data_data.male,
-                            backgroundColor: bgColor,
+                            backgroundColor: '#055bc8',
                             borderColor: [
                               // '#055bc8'
                             ],
@@ -279,35 +269,9 @@ $.each(overall_chart_data_by_gender.female, function(index, val) {
                             borderWidth: 1,
                             lineTension: 0,
                         },{
-                            label: 'Female',
+                            label: 'Female:',
                             data: chart_data_data.female,
-                            backgroundColor: [
-                              
-                              '#ff80ff',
-                              '#ff80ff',
-                              '#ff80ff',
-                              '#ff80ff',
-                              '#ff80ff',
-                              '#ff80ff',
-                              '#ff80ff',
-                              '#ff80ff',
-                              '#ff80ff',
-                              '#ff80ff',
-                              '#ff80ff',
-                              '#ff80ff',
-                              '#ff80ff',
-                              '#ff80ff',
-                              '#ff80ff',
-                              '#ff80ff',
-                              '#ff80ff',
-                              '#ff80ff',
-                              '#ff80ff',
-                              '#ff80ff',
-                              '#ff80ff',
-                              '#ff80ff',
-                              '#ff80ff',
-                              '#ff80ff',
-                            ],
+                            backgroundColor: '#ff80ff',
                             borderColor: [
                               // '#e03997'
                             ],
@@ -317,24 +281,38 @@ $.each(overall_chart_data_by_gender.female, function(index, val) {
                         }]
                     },
                     options: {
+                          tooltips: {
+                              callbacks: {
+                                  label: function(tooltipItem, data) {
+                                      var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                                      if (label) {
+                                          label += ' Level ';
+                                      }
+                                      label += tooltipItem.yLabel;
+                                      return label;
+                                  }
+                              }
+                          },
                         responsive: true,
                         title: {
-                                display: false,
-                                text: "Overall "
+                                display: true,
+                                text: "Average Mastery by Gender"
                         },
                         legend: {
-                                display: false,  
+                                display: true,  
                         },
                         scales: {
-                            yAxes: [{
+                            xAxes: [{
 
                                 ticks: {
-                                    fontSize:14,
-                                    beginAtZero: true,
-                                    stepSize:1
+                                    // fontSize:14,
+                                    // beginAtZero: true,
+                                    // stepSize:1
+                                  autoSkip: false
                                 }
                             }],
-                            xAxes: [{
+                            yAxes: [{
                             display: true,
                             ticks:{
                               beginAtZero:true,
