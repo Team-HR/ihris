@@ -10,7 +10,45 @@ if (isset($_POST["load"])) {
 	createTable($mysqli,"CASUAL",$department_id,$year);
 	createTable2($mysqli,$department_id,$year);
 }
+elseif (isset($_POST["fetchPerfData"])) {
+	
+$sql = <<< SQL
+SELECT
+	COUNT(personneltrainings_id) AS num_trainings,
+-- 	startDate,
+	MONTH(startDate) AS month,
+	YEAR(startDate) AS year
+FROM
+	personneltrainings
+GROUP BY
+	MONTH(startDate)
+ORDER BY
+-- MONTH(startDate) ASC,	
+YEAR(startDate) ASC
+SQL;
 
+$data = [];
+$res = $mysqli->query($sql);
+
+while ($row = $res->fetch_assoc()) {
+	$year = $row['year'];
+	$months = [
+		'month' => $row['month'],
+		'num_trainings' => $row['num_trainings']
+	];
+
+	if (!array_key_exists('year_'.$year, $data)) {
+		$data['year_'.$year] = [
+			'year'	=> $year,
+			'months' => [
+				$months['month'] => $months
+			]
+		];
+	} else $data['year_'.$year]['months'][$months['month']] = $months;
+}
+
+echo json_encode($data);
+}
 elseif (isset($_POST["load_graph"])) {
 	$department_id = $_POST["department_id"];
 	$year = $_POST["year"];

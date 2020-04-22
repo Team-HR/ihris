@@ -18,7 +18,7 @@ $(document).ready(function () {
             ldnLsaCharts_total.destroy();
             ldnLsaCharts2.destroy();
             ldnLsaCharts2_total.destroy();
-            performanceChart.destroy();
+            // performanceChart.destroy();
             tbody.html(loading_el.show());
             sortBbyYear = value;
             // console.log('check', sortBbyDept+" and "+sortBbyYear);
@@ -58,11 +58,108 @@ $(document).ready(function () {
             $("#reportDepartment").html(html);
         }
     });
+
+    var ctxPerformance = $("#performance_chart");
+    $.post("trainingreport_proc.php",{fetchPerfData:true},
+    function (jsonData, textStatus, jqXHR) {
+        // console.log(data);
+        var datasets = [];
+        var bgColors = ['#ff000070', '#00800075', '#0000ff70', '#ffa50070', '#ffff0070'];
+        var colors = ['red', 'green', 'blue', 'orange', 'yellow'];
+        var counter = 0;
+        $.each(jsonData, function (i, val) {
+            data = [];
+            for (let index = 0; index < 12; index++) {
+                data[index] = (val.months[index+1]?val.months[index+1].num_trainings:'');
+            }
+            set = {
+                label: val.year,
+                // steppedLine: 'middle',
+                backgroundColor: bgColors[counter],
+                borderColor: colors[counter],
+                borderWidth: 1,
+                fill: true,
+                data: data
+            }
+            datasets.push(set);
+            counter++;
+        });
+        console.log(datasets);
+        var pfChartCfg = {
+            type: 'line',
+
+            data: {
+                labels: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+                datasets: datasets
+            },
+            options: {
+                // legend: {
+                //     onClick: function (e, legendItem) {
+                //         var index = legendItem.datasetIndex;
+                //         var ci = this.chart;
+                //         var dataset_num = this.chart.config.data.datasets.length;
+                        
+                //         var thereIsHidden = false;
+                //         for (let i = 0; i < dataset_num; i++) {
+                //             meta = ci.getDatasetMeta(i);
+                //             if (meta.hidden){
+                //                 thereIsHidden = true;
+                //                 break;
+                //             }
+                //         }
+
+                //         if (thereIsHidden) {
+                //             for (let i = 0; i < dataset_num; i++) {
+                //                 if (i != index) {
+                //                     meta = ci.getDatasetMeta(i);
+                //                     meta.hidden = null;
+                //                 }
+                //             }
+                //         } else {
+                //             for (let i = 0; i < dataset_num; i++) {
+                //                 if (i != index) {
+                //                     meta = ci.getDatasetMeta(i);
+                //                     meta.hidden = true;
+                //                 } else {
+                //                     meta = ci.getDatasetMeta(i);
+                //                     meta.hidden = false;
+                //                 }
+                //             }
+                //         }
+                //         ci.update();
+                //     }
+                // },
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Training Conducted Performance'
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        autoSkip: false
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            stepSize: 1,
+                            beginAtZero: true
+                        },
+                        display: true
+                    }]
+                }
+            }
+        };
+
+        performanceChart = new Chart(ctxPerformance, pfChartCfg);
+        
+    },
+    "json"
+);
+
+
 });
 
 function load(department_id, year) {
-
-
     $.post('trainingreport_proc.php', {
         load_graph: true,
         department_id: department_id,
@@ -72,8 +169,6 @@ function load(department_id, year) {
         json = $.parseJSON(data);
         // console.log(json[0]);
         // console.log([json[0][0]+json[0][1],json[0][2]+json[0][3]]);
-
-        var ctxPerformance = $("#performance_chart");
         var ctx = $("#graph_permanent");
         var ctx_total = $("#graph_permanent_total");
         var ctx2 = $("#graph_casual");
@@ -178,66 +273,7 @@ function load(department_id, year) {
         config2_total.data.datasets[1].data = [json[1][2] + json[1][3]];
         config2_total.options.title.text = "Casual Employees With vs Without Trainings";
 //TODO:
-        $.post("test.php", data,
-            function (jsonData, textStatus, jqXHR) {
-                // console.log(data);
-                var datasets = [];
-                var bgColors = ['#ff000070', '#00800075', '#0000ff70', '#ffa50070', '#ffff0070'];
-                var colors = ['red', 'green', 'blue', 'orange', 'yellow'];
-                var counter = 0;
-                $.each(jsonData, function (i, val) {
-                    data = [];
-                    for (let index = 0; index < 12; index++) {
-                        data[index] = (val.months[index+1]?val.months[index+1].num_trainings:'');
-                    }
-                    set = {
-                        label: val.year,
-                        // steppedLine: 'middle',
-                        backgroundColor: bgColors[counter],
-                        borderColor: colors[counter],
-                        borderWidth: 1,
-                        fill: true,
-                        data: data
-                    }
-                    datasets.push(set);
-                    counter++;
-                });
-                console.log(datasets);
-                var pfChartCfg = {
-                    type: 'line',
         
-                    data: {
-                        labels: ['January','February','March','April','May','June','July','August','September','October','November','December'],
-                        datasets: datasets
-                    },
-                    options: {
-                        
-                        responsive: true,
-                        title: {
-                            display: true,
-                            text: 'Training Conducted Performance'
-                        },
-                        scales: {
-                            xAxes: [{
-                                display: true,
-                                autoSkip: false
-                            }],
-                            yAxes: [{
-                                ticks: {
-                                    stepSize: 1,
-                                    beginAtZero: true
-                                },
-                                display: true
-                            }]
-                        }
-                    }
-                };
-        
-                performanceChart = new Chart(ctxPerformance, pfChartCfg);
-                
-            },
-            "json"
-        );
         ldnLsaCharts = new Chart(ctx, config);
         ldnLsaCharts_total = new Chart(ctx_total, config_total);
         ldnLsaCharts2 = new Chart(ctx2, config2);
