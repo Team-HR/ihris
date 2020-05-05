@@ -1,0 +1,13 @@
+{
+    "sqltools.connections": [
+        {
+            "askForPassword": true,
+            "database": "hris",
+            "dialect": "MySQL",
+            "name": "hrmo",
+            "port": 3306,
+            "server": "localhost",
+            "username": "root"
+        }
+    ]
+}
