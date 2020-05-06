@@ -135,20 +135,28 @@ $data = $result->fetch_assoc();
 $data = [];
 $filters = [
     'category' => ['Key Position', 'Administrative', 'Technical'],
-    'level' => [1,2,3],
     'nature_of_assignment' => ['RANK & FILE', 'SUPERVISORY'],
     'gender' => ['MALE','FEMALE']
 ];
 
+$filters = [
+    ['Key Position', 'RANK & FILE', 'MALE'],
+    ['Key Position', 'RANK & FILE', 'FEMALE'],
+    ['Key Position', 'SUPERVISORY', 'MALE'],
+    ['Key Position', 'SUPERVISORY', 'FEMALE'],
+    ['Administrative', 'RANK & FILE', 'MALE'],
+    ['Administrative', 'RANK & FILE', 'FEMALE'],
+    ['Administrative', 'SUPERVISORY', 'MALE'],
+    ['Administrative', 'SUPERVISORY', 'FEMALE'],    
+    ['Technical', 'RANK & FILE', 'MALE'],
+    ['Technical', 'RANK & FILE', 'FEMALE'],
+    ['Technical', 'SUPERVISORY', 'MALE'],
+    ['Technical', 'SUPERVISORY', 'FEMALE']
+];
 
-$indeces = [];
-$wheres = [];
-$where = "WHERE";
-$_i = 0;
-foreach ($filters as $cat => $filter) {
-    $_i++;
-    $where .= " `".$cat."` = '".$filter[0]."'".($_i!==count($filters)?" AND":"");
-}
-echo $where;
+$sql = "WHERE category = '$category' AND natureOfAssignment = '$natureOfAssigment' AND gender = '$gender'";
 
-print("<pre>".print_r($wheres,true)."</pre>");
+
+
+
+// print("<pre>".print_r($wheres,true)."</pre>");
