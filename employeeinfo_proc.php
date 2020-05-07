@@ -133,8 +133,8 @@ if (isset($_POST["loadProfile"])) {
 	$lastName = addslashes($_POST["lastName"]);
 	$extName = addslashes($_POST["extName"]);
 	$status = $_POST["status"];
-	$statusDateVal = $_POST["statusDate"];
-	$dateIPCR = $_POST["dateIPCR"];
+	$statusDateVal = ($_POST["statusDate"]?$_POST["statusDate"]:"0000-00-00");
+	$dateIPCR = ($_POST["dateIPCR"]?$_POST["dateIPCR"]:"0000-00-00");
 	
 	if ($status === "ACTIVE") {
 		$statusDate = ",`dateActivated` = '$statusDateVal'";
@@ -150,7 +150,7 @@ if (isset($_POST["loadProfile"])) {
 	$department_id = $_POST["department_id"];
 	$position_id = $_POST["position_id"];
 
-	$sql = "UPDATE `employees` SET `firstName`= '$firstName',`lastName`= '$lastName',`middleName`='$middleName',`extName`='$extName',`gender`='$gender',`employmentStatus`='$employmentStatus',`department_id`='$department_id',`position_id`='$position_id',`natureOfAssignment`='$natureOfAssignment', `status` = '$status', `dateIPCR` = '$dateIPCR' $statusDate WHERE `employees_id`= '$employees_id'";
+	echo $sql = "UPDATE `employees` SET `firstName`= '$firstName',`lastName`= '$lastName',`middleName`='$middleName',`extName`='$extName',`gender`='$gender',`employmentStatus`='$employmentStatus',`department_id`='$department_id',`position_id`='$position_id',`natureOfAssignment`='$natureOfAssignment', `status` = '$status', `dateIPCR` = '$dateIPCR' $statusDate WHERE `employees_id`= '$employees_id'";
 	$mysqli->query($sql);
 }
 

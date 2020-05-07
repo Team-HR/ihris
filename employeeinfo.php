@@ -127,6 +127,7 @@ if (isset($_GET["spms"])) {
 			department_id: $("#departmentModal").val(),
 			position_id: $("#positionModal").val()
 		}, function(data, textStatus, xhr) {
+			// console.log(data);
 			/*optional stuff to do after success */
 			$(load);
 		});
