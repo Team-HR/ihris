@@ -20,7 +20,7 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true && $_SESSION[
 </head>
 
 <body class="noprint" style="
-    background: url(assets/bgs/bg.jpg) no-repeat center center fixed;
+    background: url(assets/bgs/circuitboardbg.gif) no-repeat center center fixed;
     -moz-background-size: cover;
     -webkit-background-size: cover;
     -o-background-size: cover;
