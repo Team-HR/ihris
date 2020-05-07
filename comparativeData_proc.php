@@ -117,7 +117,9 @@ elseif (isset($_POST["addNew"])) {
 	$sg = $data0[2];
 	$office = $data0[3];
 	$dateVacated = $data0[4];
+	$dateVacated = ($dateVacated?$dateVacated:'0000-00-00');
 	$dateOfInterview = $data0[5];
+	$dateOfInterview = ($dateOfInterview?$dateOfInterview:'0000-00-00');
 	$education = serialize($data1[0]);
 	$training = serialize($data1[1]);
 	$experience = serialize($data1[2]);
@@ -157,8 +159,12 @@ elseif(isset($_POST["editEntry"])){
 	$itemNo = $data0[1];
 	$sg = $data0[2];
 	$office = $data0[3];
+	// $dateVacated = $data0[4];
+	// $dateOfInterview = $data0[5];
 	$dateVacated = $data0[4];
+	$dateVacated = ($dateVacated?$dateVacated:'0000-00-00');
 	$dateOfInterview = $data0[5];
+	$dateOfInterview = ($dateOfInterview?$dateOfInterview:'0000-00-00');
 	$education = serialize($data1[0]);
 	$training = serialize($data1[1]);
 	$experience = serialize($data1[2]);
