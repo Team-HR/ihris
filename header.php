@@ -78,7 +78,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true && $_SESSION[
 </head>
 <!-- <body class="" style="background-image: url(assets/bgs/ihris_bg2.png); background-repeat: no-repeat; background-attachment: fixed;"> -->
   <body style="
-    background: url(assets/bgs/bg.jpg) no-repeat center center fixed;
+    background: url(assets/bgs/circuitboardbg.gif) no-repeat center center fixed;
     -moz-background-size: cover;
     -webkit-background-size: cover;
     -o-background-size: cover;
