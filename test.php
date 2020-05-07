@@ -89,15 +89,42 @@ require_once '_connect.db.php';
 // `gender` = 'FEMALE'
 // SQL;
 // $filter = "";
-$filter = <<<SQL
-WHERE
-`category` = 'Administrative' AND
-`gender` = 'FEMALE'
-SQL;
-// $filter = "";+
+// echo "Filter: ".($filter?$filter:'N/A')."<br>";
 
-echo "Filter: ".($filter?$filter:'N/A')."<br>";
-$sql = <<<SQL
+
+$data = [];
+$filters = [
+    'category' => ['Key Position', 'Administrative', 'Technical'],
+    'nature_of_assignment' => ['RANK & FILE', 'SUPERVISORY'],
+    'gender' => ['MALE','FEMALE']
+];
+
+$filters = [
+    ['Key Position', 'RANK & FILE', 'MALE'],
+    ['Key Position', 'RANK & FILE', 'FEMALE'],
+    ['Key Position', 'SUPERVISORY', 'MALE'],
+    ['Key Position', 'SUPERVISORY', 'FEMALE'],
+    ['Administrative', 'RANK & FILE', 'MALE'],
+    ['Administrative', 'RANK & FILE', 'FEMALE'],
+    ['Administrative', 'SUPERVISORY', 'MALE'],
+    ['Administrative', 'SUPERVISORY', 'FEMALE'],    
+    ['Technical', 'RANK & FILE', 'MALE'],
+    ['Technical', 'RANK & FILE', 'FEMALE'],
+    ['Technical', 'SUPERVISORY', 'MALE'],
+    ['Technical', 'SUPERVISORY', 'FEMALE']
+];
+
+// print("<pre>".print_r($filters,true)."</pre>");
+
+$queries = [];
+foreach ($filters as $filter) {
+    $sql = "WHERE category = '$filter[0]' AND natureOfAssignment = '$filter[1]' AND gender = '$filter[2]'";
+    $queries[] = $sql;
+}
+
+// print("<pre>".print_r($queries,true)."</pre>");
+
+$sql_ave = <<<SQL
 SELECT 
 ROUND(AVG(`competency`.`Adaptability`)) 'adaptability',
 ROUND(AVG(`competency`.`ContinousLearning`)) 'continuous_learning',
@@ -125,38 +152,48 @@ ROUND(AVG(`competency`.`ValuesandEthics`)) 'values_and_ethics',
 ROUND(AVG(`competency`.`VisioningandStrategicDirection`)) 'visioning_and_strategic_direction'
 FROM
 `competency`
-LEFT JOIN `employees` ON `competency`.`employees_id` = `employees`.`employees_id` LEFT JOIN `positiontitles` ON `employees`.`position_id` = `positiontitles`.`position_id`
-$filter
+LEFT JOIN `employees` ON `competency`.`employees_id` = `employees`.`employees_id` LEFT JOIN `positiontitles` ON `employees`.`position_id` = `positiontitles`.`position_id` 
 SQL;
 
-$result = $mysqli->query($sql);
-$data = $result->fetch_assoc();
-
-$data = [];
-$filters = [
-    'category' => ['Key Position', 'Administrative', 'Technical'],
-    'nature_of_assignment' => ['RANK & FILE', 'SUPERVISORY'],
-    'gender' => ['MALE','FEMALE']
-];
-
-$filters = [
-    ['Key Position', 'RANK & FILE', 'MALE'],
-    ['Key Position', 'RANK & FILE', 'FEMALE'],
-    ['Key Position', 'SUPERVISORY', 'MALE'],
-    ['Key Position', 'SUPERVISORY', 'FEMALE'],
-    ['Administrative', 'RANK & FILE', 'MALE'],
-    ['Administrative', 'RANK & FILE', 'FEMALE'],
-    ['Administrative', 'SUPERVISORY', 'MALE'],
-    ['Administrative', 'SUPERVISORY', 'FEMALE'],    
-    ['Technical', 'RANK & FILE', 'MALE'],
-    ['Technical', 'RANK & FILE', 'FEMALE'],
-    ['Technical', 'SUPERVISORY', 'MALE'],
-    ['Technical', 'SUPERVISORY', 'FEMALE']
-];
-
-$sql = "WHERE category = '$category' AND natureOfAssignment = '$natureOfAssigment' AND gender = '$gender'";
-
-
-
-
 // print("<pre>".print_r($wheres,true)."</pre>");
+$sql_emp = <<<SQL
+SELECT 
+    -- `employees`.`employees_id`,
+    CONCAT(`employees`.`lastName`,', ',`employees`.`firstName`,' ',`employees`.`middleName`,' ',`employees`.`extName`) AS fullName
+FROM
+`competency`
+LEFT JOIN `employees` ON `competency`.`employees_id` = `employees`.`employees_id` LEFT JOIN `positiontitles` ON `employees`.`position_id` = `positiontitles`.`position_id` 
+SQL;
+
+foreach ($queries as $qk => $qry) {
+    $key = $filters[$qk][0].";".$filters[$qk][1];
+    // echo $key."<br>";
+
+
+    //get the average competency
+    $result = $mysqli->query($sql_ave.$qry);
+    $data_fltrs = [$filters[$qk][0],$filters[$qk][1]];
+    $data_ave = $result->fetch_assoc();
+    // now get the list of employees
+    $data_emps = [];
+    $result = $mysqli->query($sql_emp.$qry." ORDER BY `employees`.`lastName` ASC");
+    while ($emp = $result->fetch_assoc()) {
+        $data_emps[] = $emp['fullName'];   
+    }
+
+    if (!array_key_exists($key, $data)) {
+        //male
+        $data[$key]['filters'] = $data_fltrs;
+        $data[$key]['male'] = [
+            'average' => $data_ave,
+            'employees' => $data_emps
+        ];
+	} else {
+        $data[$key]['female'] = [
+            'average' => $data_ave,
+            'employees' => $data_emps
+        ];
+    }
+}
+
+print("<pre>".print_r($data,true)."</pre>");
