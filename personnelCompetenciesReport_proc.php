@@ -213,7 +213,13 @@ elseif (isset($_POST["fetchData"])) {
       //get the average competency
       $result = $mysqli->query($sql_ave.$qry);
       $data_fltrs = [$filters[$qk][0],$filters[$qk][1]];
-      $data_ave = $result->fetch_assoc();
+      $data_average = $result->fetch_assoc();
+      $data_ave = [];
+      foreach ($data_average as $label => $ave) {
+        $data_ave['label'][] = $label;
+        $data_ave['average'][] = $ave;
+      }
+      
       // now get the list of employees
       $data_emps = [];
       $result = $mysqli->query($sql_emp.$qry." ORDER BY `employees`.`lastName` ASC");

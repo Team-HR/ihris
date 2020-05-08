@@ -15,17 +15,18 @@ require_once "_connect.db.php"; ?>
       <h3><i class="icon chart line"></i>Generate Competency Report</h3>
     </div>
     <div class="right item">
-      <a href="javascript:void(0)" class="ui small green button"><i class="ui icon print"></i> Print</a>
+      <a href="javascript:void(0)" onclick="print()" class="ui small green button"><i class="ui icon print"></i> Print</a>
     </div>
   </div>
 </div>
 
 <div class="ui container" style="background-color: white; width: 1300px;">
+<h1 class="ui header center aligned">Competency Report</h1>
   <div class="ui segment" id="app">
     <template v-for="cat in data">
       <h1 class="ui blue header block">{{combineCat(cat.filters)}}</h1>
       <!-- chart here -->
-      <chart-component :chart-data="combineMaleAndFemaleData(cat.male.average,cat.female.average)"></chart-component>
+      <chart-component v-if="cat.male.employees != '' && cat.female.employees != ''" :chart-data="combineMaleAndFemaleData(cat.male.average,cat.female.average)"></chart-component>
       <div class="ui grid">
         <div class="eight wide column">
           <div class="ui segment">
@@ -102,9 +103,41 @@ require_once "_connect.db.php"; ?>
     mounted() {
       console.log(this.chartData);
       console.log(this.$el);
-      
+
+var myChart = new Chart(this.$el.getContext('2d'), {
+    type: 'bar',
+    data: {
+        labels: this.chartData.male.label,
+        datasets: [
+          {
+            label: 'Male',
+            data: this.chartData.male.average,
+            backgroundColor: '#4075a975',
+            borderColor:'#4075a9',
+            borderWidth: 1
+          },
+          {
+            label: 'Female',
+            data: this.chartData.female.average,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor:'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+          },
+        ]
     },
-    template: '<canvas></canvas>'
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+
+    },
+    template: '<canvas height="100"></canvas>'
   })
 </script>
 <style>
