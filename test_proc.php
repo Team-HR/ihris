@@ -196,4 +196,5 @@ foreach ($queries as $qk => $qry) {
     }
 }
 
-print("<pre>".print_r($data,true)."</pre>");
+echo json_encode($data);
+// print("<pre>".print_r($data,true)."</pre>");
