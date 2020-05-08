@@ -1,58 +1,5 @@
 <?php $title = "L&D Profile"; require_once "header.php"; require_once "_connect.db.php";?>
 
-<script type="text/javascript">
-  $(document).ready(function() {
-    $("#sortYear").dropdown();
-
-    getMinMaxYear("all");
-    $("#_search").on("keyup", function() {
-      var value = $(this).val().toLowerCase();
-      $("#_table tr").filter(function() {
-        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-      });
-      
-      if (value != "") {
-        $("#year").html("");
-      }
-       
-    });
-
-    $(load(""));
-    $("#sortYear").change(function(event) {
-      var year = $(this).val();
-      $(load(year));
-      getMinMaxYear(year);
-    });
-  });
-
-  function getMinMaxYear(year){
-      if (year == "all") {
-        year = "<?php 
-          $sql = "SELECT MIN(year(`startDate`)) AS `minYear` FROM `personneltrainings`";
-          $result = $mysqli->query($sql);
-          $row = $result->fetch_assoc();
-          $minYear = $row["minYear"];
-          $sql = "SELECT MAX(year(`startDate`)) AS `maxYear` FROM `personneltrainings`";
-          $result = $mysqli->query($sql);
-          $row = $result->fetch_assoc();
-          $maxYear = $row["maxYear"];
-          echo "$minYear-$maxYear";
-        ?>";
-      }
-    $("#year").html(year);
-  }
-
-  function load (year){
-    $("#tableBody").load('ldprofile_proc.php',{
-      loadTable: true,
-      year: year,
-    } ,
-      function(){
-      /* Stuff to do after the page is loaded */
-    });
-  }
-</script>
-
 <div class="ui container">
   <div class="ui borderless blue inverted mini menu noprint">
     <div class="left item" style="margin-right: 0px !important;">
@@ -70,15 +17,13 @@
         <!-- <option value="">All</option> -->
         <option value="all">All</option>
         <?php
-//get year start
-        require_once "_connect.db.php";
-        $sql = "SELECT DISTINCT year(`startDate`) AS `years` FROM `personneltrainings` ORDER BY `years` DESC";
-        $result = $mysqli->query($sql);
-        while ($row = $result->fetch_assoc()) {
-          $years = $row["years"];
-          echo "<option value=\"$years\">$years</option>";
-        }
-//get year end
+          require_once "_connect.db.php";
+          $sql = "SELECT DISTINCT year(`startDate`) AS `years` FROM `personneltrainings` ORDER BY `years` DESC";
+          $result = $mysqli->query($sql);
+          while ($row = $result->fetch_assoc()) {
+            $years = $row["years"];
+            echo "<option value=\"$years\">$years</option>";
+          }
         ?>
       </select>
       </div>
@@ -113,5 +58,51 @@
 </div>
 
 
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#sortYear").dropdown();
+
+    getMinMaxYear("all");
+    $("#_search").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#_table tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+      
+      if (value != "") {
+        $("#year").html("");
+      }
+       
+    });
+
+    $(load(""));
+    $("#sortYear").change(function(event) {
+      var year = $(this).val();
+      $(load(year));
+      getMinMaxYear(year);
+    });
+  });
+
+  function getMinMaxYear(year){
+    if (year == "all"){ 
+      $.post("ldprofile_proc.php", {getMinMaxYear:true},
+        function (data, textStatus, jqXHR) {
+          year = data
+          $("#year").html(year);
+        }
+      );
+    } else $("#year").html(year);
+  }
+
+  function load (year){
+    $("#tableBody").load('ldprofile_proc.php',{
+      loadTable: true,
+      year: year,
+    } ,
+      function(){
+      /* Stuff to do after the page is loaded */
+    });
+  }
+</script>
 
 <?php require_once "footer.php";?>
