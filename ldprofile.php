@@ -28,11 +28,11 @@
   function getMinMaxYear(year){
       if (year == "all") {
         year = "<?php 
-          $sql = "SELECT MIN(year(`startDate`)) AS `minYear` FROM `personnelTrainings`";
+          $sql = "SELECT MIN(year(`startDate`)) AS `minYear` FROM `personneltrainings`";
           $result = $mysqli->query($sql);
           $row = $result->fetch_assoc();
           $minYear = $row["minYear"];
-          $sql = "SELECT MAX(year(`startDate`)) AS `maxYear` FROM `personnelTrainings`";
+          $sql = "SELECT MAX(year(`startDate`)) AS `maxYear` FROM `personneltrainings`";
           $result = $mysqli->query($sql);
           $row = $result->fetch_assoc();
           $maxYear = $row["maxYear"];
@@ -72,7 +72,7 @@
         <?php
 //get year start
         require_once "_connect.db.php";
-        $sql = "SELECT DISTINCT year(`startDate`) AS `years` FROM `personnelTrainings` ORDER BY `years` DESC";
+        $sql = "SELECT DISTINCT year(`startDate`) AS `years` FROM `personneltrainings` ORDER BY `years` DESC";
         $result = $mysqli->query($sql);
         while ($row = $result->fetch_assoc()) {
           $years = $row["years"];
