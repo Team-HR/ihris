@@ -154,10 +154,10 @@ elseif (isset($_POST["compactDates"])) {
 elseif (isset($_POST["getITATDates"])) {
 	$rspvac_id = $_POST["rspvac_id"];
 
-	$sql0 = "SELECT * FROM `rsp_indTurnArroundTime` WHERE `rspvac_id` = '$rspvac_id'";
+	$sql0 = "SELECT * FROM `rsp_indturnarroundtime` WHERE `rspvac_id` = '$rspvac_id'";
 	$result = $mysqli->query($sql0);
 	if ($result->num_rows === 0) {
-		$sql1 = "INSERT INTO `rsp_indTurnArroundTime` (`rsp_indTATid`, `rspvac_id`, `itat0`, `itat1`, `itat2`, `itat3`, `itat4`, `itat5`, `itat6`, `itat7`, `itat8`, `costOfSourcing`) VALUES (NULL, '$rspvac_id', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)";
+		$sql1 = "INSERT INTO `rsp_indturnarroundtime` (`rsp_indTATid`, `rspvac_id`, `itat0`, `itat1`, `itat2`, `itat3`, `itat4`, `itat5`, `itat6`, `itat7`, `itat8`, `costOfSourcing`) VALUES (NULL, '$rspvac_id', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)";
 		$mysqli->query($sql1);
 		$arr = array();
 		for ($i=0; $i < 10; $i++) { 
@@ -183,7 +183,7 @@ elseif (isset($_POST["getITATDates"])) {
 
 elseif (isset($_POST["loadCos"])) {
 	$rspvac_id = $_POST["rspvac_id"];
-	$sql0 = "SELECT * FROM `rsp_indTurnArroundTime` WHERE `rspvac_id` = '$rspvac_id'";
+	$sql0 = "SELECT * FROM `rsp_indturnarroundtime` WHERE `rspvac_id` = '$rspvac_id'";
 	$result = $mysqli->query($sql0);
 	$row = $result->fetch_assoc();
 	echo !$row['costOfSourcing'] ? "" : $row['costOfSourcing'];
