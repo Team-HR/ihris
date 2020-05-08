@@ -145,7 +145,7 @@
 						<div class="content">
 							<div class="ui animated list">
           			<a class="item" href="reqsandcoms.php">Training/Seminar Invitation/Communication</a>
-          			<a class="item" href="personnelTrainings.php">Training Schedule/Evaluation</a>
+          			<a class="item" href="personneltrainings.php">Training Schedule/Evaluation</a>
           			<a class="item" href="ldprofile.php">L&D Profile</a>
           			<a class="item" href="ldplan.php">L&D Plan</a>
           			<a class="item" href="ldactivities.php">L&D Activities</a>

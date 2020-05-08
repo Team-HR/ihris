@@ -67,8 +67,17 @@ if (isset($_POST["loadTable"])) {
 </tr>
 <?php
 
+} elseif (isset($_POST["getMinMaxYear"])) {
+	$sql = "SELECT MIN(year(`startDate`)) AS `minYear` FROM `personneltrainings`";
+	$result = $mysqli->query($sql);
+	$row = $result->fetch_assoc();
+	$minYear = $row["minYear"];
+	$sql = "SELECT MAX(year(`startDate`)) AS `maxYear` FROM `personneltrainings`";
+	$result = $mysqli->query($sql);
+	$row = $result->fetch_assoc();
+	$maxYear = $row["maxYear"];
+	echo "$minYear-$maxYear";
 }
-
 
 function dateToStr($numeric_date){
 $date = new DateTime($numeric_date);

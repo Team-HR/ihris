@@ -391,7 +391,7 @@ function editAssFunc(id,assessment_index){
 <div class="ui container noBorderPrint">
 	<div class="ui borderless blue inverted mini menu">
     <div class="left item" style="margin-right: 0px !important;">
-      <a href="personnelTrainings.php" class="blue ui icon button noprint" title="Back" style="width: 65px;">
+      <a href="personneltrainings.php" class="blue ui icon button noprint" title="Back" style="width: 65px;">
         <i class="icon chevron left"></i> Back
       </a>
     </div>
