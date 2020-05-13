@@ -51,7 +51,7 @@ if ($timeEnd !== null) {
     array_push($events, $inside_events);
   }
 
-  $sql = "SELECT * FROM `requestandcoms` WHERE `isMeeting` != 'yes' AND `isMeeting` != ''";
+  $sql = "SELECT * FROM `requestandcoms` WHERE `type` != 'meeting' AND `type` != ''";
   $result = $mysqli->query($sql);
   while ($row = $result->fetch_assoc()) {
 
