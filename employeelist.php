@@ -327,7 +327,7 @@ if (isset($_GET["scrollTo"])) {
     </div>
   </div>
 </div>
-	<div class="ui container" style="/**min-height: 25000px;**/">
+	<div class="ui container">
 
 	<div class="ui borderless blue inverted mini menu">
     <div class="left item" style="margin-right: 0px !important;">
