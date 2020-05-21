@@ -1,247 +1,112 @@
-<?php
-require_once '_connect.db.php';
 
-$data = [];
-/*
-[personneltrainingslist_id] => 1
-[dateAdded] => 2018-10-10 08:11:35
-[personneltrainings_id] => 1
-[employees_id] => 546
-[training_id] => 35
-[dateD] => 2018-10-10 00:00:00
-[startDate] => 2018-08-17
-[endDate] => 2018-08-17
-[numHours] => 8
-[venue] => Coco Cubano, Bacong, Neg. Or.
-[remarks] => City Treasury Office Personnel
-[timeStart] => 
-[timeEnd] => 
-*/
-$employees_id = 1417;
+<div class="ui segment grid" id="pds-app">
+  <div class="three wide column">
+    <div id="pim-menu" class="ui secondary vertical pointing menu fluid">
+      <a class="item" data-tab="appointments">
+        Appointment
+      </a>
+      <a class="item active" data-tab="pds">
+        PDS
+      </a>
+      <a class="item" data-tab="service_records">
+        Service Records
+      </a>
+      <a class="item" data-tab="leave_records">
+        Leave Records
+      </a>
+    </div>
+  </div>
+  <div class="thirteen wide stretched column">
+    <div class="ui tab" data-tab="appointments"></div>
+    <div class="ui tab active" data-tab="pds">
+      <div class="ui pointing secondary blue menu fluid" id="pds">
+        <a class="item active" data-tab="personal">Personal</a>
+        <a class="item" data-tab="family">Family</a>
+        <a class="item" data-tab="education">Education</a>
+        <a class="item" data-tab="eligibility">Eligibility</a>
+        <a class="item" data-tab="work_experience">Work Experiences</a>
+        <a class="item" data-tab="voluntary_works">Voluntary Works</a>
+        <a class="item" data-tab="trainings">Trainings</a>
+        <a class="item" data-tab="other_information">Other Information</a>
+      </div>
+      <div class="ui tab segment active" data-tab="personal">
 
-
-    $years_with_trainings = [];
-    $sql = <<<SQL
-    SELECT 
-    DISTINCT(YEAR(fromDate)) as year
-    FROM requestandcomslist
-    LEFT JOIN requestandcoms
-    ON
-    requestandcomslist.controlNumber = requestandcoms.controlNumber
-    WHERE requestandcomslist.employees_id = '$employees_id'
-    AND isMeeting <> 'yes'
-    SQL;
-
-    $result = $mysqli->query($sql);
-    
-    if ($result->num_rows>0){
-        while ($row = $result->fetch_array()){
-        $years_with_trainings[] = $row['year'];
-    }}
-
-	$sql = <<<SQL
-	SELECT 
-	DISTINCT(YEAR(startDate)) as year
-	FROM personneltrainingslist
-	LEFT JOIN personneltrainings
-	ON
-	personneltrainingslist.personneltrainings_id = personneltrainings.personneltrainings_id
-	WHERE personneltrainingslist.employees_id = '$employees_id'
-	SQL;
-	
-	$result = $mysqli->query($sql);
-		while ($row = $result->fetch_array()) {
-			if (!in_array($row['year'],$years_with_trainings)) {
-                $years_with_trainings[] = $row['year'];
-			}
-		}
-
-print("<pre>".print_r($years_with_trainings,true)."</pre>");
-// $data = array();
-// $sql = <<<SQL
-//     SELECT
-//         employees.employees_id,
-//         UPPER(CONCAT( employees.lastName, ', ', employees.firstName, ' ', employees.middleName, ' ', employees.extName )) AS fullName,
-//         CONCAT_WS(', ',prr.period, prr.year) AS period,
-//         prr.type,
-//         prrlist.comments 
-//     FROM
-//         employees    
-//     LEFT JOIN prrlist ON employees.employees_id = prrlist.employees_id
-//     LEFT JOIN prr ON prrlist.prr_id = prr.prr_id
-//     WHERE
-//         employees.`status` = 'ACTIVE' 
-//         -- AND prrlist.comments <> '' 
-//     ORDER BY
-//         employees.lastName ASC,
-//         prr.period DESC
-// SQL;
-// $result = $mysqli->query($sql);
-// while($row = $result->fetch_assoc()){
-//     $id = $row['employees_id'];
-//     $prr = [
-//         'period' => $row['period'],
-//         'type' => $row['type'],
-//         'comments' => $row['comments']
-//     ];
-
-//     if (!array_key_exists('id_'.$id,$data)){
-//         $data['id_'.$id] = [
-//         'id' => $id,
-//         'fullName' => $row['fullName'],
-//         'prr' => [$prr]
-//         ];
-//     } else $data['id_'.$id]['prr'][] = $prr;
-// }
-// print("<pre>".print_r($data,true)."</pre>");
-// $sql = <<< SQL
-// SELECT
-// 	COUNT(personneltrainings_id) AS num_trainings,
-// -- 	startDate,
-// 	MONTH(startDate) AS month,
-// 	YEAR(startDate) AS year
-// FROM
-// 	personneltrainings
-// GROUP BY
-// 	MONTH(startDate)
-// ORDER BY
-// -- MONTH(startDate) ASC,	
-// YEAR(startDate) ASC
-// SQL;
-
-// $data = [];
-// $res = $mysqli->query($sql);
-
-// while ($row = $res->fetch_assoc()) {
-// 	$year = $row['year'];
-// 	$months = [
-// 		'month' => $row['month'],
-// 		'num_trainings' => $row['num_trainings']
-// 	];
-
-// 	if (!array_key_exists('year_'.$year, $data)) {
-// 		$data['year_'.$year] = [
-// 			'year'	=> $year,
-// 			'months' => [
-// 				$months['month'] => $months
-// 			]
-// 		];
-// 	} else $data['year_'.$year]['months'][$months['month']] = $months;
-// }
-
-// echo json_encode($data);
-// print("<pre>".print_r($data,true)."</pre>");
-
-// $data = [];
-// $sql = <<<SQL
-// SELECT `competency`.*,`employees`.*,`positiontitles`.* FROM `competency` LEFT JOIN `employees` ON `competency`.`employees_id` = `employees`.`employees_id` LEFT JOIN `positiontitles` ON `employees`.`position_id` = `positiontitles`.`position_id`
-// WHERE
-// `category` = 'Administrative'
-// AND
-// `gender` = 'FEMALE'
-// SQL;
-// $filter = "";
-// echo "Filter: ".($filter?$filter:'N/A')."<br>";
-
-/*
-$data = [];
-$filters = [
-    'category' => ['Key Position', 'Administrative', 'Technical'],
-    'nature_of_assignment' => ['RANK & FILE', 'SUPERVISORY'],
-    'gender' => ['MALE','FEMALE']
-];
-
-$filters = [
-    ['Key Position', 'RANK & FILE', 'MALE'],
-    ['Key Position', 'RANK & FILE', 'FEMALE'],
-    ['Key Position', 'SUPERVISORY', 'MALE'],
-    ['Key Position', 'SUPERVISORY', 'FEMALE'],
-    ['Administrative', 'RANK & FILE', 'MALE'],
-    ['Administrative', 'RANK & FILE', 'FEMALE'],
-    ['Administrative', 'SUPERVISORY', 'MALE'],
-    ['Administrative', 'SUPERVISORY', 'FEMALE'],    
-    ['Technical', 'RANK & FILE', 'MALE'],
-    ['Technical', 'RANK & FILE', 'FEMALE'],
-    ['Technical', 'SUPERVISORY', 'MALE'],
-    ['Technical', 'SUPERVISORY', 'FEMALE']
-];
-
-$queries = [];
-foreach ($filters as $filter) {
-    $sql = "WHERE category = '$filter[0]' AND natureOfAssignment = '$filter[1]' AND gender = '$filter[2]'";
-    $queries[] = $sql;
-}
-
-$sql_ave = <<<SQL
-SELECT 
-ROUND(AVG(`competency`.`Adaptability`)) 'adaptability',
-ROUND(AVG(`competency`.`ContinousLearning`)) 'continuous_learning',
-ROUND(AVG(`competency`.`Communication`)) 'communication',
-ROUND(AVG(`competency`.`OrganizationalAwareness`)) 'organizational_awareness',
-ROUND(AVG(`competency`.`CreativeThinking`)) 'creative_thinking',
-ROUND(AVG(`competency`.`NetworkingRelationshipBuilding`)) 'networking_relationship_building',
-ROUND(AVG(`competency`.`ConflictManagement`)) 'conflict_management',
-ROUND(AVG(`competency`.`StewardshipofResources`)) 'stewardship_of_resources',
-ROUND(AVG(`competency`.`RiskManagement`)) 'risk_management',
-ROUND(AVG(`competency`.`StressManagement`)) 'stress_management',
-ROUND(AVG(`competency`.`Influence`)) 'influence',
-ROUND(AVG(`competency`.`Initiative`)) 'initiative',
-ROUND(AVG(`competency`.`TeamLeadership`)) 'team_leadership',
-ROUND(AVG(`competency`.`ChangeLeadership`)) 'change_leadership',
-ROUND(AVG(`competency`.`ClientFocus`)) 'client_focus',
-ROUND(AVG(`competency`.`Partnering`)) 'partnering',
-ROUND(AVG(`competency`.`DevelopingOthers`)) 'developing_others',
-ROUND(AVG(`competency`.`PlanningandOrganizing`)) 'planning_and_organizing',
-ROUND(AVG(`competency`.`DecisionMaking`)) 'decision_making',
-ROUND(AVG(`competency`.`AnalyticalThinking`)) 'analytical_thinking',
-ROUND(AVG(`competency`.`ResultsOrientation`)) 'results_orientation',
-ROUND(AVG(`competency`.`Teamwork`)) 'teamwork',
-ROUND(AVG(`competency`.`ValuesandEthics`)) 'values_and_ethics',
-ROUND(AVG(`competency`.`VisioningandStrategicDirection`)) 'visioning_and_strategic_direction'
-FROM
-`competency`
-LEFT JOIN `employees` ON `competency`.`employees_id` = `employees`.`employees_id` LEFT JOIN `positiontitles` ON `employees`.`position_id` = `positiontitles`.`position_id` 
-SQL;
-
-// $sql_emp = <<<SQL
-// SELECT 
-//     -- `employees`.`employees_id`,
-//     CONCAT(`employees`.`lastName`,', ',`employees`.`firstName`,' ',`employees`.`middleName`,' ',`employees`.`extName`) AS fullName
-// FROM
-// `competency`
-// LEFT JOIN `employees` ON `competency`.`employees_id` = `employees`.`employees_id` LEFT JOIN `positiontitles` ON `employees`.`position_id` = `positiontitles`.`position_id` 
-// SQL;
-
-foreach ($queries as $qk => $qry) {
-    $key = $filters[$qk][0].";".$filters[$qk][1];
-    // echo $key."<br>";
+<h5>PERSONAL INFORMATION</h5>
+<hr>
 
 
-    //get the average competency
-    $result = $mysqli->query($sql_ave.$qry);
-    $data_fltrs = [$filters[$qk][0],$filters[$qk][1]];
-    $data_ave = $result->fetch_assoc();
-    // now get the list of employees
-    $data_emps = [];
-    $result = $mysqli->query($sql_emp.$qry." ORDER BY `employees`.`lastName` ASC");
-    while ($emp = $result->fetch_assoc()) {
-        $data_emps[] = $emp['fullName'];   
-    }
+<div class="ui form">
+  <div class="fields">
+    <div class="two wide field">
+      <label for="">Employee ID:</label>
+      <input type="text" placeholder="ID" v-model="employee.employee_id">
+    </div>
+  </div>
+  <div class="fields">
+    <div class="field">
+      <label for="">Last Name:</label>
+      <input type="text" placeholder="Last Name" v-model="employee.lastName">
+    </div>
+    <div class="field">
+      <label for="">First Name:</label>
+      <input type="text" placeholder="First Name" v-model="employee.firstName">
+    </div>
+    <div class="field">
+      <label for="">Middle Name:</label>
+      <input type="text" placeholder="Middle Name" v-model="employee.middleName">
+    </div>
+    <div class="field">
+      <label for="">Ext Name:</label>
+      <input type="text" placeholder="Extension" v-model="employee.extName">
+    </div>
+  </div>
+  <div class="fields">
+    <div class="field">
+      <label for="">Birthdate:</label>
+      <input type="date">
+    </div>
+    <div class="field">
+      <label for="">Birthplace:</label>
+      <input type="text" placeholder="Birthplace">
+    </div>
+    <div class="field">
+      <label for="">Gender:</label>
+      <input type="text" v-model="employee.gender" placeholder="Gender"> 
+    </div>
+  </div>
+</div>
 
-    if (!array_key_exists($key, $data)) {
-        //male
-        $data[$key]['filters'] = $data_fltrs;
-        $data[$key]['male'] = [
-            'average' => $data_ave,
-            'employees' => $data_emps
-        ];
-	} else {
-        $data[$key]['female'] = [
-            'average' => $data_ave,
-            'employees' => $data_emps
-        ];
-    }
-}
 
-print("<pre>".print_r($data,true)."</pre>");
-*/
+
+
+
+
+      </div>
+      <div class="ui tab segment" data-tab="family">
+        Family
+      </div>
+      <div class="ui tab segment" data-tab="education">
+        Education
+      </div>
+      <div class="ui tab segment" data-tab="eligibility">
+        Elligibility
+      </div>
+      <div class="ui tab segment" data-tab="work_experience">
+        Work Experiences
+      </div>
+      <div class="ui tab segment" data-tab="trainings">
+        Trainings
+      </div>
+      <div class="ui tab segment" data-tab="voluntary_works">
+        Voluntary Works
+      </div>
+      <div class="ui tab segment" data-tab="other_information">
+        Other Information
+      </div>
+    </div>
+    <div class="ui tab" data-tab="service_records"></div>
+    <div class="ui tab" data-tab="leave_records"></div>
+  </div>
+</div>
+
+<script src="pds/config.js"></script>
