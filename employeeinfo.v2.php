@@ -264,7 +264,7 @@ if (isset($_GET["spms"])) {
   </div>
 </div>
 
-<div class="ui container" style="min-height: 600px;">
+<div class="ui fluid container" style="min-height: 600px; padding: 5px;">
 	<div class="ui borderless blue inverted mini menu">
     <div class="left item" style="margin-right: 0px !important;">
       <!-- <a href="employeelist.php?scrollTo=<?php echo $employees_id;?>" class="blue ui icon button" title="Back" style="width: 65px;">
@@ -283,7 +283,7 @@ if (isset($_GET["spms"])) {
 		</div>
 	</div>
 
-	<div class="ui container">
+	<div class="ui container ">
 <style type="text/css">
 	.actives{
 		background-color: #f2f2f2;
@@ -329,25 +329,12 @@ if (isset($_GET["spms"])) {
 		</table>
 	</div>
 
-
-<div class="ui segment">
-	<div class="ui grid">
-	  <div class="eight wide column">
-		<!-- <div class="ui container" style="width: 100%; margin-right: auto; margin-left: auto;"> -->
-			<!-- <h5 class="ui blue header centered ">Job Competency Profile</h5> -->
-			<canvas id="comptChart" height="210"></canvas>
-		<!-- </div> -->
-	  </div>
-	  <div class="eight wide column">
-<!-- 	  	            <div class="ui container" style="margin-right: auto; margin-left: auto;"> -->
-               <canvas id="ldnLsaChart" height="210"></canvas>
-            <!-- </div> -->
-	  </div>
+	<div class="ui container" style="padding: 5px;">
+	<?php require 'test.php'?>
 	</div>
-</div>
+	
 
-<div class="ui basic segment" style="min-height: 500px;">
-
+<div class="ui container segment" style="min-height: 500px;">
 <div id="context1">
   <div class="ui top attached pointing blue inverted menu">
     <a id="rsp" class="item active" data-tab="first">Recruitment, Selection, and Placement<br>(RSP)</a>
@@ -356,11 +343,19 @@ if (isset($_GET["spms"])) {
     <a class="item" data-tab="fourth">Rewards and Recognition<br>(R&R)</a>
   </div>
   <div id="rsp0" class="ui bottom attached tab segment active" data-tab="first">
+  	<div class="ui container segment">
+		<div class="ui grid">
+		<div class="eight wide column">
+			<canvas id="comptChart" height="210"></canvas>
+		</div>
+		<div class="eight wide column">
+			<canvas id="ldnLsaChart" height="210"></canvas>
+		</div>
+		</div>
+	</div>
     <div class="ui pointing secondary blue menu">
       <a class="active item" data-tab="first/a">Competency Profile</a>
       <a class="item" data-tab="first/b">Learning Style</a>
-<!--       <a class="item" data-tab="first/b">1B</a>
-      <a class="item" data-tab="first/c">1C</a> -->
     </div>
     <div class="ui active tab segment" data-tab="first/a">
 <?php
