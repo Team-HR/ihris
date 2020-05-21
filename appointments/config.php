@@ -43,7 +43,7 @@ function getEmployees($mysqli){
     $stmt->execute();
     $result = $stmt->get_result();
     while ($employee = $result->fetch_assoc()) {
-        $data[$employee['employees_id']] = $employee;
+
     }
     return $data;
 }
