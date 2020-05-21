@@ -30,6 +30,10 @@ function existingEmployeeNewAppointment($json,$mysqli){
 function existingEmployeeUpdateAppointment($json,$mysqli){
 
 }
+function existingEmployeeUpdateAppointment($json,$mysqli){
+
+}
+
 
 
 function getEmployees($mysqli){
