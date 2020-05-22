@@ -2,32 +2,37 @@
 require '_connect.db.php';
 require 'libs/FormatDateTime.php';
 require 'libs/Department.php';
+require 'libs/DateCompactor.php';
+
 
 if (isset($_POST["load"])) {
 	
 	$year = $_POST["yearState"];
 	if ($year === "all") {
 		$year = 1000;
-		$sql = "SELECT * FROM `rsp_vacant_positions` WHERE year(`dateVacated`) != ? ORDER BY `positiontitle` ASC";
+		// $sql = "SELECT * FROM `rsp_vacant_positions` WHERE year(`dateVacated`) != ? ORDER BY `positiontitle` ASC";
+		$sql = "SELECT `rsp_vacant_positions`.*, `rsp_indturnarroundtime`.`itat0` FROM `rsp_vacant_positions` LEFT JOIN `rsp_indturnarroundtime` ON `rsp_vacant_positions`.`rspvac_id` = `rsp_indturnarroundtime`.`rspvac_id` WHERE year(`dateVacated`) != ? ORDER BY `rsp_indturnarroundtime`.`itat0` DESC";
 	} else {
-		$sql = "SELECT * FROM `rsp_vacant_positions` WHERE year(`dateVacated`) = ? ORDER BY `positiontitle` ASC";
+		// $sql = "SELECT * FROM `rsp_vacant_positions` WHERE year(`dateVacated`) = ? ORDER BY `positiontitle` ASC";
+		$sql = "SELECT `rsp_vacant_positions`.*, `rsp_indturnarroundtime`.`itat0` FROM `rsp_vacant_positions` LEFT JOIN `rsp_indturnarroundtime` ON `rsp_vacant_positions`.`rspvac_id` = `rsp_indturnarroundtime`.`rspvac_id` WHERE year(`dateVacated`) = ? ORDER BY `rsp_indturnarroundtime`.`itat0` DESC";
 	}
 
 	
 	$deparment = new Department();
 	$dateTime = new FormatDateTime();
+	$dateCompactor = new DateCompactor;
 
 	$stmt = $mysqli->prepare($sql);
 	$stmt->bind_param("i", $year);
 	$stmt->execute();
 	$stmt->store_result();
-	$stmt->bind_result($rspvac_id,$position,$itemNo,$sg,$office,$dateVacated,$dateOfInterview,$education,$training,$experience,$eligibility,$datetime_added);
+	$stmt->bind_result($rspvac_id,$position,$itemNo,$sg,$office,$dateVacated,$dateOfInterview,$education,$training,$experience,$eligibility,$datetime_added,$pub_date);
 	$counter = 1;
 	if ($stmt->num_rows === 0) {
 ?>
 
 	<tr>
-		<td colspan="11" style="color: grey; text-align: center; padding: 50px;"><i>No Vacant Positions Available</i> </td>
+		<td colspan="12" style="color: grey; text-align: center; padding: 50px;"><i>No Vacant Positions Available</i> </td>
 	</tr>
 
 <?php
@@ -73,6 +78,9 @@ if (isset($_POST["load"])) {
 			}
 		?>
 		</td>
+		<td>
+			<?=(unserialize($pub_date)?$dateCompactor->compactDates(unserialize($pub_date)):'---')?>
+		</td>
 		<td class="center aligned" style="width: 50px;">
 
 
@@ -109,7 +117,9 @@ elseif (isset($_POST["addNew"])) {
 	$sg = $data0[2];
 	$office = $data0[3];
 	$dateVacated = $data0[4];
+	$dateVacated = ($dateVacated?$dateVacated:'0000-00-00');
 	$dateOfInterview = $data0[5];
+	$dateOfInterview = ($dateOfInterview?$dateOfInterview:'0000-00-00');
 	$education = serialize($data1[0]);
 	$training = serialize($data1[1]);
 	$experience = serialize($data1[2]);
@@ -149,8 +159,12 @@ elseif(isset($_POST["editEntry"])){
 	$itemNo = $data0[1];
 	$sg = $data0[2];
 	$office = $data0[3];
+	// $dateVacated = $data0[4];
+	// $dateOfInterview = $data0[5];
 	$dateVacated = $data0[4];
+	$dateVacated = ($dateVacated?$dateVacated:'0000-00-00');
 	$dateOfInterview = $data0[5];
+	$dateOfInterview = ($dateOfInterview?$dateOfInterview:'0000-00-00');
 	$education = serialize($data1[0]);
 	$training = serialize($data1[1]);
 	$experience = serialize($data1[2]);
@@ -198,4 +212,32 @@ elseif (isset($_POST["deleteFunc"])) {
 		}
 	}
 
+	function createList($arr,$bool = true){
+		$list = "";
+		if ($arr) {
+			if ($bool) {
+				foreach ($arr as $value) {
+					$list .= "* $value<br>";
+				}
+			} else {
+				foreach ($arr as $key => $value) {
+					$dates = "";
+					if (!$value[3] && !$value[4]) {
+						$dates = "(Dates not indicated)";
+					} elseif (!$value[3] && $value[4]) {
+						$dates = "(To: ".formatDate($value[4]).")";
+					} elseif ($value[3] && !$value[4]) {
+						$dates = "(From: ".formatDate($value[3])." to Present)";
+					} else {
+						$dates = "(".formatDate($value[3]) ." - ".formatDate($value[4]).")";
+					}
+					$list .= "* <b>$value[2]</b> <i>as</i>  <span style='color:#025214; font-weight: bold;'>$value[0]</span> $dates<br>";
+	
+				}
+			}
+		} else {
+			$list .= "* NONE";
+		}
+		return $list;
+	} 
 ?>

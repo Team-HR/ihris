@@ -462,6 +462,7 @@ function clearFormData(){
         <th class="heads" colspan="4">Qualification Standards</th>
         <th class="heads" rowspan="2">Date Vacated</th>
         <th class="heads" rowspan="2">Date of Interview</th>
+        <th class="heads" rowspan="2">Date of Publication</th>
         <th class="heads" rowspan="2">Options</th>
 <!--         <th rowspan="2">Date Published</th>
         <th rowspan="2">Date Filled-Up</th> -->

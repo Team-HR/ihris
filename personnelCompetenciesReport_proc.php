@@ -144,6 +144,107 @@ if (isset($_POST["load"])) {
 
 }
 
+elseif (isset($_POST["fetchData"])) {
+
+  $data = [];
+  $filters = [
+    ['Key Position', 'Rank & File', 'Male'],
+    ['Key Position', 'Rank & File', 'Female'],
+    ['Key Position', 'Supervisory', 'Male'],
+    ['Key Position', 'Supervisory', 'Female'],
+    ['Administrative', 'Rank & File', 'Male'],
+    ['Administrative', 'Rank & File', 'Female'],
+    ['Administrative', 'Supervisory', 'Male'],
+    ['Administrative', 'Supervisory', 'Female'],    
+    ['Technical', 'Rank & File', 'Male'],
+    ['Technical', 'Rank & File', 'Female'],
+    ['Technical', 'Supervisory', 'Male'],
+    ['Technical', 'Supervisory', 'Female']
+];
+
+  $queries = [];
+  foreach ($filters as $filter) {
+      $sql = "WHERE category = '$filter[0]' AND natureOfAssignment = '$filter[1]' AND gender = '$filter[2]'";
+      $queries[] = $sql;
+  }
+  
+  $sql_ave = <<<SQL
+  SELECT 
+  ROUND(AVG(`competency`.`Adaptability`)) 'adaptability',
+  ROUND(AVG(`competency`.`ContinousLearning`)) 'continuous_learning',
+  ROUND(AVG(`competency`.`Communication`)) 'communication',
+  ROUND(AVG(`competency`.`OrganizationalAwareness`)) 'organizational_awareness',
+  ROUND(AVG(`competency`.`CreativeThinking`)) 'creative_thinking',
+  ROUND(AVG(`competency`.`NetworkingRelationshipBuilding`)) 'networking_relationship_building',
+  ROUND(AVG(`competency`.`ConflictManagement`)) 'conflict_management',
+  ROUND(AVG(`competency`.`StewardshipofResources`)) 'stewardship_of_resources',
+  ROUND(AVG(`competency`.`RiskManagement`)) 'risk_management',
+  ROUND(AVG(`competency`.`StressManagement`)) 'stress_management',
+  ROUND(AVG(`competency`.`Influence`)) 'influence',
+  ROUND(AVG(`competency`.`Initiative`)) 'initiative',
+  ROUND(AVG(`competency`.`TeamLeadership`)) 'team_leadership',
+  ROUND(AVG(`competency`.`ChangeLeadership`)) 'change_leadership',
+  ROUND(AVG(`competency`.`ClientFocus`)) 'client_focus',
+  ROUND(AVG(`competency`.`Partnering`)) 'partnering',
+  ROUND(AVG(`competency`.`DevelopingOthers`)) 'developing_others',
+  ROUND(AVG(`competency`.`PlanningandOrganizing`)) 'planning_and_organizing',
+  ROUND(AVG(`competency`.`DecisionMaking`)) 'decision_making',
+  ROUND(AVG(`competency`.`AnalyticalThinking`)) 'analytical_thinking',
+  ROUND(AVG(`competency`.`ResultsOrientation`)) 'results_orientation',
+  ROUND(AVG(`competency`.`Teamwork`)) 'teamwork',
+  ROUND(AVG(`competency`.`ValuesandEthics`)) 'values_and_ethics',
+  ROUND(AVG(`competency`.`VisioningandStrategicDirection`)) 'visioning_and_strategic_direction'
+  FROM
+  `competency`
+  LEFT JOIN `employees` ON `competency`.`employees_id` = `employees`.`employees_id` LEFT JOIN `positiontitles` ON `employees`.`position_id` = `positiontitles`.`position_id` 
+  SQL;
+  
+  $sql_emp = <<<SQL
+  SELECT 
+      -- `employees`.`employees_id`,
+      CONCAT(`employees`.`lastName`,', ',`employees`.`firstName`,' ',`employees`.`middleName`,' ',`employees`.`extName`) AS fullName
+  FROM
+  `competency`
+  LEFT JOIN `employees` ON `competency`.`employees_id` = `employees`.`employees_id` LEFT JOIN `positiontitles` ON `employees`.`position_id` = `positiontitles`.`position_id` 
+  SQL;
+  
+  foreach ($queries as $qk => $qry) {
+      $key = $filters[$qk][0].";".$filters[$qk][1];
+      //get the average competency
+      $result = $mysqli->query($sql_ave.$qry);
+      $data_fltrs = [$filters[$qk][0],$filters[$qk][1]];
+      $data_average = $result->fetch_assoc();
+      $data_ave = [];
+      foreach ($data_average as $label => $ave) {
+        $data_ave['label'][] = $label;
+        $data_ave['average'][] = $ave;
+      }
+      
+      // now get the list of employees
+      $data_emps = [];
+      $result = $mysqli->query($sql_emp.$qry." ORDER BY `employees`.`lastName` ASC");
+      while ($emp = $result->fetch_assoc()) {
+          $data_emps[] = $emp['fullName'];   
+      }
+  
+      if (!array_key_exists($key, $data)) {
+          //male
+          $data[$key]['filters'] = $data_fltrs;
+          $data[$key]['male'] = [
+              'average' => $data_ave,
+              'employees' => $data_emps
+          ];
+    } else {
+          $data[$key]['female'] = [
+              'average' => $data_ave,
+              'employees' => $data_emps
+          ];
+      }
+  }
+  
+  echo json_encode($data);
+}
+
 elseif (isset($_POST["get_average_data"])) {
   // wip get average data
   $filters = $_POST["filters"];

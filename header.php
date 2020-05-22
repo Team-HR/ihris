@@ -16,8 +16,15 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true && $_SESSION[
 <!--  <meta charset="UTF-8" name="google" value="notranslate" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/> -->
   <meta name="viewport" content="width=device-width, height=device-height , initial-scale=1">
   <link rel="stylesheet" type="text/css" href="ui/dist/semantic.css">
+<<<<<<< HEAD
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <!-- <script src="node_modules\vue\dist\vue.min.js"></script> -->
+=======
+
+  <!-- <script src="node_modules\vue\dist\vue.min.js"></script> -->
+  <!-- development version, includes helpful console warnings -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+>>>>>>> 6a7be9fef6cef12dc730e0c2a4d5511704686192
   <script src="node_modules\moment\min\moment.min.js"></script>
 
   <script src="jquery/jquery-3.3.1.min.js"></script>
@@ -78,7 +85,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true && $_SESSION[
 </head>
 <!-- <body class="" style="background-image: url(assets/bgs/ihris_bg2.png); background-repeat: no-repeat; background-attachment: fixed;"> -->
   <body style="
-    background: url(assets/bgs/bg.jpg) no-repeat center center fixed;
+    background: url(assets/bgs/circuitboardbg.gif) no-repeat center center fixed;
     -moz-background-size: cover;
     -webkit-background-size: cover;
     -o-background-size: cover;
