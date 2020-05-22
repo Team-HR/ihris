@@ -49,7 +49,7 @@ function view($mysqli,$counter,$prr_id){
     <td style='text-align:center'>".$counter++."</td>
     <td>".mb_convert_case($lastName,MB_CASE_TITLE, 'UTF-8')."</td>
     <td>".mb_convert_case($firstName,MB_CASE_TITLE, 'UTF-8')."</td>
-    <td align='center'>".mb_convert_case($middleName[0],MB_CASE_TITLE, 'UTF-8')."</td>
+    <td align='center'>".mb_convert_case(($middleName?$middleName[0].'.':''),MB_CASE_TITLE, 'UTF-8')."</td>
     <td align='center'>$extName</td>
     <td align='center'>$gender[0]</td>
     <td style='width:100px;text-align:center'>".$row1['date_submitted']."</td>
