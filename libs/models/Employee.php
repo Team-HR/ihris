@@ -1,7 +1,6 @@
 <?php
 class Employee {
     private $db;
-    public $inserted_id;
 
     function __construct()
     {
@@ -33,7 +32,7 @@ class Employee {
             $employees_id = $stmt->insert_id;
             $stmt->close();
         }
-        $this->inserted_id = $employees_id;
+        return $employees_id;
     }
     
     public function getEmployees(){

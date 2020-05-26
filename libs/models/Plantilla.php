@@ -27,4 +27,18 @@ class Plantilla {
         $stmt->close();
         return $data;
     }
+
+    public function isOccupied($plantilla_id){
+        $appointment_id = 0;
+        $sql = <<<SQL
+            SELECT `id` FROM `appointments` WHERE `plantilla_id` = ? 
+            AND `date_ended` IS NULL
+        SQL;
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param('i',$plantilla_id);
+        $stmt->execute();
+        $stmt->bind_result($appointment_id);
+        $stmt->fetch();
+        return $appointment_id != 0?true:false;
+    }
 }

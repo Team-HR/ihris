@@ -1,17 +1,17 @@
 
 <?php
-require_once '../_connect.db.php';
-
-// $echo = getPlantillas($mysqli);
-// print("<pre>".print_r($echo,true)."</pre>");
-
-    $json['employee_id']='9';
+require '../libs/models/Employee.php';
+require '../libs/models/Plantilla.php';
+require '../libs/models/Appointment.php';
+#============================================================================
+#TEST START
+#============================================================================
+    $json['plantilla_id']='12'; //
+    $json['employee_id']='33465'; //33465
     $json['first_name']='Jane';
     $json['last_name']='Doe';
     $json['middle_name']='Mcaskill';
     $json['ext_name']='';
-
-    $json['plantilla_id']='6';
     $json['status_of_appointment']='permanent';
     $json['date_of_appointment']='2020-01-01';
     $json['date_ended']='';
@@ -36,155 +36,40 @@ require_once '../_connect.db.php';
     $json['csc_release_date']='2020-01-10';
     print("<pre>".print_r($json,true)."</pre>");
 
-    print("<pre>".print_r(newEmployeeNewAppointment($json,$mysqli),true)."</pre>");
-    // array_walk($json,function(&$value, $key){
-    //     $value = (!$value?NULL:$value);
-    // });
-
-    // echo(newEmployeeNewAppointment($json,$mysqli));
-    // echo json_encode($json);
+#============================================================================
+#TEST END
+#============================================================================
+$emp = new Employee;
+$plantilla = new Plantilla;
+$apt = new Appointment;
+    
 if(isset($_POST['getEmployees'])){
-    echo json_encode(getEmployees($mysqli));
+    echo json_encode($emp->getEmployees());
 }
 
 elseif(isset($_POST['getPlantillas'])){
-    echo json_encode(getPlantillas($mysqli));
+    echo json_encode($plantilla->getPlantillas());
 }
 
+elseif (isset($_POST['addNewAppointment'])) {
+    $json = json_decode($_POST['json']);
+    // $json = $json;
+    $status = array(
+        'success' => false,
+        'error' => false
+    );
 
-function newEmployeeNewAppointment($json,$mysqli){
-    // insert new empoyee to employees table
-    $sql = <<<SQL
-    INSERT INTO `employees`(`firstName`, `lastName`, `middleName`, `extName`)
-    SELECT ?, ?, ?, ? 
-    -- FROM DUAL
-    WHERE NOT EXISTS (
-    SELECT * FROM 
-    `employees` WHERE 
-    `firstName`= ? AND 
-    `lastName` = ? AND 
-    `middleName` = ? AND 
-    `extName` = ?
-    )
+    // check if plantilla is null
+    if(!$json['plantilla_id']) $status['error']['nullPlantilla'] = 'The plantilla id cannot be null!';
+    // check if plantilla is occupied
+    if($plantilla->isOccupied($json['plantilla_id'])) $status['error']['isOccupied'] = 'The plantilla is not vacant!';
+    // check if employee id is null
+    if (!$json['employee_id']) $status['error']['nullEmployee'] = 'The employee id cannot be null!';
 
-    SQL;
-    $stmt = $mysqli->prepare($sql);
-    $stmt->bind_param('ssss',$json['first_name'],$json['last_name'],$json['middle_name'],$json['ext_name']);
-    $stmt->execute();
-    // get insert_id
-    $employee_id = $stmt->insert_id;
-    // if($stmt->error) return $stmt->error;
-    // $stmt->close();
-    return $stmt->fetch ();
-//     $sql = <<<SQL
-//     INSERT INTO `appointments` (`id`, 
-//     `plantilla_id`,
-//     `employee_id`,
-//     `status_of_appointment`,
-//     `date_of_appointment`,
-//     `date_ended`,
-//     `nature_of_appointment`,
-//     `legal_doc`,
-//     `memo_for_legal`,
-//     `head_of_agency`,
-//     `date_of_signing`,
-//     `csc_auth_official`,
-//     `date_signed_by_csc`,
-//     `csc_mc_no`,
-//     `published_at`,
-//     `date_of_publication`,
-//     `hrmo`,
-//     `screening_body`,
-//     `date_of_screening`,
-//     `committee_chair`,
-//     `notation_1`,
-//     `notation_2`,
-//     `notation_3`,
-//     `notation_4`,
-//     `csc_release_date`, 
-//     `timestamp_created`, 
-//     `timestamp_updated`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, current_timestamp(), current_timestamp())
-//     SQL;
-//     $stmt = $mysqli->prepare($sql);
-//     $stmt->bind_param('iisssssssssssssssssiiiis',
-//     $json['plantilla_id'],
-//     $employee_id,
-//     $json['status_of_appointment'],
-//     $json['date_of_appointment'],
-//     $json['date_ended'],
-//     $json['nature_of_appointment'],
-//     $json['legal_doc'],
-//     $json['memo_for_legal'],
-//     $json['head_of_agency'],
-//     $json['date_of_signing'],
-//     $json['csc_auth_official'],
-//     $json['date_signed_by_csc'],
-//     $json['csc_mc_no'],
-//     $json['published_at'],
-//     $json['date_of_publication'],
-//     $json['hrmo'],
-//     $json['screening_body'],
-//     $json['date_of_screening'],
-//     $json['committee_chair'],
-//     $json['notation_1'],
-//     $json['notation_2'],
-//     $json['notation_3'],
-//     $json['notation_4'],
-//     $json['csc_release_date']
-// );
-//     $stmt->execute();
-//     if($stmt->error) return $stmt->error;
-//     $stmt->close();
-}
-function existingEmployeeNewAppointment($json,$mysqli){
-
-}
-
-function existingEmployeeUpdateAppointment($json,$mysqli){
-
-}
-
-
-function getEmployees($mysqli){
-    $data = [];
-    $sql = <<<SQL
-        SELECT 
-            `employees_id`,
-            `lastName`,
-            `firstName`,
-            `middleName`,
-            `extName` 
-        FROM 
-            `employees` 
-        ORDER BY 
-            `employees`.`lastName` 
-        ASC
-    SQL;
-    $stmt = $mysqli->prepare($sql);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    while ($employee = $result->fetch_assoc()) {
-
+    if(!$status['error']) {
+        $apt->addNewAppointment($json);
+        $status['success'] = true;
     }
-    return $data;
-}
 
-function getPlantillas($mysqli){
-    $data = [];
-    $sql = <<<SQL
-    SELECT 
-        * 
-    FROM 
-        `plantillas` 
-    ORDER BY 
-        `plantillas`.`position_title`
-    ASC
-    SQL;
-    $stmt = $mysqli->prepare($sql);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    while ($plantilla = $result->fetch_assoc()) {
-        $data[$plantilla['id']] = $plantilla;
-    }
-    return $data;
+    echo json_encode($status);   
 }
