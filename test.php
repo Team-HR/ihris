@@ -31,55 +31,8 @@
       </div>
       <div class="ui tab segment active" data-tab="personal">
 
-<h5>PERSONAL INFORMATION</h5>
-<hr>
 
-
-<div class="ui form">
-  <div class="fields">
-    <div class="two wide field">
-      <label for="">Employee ID:</label>
-      <input type="text" placeholder="ID" v-model="employee.employee_id">
-    </div>
-  </div>
-  <div class="fields">
-    <div class="field">
-      <label for="">Last Name:</label>
-      <input type="text" placeholder="Last Name" v-model="employee.lastName">
-    </div>
-    <div class="field">
-      <label for="">First Name:</label>
-      <input type="text" placeholder="First Name" v-model="employee.firstName">
-    </div>
-    <div class="field">
-      <label for="">Middle Name:</label>
-      <input type="text" placeholder="Middle Name" v-model="employee.middleName">
-    </div>
-    <div class="field">
-      <label for="">Ext Name:</label>
-      <input type="text" placeholder="Extension" v-model="employee.extName">
-    </div>
-  </div>
-  <div class="fields">
-    <div class="field">
-      <label for="">Birthdate:</label>
-      <input type="date">
-    </div>
-    <div class="field">
-      <label for="">Birthplace:</label>
-      <input type="text" placeholder="Birthplace">
-    </div>
-    <div class="field">
-      <label for="">Gender:</label>
-      <input type="text" v-model="employee.gender" placeholder="Gender"> 
-    </div>
-  </div>
-</div>
-
-
-
-
-
+<?php require 'pds.php';?>
 
       </div>
       <div class="ui tab segment" data-tab="family">
