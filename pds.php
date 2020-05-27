@@ -152,5 +152,18 @@
     </div>
     <i>Contact Details:</i>
     <hr>
-    
+    <div class="three fields">
+        <div class="field">
+            <label>Tel#:</label>
+            <input type="text">
+        </div>
+        <div class="field">
+            <label>Mobile#:</label>
+            <input type="text">
+        </div>
+        <div class="field">
+            <label>Email:</label>
+            <input type="text">
+        </div>
+    </div>
 </div>
