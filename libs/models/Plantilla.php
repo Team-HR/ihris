@@ -9,15 +9,7 @@ class Plantilla {
     
     public function getPlantillas(){
         $data = [];
-        $sql = <<<SQL
-        SELECT 
-            * 
-        FROM 
-            `plantillas` 
-        ORDER BY 
-            `plantillas`.`position_title`
-        ASC
-        SQL;
+        $sql = "SELECT * FROM `plantillas` ORDER BY `plantillas`.`position_title` ASC";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
         $result = $stmt->get_result();

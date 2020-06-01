@@ -48,7 +48,7 @@ if (isset($_GET["scrollTo"])) {
 	});
 
 	function load(filters){
-			$.post('employeelist_proc.php', {
+			$.post('employeelist.v2.ajax.php', {
 				load: true,
 				filters: filters,
 			}, function(data, textStatus, xhr) {
@@ -80,7 +80,7 @@ if (isset($_GET["scrollTo"])) {
 	}
 
 	function addPersonnel(){
-		$.post('employeelist_proc.php', {
+		$.post('employeelist.v2.ajax.php', {
 			addPersonnel: true,
 			firstNameModal: $("#firstNameModal").val(),
 			middleNameModal: $("#middleNameModal").val(),
@@ -117,7 +117,7 @@ if (isset($_GET["scrollTo"])) {
 	}
 
 	function getNumOfStatus(filters){
-		$.post('employeelist_proc.php', {
+		$.post('employeelist.v2.ajax.php', {
 			getNumOfStatus: true,
 			filters: filters
 		}, function(data, textStatus, xhr) {
@@ -127,7 +127,7 @@ if (isset($_GET["scrollTo"])) {
 	}
 
 	function editStat(employees_id){
-		$.post('employeelist_proc.php', {
+		$.post('employeelist.v2.ajax.php', {
 			get_editStat: true,
 			employees_id: employees_id,
 		}, function(data, textStatus, xhr) {
@@ -141,7 +141,7 @@ if (isset($_GET["scrollTo"])) {
 		
 		$("#editStat").modal({
 			onApprove: function (){
-				$.post('employeelist_proc.php', {
+				$.post('employeelist.v2.ajax.php', {
 					editStat: true,
 					employees_id: employees_id,
 					status: $("#editStat_drop").dropdown("get value"),
@@ -327,7 +327,7 @@ if (isset($_GET["scrollTo"])) {
     </div>
   </div>
 </div>
-	<div class="ui container">
+	<div class="ui fluid container" style="padding: 5px;">
 
 	<div class="ui borderless blue inverted mini menu">
     <div class="left item" style="margin-right: 0px !important;">

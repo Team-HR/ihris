@@ -171,7 +171,7 @@ if ($rspvac_id = $_GET["rspvac_id"]) {
 <!-- modal add new vacant position start -->
 <!-- id="addNew" -->
 <div class="ui fullscreen modal scrollable formModal" id="addModal">
-  <div class="header" style="">
+  <div class="header">
     <i class="blue icon user circle"></i> Add New Applicant
   </div>
   <div class="scrolling content">
