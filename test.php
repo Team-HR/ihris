@@ -1,8 +1,64 @@
 <?php
 require_once '_connect.db.php';
+
+$data = [];
+/*
+[personneltrainingslist_id] => 1
+[dateAdded] => 2018-10-10 08:11:35
+[personneltrainings_id] => 1
+[employees_id] => 546
+[training_id] => 35
+[dateD] => 2018-10-10 00:00:00
+[startDate] => 2018-08-17
+[endDate] => 2018-08-17
+[numHours] => 8
+[venue] => Coco Cubano, Bacong, Neg. Or.
+[remarks] => City Treasury Office Personnel
+[timeStart] => 
+[timeEnd] => 
+*/
+$employees_id = 1417;
+
+
+    $years_with_trainings = [];
+    $sql = <<<SQL
+    SELECT 
+    DISTINCT(YEAR(fromDate)) as year
+    FROM requestandcomslist
+    LEFT JOIN requestandcoms
+    ON
+    requestandcomslist.controlNumber = requestandcoms.controlNumber
+    WHERE requestandcomslist.employees_id = '$employees_id'
+    AND isMeeting <> 'yes'
+    SQL;
+
+    $result = $mysqli->query($sql);
+    
+    if ($result->num_rows>0){
+        while ($row = $result->fetch_array()){
+        $years_with_trainings[] = $row['year'];
+    }}
+
+	$sql = <<<SQL
+	SELECT 
+	DISTINCT(YEAR(startDate)) as year
+	FROM personneltrainingslist
+	LEFT JOIN personneltrainings
+	ON
+	personneltrainingslist.personneltrainings_id = personneltrainings.personneltrainings_id
+	WHERE personneltrainingslist.employees_id = '$employees_id'
+	SQL;
+	
+	$result = $mysqli->query($sql);
+		while ($row = $result->fetch_array()) {
+			if (!in_array($row['year'],$years_with_trainings)) {
+                $years_with_trainings[] = $row['year'];
+			}
+		}
+
+print("<pre>".print_r($years_with_trainings,true)."</pre>");
 // $data = array();
 // $sql = <<<SQL
-
 //     SELECT
 //         employees.employees_id,
 //         UPPER(CONCAT( employees.lastName, ', ', employees.firstName, ' ', employees.middleName, ' ', employees.extName )) AS fullName,
@@ -19,9 +75,7 @@ require_once '_connect.db.php';
 //     ORDER BY
 //         employees.lastName ASC,
 //         prr.period DESC
-
 // SQL;
-
 // $result = $mysqli->query($sql);
 // while($row = $result->fetch_assoc()){
 //     $id = $row['employees_id'];
@@ -39,9 +93,7 @@ require_once '_connect.db.php';
 //         ];
 //     } else $data['id_'.$id]['prr'][] = $prr;
 // }
-
 // print("<pre>".print_r($data,true)."</pre>");
-
 // $sql = <<< SQL
 // SELECT
 // 	COUNT(personneltrainings_id) AS num_trainings,
@@ -91,7 +143,7 @@ require_once '_connect.db.php';
 // $filter = "";
 // echo "Filter: ".($filter?$filter:'N/A')."<br>";
 
-
+/*
 $data = [];
 $filters = [
     'category' => ['Key Position', 'Administrative', 'Technical'],
@@ -114,15 +166,11 @@ $filters = [
     ['Technical', 'SUPERVISORY', 'FEMALE']
 ];
 
-// print("<pre>".print_r($filters,true)."</pre>");
-
 $queries = [];
 foreach ($filters as $filter) {
     $sql = "WHERE category = '$filter[0]' AND natureOfAssignment = '$filter[1]' AND gender = '$filter[2]'";
     $queries[] = $sql;
 }
-
-// print("<pre>".print_r($queries,true)."</pre>");
 
 $sql_ave = <<<SQL
 SELECT 
@@ -155,15 +203,14 @@ FROM
 LEFT JOIN `employees` ON `competency`.`employees_id` = `employees`.`employees_id` LEFT JOIN `positiontitles` ON `employees`.`position_id` = `positiontitles`.`position_id` 
 SQL;
 
-// print("<pre>".print_r($wheres,true)."</pre>");
-$sql_emp = <<<SQL
-SELECT 
-    -- `employees`.`employees_id`,
-    CONCAT(`employees`.`lastName`,', ',`employees`.`firstName`,' ',`employees`.`middleName`,' ',`employees`.`extName`) AS fullName
-FROM
-`competency`
-LEFT JOIN `employees` ON `competency`.`employees_id` = `employees`.`employees_id` LEFT JOIN `positiontitles` ON `employees`.`position_id` = `positiontitles`.`position_id` 
-SQL;
+// $sql_emp = <<<SQL
+// SELECT 
+//     -- `employees`.`employees_id`,
+//     CONCAT(`employees`.`lastName`,', ',`employees`.`firstName`,' ',`employees`.`middleName`,' ',`employees`.`extName`) AS fullName
+// FROM
+// `competency`
+// LEFT JOIN `employees` ON `competency`.`employees_id` = `employees`.`employees_id` LEFT JOIN `positiontitles` ON `employees`.`position_id` = `positiontitles`.`position_id` 
+// SQL;
 
 foreach ($queries as $qk => $qry) {
     $key = $filters[$qk][0].";".$filters[$qk][1];
@@ -197,3 +244,4 @@ foreach ($queries as $qk => $qry) {
 }
 
 print("<pre>".print_r($data,true)."</pre>");
+*/

@@ -410,6 +410,7 @@ function listEmployees($mysqli, $gender, $employmentStatus, $department_id,$year
 	} else {
 		while ($row = $result->fetch_assoc()) {
 			$employees_id = $row["employees_id"];
+			$has_trainings_last_three_years = hasTrainingsLastThreeYears($mysqli,$employees_id);
 			$lastName = mb_convert_case($row["lastName"], MB_CASE_TITLE, "UTF-8");
 			$firstName = mb_convert_case($row["firstName"], MB_CASE_TITLE, "UTF-8");
 			$middleName = mb_convert_case($row["middleName"], MB_CASE_TITLE, "UTF-8");
@@ -436,7 +437,7 @@ function listEmployees($mysqli, $gender, $employmentStatus, $department_id,$year
 			$position = $row["position"];
 			$training = "";
 			$startDate = "";
-			$endDate = "";;
+			$endDate = "";
 			$numHours = "";
 			$remarks = "";
 
@@ -447,8 +448,8 @@ function listEmployees($mysqli, $gender, $employmentStatus, $department_id,$year
 
 					if ($key === 0) {
 						?>
-						<tr style="background-color: /*#cce2f7*/;">
-							<td style="white-space: nowrap;"><?=$fullName?></td>
+						<tr <?=($has_trainings_last_three_years?'style="background-color: #7600f738"':'')?>>
+							<td><?=$fullName." ".($has_trainings_last_three_years?'<br><i class="ui green icon certificate"></i> w/ trainings last 3 yrs':'')?></td>
 							<td><?=$gender[0]?></td>
 							<td><?=$employmentStatus?></td>
 							<td><?=$department?></td>
@@ -462,7 +463,7 @@ function listEmployees($mysqli, $gender, $employmentStatus, $department_id,$year
 						<?php
 					} else {
 						?>
-						<tr>
+						<tr <?=($has_trainings_last_three_years?'style="background-color: #7600f738"':'')?>>
 							<td colspan="5"></td>
 							<td><?=$value["training"]?></td>
 							<td><?=dateToStr($value["startDate"])?></td>
@@ -647,7 +648,48 @@ function get_num($mysqli,$id,$stat,$gen,$year,$bool){
 
 }
 
+function hasTrainingsLastThreeYears($mysqli,$employees_id){
+	if($employees_id == null) return false;
+
+
+    $years_with_trainings = [];
+    $sql = <<<SQL
+    SELECT 
+    DISTINCT(YEAR(fromDate)) as year
+    FROM requestandcomslist
+    LEFT JOIN requestandcoms
+    ON
+    requestandcomslist.controlNumber = requestandcoms.controlNumber
+    WHERE requestandcomslist.employees_id = '$employees_id'
+    AND isMeeting <> 'yes'
+    SQL;
+
+    $result = $mysqli->query($sql);
+    
+    if ($result->num_rows>0){
+        while ($row = $result->fetch_array()){
+        $years_with_trainings[] = $row['year'];
+    }}
+
+	$sql = <<<SQL
+	SELECT 
+	DISTINCT(YEAR(startDate)) as year
+	FROM personneltrainingslist
+	LEFT JOIN personneltrainings
+	ON
+	personneltrainingslist.personneltrainings_id = personneltrainings.personneltrainings_id
+	WHERE personneltrainingslist.employees_id = '$employees_id'
+	SQL;
+	
+	$result = $mysqli->query($sql);
+		while ($row = $result->fetch_array()) {
+			if (!in_array($row['year'],$years_with_trainings)) {
+                $years_with_trainings[] = $row['year'];
+			}
+		}
+
+	return count($years_with_trainings)>=3?true:false;
+
+}
+
 ?>
-
-
-
