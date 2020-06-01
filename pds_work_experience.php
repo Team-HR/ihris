@@ -1,5 +1,6 @@
 <div class="ui tiny form">
-    <h4 class="ui header">V. Work Experience</h4>
+<button class="mini teal ui button right floated"><i class="icon edit"></i> Edit</button>
+    <h4 class="ui header">V. WORK EXPERIENCE</h4>
     <hr>
     <table class="ui very small compact structured celled table">
         <thead>
