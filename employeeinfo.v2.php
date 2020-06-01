@@ -349,9 +349,7 @@ if (isset($_GET["spms"])) {
     </div>
   </div>
   <div class="thirteen wide stretched column">
-    <div class="ui tab" data-tab="appointments">
-		<?php require 'appointments.php'?>
-	</div>
+    <div class="ui tab" data-tab="appointments"></div>
     <div class="ui tab active" data-tab="pds">
       <div class="ui pointing secondary blue menu fluid" id="pds">
         <a class="item active" data-tab="personal">Personal</a>

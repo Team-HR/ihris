@@ -1,4 +1,13 @@
-<div id="app" style="background: white;">
+<?php $title = "Appointments"; require_once "header.php"; require_once "_connect.db.php";?>
+
+<script type="text/javascript">
+
+
+</script>
+
+
+
+<div id="app" style="background: white; margin-top:30px; width:95%;;margin-left:40px;padding:20px">
    <div class="ui form">
     <div style="font-size:15x;box-shadow: -0px 3px gray; height:30px;">PLANTILLA INFORMATION</div><br><br>
   <!-- appointee -->
@@ -343,3 +352,6 @@
 
     </div>
 </div>  
+
+
+<?php require_once "footer.php";?>
