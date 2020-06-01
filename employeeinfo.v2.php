@@ -330,7 +330,7 @@ if (isset($_GET["spms"])) {
 	</div>
 
 	<div class="ui container" style="padding: 5px;">
-	<?php require 'test.php'?>
+		<?php require 'pds.php'?>
 	</div>
 	
 
