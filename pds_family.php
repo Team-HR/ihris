@@ -1,6 +1,6 @@
 <div class="ui tiny form">
+<button class="mini teal ui button right floated"><i class="icon edit"></i> Edit</button>
     <h4 class="ui header">II. FAMILY BACKGROUND</h4>
-
     <i>Spouse's Informaion</i>
     <hr>
     <div class="four fields">
