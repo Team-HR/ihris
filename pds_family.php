@@ -71,35 +71,21 @@
             <label for="">Middlename:</label>
             <input type="text" placeholder="">
         </div>
-        <!-- <div class="field">
-            <label for="">Name extension:</label>
-            <input type="text" placeholder="">
-        </div> -->
     </div>
     <i>Name of Children</i>
     <hr>
-    <table class="ui very small compact table">
+    <table class="ui very small compact structured celled table">
         <thead>
             <tr>
-                <th>NAME</th>
-                <th>BIRTHDATE</th>
+                <th>Name of the Child</th>
+                <th>Date of Birth</th>
             </tr>
         </thead>
         <tbody>
-        <tr v-for="i in 10">
+        <tr v-for="i in 2">
             <td>Child {{i}}</td>
-            <td>Birthdate {{i}} </td>
+            <td>mm/dd/yyyy</td>
         </tr>
         </tbody>
     </table>
-    <!-- <div :key="i" class="two  fields">
-        <div class="field">
-            <label for="">Fullname:</label>
-            <input type="text"> 
-        </div>
-        <div class="field">
-            <label for="">Birthdates:</label>
-            <input type="text"> 
-        </div>
-    </div> -->
 </div>

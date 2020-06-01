@@ -21,13 +21,13 @@
     <div class="ui tab active" data-tab="pds">
       <div class="ui pointing secondary blue menu fluid" id="pds">
         <a class="item" data-tab="personal">Personal</a>
-        <a class="item active" data-tab="family">Family</a>
+        <a class="item" data-tab="family">Family</a>
         <a class="item" data-tab="education">Education</a>
         <a class="item" data-tab="eligibility">Eligibility</a>
         <a class="item" data-tab="work_experience">Work Experiences</a>
         <a class="item" data-tab="voluntary_works">Voluntary Works</a>
         <a class="item" data-tab="trainings">Trainings</a>
-        <a class="item" data-tab="other_information">Other Information</a>
+        <a class="item active" data-tab="other_information">Other Information</a>
       </div>
       <div class="ui tab segment" data-tab="personal">
       <div class="ui tiny form">
@@ -200,26 +200,26 @@
     </div>
 </div>
       </div>
-      <div class="ui tab segment active" data-tab="family">
-<?php require 'pds_family.php';?>
+      <div class="ui tab segment" data-tab="family">
+        <?php require 'pds_family.php';?>
       </div>
       <div class="ui tab segment" data-tab="education">
-        Education
+        <?php require 'pds_education.php';?>
       </div>
       <div class="ui tab segment" data-tab="eligibility">
-        Elligibility
+        <?php require 'pds_eligibility.php'?>
       </div>
       <div class="ui tab segment" data-tab="work_experience">
-        Work Experiences
-      </div>
-      <div class="ui tab segment" data-tab="trainings">
-        Trainings
+        <?php require 'pds_work_experience.php'?>
       </div>
       <div class="ui tab segment" data-tab="voluntary_works">
-        Voluntary Works
+        <?php require 'pds_voluntary.php'?>
       </div>
-      <div class="ui tab segment" data-tab="other_information">
-        Other Information
+      <div class="ui tab segment" data-tab="trainings">
+        <?php require 'pds_trainings.php'?>
+      </div>
+      <div class="ui tab segment active" data-tab="other_information">
+        <?php require 'pds_other_information.php'?>
       </div>
     </div>
     <div class="ui tab" data-tab="service_records"></div>
