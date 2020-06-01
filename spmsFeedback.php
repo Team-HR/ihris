@@ -4,6 +4,22 @@ require_once "header.php";
 ?>
 <div class='ui segment' style="width:80%;margin:auto" id="app">
   <!-- content -->
+  
+    <div class="ui modal" id="feedbackSaveModal">
+        <div class="header">Add Feedback</div>
+        <div class="content">
+            <form class="ui form" @submit="saveFeed">
+                <div class="field">
+                    <label>Feedback</label>
+                    <textarea v-model="txtfeed"></textarea>
+                </div>
+                <div class="field">
+                    <button class='ui primary button fluid'>Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div>
         <h1>Feedback and Monitoring</h1>
     </div>
@@ -36,9 +52,9 @@ require_once "header.php";
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="e in Employees">
-                    <td>{{e.lastName}} {{e.firstName}}</td>
-                    <td>{{e.employmentStatus}}</td>
+                <tr v-for="e in mergedData" class="ui" :class='e.color' @click="openFeed(e.employees_id)" :key="e.employees_id">
+                    <td>{{Employees[e.employees_id].lastName}} {{ Employees[e.employees_id].firstName }}</td>
+                    <td>{{Employees[e.employees_id].employmentStatus}}</td>
                 </tr>
             </tbody>
         </table>
@@ -52,13 +68,15 @@ require_once "header.php";
             Employees   :[],
             feedbacks   :[],
             mergedData  :[],
+            txtfeed     :"",
+            txtid       :0,
+            
         },
         methods:{
            getEmployees:()=>{
                 var xml = new XMLHttpRequest()
                     xml.onload = ()=>{
                         app.Employees = JSON.parse(xml.responseText)
-                        app.mergeTable()
                     }
                     xml.open('POST','umbra/feedback/jason.php',true)
                     xml.send()
@@ -80,16 +98,45 @@ require_once "header.php";
                event.preventDefault()
            },
            mergeTable:()=>{
-                var a_null = {feedbacking_id: "", feedbacking_emp: "", feedbacking_year: "", feedbacking_feedback: ""};
-                app.Employees.forEach(Employee=>{
-                    feed = app.feedbacks.find( ({ feedbacking_emp }) => feedbacking_emp === Employee.employees_id )
-                    if(feed){
-                        ar = feed
-                    }else{
-                        ar = a_null
+                // var a_null = {feedbacking_id: "", feedbacking_emp: "", feedbacking_year: "", feedbacking_feedback: "",color: "red"};
+                app.mergedData = [];
+                for ( ind in app.Employees) {
+                    Employee = app.Employees[ind];
+                    if(app.feedbacks[ind]){
+                        feedback = app.feedbacks[ind] 
+                        rowColor = 'yellow';
+                        if(feedback['color']){
+                            rowColor = ""
+                        }                      
+                        app.mergedData[ind] = {employees_id:Employee['employees_id'],employmentStatus:Employee['employmentStatus'],feedbacking_id:feedback['feedbacking_id'],feedbacking_feedback:feedback['feedbacking_feedback'],color:rowColor}
+                    }else{       
+                        app.mergedData[ind] = {employees_id:Employee['employees_id'],employmentStatus:Employee['employmentStatus'],feedbacking_id:"", feedbacking_feedback:"",color: "yellow"}
                     }
-                        app.mergedData.push({Employee,ar})
-                });
+
+                        app.mergedData = app.mergedData.filter(()=>true)
+                }
+           },
+           openFeed: function(dataId){
+                app.txtfeed = ""
+                app.txtid   = dataId
+                if(app.feedbacks[dataId]){
+                    app.txtfeed =  app.feedbacks[dataId].feedbacking_feedback
+                }
+                $("#feedbackSaveModal").modal('show')        
+           },
+           saveFeed: function(){
+                event.preventDefault()
+                var fd = new FormData()
+                    fd.append('savefeedback',true)
+                    fd.append('yr',app.feedBackYR)
+                    fd.append('emp',app.txtid)
+                    fd.append('feedback',app.txtfeed)
+                var xhr = new XMLHttpRequest()
+                    xhr.onload = function(){
+                        app.getFeedback()
+                    }   
+                    xhr.open('POST','umbra/feedback/feedback.config.php',true)
+                    xhr.send(fd)             
            }
         },
         watch:{
@@ -98,7 +145,10 @@ require_once "header.php";
             },
             feedbacks:()=>{
                 app.mergeTable()
-            }
+            },
+            Employees:()=>{
+                app.mergeTable()
+            },
         },
         mounted:function(){
             var rdy = setInterval(() => {
@@ -115,3 +165,8 @@ require_once "header.php";
 <?
 require_once "footer.php";
 ?>
+<style>
+    .yellow{
+        background:#ffe0034d;
+    }
+</style>
