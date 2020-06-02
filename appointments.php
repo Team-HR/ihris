@@ -264,7 +264,7 @@
                   </div>
                 </div>
               </div>
-            </div>   
+            </div>
             <br>
     <div style="font-size:15x;box-shadow: -0px 3px gray; height:30px;">PUBLICATION & OTHER INFORMATION</div><br> 
       <div class="ui grid">

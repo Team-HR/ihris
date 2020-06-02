@@ -3,7 +3,7 @@ $(document).ready(function () {
     $('#pim-menu .item').tab();
 });
 
-var pds_app = new Vue({
+new Vue({
     el: "#pds-app",
     data: {
         employee_id: 0,

@@ -1,5 +1,5 @@
 <div class="ui tiny form">
-    <button class="mini teal ui button right floated"><i class="icon edit"></i> Edit</button>
+    <button id="btn_update_pds_personal" class="mini teal ui button right floated"><i class="icon edit"></i> Edit</button>
     <h4 class="ui header">I. PERSONAL INFORMATION</h4>
     <i>Bio</i>
     <hr>
