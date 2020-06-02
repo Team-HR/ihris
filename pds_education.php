@@ -16,7 +16,7 @@
         </thead>
         <tbody>
             <tr>
-                <td>Elementary</td>
+                <th>Elementary</th>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -25,7 +25,7 @@
                 <td></td>
             </tr>
             <tr>
-                <td>Secondary</td>
+                <th>Secondary</th>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -34,7 +34,7 @@
                 <td></td>
             </tr>
             <tr>
-                <td>Vocational/Trade Course</td>
+                <th>Vocational/Trade Course</th>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -43,7 +43,7 @@
                 <td></td>
             </tr>
             <tr>
-                <td>College</td>
+                <th>College</th>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -52,7 +52,7 @@
                 <td></td>
             </tr>
             <tr>
-                <td>Graduate Studies</td>
+                <th>Graduate Studies</th>
                 <td></td>
                 <td></td>
                 <td></td>
