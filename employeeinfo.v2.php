@@ -335,13 +335,13 @@ function update() {
 
     <div class="ui container" style="padding: 5px;">
 
-        <div class="ui segment grid" id="pds-app">
+        <div class="ui segment grid">
             <div class="three wide column">
                 <div id="pim-menu" class="ui secondary vertical pointing menu fluid">
-                    <a class="item active" data-tab="appointments">
+                    <a class="item" data-tab="appointments">
                         Appointment
                     </a>
-                    <a class="item" data-tab="pds">
+                    <a class="item active" data-tab="pds">
                         PDS
                     </a>
                     <a class="item" data-tab="service_records">
@@ -353,7 +353,7 @@ function update() {
                 </div>
             </div>
             <div class="thirteen wide stretched column">
-                <div class="ui tab active" data-tab="appointments">
+                <div class="ui tab" data-tab="appointments">
                     <div class="ui pointing secondary blue menu fluid" id="pds">
                         <a class="item active" data-tab="appointment_history">Appointment History</a>
                     </div>
@@ -378,7 +378,7 @@ function update() {
                         </table>
                     </div>
                 </div>
-                <div class="ui tab" data-tab="pds">
+                <div class="ui tab active" data-tab="pds">
                     <div class="ui pointing secondary blue menu fluid" id="pds">
                         <a class="item active" data-tab="personal">Personal</a>
                         <a class="item" data-tab="family">Family</a>
@@ -418,8 +418,6 @@ function update() {
                 <div class="ui tab" data-tab="leave_records"></div>
                 </>
             </div>
-
-            <script src="pds/config.js"></script>
         </div>
 
 
@@ -517,24 +515,16 @@ function update() {
 	?>
 
                     </div>
-
-
-                    <!--     <div class="ui tab segment" data-tab="first/b">1B</div>
-    <div class="ui tab segment" data-tab="first/c">1C</div> -->
                 </div>
                 <div class="ui bottom attached tab segment" data-tab="second">
                     <div class="ui pointing secondary blue menu">
                         <a class="item active" data-tab="second/a">Trainings Attended</a>
-                        <!--       <a class="item" data-tab="second/b">2B</a>
-      <a class="item" data-tab="second/c">2C</a> -->
                     </div>
                     <div class="ui tab segment active" data-tab="second/a">
                         <?php
     		require_once "employeeinfo_trainingsAttended.php";
     	?>
                     </div>
-                    <!-- <div class="ui  tab segment" data-tab="second/b">2B</div>
-    <div class="ui tab segment" data-tab="second/c">2C</div> -->
                 </div>
                 <div id="spms0" class="ui bottom attached tab segment" data-tab="third">
                     <div class="ui pointing secondary blue menu">
@@ -577,4 +567,7 @@ function update() {
         </div>
     </div>
 
+
+    <!-- scripts -->
+    <script src="pds/config.js"></script>
     <?php require_once "footer.php";?>
