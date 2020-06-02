@@ -4,7 +4,7 @@
         $yr = $_POST['yr'];
         $emp = $_POST['emp'];
         $feedback = $_POST['feedback'];
-        $sucess = true;
+        $success = true;
         $mess = "";
         $check = "SELECT * from `spms_feedbacking` where `feedbacking_year`='$yr' and `feedbacking_emp`='$emp'";
         $check = $mysqli->query($check);
@@ -17,21 +17,21 @@
             $sql = $mysqli->query($sql);
             if(!$sql){
                 $mess = $mysqli->error;
-                $sucess = false;
+                $success = false;
             }
         }else{
             $mess = "Data is saved";    
             $sql = "INSERT into `spms_feedbacking` 
-                    (`feedbacking_id`,`feedbacking_year`,`feedbacking_emp`,`feedbacking_feedback`)
-                    values ('','$yr','$emp','$feedback')";
+                    (`feedbacking_id`,`feedbacking_year`,`feedbacking_emp`,`feedbacking_feedback`,`color`)
+                    values ('','$yr','$emp','$feedback','1')";
             $sql = $mysqli->query($sql);
             if(!$sql){
                 $mess = $mysqli->error;
-                $sucess = false;
+                $success = false;
             }
         }
         $ar = array(
-            "success" => $sucess,
+            "success" => $success,
             "message" => $mess,
         );
         echo json_encode($ar);
@@ -46,5 +46,42 @@
             $ar = $sql->fetch_assoc();
             echo $ar['feedbacking_feedback'];
         }
+    }elseif (isset($_POST['colorChange'])) {
+        $yr = $_POST['yr'];
+        $emp = $_POST['emp'];
+        $dat = $_POST['dat'];
+        $success = true;
+        $mess = "";
+        $check = "SELECT * from `spms_feedbacking` where `feedbacking_year`='$yr' and `feedbacking_emp`='$emp'";
+        $check = $mysqli->query($check);
+        if(!$check){
+            $mess = $mysqli->error;
+            $success = false;
+        }
+        if($check->num_rows){
+            $mess = "Color was change";    
+            $check = $check->fetch_assoc();
+            $sql = "UPDATE `spms_feedbacking` SET `color` = '$dat' WHERE `spms_feedbacking`.`feedbacking_id` = '$check[feedbacking_id]'";
+            $sql = $mysqli->query($sql);
+            if(!$sql){
+                $mess = $mysqli->error;
+                $success = false;
+            }
+        }else{
+            $mess = "Data color is change";    
+            $sql = "INSERT into `spms_feedbacking` 
+                    (`feedbacking_id`,`feedbacking_year`,`feedbacking_emp`,`color`)
+                    values ('','$yr','$emp','1')";
+            $sql = $mysqli->query($sql);
+            if(!$sql){
+                $mess = $mysqli->error;
+                $success = false;
+            }
+        }
+        $ar = array(
+            "success" => $success,
+            "message" => $mess,
+        );
+        echo json_encode($ar);
     }
 ?>
