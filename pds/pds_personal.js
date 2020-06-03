@@ -9,9 +9,12 @@ new Vue({
         getEmployeeData(){
             window.$_GET = new URLSearchParams(location.search);
             this.employee.employee_id = $_GET.get('employees_id');
+            console.log(this.employee.employee_id);
+            
             $.get("pds/config.php",{getEmployeeData: true, employee_id: this.employee.employee_id},
                 (data, textStatus, jqXHR)=>{
                     this.employee = data
+                    console.log(this.employee);
                 },
                 "json"
             );
