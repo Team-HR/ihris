@@ -49,6 +49,10 @@ require_once "header.php";
                     <button class='ui primary button fluid' name="saveBTN">SAVE</button>
                 </div>
             </form>
+            <br>
+                <div class="field">
+                    <button class='ui negative button fluid' onclick="$(this.offsetParent).modal('hide')">Close</button>
+                </div>
         </div>
     </div>
 
@@ -91,7 +95,7 @@ require_once "header.php";
             </thead>
             <tbody>
                 <tr v-for="e in mergedData" class="ui" :class='e.color' :key="e.employees_id">
-                    <td>{{Employees[e.employees_id].lastName}} {{ Employees[e.employees_id].firstName }}</td>
+                    <td>{{e.lastName}} {{ e.firstName }}</td>
                     <td>{{Employees[e.employees_id].gender}}</td>
                     <td>{{Employees[e.employees_id].employmentStatus}}</td>
                     <td style="text-align:center">
@@ -133,7 +137,7 @@ require_once "header.php";
                         app.Employees = JSON.parse(xml.responseText)
                     }
                     xml.open('POST','umbra/feedback/jason.php',true)
-                    xml.send()
+                    xml.send()                    
            },
            getFeedback:()=>{
                if(app.pre_feedBackYR.toString().length==4){
@@ -172,11 +176,21 @@ require_once "header.php";
                         if(feedback['color']==1){
                             rowColor = ""
                         }                      
-                        app.mergedData[ind] = {employees_id:Employee['employees_id'],employmentStatus:Employee['employmentStatus'],feedbacking_id:feedback['feedbacking_id'],feedbacking_feedback:feedback['feedbacking_feedback'],color:rowColor}
+                        app.mergedData[ind] = {employees_id:Employee['employees_id'],lastName:Employee['lastName'],firstName:Employee['firstName'],middleName:Employee['middleName'],extName:Employee['extName'],feedbacking_id:feedback['feedbacking_id'],feedbacking_feedback:feedback['feedbacking_feedback'],color:rowColor}
                     }else{       
-                        app.mergedData[ind] = {employees_id:Employee['employees_id'],employmentStatus:Employee['employmentStatus'],feedbacking_id:"", feedbacking_feedback:"",color: "yellow"}
+                        app.mergedData[ind] = {employees_id:Employee['employees_id'],lastName:Employee['lastName'],firstName:Employee['firstName'],middleName:Employee['middleName'],extName:Employee['extName'],feedbacking_id:"", feedbacking_feedback:"",color: "yellow"}
                     }
-                        app.mergedData = app.mergedData.filter(()=>true);   
+                        app.mergedData = app.mergedData.filter(()=>true);
+                        app.mergedData = app.mergedData.sort(function(a,b){
+                            if (a.lastName < b.lastName) {
+                                return -1;
+                            }
+                            if (a.lastName > b.lastName) {
+                                return 1;
+                            }
+                            // names must be equal
+                            return 0;
+                        })
                 }
                 app._("fetching_msg").style.display="none"
            },
