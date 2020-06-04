@@ -15,14 +15,16 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true && $_SESSION[
 	<title><?php echo $title?></title>
 <!--  <meta charset="UTF-8" name="google" value="notranslate" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/> -->
   <meta name="viewport" content="width=device-width, height=device-height , initial-scale=1">
-  <link rel="stylesheet" type="text/css" href="ui/dist/semantic.css">
 
   <script src="node_modules\vue\dist\vue.min.js"></script>
   <!-- development version, includes helpful console warnings -->
   <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
   <script src="node_modules\moment\min\moment.min.js"></script>
 
-  <script src="jquery/jquery-3.3.1.min.js"></script>
+  <!-- <script src="jquery/jquery-3.3.1.min.js"></script> -->
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <!-- <link rel="stylesheet" type="text/css" href="ui/dist/semantic.css"> -->
+  <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
   <script src="semantic/dist/semantic.min.js"></script>
   <script src="node_modules/chart.js/dist/Chart.js"></script>
   <script src="node_modules/chart.js/dist/Chart.min.js"></script>
