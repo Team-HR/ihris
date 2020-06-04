@@ -570,4 +570,18 @@ function update() {
 
     <!-- scripts -->
     <script src="pds/config.js"></script>
+    <script src="pds/pds_personal.js"></script>
+    
+    <!-- styles -->
+    <style>
+        .editState {
+            /*border: 2px solid green !important;*/
+            background-color: #ffffb05c !important;
+        }
+        .readOnly {
+            border: 1px solid white !important;
+            border-bottom: 1px solid lightgrey !important;
+            border-radius: 0px !important;
+        }
+    </style>
     <?php require_once "footer.php";?>

@@ -1,3 +1,4 @@
+<div id="pds_family">
 <div class="ui tiny form">
 <button class="mini teal ui button right floated"><i class="icon edit"></i> Edit</button>
     <h4 class="ui header">II. FAMILY BACKGROUND</h4>
@@ -6,7 +7,7 @@
     <div class="four fields">
         <div class="field">
             <label for="">Surname:</label>
-            <input type="text" placeholder="--- N/A ---">
+            <input v-bind:class="{editState:!readonly,readOnly:readonly}" :readonly = "readonly" v-model="employee.lastName" type="text" placeholder="--- N/A ---">
         </div>
         <div class="field">
             <label for="">Firstname:</label>
@@ -88,4 +89,5 @@
         </tr>
         </tbody>
     </table>
+</div>
 </div>
