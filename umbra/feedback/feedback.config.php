@@ -59,7 +59,7 @@
             $success = false;
         }
         if($check->num_rows){
-            $mess = "Color was change";    
+            $mess = "Color was changed";    
             $check = $check->fetch_assoc();
             $sql = "UPDATE `spms_feedbacking` SET `color` = '$dat' WHERE `spms_feedbacking`.`feedbacking_id` = '$check[feedbacking_id]'";
             $sql = $mysqli->query($sql);
@@ -68,7 +68,7 @@
                 $success = false;
             }
         }else{
-            $mess = "Data color is change";    
+            $mess = "Data color is changed";    
             $sql = "INSERT into `spms_feedbacking` 
                     (`feedbacking_id`,`feedbacking_year`,`feedbacking_emp`,`color`)
                     values ('','$yr','$emp','1')";
