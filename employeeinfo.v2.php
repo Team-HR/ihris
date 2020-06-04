@@ -571,6 +571,7 @@ function update() {
     <!-- scripts -->
     <script src="pds/config.js"></script>
     <script src="pds/pds_personal.js"></script>
+    <script src="pds/pds_family.js"></script>
     
     <!-- styles -->
     <style>

@@ -21,7 +21,7 @@
     <hr>
     <div class="four fields">
         <div class="field">
-            <label>Surname:</label>
+            <label>Lastname:</label>
             <input v-bind:class="{editState:!readonly,readOnly:readonly}" :readonly = "readonly" v-model="employee.lastName" type="text" placeholder="--- N/A ---">
         </div>
         <div class="field">

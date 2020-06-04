@@ -10,10 +10,10 @@ new Vue({
         getEmployeeData(){
             window.$_GET = new URLSearchParams(location.search);
             this.employee.employee_id = $_GET.get('employees_id');
-            $.get("pds/config.php",{getEmployeeData: true, employee_id: this.employee.employee_id},
+            $.get("pds/config.php",{getPdsPersonal: true, employee_id: this.employee.employee_id},
                 (data, textStatus, jqXHR)=>{
                     this.employee = data
-                    console.log(this.employee);
+                    // console.log(this.employee);
                 },
                 "json"
             );
@@ -24,7 +24,7 @@ new Vue({
             $("#btns_pds_personal_update").show();
         },
         goSave(){
-            console.log(this.employee);
+            // console.log(this.employee);
             $.post("pds/config.php", {savePdsPersonal: true, employee: this.employee},
                 (data, textStatus, jqXHR)=>{
                     if (data > 0) {

@@ -2,7 +2,23 @@ new Vue({
     el: "#pds_family",
     data: {
         readonly: true,
-        employee: {employee_id: 0,lastName: "",firstName: "",middleName: "",extName: "",birthdate: "",birthplace: "",citizenship: "",gender: "",civil_status: "",height: "",weight: "",blood_type: "",gsis_id: "",pag_ibig_id: "",philhealth_id: "",sss_id: "",tin_id: "",res_house_no: "",res_street: "",res_subdivision: "",res_barangay: "",res_city: "",res_province: "",res_zip_code: "",res_tel: "",perm_house_no: "",perm_street: "",perm_subdivision: "",perm_barangay: "",perm_city: "",perm_province: "",perm_zip_code: "",perm_tel: "",mobile: "",email: "",
+        employee: {
+            employee_id: 0,
+            father_ext_name:"",
+            father_first_name:"",
+            father_last_name:"",
+            father_middle_name:"",
+            mother_first_name:"",
+            mother_last_name:"",
+            mother_middle_name:"",
+            spouse_business_address:"",
+            spouse_employeer:"",
+            spouse_ext_name:"",
+            spouse_first_name:"",
+            spouse_last_name:"",
+            spouse_middle_name:"",
+            spouse_mobile:"",
+            spouse_occupation:""
         },
         updateSuccess: false
     },
@@ -10,7 +26,7 @@ new Vue({
         getEmployeeData(){
             window.$_GET = new URLSearchParams(location.search);
             this.employee.employee_id = $_GET.get('employees_id');
-            $.get("pds/config.php",{getEmployeeData: true, employee_id: this.employee.employee_id},
+            $.get("pds/config.php",{getPdsFamily: true, employee_id: this.employee.employee_id},
                 (data, textStatus, jqXHR)=>{
                     this.employee = data
                     console.log(this.employee);
@@ -20,22 +36,29 @@ new Vue({
         },
         goUpdate(){
             this.readonly = false
-            $("#btn_pds_personal_update").hide();
-            $("#btns_pds_personal_update").show();
+            $("#btn_pds_family_update").hide();
+            $("#btns_pds_family_update").show();
         },
         goSave(){
-            console.log(this.employee);
-            $.post("pds/config.php", {savePdsPersonal: true, employee: this.employee},
+            // console.log(this.employee);
+            $.post("pds/config.php", {savePdsFamily: true, employee: this.employee},
                 (data, textStatus, jqXHR)=>{
                     if (data > 0) {
-                        this.updateSuccess = true
-                        setTimeout(()=>{
-                            this.updateSuccess = false
-                        }, 2000);
+                        $('body').toast({
+                            title: 'LOOK',
+                            message: 'See, how long i will last',
+                            showProgress: 'bottom',
+                            classProgress: 'red'
+                        });
+                        // this.savedToast()
+                        // this.updateSuccess = true
+                        // setTimeout(()=>{
+                        //     this.updateSuccess = false
+                        // }, 2000);
                     }
                     this.readonly = true
-                    $("#btn_pds_personal_update").show();
-                    $("#btns_pds_personal_update").hide();
+                    $("#btn_pds_family_update").show();
+                    $("#btns_pds_family_update").hide();
                 },
                 "json"
             );
@@ -43,8 +66,16 @@ new Vue({
         goCancel(){
             this.getEmployeeData()
             this.readonly = true
-            $("#btn_pds_personal_update").show();
-            $("#btns_pds_personal_update").hide();
+            $("#btn_pds_family_update").show();
+            $("#btns_pds_family_update").hide();
+        },
+        savedToast(){
+            $('body').toast({
+                title: 'LOOK',
+                message: 'See, how long i will last',
+                showProgress: 'bottom',
+                classProgress: 'red'
+            });
         }
     },
     created() {
