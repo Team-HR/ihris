@@ -28,14 +28,17 @@ new Vue({
             $.post("pds/config.php", {savePdsPersonal: true, employee: this.employee},
                 (data, textStatus, jqXHR)=>{
                     console.log('data',data);
-                    console.log('textStatus',textStatus);
-                    console.log('jqXHR',jqXHR);
+                    if (data > 0) {
+                        $("#pds_personal_update_saved").show();
+                    }
+                    // console.log('textStatus',textStatus);
+                    // console.log('jqXHR',jqXHR);
+                    this.readonly = true
+                    $("#btn_pds_personal_update").show();
+                    $("#btns_pds_personal_update").hide();
                 },
                 "json"
             );
-            this.readonly = true
-            $("#btn_pds_personal_update").show();
-            $("#btns_pds_personal_update").hide();
         },
         goCancel(){
             this.getEmployeeData()

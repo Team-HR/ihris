@@ -1,12 +1,20 @@
 <div id="pds_personal">
 <div id="form_pds_personal" class="ui tiny form">
-    <button @click="goUpdate" id="btn_pds_personal_update" class="ui mini teal button right floated"><i class="icon edit"></i> Update</button>
+    <button @click="goUpdate" id="btn_pds_personal_update" class="ui mini teal button"><i class="icon edit"></i> Update</button>
 
-    <div id="btns_pds_personal_update" class="ui mini buttons right floated" style="display:none">
+    <div id="btns_pds_personal_update" class="ui mini buttons" style="display:none">
         <button @click="goSave" class="ui green button"><i class="icon save"></i> Save</button>
             <div class="or"></div>
         <button @click="goCancel" class="ui button"><i class="icon trash"></i> Discard</button>
     </div>
+
+<div class="ui success message" v-bind:class="{visible:updateSuccess, hidden:updateSuccess}" id="pds_personal_update_saved">
+  <i class="close icon"></i>
+  <div class="header">
+    Success!
+  </div>
+  <p>Update successfully saved!</p>
+</div>
 
     <h4 class="ui header">I. PERSONAL INFORMATION</h4>
     <i>Bio</i>
