@@ -1,22 +1,12 @@
 <div id="pds_family">
-<div class="ui tiny form">
-
 <div id="form_pds_family" class="ui tiny form">
     <button @click="goUpdate" id="btn_pds_family_update" class="ui mini teal button"><i class="icon edit"></i> Update</button>
 
     <div id="btns_pds_family_update" class="ui mini buttons" style="display:none">
         <button @click="goSave" class="ui green button"><i class="icon save"></i> Save</button>
             <div class="or"></div>
-        <button @click="goCancel" class="ui button"><i class="icon trash"></i> Discard</button>
+        <button @click="goCancel" class="ui red button"><i class="icon trash"></i> Discard</button>
     </div>
-
-<div class="ui success transition message" v-bind:class="{ visible:updateSuccess, hidden:!updateSuccess }" id="pds_family_update_saved">
-  <i class="close icon" @click="updateSuccess=!updateSuccess"></i>
-  <div class="header">
-    Success!
-  </div>
-  <p>Update successfully saved!</p>
-</div>
 
     <h4 class="ui header">II. FAMILY BACKGROUND</h4>
     <i>Spouse's Informaion</i>
@@ -94,8 +84,10 @@
             <input v-bind:class="{editState:!readonly,readOnly:readonly}" :readonly = "readonly" v-model="employee.mother_middle_name" type="text" placeholder="--- N/A ---">
         </div>
     </div>
-    <i>Name of Children</i>
+    <i>Children</i>
     <hr>
+    
+
     <table class="ui very small compact structured celled table">
         <thead>
             <tr>
@@ -104,10 +96,19 @@
             </tr>
         </thead>
         <tbody>
-        <tr v-for="i in 2">
-            <td>Child {{i}}</td>
-            <td>mm/dd/yyyy</td>
+        <template v-if="numOfChildren > 0">
+        <tr v-for="child in employee.children">
+            <td>{{child.child_name}}</td>
+            <td>{{child.child_birthdate}}</td>
         </tr>
+        </template>
+        <template v-else>
+            <tr class="center aligned" style="color:lightgrey">
+                <td colspan="2">-- N/A--</td>
+            </tr>
+        </template>
+        
+
         </tbody>
     </table>
 </div>

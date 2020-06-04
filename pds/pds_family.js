@@ -18,9 +18,10 @@ new Vue({
             spouse_last_name:"",
             spouse_middle_name:"",
             spouse_mobile:"",
-            spouse_occupation:""
+            spouse_occupation:"",
+            children: []
         },
-        updateSuccess: false
+
     },
     methods: {
         getEmployeeData(){
@@ -44,17 +45,7 @@ new Vue({
             $.post("pds/config.php", {savePdsFamily: true, employee: this.employee},
                 (data, textStatus, jqXHR)=>{
                     if (data > 0) {
-                        $('body').toast({
-                            title: 'LOOK',
-                            message: 'See, how long i will last',
-                            showProgress: 'bottom',
-                            classProgress: 'red'
-                        });
-                        // this.savedToast()
-                        // this.updateSuccess = true
-                        // setTimeout(()=>{
-                        //     this.updateSuccess = false
-                        // }, 2000);
+                        this.savedToast()
                     }
                     this.readonly = true
                     $("#btn_pds_family_update").show();
@@ -63,19 +54,29 @@ new Vue({
                 "json"
             );
         },
+        savedToast(){
+            $('#form_pds_family').toast({
+                title: 'Saved!',
+                message: 'Succesfully saved changes!',
+                showProgress: 'bottom',
+                classProgress: 'green',
+                position: 'top center',
+                className: {
+                    toast: 'ui message'
+                }
+            });
+        },
         goCancel(){
             this.getEmployeeData()
             this.readonly = true
             $("#btn_pds_family_update").show();
             $("#btns_pds_family_update").hide();
         },
-        savedToast(){
-            $('body').toast({
-                title: 'LOOK',
-                message: 'See, how long i will last',
-                showProgress: 'bottom',
-                classProgress: 'red'
-            });
+
+    },
+    computed:{
+        numOfChildren(){
+            return this.employee.children.length;
         }
     },
     created() {

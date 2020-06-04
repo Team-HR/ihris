@@ -55,6 +55,10 @@ elseif (isset($_GET['getPdsFamily'])) {
     $result = $stmt->get_result();
     $data = $result->fetch_assoc();
     $stmt->close();
+    $data['children'] = [];
+
+
+    
     echo json_encode($data);
 }
 

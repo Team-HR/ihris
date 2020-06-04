@@ -5,16 +5,8 @@
     <div id="btns_pds_personal_update" class="ui mini buttons" style="display:none">
         <button @click="goSave" class="ui green button"><i class="icon save"></i> Save</button>
             <div class="or"></div>
-        <button @click="goCancel" class="ui button"><i class="icon trash"></i> Discard</button>
+        <button @click="goCancel" class="ui red button"><i class="icon trash"></i> Discard</button>
     </div>
-
-<div class="ui success transition message" v-bind:class="{ visible:updateSuccess, hidden:!updateSuccess }" id="pds_personal_update_saved">
-  <i class="close icon" @click="updateSuccess=!updateSuccess"></i>
-  <div class="header">
-    Success!
-  </div>
-  <p>Update successfully saved!</p>
-</div>
 
     <h4 class="ui header">I. PERSONAL INFORMATION</h4>
     <i>Bio</i>
