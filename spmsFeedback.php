@@ -4,17 +4,49 @@ require_once "header.php";
 ?>
 <div class='ui segment' style="width:80%;margin:auto" id="app">
   <!-- content -->
-  
+    <div style="position:fixed;right:0;min-width:50%;z-index:5000;top:0;">
+        <div class="ui icon message" style="display:none" id="fetching_msg">
+            <i class="notched circle loading icon"></i>
+            <div class="content">
+                <div class="header">
+                Just one second
+                </div>
+                <p>We're fetching that content for you.</p>
+            </div>
+        </div>
+
+        <div class="ui warning message transition" style="display:none" id="warning_msg">
+            <div class="header">
+                Warning
+            </div>
+            {{ server_msg }}
+        </div>
+        <div class="ui negative message transition" style="display:none" id="error_msg">
+            <div class="header">
+                ERROR!!
+            </div>
+            {{ server_msg }}
+        </div>
+        <div class="ui success message transition" style="display:none" id="success_msg">
+            <div class="header">
+                SUCCESS!!
+            </div>
+            {{ server_msg }}
+        </div>
+    </div>
+
+
+
     <div class="ui modal" id="feedbackSaveModal">
         <div class="header">Add Feedback</div>
         <div class="content">
-            <form class="ui form" @submit="saveFeed">
+            <form class="ui form" @submit.prevent="saveFeed">
                 <div class="field">
                     <label>Feedback</label>
-                    <textarea v-model="txtfeed"></textarea>
+                    <textarea v-model="txtfeed" required></textarea>
                 </div>
                 <div class="field">
-                    <button class='ui primary button fluid'>Submit</button>
+                    <button class='ui primary button fluid' name="saveBTN">SAVE</button>
                 </div>
             </form>
         </div>
@@ -26,35 +58,53 @@ require_once "header.php";
     <div>
         <div class="ui divider"></div>
         <form class="ui form" @submit="noSubmit">
-            <div class="two fields">
-                <div class="field" > 
+            <div class="three fields">
+                <div class="two wide field " > 
                     <label>Year</label>
-                    <input type="text" name="year" v-model.number="feedBackYR" >
+                    <input type="text" name="year" v-model.number="pre_feedBackYR" >
                 </div>
-                <div class="field">
-                    <label>Status</label>
-                    <select type="text" name="period">
-                        <option value=""></option>
-                        <option value="PERMANENT">PERMANENT</option>
-                        <option value="CASUAL">CASUAL</option>
-                        <option value="ELECTIVE">ELECTIVE</option>
+                <div class="two wide field">
+                    <label>Gender</label>
+                    <select type="text" name="period" v-model="gender">
+                        <option value="">All</option>
+                        <option value="MALE">MALE</option>
+                        <option value="FEMALE">FEMALE</option>
                     </select>
-                </div>  
+                </div> 
+                <div class="twelve wide field">
+                    <label>Search</label>
+                    <input type="search" name="searchData" v-model="searchData">
+                </div> 
             </div>
         </form>
-        <table class="ui celled table selectable">
+        <table class="ui celled table selectable" id="feedbackTable">
             <thead>
                 <tr>
                     <!-- <th>Employee's Name</th>
                     <th>Dapartment</th> -->
                     <th>Fullname</th>
+                    <th>GENDER</th>
                     <th>Status</th>
+                    <th>Colors</th>
+                    <th>Options</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="e in mergedData" class="ui" :class='e.color' @click="openFeed(e.employees_id)" :key="e.employees_id">
+                <tr v-for="e in mergedData" class="ui" :class='e.color' :key="e.employees_id">
                     <td>{{Employees[e.employees_id].lastName}} {{ Employees[e.employees_id].firstName }}</td>
+                    <td>{{Employees[e.employees_id].gender}}</td>
                     <td>{{Employees[e.employees_id].employmentStatus}}</td>
+                    <td style="text-align:center">
+                        <div class="ui buttons">
+                            <button class="ui button" @click="rowColor(e.employees_id,1)"  > </button>
+                            <div class="or"></div>
+                            <button class="ui yellow button" @click="rowColor(e.employees_id,0)"></button>
+                        </div>
+                    </td>
+                    <td style="text-align:center">
+                        <button class="ui positive button" @click="openFeed(e.employees_id)">Open form</button>
+                    </td>
+                    
                 </tr>
             </tbody>
         </table>
@@ -64,16 +114,20 @@ require_once "header.php";
     var app = new Vue({
         el:"#app",
         data:{
-            feedBackYR  :new Date().getFullYear(),
+            pre_feedBackYR  :new Date().getFullYear(),
+            feedBackYR  :0,
             Employees   :[],
             feedbacks   :[],
             mergedData  :[],
             txtfeed     :"",
             txtid       :0,
-            
+            server_msg  :"",
+            searchData  :"",
+            gender      :"",
         },
         methods:{
            getEmployees:()=>{
+                app._("fetching_msg").style.display=""
                 var xml = new XMLHttpRequest()
                     xml.onload = ()=>{
                         app.Employees = JSON.parse(xml.responseText)
@@ -82,7 +136,9 @@ require_once "header.php";
                     xml.send()
            },
            getFeedback:()=>{
-                if(app.feedBackYR.toString().length==4){
+               if(app.pre_feedBackYR.toString().length==4){
+                app._("fetching_msg").style.display=""
+                app.feedBackYR = app.pre_feedBackYR
                     var fd = new FormData();
                         fd.append('year',app.feedBackYR)
                         fd.append('getFeedback',true)
@@ -90,9 +146,17 @@ require_once "header.php";
                         xml.onload = function(){
                                 app.feedbacks = JSON.parse(xml.responseText)
                         }
-                        xml.open('POST','umbra/feedback/jason.php',true)
+                        xml.open('POST','umbra/feedback/jason.php',false)
                         xml.send(fd)
                 }
+           },
+           checkYr: ()=>{
+                if(app.pre_feedBackYR.length==4){
+                    app.feedBackYR = app.pre_feedBackYR
+                }else{
+                    app.pre_feedBackYR = app.feedBackYR
+                }
+                app.getFeedback()
            },
            noSubmit:()=>{
                event.preventDefault()
@@ -105,16 +169,16 @@ require_once "header.php";
                     if(app.feedbacks[ind]){
                         feedback = app.feedbacks[ind] 
                         rowColor = 'yellow';
-                        if(feedback['color']){
+                        if(feedback['color']==1){
                             rowColor = ""
                         }                      
                         app.mergedData[ind] = {employees_id:Employee['employees_id'],employmentStatus:Employee['employmentStatus'],feedbacking_id:feedback['feedbacking_id'],feedbacking_feedback:feedback['feedbacking_feedback'],color:rowColor}
                     }else{       
                         app.mergedData[ind] = {employees_id:Employee['employees_id'],employmentStatus:Employee['employmentStatus'],feedbacking_id:"", feedbacking_feedback:"",color: "yellow"}
                     }
-
-                        app.mergedData = app.mergedData.filter(()=>true)
+                        app.mergedData = app.mergedData.filter(()=>true);   
                 }
+                app._("fetching_msg").style.display="none"
            },
            openFeed: function(dataId){
                 app.txtfeed = ""
@@ -125,22 +189,106 @@ require_once "header.php";
                 $("#feedbackSaveModal").modal('show')        
            },
            saveFeed: function(){
-                event.preventDefault()
-                var fd = new FormData()
+                var el = event.target.saveBTN;
+                    el.innerHTML = "Saving Data..."
+                    el.disabled = true
+                if(app.feedBackYR.length < 4){
+                    app.server_msg = "Invalid Year";
+                    app._('warning_msg').style.display = ""
+                    setTimeout(() => {
+                        app._('warning_msg').style.display = "none"
+                    }, 2000); 
+                }else{
+                    app.server_msg = ""
+                    var fd = new FormData()
                     fd.append('savefeedback',true)
                     fd.append('yr',app.feedBackYR)
                     fd.append('emp',app.txtid)
                     fd.append('feedback',app.txtfeed)
                 var xhr = new XMLHttpRequest()
                     xhr.onload = function(){
-                        app.getFeedback()
+                        app.checkYr()
+                        var msg = JSON.parse(this.responseText);
+                        app.server_msg = msg.message
+                        if(msg.success){
+                            app._('success_msg').style.display = ""
+                            setTimeout(() => {
+                                app._('success_msg').style.display = "none"
+                            }, 2000); 
+                            $("#feedbackSaveModal").modal('hide')        
+                        }else{
+                            app._('error_msg').style.display = ""
+                            setTimeout(() => {
+                                app._('error_msg').style.display = "none"
+                            }, 2000); 
+                        } 
+                        el.innerHTML = "SAVE"
+                        el.disabled = false
                     }   
                     xhr.open('POST','umbra/feedback/feedback.config.php',true)
                     xhr.send(fd)             
-           }
+                }
+           },
+           _: function(el){
+                return document.getElementById(el);
+           },
+           rowColor: function(dataId,dat){
+                var el = event.target;
+                    el.disabled = true;
+                app.server_msg = ""
+                var fd = new FormData();
+                    fd.append('colorChange',true)
+                    fd.append('emp',dataId)
+                    fd.append('yr',app.feedBackYR)
+                    fd.append('dat',dat)
+                var xhr = new XMLHttpRequest()
+                    xhr.onload = function(){
+                        app.checkYr()
+                        var msg = JSON.parse(this.responseText)
+                            app.server_msg = msg.message
+                        if(msg.success){
+                            app._('success_msg').style.display = ""
+                            setTimeout(() => {
+                                app._('success_msg').style.display = "none"
+                            }, 2000); 
+                            $("#feedbackSaveModal").modal('hide')        
+                        }else{
+                            app._('error_msg').style.display = ""
+                            setTimeout(() => {
+                                app._('error_msg').style.display = "none"
+                            }, 2000); 
+                        }
+                        el.disabled = false
+                    }
+                    xhr.open('POST','umbra/feedback/feedback.config.php',true)
+                    xhr.send(fd)             
+            },searcher:function(){
+                    table = document.getElementById("feedbackTable");
+                    tr  = table.getElementsByTagName("tr");
+                    for(var i=1;i < tr.length ; i++) {                        
+                        td = tr[i].getElementsByTagName("td")
+                        if (td) {
+                            name = td[0].textContent || td[0].innerText;
+                            gender = td[1].textContent || td[1].innerText;
+                            if(app.gender!=""){
+                                if (name.toUpperCase().indexOf(app.searchData.toUpperCase()) > -1 && gender.toUpperCase() == app.gender.toUpperCase()) {
+                                    tr[i].style.display = "";
+                                } else {
+                                    tr[i].style.display = "none";
+                                }
+                            }else{
+                                if (name.toUpperCase().indexOf(app.searchData.toUpperCase()) > -1) {
+                                    tr[i].style.display = "";
+                                } else {
+                                    tr[i].style.display = "none";
+                                }
+                            }
+                        }
+                    }
+                }
         },
         watch:{
-            feedBackYR:()=>{
+            pre_feedBackYR:()=>{
                 app.getFeedback()
             },
             feedbacks:()=>{
@@ -149,6 +297,12 @@ require_once "header.php";
             Employees:()=>{
                 app.mergeTable()
             },
+            searchData:function () {
+                app.searcher()
+            },
+            gender:function () {
+                app.searcher()
+            }
         },
         mounted:function(){
             var rdy = setInterval(() => {
@@ -156,6 +310,7 @@ require_once "header.php";
                     console.log('Document Load Done');
                     app.getFeedback()
                     app.getEmployees()
+                    app.searcher()
                     clearInterval(rdy)
                 }
             }, 100);
