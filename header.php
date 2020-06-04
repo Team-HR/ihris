@@ -23,7 +23,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true && $_SESSION[
   <script src="node_modules\moment\min\moment.min.js"></script>
 
   <script src="jquery/jquery-3.3.1.min.js"></script>
-  <script src="ui/dist/semantic.min.js"></script>
+  <script src="semantic/dist/semantic.min.js"></script>
   <script src="node_modules/chart.js/dist/Chart.js"></script>
   <script src="node_modules/chart.js/dist/Chart.min.js"></script>
   

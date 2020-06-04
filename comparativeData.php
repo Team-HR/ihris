@@ -442,7 +442,7 @@ function clearFormData(){
   </div>
 </div>
 
-<div style="padding: /*20px*/;">
+<div>
 <style type="text/css">
   .heads {
     padding: 2px !important;

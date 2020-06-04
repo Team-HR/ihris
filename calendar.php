@@ -173,7 +173,7 @@ var events = [];
     </div>
   </div>
 
-  <div class="right ui rail" style="">
+  <div class="right ui rail">
     <div class="ui sticky" style="width: 272px !important; height: 262.531px !important; left: 1356.5px;">
     
   <p>
