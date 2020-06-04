@@ -1,247 +1,81 @@
 <?php
-require_once '_connect.db.php';
+require "_connect.db.php";
 
-$data = [];
-/*
-[personneltrainingslist_id] => 1
-[dateAdded] => 2018-10-10 08:11:35
-[personneltrainings_id] => 1
-[employees_id] => 546
-[training_id] => 35
-[dateD] => 2018-10-10 00:00:00
-[startDate] => 2018-08-17
-[endDate] => 2018-08-17
-[numHours] => 8
-[venue] => Coco Cubano, Bacong, Neg. Or.
-[remarks] => City Treasury Office Personnel
-[timeStart] => 
-[timeEnd] => 
-*/
-$employees_id = 1417;
+$employee = array('lastName' => 'ANTIQUE',
+	    'firstName' => 'ANGELO',
+	    'middlename' => 'G.',
+	    'extName' => '',
+	    'employee_id' => 124,
+	    'birthdate' => '',
+	    'birthplace' => '',
+	    'gender' => '',
+	    'civil_status' => '',
+	    'citizenship' => '',
+	    'height_m' => '',
+	    'weight_kg' => '',
+	    'blood_type' => '',
+	    'gsis_id' => '',
+	    'pag_ibig_id' => '',
+	    'philhealth_id' => '',
+	    'sss_id' => '',
+	    'tin_id' => '',
+	    'res_house_no' => '',
+	    'res_street' => '',
+	    'res_subdivision' => '',
+	    'res_barangay' => '',
+	    'res_city' => '',
+	    'res_province' => '',
+	    'res_zip_code' => '',
+	    'res_tel' => '',
+	    'perm_house_no' => '',
+	    'perm_street' => '',
+	    'perm_subdivision' => '',
+	    'perm_barangay' => '',
+	    'perm_city' => '',
+	    'perm_province' => '',
+	    'perm_zip_code' => '',
+	    'perm_tel' => '',
+	    'mobile' => '',
+	    'email' => '',
+	    'spouse_last_name' => '',
+	    'spouse_first_name' => '',
+	    'spouse_middle_name' => '',
+	    'spouse_ext_name' => '',
+	    'spouse_occupation' => '',
+	    'spouse_employee' => '',
+	    'father_last_name' => '',
+	    'father_first_name' => '',
+	    'father_middle_name' => '',
+	    'father_ext_name' => '',
+	    'mother_last_name' => '',
+	    'mother_first_name' => '',
+	    'mother_middle_name' => '',
+	    'mother_ext_name' => '',
+	    'third_degree' => '',
+	    'third_degree_details' => '',
+	    'fourth_degree' => '',
+	    'fourth_degree_details' => '',
+	    'formally_charged' => '',
+	    'formally_charged_details' => '',
+	    'admin_offense' => '',
+	    'admin_offense_details' => '',
+	    'convicted' => '',
+	    'convicted_details' => '',
+	    'separated_from_service' => '',
+	    'separated_from_service_details' => '',
+	    'election_candidate' => '',
+	    'election_candidate_details' => '',
+	    'indigenous_member' => '',
+	    'indigenous_member_details' => '',
+	    'pwd' => '',
+	    'pwd_details' => '',
+	    'solo_parent' => '',
+	    'solo_parent_details' => '');
 
+    $sql = "UPDATE `pds` SET `birthdate` = ?,`birthplace` = ?,`citizenship` = ?,`gender` = ?,`civil_status` = ?,`height` = ?,`weight` = ?,`blood_type` = ?,`gsis_id` = ?,`pag_ibig_id` = ?,`philhealth_id` = ?,`sss_id` = ?,`tin_id` = ?,`res_house_no` = ?,`res_street` = ?,`res_subdivision` = ?,`res_barangay` = ?,`res_city` = ?,`res_province` = ?,`res_zip_code` = ?,`res_tel` = ?,`perm_house_no` = ?,`perm_street` = ?,`perm_subdivision` = ?,`perm_barangay` = ?,`perm_city` = ?,`perm_province` = ?,`perm_zip_code` = ?,`perm_tel` = ?,`mobile` = ?,`email` = ? WHERE `employee_id` = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("sssssssssssssssssssssssssssssssi",$employee['birthdate'],$employee['birthplace'],$employee['citizenship'],$employee['gender'],$employee['civil_status'],$employee['height'],$employee['weight'],$employee['blood_type'],$employee['gsis_id'],$employee['pag_ibig_id'],$employee['philhealth_id'],$employee['sss_id'],$employee['tin_id'],$employee['res_house_no'],$employee['res_street'],$employee['res_subdivision'],$employee['res_barangay'],$employee['res_city'],$employee['res_province'],$employee['res_zip_code'],$employee['res_tel'],$employee['perm_house_no'],$employee['perm_street'],$employee['perm_subdivision'],$employee['perm_barangay'],$employee['perm_city'],$employee['perm_province'],$employee['perm_zip_code'],$employee['perm_tel'],$employee['mobile'],$employee['email'],$employee['employee_id']);
+    $stmt->execute();
 
-    $years_with_trainings = [];
-    $sql = <<<SQL
-    SELECT 
-    DISTINCT(YEAR(fromDate)) as year
-    FROM requestandcomslist
-    LEFT JOIN requestandcoms
-    ON
-    requestandcomslist.controlNumber = requestandcoms.controlNumber
-    WHERE requestandcomslist.employees_id = '$employees_id'
-    AND isMeeting <> 'yes'
-    SQL;
+// echo "<pre>".print_r($data,true)."</pre>";
 
-    $result = $mysqli->query($sql);
-    
-    if ($result->num_rows>0){
-        while ($row = $result->fetch_array()){
-        $years_with_trainings[] = $row['year'];
-    }}
-
-	$sql = <<<SQL
-	SELECT 
-	DISTINCT(YEAR(startDate)) as year
-	FROM personneltrainingslist
-	LEFT JOIN personneltrainings
-	ON
-	personneltrainingslist.personneltrainings_id = personneltrainings.personneltrainings_id
-	WHERE personneltrainingslist.employees_id = '$employees_id'
-	SQL;
-	
-	$result = $mysqli->query($sql);
-		while ($row = $result->fetch_array()) {
-			if (!in_array($row['year'],$years_with_trainings)) {
-                $years_with_trainings[] = $row['year'];
-			}
-		}
-
-print("<pre>".print_r($years_with_trainings,true)."</pre>");
-// $data = array();
-// $sql = <<<SQL
-//     SELECT
-//         employees.employees_id,
-//         UPPER(CONCAT( employees.lastName, ', ', employees.firstName, ' ', employees.middleName, ' ', employees.extName )) AS fullName,
-//         CONCAT_WS(', ',prr.period, prr.year) AS period,
-//         prr.type,
-//         prrlist.comments 
-//     FROM
-//         employees    
-//     LEFT JOIN prrlist ON employees.employees_id = prrlist.employees_id
-//     LEFT JOIN prr ON prrlist.prr_id = prr.prr_id
-//     WHERE
-//         employees.`status` = 'ACTIVE' 
-//         -- AND prrlist.comments <> '' 
-//     ORDER BY
-//         employees.lastName ASC,
-//         prr.period DESC
-// SQL;
-// $result = $mysqli->query($sql);
-// while($row = $result->fetch_assoc()){
-//     $id = $row['employees_id'];
-//     $prr = [
-//         'period' => $row['period'],
-//         'type' => $row['type'],
-//         'comments' => $row['comments']
-//     ];
-
-//     if (!array_key_exists('id_'.$id,$data)){
-//         $data['id_'.$id] = [
-//         'id' => $id,
-//         'fullName' => $row['fullName'],
-//         'prr' => [$prr]
-//         ];
-//     } else $data['id_'.$id]['prr'][] = $prr;
-// }
-// print("<pre>".print_r($data,true)."</pre>");
-// $sql = <<< SQL
-// SELECT
-// 	COUNT(personneltrainings_id) AS num_trainings,
-// -- 	startDate,
-// 	MONTH(startDate) AS month,
-// 	YEAR(startDate) AS year
-// FROM
-// 	personneltrainings
-// GROUP BY
-// 	MONTH(startDate)
-// ORDER BY
-// -- MONTH(startDate) ASC,	
-// YEAR(startDate) ASC
-// SQL;
-
-// $data = [];
-// $res = $mysqli->query($sql);
-
-// while ($row = $res->fetch_assoc()) {
-// 	$year = $row['year'];
-// 	$months = [
-// 		'month' => $row['month'],
-// 		'num_trainings' => $row['num_trainings']
-// 	];
-
-// 	if (!array_key_exists('year_'.$year, $data)) {
-// 		$data['year_'.$year] = [
-// 			'year'	=> $year,
-// 			'months' => [
-// 				$months['month'] => $months
-// 			]
-// 		];
-// 	} else $data['year_'.$year]['months'][$months['month']] = $months;
-// }
-
-// echo json_encode($data);
-// print("<pre>".print_r($data,true)."</pre>");
-
-// $data = [];
-// $sql = <<<SQL
-// SELECT `competency`.*,`employees`.*,`positiontitles`.* FROM `competency` LEFT JOIN `employees` ON `competency`.`employees_id` = `employees`.`employees_id` LEFT JOIN `positiontitles` ON `employees`.`position_id` = `positiontitles`.`position_id`
-// WHERE
-// `category` = 'Administrative'
-// AND
-// `gender` = 'FEMALE'
-// SQL;
-// $filter = "";
-// echo "Filter: ".($filter?$filter:'N/A')."<br>";
-
-/*
-$data = [];
-$filters = [
-    'category' => ['Key Position', 'Administrative', 'Technical'],
-    'nature_of_assignment' => ['RANK & FILE', 'SUPERVISORY'],
-    'gender' => ['MALE','FEMALE']
-];
-
-$filters = [
-    ['Key Position', 'RANK & FILE', 'MALE'],
-    ['Key Position', 'RANK & FILE', 'FEMALE'],
-    ['Key Position', 'SUPERVISORY', 'MALE'],
-    ['Key Position', 'SUPERVISORY', 'FEMALE'],
-    ['Administrative', 'RANK & FILE', 'MALE'],
-    ['Administrative', 'RANK & FILE', 'FEMALE'],
-    ['Administrative', 'SUPERVISORY', 'MALE'],
-    ['Administrative', 'SUPERVISORY', 'FEMALE'],    
-    ['Technical', 'RANK & FILE', 'MALE'],
-    ['Technical', 'RANK & FILE', 'FEMALE'],
-    ['Technical', 'SUPERVISORY', 'MALE'],
-    ['Technical', 'SUPERVISORY', 'FEMALE']
-];
-
-$queries = [];
-foreach ($filters as $filter) {
-    $sql = "WHERE category = '$filter[0]' AND natureOfAssignment = '$filter[1]' AND gender = '$filter[2]'";
-    $queries[] = $sql;
-}
-
-$sql_ave = <<<SQL
-SELECT 
-ROUND(AVG(`competency`.`Adaptability`)) 'adaptability',
-ROUND(AVG(`competency`.`ContinousLearning`)) 'continuous_learning',
-ROUND(AVG(`competency`.`Communication`)) 'communication',
-ROUND(AVG(`competency`.`OrganizationalAwareness`)) 'organizational_awareness',
-ROUND(AVG(`competency`.`CreativeThinking`)) 'creative_thinking',
-ROUND(AVG(`competency`.`NetworkingRelationshipBuilding`)) 'networking_relationship_building',
-ROUND(AVG(`competency`.`ConflictManagement`)) 'conflict_management',
-ROUND(AVG(`competency`.`StewardshipofResources`)) 'stewardship_of_resources',
-ROUND(AVG(`competency`.`RiskManagement`)) 'risk_management',
-ROUND(AVG(`competency`.`StressManagement`)) 'stress_management',
-ROUND(AVG(`competency`.`Influence`)) 'influence',
-ROUND(AVG(`competency`.`Initiative`)) 'initiative',
-ROUND(AVG(`competency`.`TeamLeadership`)) 'team_leadership',
-ROUND(AVG(`competency`.`ChangeLeadership`)) 'change_leadership',
-ROUND(AVG(`competency`.`ClientFocus`)) 'client_focus',
-ROUND(AVG(`competency`.`Partnering`)) 'partnering',
-ROUND(AVG(`competency`.`DevelopingOthers`)) 'developing_others',
-ROUND(AVG(`competency`.`PlanningandOrganizing`)) 'planning_and_organizing',
-ROUND(AVG(`competency`.`DecisionMaking`)) 'decision_making',
-ROUND(AVG(`competency`.`AnalyticalThinking`)) 'analytical_thinking',
-ROUND(AVG(`competency`.`ResultsOrientation`)) 'results_orientation',
-ROUND(AVG(`competency`.`Teamwork`)) 'teamwork',
-ROUND(AVG(`competency`.`ValuesandEthics`)) 'values_and_ethics',
-ROUND(AVG(`competency`.`VisioningandStrategicDirection`)) 'visioning_and_strategic_direction'
-FROM
-`competency`
-LEFT JOIN `employees` ON `competency`.`employees_id` = `employees`.`employees_id` LEFT JOIN `positiontitles` ON `employees`.`position_id` = `positiontitles`.`position_id` 
-SQL;
-
-// $sql_emp = <<<SQL
-// SELECT 
-//     -- `employees`.`employees_id`,
-//     CONCAT(`employees`.`lastName`,', ',`employees`.`firstName`,' ',`employees`.`middleName`,' ',`employees`.`extName`) AS fullName
-// FROM
-// `competency`
-// LEFT JOIN `employees` ON `competency`.`employees_id` = `employees`.`employees_id` LEFT JOIN `positiontitles` ON `employees`.`position_id` = `positiontitles`.`position_id` 
-// SQL;
-
-foreach ($queries as $qk => $qry) {
-    $key = $filters[$qk][0].";".$filters[$qk][1];
-    // echo $key."<br>";
-
-
-    //get the average competency
-    $result = $mysqli->query($sql_ave.$qry);
-    $data_fltrs = [$filters[$qk][0],$filters[$qk][1]];
-    $data_ave = $result->fetch_assoc();
-    // now get the list of employees
-    $data_emps = [];
-    $result = $mysqli->query($sql_emp.$qry." ORDER BY `employees`.`lastName` ASC");
-    while ($emp = $result->fetch_assoc()) {
-        $data_emps[] = $emp['fullName'];   
-    }
-
-    if (!array_key_exists($key, $data)) {
-        //male
-        $data[$key]['filters'] = $data_fltrs;
-        $data[$key]['male'] = [
-            'average' => $data_ave,
-            'employees' => $data_emps
-        ];
-	} else {
-        $data[$key]['female'] = [
-            'average' => $data_ave,
-            'employees' => $data_emps
-        ];
-    }
-}
-
-print("<pre>".print_r($data,true)."</pre>");
-*/

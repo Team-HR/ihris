@@ -6,33 +6,33 @@
     <div class="four fields">
         <div class="field">
             <label for="">Surname:</label>
-            <input type="text" placeholder="">
+            <input type="text" placeholder="--- N/A ---">
         </div>
         <div class="field">
             <label for="">Firstname:</label>
-            <input type="text" placeholder="">
+            <input type="text" placeholder="--- N/A ---">
         </div>
         <div class="field">
             <label for="">Middlename:</label>
-            <input type="text" placeholder="">
+            <input type="text" placeholder="--- N/A ---">
         </div>
         <div class="field">
             <label for="">Name extension:</label>
-            <input type="text" placeholder="">
+            <input type="text" placeholder="--- N/A ---">
         </div>
     </div>
     <div class="three fields">
         <div class="field">
             <label for="">Occupation:</label>
-            <input type="text"> 
+            <input type="text" placeholder="--- N/A ---"> 
         </div>
         <div class="field">
             <label for="">Employeer/Business Name:</label>
-            <input type="text"> 
+            <input type="text" placeholder="--- N/A ---"> 
         </div>
         <div class="field">
             <label for="">Telephone No.:</label>
-            <input type="text"> 
+            <input type="text" placeholder="--- N/A ---"> 
         </div>
     </div>
 
@@ -41,19 +41,19 @@
     <div class="four fields">
         <div class="field">
             <label for="">Surname:</label>
-            <input type="text" placeholder="">
+            <input type="text" placeholder="--- N/A ---">
         </div>
         <div class="field">
             <label for="">Firstname:</label>
-            <input type="text" placeholder="">
+            <input type="text" placeholder="--- N/A ---">
         </div>
         <div class="field">
             <label for="">Middlename:</label>
-            <input type="text" placeholder="">
+            <input type="text" placeholder="--- N/A ---">
         </div>
         <div class="field">
             <label for="">Name extension:</label>
-            <input type="text" placeholder="">
+            <input type="text" placeholder="--- N/A ---">
         </div>
     </div>
     <i>Mother's Maiden Name</i>
@@ -61,15 +61,15 @@
     <div class="three fields">
         <div class="field">
             <label for="">Surname:</label>
-            <input type="text" placeholder="">
+            <input type="text" placeholder="--- N/A ---">
         </div>
         <div class="field">
             <label for="">Firstname:</label>
-            <input type="text" placeholder="">
+            <input type="text" placeholder="--- N/A ---">
         </div>
         <div class="field">
             <label for="">Middlename:</label>
-            <input type="text" placeholder="">
+            <input type="text" placeholder="--- N/A ---">
         </div>
     </div>
     <i>Name of Children</i>
