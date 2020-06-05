@@ -51,12 +51,15 @@
                       </div>
                       <div class=" field">
                           <strong>Probationary Period:</strong> 
-                          <input type="text" placeholder="Probationary Period">
+                          <input type="text" placeholder="Probationary Period" v-model="probationary_period">
                       </div>
                       
                     <div class="field">
                           <strong>Position Vacated by:</strong> 
-                          <input type="text"  placeholder="Position Vacated by">
+                          <select class="ui search dropdown" v-model.number="vacated_by">
+                            <option value="">Employee ID</option>
+                            <option v-for="Employee in Employees" :value="Employee.employees_id">{{ Employee.lastName }} {{ Employee.firstName }}</option>
+                          </select>
                     </div> 
                     <div class="two fields">
                         <div class= "field">
@@ -124,7 +127,7 @@
                     <div class="two fields">
                        <div class="field"> 
                            <strong>Section</strong> 
-                           <input type="text" placeholder="Section">
+                           <input type="text" placeholder="Section" v-model="section">
                         </div>
                         <div class="field"> 
                            <strong>Section Head</strong> 
@@ -151,11 +154,11 @@
                        <div class = "three fields">
                           <div class=" field">
                                 <strong>Other compensation:</strong> 
-                                   <input type="text" placeholder="Other compensation">
+                                   <input type="text" placeholder="Other compensation" v-model="other_compensation">
                           </div>
                           <div class="field">
                                 <strong>Page No.:</strong> 
-                                   <input type="number" placeholder="Page No.">
+                                   <input type="number" placeholder="Page No." v-model="page_no">
                           </div>
                           <div class="field">
                                 <strong>Item No.:</strong> 
@@ -167,7 +170,7 @@
                 </div>
               </div>
           </div>
-  <br>
+    <br>
       <div style="font-size:15x;box-shadow: -0px 3px gray; height:30px;">APPOINTMENT INFORMATION</div><br> 
        <div class="ui grid">
           <div class="three column row">
@@ -175,7 +178,7 @@
                  <div class="ui form">
                        <div class="field"> 
                          <strong>Status of Appointment</strong> 
-                              <select id="status" class="ui fluid search selection dropdown">
+                              <select id="status" class="ui fluid search selection dropdown" v-model="status_of_appointment">
                                 <option value="">---</option>
                                 <option value="elective">Elective</option>
                                 <option value="permanent">Permanent</option>
@@ -189,16 +192,16 @@
                       <div class = "two fields">
                           <div class=" field">
                                 <strong>Date of Appointment:</strong> 
-                                   <input type="date">
+                                   <input type="date" v-model="date_of_appointment">
                           </div>
                           <div class="field">
                                 <strong>Date of Assumption:</strong> 
-                                   <input type="date">
+                                   <input type="date" v-model="date_of_assumption">
                           </div>
                        </div>
                       <div class="field">
                             <strong>Nature of Appointment:</strong> 
-                               <select id="nature" class="ui fluid search selection dropdown">
+                               <select id="nature" class="ui fluid search selection dropdown" v-model="nature_of_appointment">
                                 <option value="">---</option>
                                 <option value="original">Original</option>
                                 <option value="promotion">Promotion</option>
@@ -212,11 +215,11 @@
                       <div class = "two fields">
                           <div class=" field">
                                 <strong>Appointing Authority:</strong> 
-                                   <input type="text" placeholder="HENRY A. TEVES">
+                                   <input type="text" placeholder="HENRY A. TEVES" v-model="head_of_agency">
                           </div>
                           <div class="field">
                                 <strong>Date of Signing:</strong> 
-                                   <input type="date">
+                                   <input type="date" v-model="date_of_signing">
                           </div>
                        </div>
                     </div>
@@ -229,37 +232,37 @@
                        <div class = "two fields">
                           <div class=" field">
                                 <strong>CSC Authorized Official:</strong> 
-                                   <input type="text" placeholder="GINA A CRUCIO">
+                                   <input type="text" placeholder="GINA A CRUCIO" v-model="csc_auth_official">
                           </div>
                           <div class="field">
                                 <strong>Date of Signed by CSC:</strong> 
-                                   <input type="date">
+                                   <input type="date" v-model="date_signed_by_csc">
                           </div>
                        </div>
 
                           <div class=" field">
                                 <strong>CSC MC NO.:</strong> 
-                                   <input type="number" placeholder="CSC MC NO.">
+                                   <input type="number" placeholder="CSC MC NO." v-model="csc_mc_no">
                           </div>
 
                        <div class = "two fields">
                           <div class="field">
                                 <strong>Assessment Date:</strong> 
-                                   <input type="date">
+                                   <input type="date" v-model="assessment_date_from">
                           </div>
                            <div class="field">
                                 <strong>To:</strong> 
-                                   <input type="date">
+                                   <input type="date" v-model="assessment_date_to">
                           </div>
                        </div>
                         <div class = "two fields">
                           <div class="field">
                                 <strong>Deliberation Date:</strong> 
-                                   <input type="date">
+                                   <input type="date" v-model="deliberation_date_from">
                           </div>
                            <div class="field">
                                 <strong>To:</strong> 
-                                   <input type="date">
+                                   <input type="date" v-model="deliberation_date_to">
                           </div>
                        </div>
                 </div>
@@ -270,15 +273,15 @@
                      <div class="field">
                        <div class="field"> 
                          <strong>Committee Chair:</strong> 
-                         <input type="text" placeholder="JEREMIAS C GALLO">
+                         <input type="text" placeholder="JEREMIAS C GALLO" v-model="committee_chair">
                         </div>
                         <div class="field"> 
                          <strong>HRMO:</strong> 
-                         <input type="text" placeholder="VERONICA GRACE P MIRAFLOR">
+                         <input type="text" placeholder="VERONICA GRACE P MIRAFLOR" v-model="hrmo">
                         </div>
                         <div class="field"> 
                          <strong>Cert. Funds Available:</strong> 
-                         <input type="text" placeholder="CORAZON P LIRAZAN">
+                         <input type="text" placeholder="CORAZON P LIRAZAN" v-model="cert_fund_available">
                         </div>
                       
                     </div>
@@ -295,18 +298,18 @@
                     <div class="field">
                        <div class=" field"> 
                         <strong>Published At:</strong> 
-                        <input type="text" placeholder="Published At">
+                        <input type="text" placeholder="Published At" v-model="published_at">
 
                       </div>
                       <div class="two fields">
                         <div class= "field">
                         <strong>Probationary Date:</strong> 
-                        <input type="date" >
+                        <input type="date" v-model="probationary_date_from">
                          </div> 
                       <div>
 
                          <strong>To:</strong> 
-                        <input type="date">
+                        <input type="date" v-model="probationary_date_to">
                       </div> 
                     </div>
                  </div>
@@ -317,17 +320,17 @@
               <div class="ui form">
                     <div class="field">
                         <strong>Posted In:</strong> 
-                        <input type="text"  placeholder="Posted In">
+                        <input type="text"  placeholder="Posted In" v-model="posted_in">
                     </div> 
                     <div class="two fields">
                         <div class= "field">
                         <strong>Posted Date:</strong> 
-                        <input type="date" >
+                        <input type="date" v-model="posted_date">
                          </div> 
                       <div>
 
                          <strong>CSC Release Date:</strong> 
-                        <input type="date">
+                        <input type="date" v-model="csc_release_date">
                       </div> 
                     </div>
             </div>
@@ -338,26 +341,26 @@
                      <div class="three fields">
                        <div class="field">
                         <strong>Government ID:</strong> 
-                        <input type="text"  placeholder="Government ID">
+                        <input type="text"  placeholder="Government ID" v-model="govID_type"> 
                         </div> 
                         <div class= "field">
                         <strong>ID No.:</strong> 
-                        <input type="number" placeholder="ID No.">
+                        <input type="number" placeholder="ID No." v-model="govID_no">
                         </div> 
                       <div>
                          <strong>Date Issued:</strong> 
-                        <input type="date"  >
+                        <input type="date" v-model="govID_issued_data">
                     </div> 
                   </div>
 
                   <div class="two fields">
                         <div class= "field">
                         <strong>Sworn Date:</strong> 
-                        <input type="date" >
+                        <input type="date" v-model="sworn_date">
                         </div> 
                       <div>
                          <strong>Cert. Issued Date:</strong> 
-                        <input type="date"  >
+                        <input type="date"  v-model="cert_issued_date">
                     </div> 
                   </div>
                 </div>
@@ -365,7 +368,7 @@
             </div> 
     
     <div class="actions">
-        <div class="ui mini approve blue button"><i class="icon check"></i> Save</div>
+        <div class="ui mini approve blue button" @click="saveData()"><i class="icon check" ></i> Save</div>
     </div>
 
     </div>

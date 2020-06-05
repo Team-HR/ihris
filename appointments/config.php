@@ -11,6 +11,10 @@ if(isset($_POST['getEmployees'])){
 elseif(isset($_POST['getPlantillas'])){
     echo json_encode(getPlantillas());
 }
+elseif(isset($_POST['set_appointment'])){
+    var_dump($_POST['set_appointment']);
+
+}
 function newEmployeeNewAppointment($json){
     $mysqli = $GLOBALS['mysqli'];
     // insert new empoyee to employees table
