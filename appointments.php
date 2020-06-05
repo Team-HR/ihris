@@ -43,7 +43,7 @@
        <br>
                        <div class=" field"> 
                           <strong>Position Name:</strong> 
-                          <select class="ui search dropdown" v-model.number="plantillas_id">
+                          <select class="ui search dropdown" v-model.number="plantilla_id">
                             <option value="">Postion Name</option>
                             <option v-for="Plantilla in Plantillas" :value="Plantilla.id">{{ Plantilla.position_title }}</option>
                           </select>  
@@ -53,16 +53,7 @@
                           <strong>Probationary Period:</strong> 
                           <input type="text" placeholder="Probationary Period">
                       </div>
-                      <div class="two fields">
-                        <div class= "field">
-                            <strong>Probationary Date:</strong> 
-                            <input type="date" >
-                        </div> 
-                        <div>
-                             <strong>To:</strong> 
-                             <input type="date">
-                        </div> 
-                     </div>
+                      
                     <div class="field">
                           <strong>Position Vacated by:</strong> 
                           <input type="text"  placeholder="Position Vacated by">
@@ -110,18 +101,19 @@
                             <option v-for="Plantilla in Plantillas" :value="Plantilla.id">{{ Plantilla.position_title }}</option>
                           </select>
                       </div>
-                      <div class="field">
-                          <strong>Department:</strong> 
-                          <input type="text"  placeholder="Department" v-model="department" readonly  >
-                      </div>
-                      <div class="field">
-                          <strong>Department Head:</strong> 
-                          <select class="ui search dropdown" v-model.number="Department_Head">
-                            <option value="">Search Employee</option>
-                            <option v-for="Employee in Employees" :value="Employee.employees_id">{{ Employee.lastName }} {{ Employee.firstName }}</option>
-                          </select>
-
-                      </div>
+                    <div class = "two fields">
+                          <div class="field">
+                              <strong>Department:</strong> 
+                              <input type="text"  placeholder="Department" v-model="department" readonly  >
+                          </div>
+                          <div class="field">
+                              <strong>Department Head:</strong> 
+                              <select class="ui search dropdown" v-model.number="Department_Head">
+                                <option value="">Search Employee</option>
+                                <option v-for="Employee in Employees" :value="Employee.employees_id">{{ Employee.lastName }} {{ Employee.firstName }}</option>
+                              </select>
+                          </div>
+                    </div>
                 </div>
               </div>
             </div>
@@ -129,6 +121,7 @@
                 <div class="six wide column">
                      <div class="ui form">
                         <br>
+                    <div class="two fields">
                        <div class="field"> 
                            <strong>Section</strong> 
                            <input type="text" placeholder="Section">
@@ -140,6 +133,7 @@
                             <option v-for="Employee in Employees" :value="Employee.employees_id">{{ Employee.lastName }} {{ Employee.firstName }}</option>
                           </select>
                         </div>
+                    </div>
                       <div class = "two fields">
                           <div class=" field">
                                 <strong>Salary Grade:</strong> 
@@ -215,13 +209,7 @@
                                 <option value="demotion">Demotion</option>        
                               </select>
                       </div>
-                    </div>
-            </div>
-         
-            <div class="six wide column">
-              <div class="ui form">
-                  <div class="field">
-                       <div class = "two fields">
+                      <div class = "two fields">
                           <div class=" field">
                                 <strong>Appointing Authority:</strong> 
                                    <input type="text" placeholder="HENRY A. TEVES">
@@ -231,6 +219,13 @@
                                    <input type="date">
                           </div>
                        </div>
+                    </div>
+            </div>
+         
+            <div class="six wide column">
+              <div class="ui form">
+                  <div class="field">
+                       
                        <div class = "two fields">
                           <div class=" field">
                                 <strong>CSC Authorized Official:</strong> 
@@ -241,17 +236,29 @@
                                    <input type="date">
                           </div>
                        </div>
-                       <div class = "three fields">
+
                           <div class=" field">
                                 <strong>CSC MC NO.:</strong> 
                                    <input type="number" placeholder="CSC MC NO.">
                           </div>
+
+                       <div class = "two fields">
                           <div class="field">
                                 <strong>Assessment Date:</strong> 
                                    <input type="date">
                           </div>
                            <div class="field">
+                                <strong>To:</strong> 
+                                   <input type="date">
+                          </div>
+                       </div>
+                        <div class = "two fields">
+                          <div class="field">
                                 <strong>Deliberation Date:</strong> 
+                                   <input type="date">
+                          </div>
+                           <div class="field">
+                                <strong>To:</strong> 
                                    <input type="date">
                           </div>
                        </div>
@@ -309,8 +316,8 @@
             <div class="five wide column">
               <div class="ui form">
                     <div class="field">
-                        <strong>Posted Date:</strong> 
-                        <input type="text"  placeholder="Posted Date">
+                        <strong>Posted In:</strong> 
+                        <input type="text"  placeholder="Posted In">
                     </div> 
                     <div class="two fields">
                         <div class= "field">
