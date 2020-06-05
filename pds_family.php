@@ -93,23 +93,39 @@
             <tr>
                 <th>Name of the Child</th>
                 <th>Date of Birth</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
-        <template v-if="numOfChildren > 0">
-        <tr v-for="child in employee.children">
-            <td>{{child.child_name}}</td>
-            <td>{{child.child_birthdate}}</td>
-        </tr>
-        </template>
-        <template v-else>
-            <tr class="center aligned" style="color:lightgrey">
-                <td colspan="2">-- N/A--</td>
+            <template v-if="numOfChildren > 0">
+            <tr v-for="(child,i) in employee.children" :key="i">
+                <td>
+                    <div class="ui fluid input">
+                      <input type="text" placeholder="Search...">
+                    </div>
+                </td>
+                <td>
+                    <div class="ui fluid input">
+                      <input type="date" placeholder="Search...">
+                    </div>
+                </td>
+                <td width="5">
+                    <button @click="alert(i)" class="ui mini button red icon"><i class="icon minus"></i> </button>
+                </td>
             </tr>
-        </template>
-        
-
+            </template>
+            <template v-else>
+                <tr class="center aligned" style="color:lightgrey">
+                    <td colspan="3">-- N/A--</td>
+                </tr>
+            </template>
+            <tr>
+                <td colspan="3"><button @click="addChild()" class="ui mini button 3green"><i class="icon add"></i> Add</button></td>
+            </tr>
         </tbody>
     </table>
+
+
+
 </div>
 </div>

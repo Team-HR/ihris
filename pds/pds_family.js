@@ -72,6 +72,12 @@ new Vue({
             $("#btn_pds_family_update").show();
             $("#btns_pds_family_update").hide();
         },
+        addChild(){
+            this.employee.children.push ({
+                            child_name: "",
+                            child_birthdate: ""
+                        })
+        },
 
     },
     computed:{

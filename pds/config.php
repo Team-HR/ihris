@@ -57,13 +57,16 @@ elseif (isset($_GET['getPdsFamily'])) {
     $stmt->close();
     $data['children'] = [];
 
-
-    
     echo json_encode($data);
 }
 
 elseif (isset($_POST['savePdsFamily'])) {
     $employee = $_POST['employee'];
+
+    array_walk($employee, function(&$item1){
+        $item1 = $item1?$item1:null;
+    });
+
     $affected_rows = 0;
 
     $sql = "UPDATE `pds_families` SET `father_ext_name` = ?,`father_first_name` = ?,`father_last_name` = ?,`father_middle_name` = ?,`mother_first_name` = ?,`mother_last_name` = ?,`mother_middle_name` = ?,`spouse_business_address` = ?,`spouse_employeer` = ?,`spouse_ext_name` = ?,`spouse_first_name` = ?,`spouse_last_name` = ?,`spouse_middle_name` = ?,`spouse_mobile` = ?,`spouse_occupation` = ? WHERE `employee_id` = ?";
@@ -77,6 +80,11 @@ elseif (isset($_POST['savePdsFamily'])) {
 
 elseif (isset($_POST['savePdsPersonal'])) {
     $employee = $_POST['employee'];
+    
+    array_walk($employee, function(&$item1){
+        $item1 = $item1?$item1:null;
+    });
+
     $affected_rows = 0;
     
     $sql = "UPDATE `employees` SET `lastName` = ?, `firstName` = ?, `middleName` = ?, `extName` = ? WHERE `employees_id` = ?";
