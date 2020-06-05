@@ -34,6 +34,109 @@ $(document).ready(function() {
 
 
 ?>
+<!-- <script src="employeeinfo.js"></script> -->
+<script type="text/javascript">
+$(document).ready(function() {
+    $(load);
+    $("#editStat_drop").dropdown();
+    $("#genderModal").dropdown();
+    $("#natureOfAssignmentModal").dropdown();
+    $("#departmentModal").dropdown();
+    $("#positionModal").dropdown({
+        fullTextSearch: true,
+    });
+    $('#context1 .menu .item').tab({
+        context: $('#context1')
+    })
+});
+
+function editModalFunc() {
+    $("#editModal").modal({
+        onDeny: function() {
+            $(load);
+        },
+        onApprove: function() {
+            $(update);
+            // save msg animation start
+            $("#saveMsg").transition({
+                animation: 'fly down',
+                onComplete: function() {
+                    setTimeout(function() {
+                        $("#saveMsg").transition('fly down');
+                    }, 1000);
+                }
+            });
+            // save msg animation end
+        }
+    }).modal("show");
+}
+
+function load() {
+    $.post('employeeinfo.v2.ajax.php', {
+        loadProfile: true,
+        employees_id: <?php echo $employees_id; ?>
+    }, function(data, textStatus, xhr) {
+        var array = jQuery.parseJSON(data);
+        // alert(array.employees_id);
+        $("#employeeName").html(array.fullname);
+        $("#firstNameModal").val(array.firstName);
+        $("#middleNameModal").val(array.middleName);
+        $("#lastNameModal").val(array.lastName);
+        $("#extNameModal").val(array.extName);
+        $("#genderModal").val(array.gender).change();
+        $("#employees_idModal").val(array.employees_id);
+        $("#editStat_drop").dropdown("set selected", array.status);
+        $("#editStat_date").val(array.statusDate);
+        $("#editStat_dateIPCR").val(array.dateIPCR);
+        $("#employmentStatusModal").dropdown("set selected", array.employmentStatus);
+        $("#natureOfAssignmentModal").val(array.natureOfAssignment).change();
+        $("#departmentModal").val(array.department_id).change();
+        $("#positionModal").val(array.position_id).change();
+        $("#categoryModal").val(array.category);
+        $("#levelModal").val(array.level);
+        $("#salaryGradeModal").val(array.salaryGrade);
+
+        // for table start
+        $("#status").html(array.status);
+        $("#statusDate").html(array.statusDateStr);
+        $("#dateIPCRView").html(array.dateIPCRView);
+        $("#employees_idView").html(array.employees_id_padded);
+        $("#departmentView").html(array.department);
+        $("#levelView").html(array.level);
+        $("#genderView").html(array.gender);
+        $("#positionView").html(array.position);
+        $("#categoryView").html(array.category);
+        $("#employmentStatusView").html(array.employmentStatus);
+        $("#natureOfAssignmentView").html(array.natureOfAssignment);
+        $("#salaryGradeView").html(array.salaryGrade);
+        // for table end
+    });
+}
+
+function update() {
+    $.post('employeeinfo.v2.ajax.php', {
+        update: true,
+        employees_id: <?php echo $employees_id; ?> ,
+        firstName : $("#firstNameModal").val(),
+        middleName: $("#middleNameModal").val(),
+        lastName: $("#lastNameModal").val(),
+        extName: $("#extNameModal").val(),
+        status: $("#editStat_drop").dropdown("get value"),
+        statusDate: $("#editStat_date").val(),
+        dateIPCR: $("#editStat_dateIPCR").val(),
+        gender: $("#genderModal").val(),
+        employmentStatus: $("#employmentStatusModal").dropdown("get value"),
+        natureOfAssignment: $("#natureOfAssignmentModal").val(),
+        department_id: $("#departmentModal").val(),
+        position_id: $("#positionModal").val()
+    }, function(data, textStatus, xhr) {
+        // console.log(data);
+        /*optional stuff to do after success */
+        $(load);
+    });
+
+}
+</script>
 <div id="saveMsg" class=""
     style="top: 15px; display: none; position: fixed; z-index: 10; width: 100%; left: 0; text-align: center;">
     <div class="ui center green inverted aligned segment" style="width: 100px; margin-left: auto; margin-right: auto;">
@@ -232,7 +335,7 @@ $(document).ready(function() {
 
     <div class="ui container" style="padding: 5px;">
 
-        <div class="ui segment grid" id="pds-app">
+        <div class="ui segment grid">
             <div class="three wide column">
                 <div id="pim-menu" class="ui secondary vertical pointing menu fluid">
                     <a class="item" data-tab="appointments">
@@ -255,42 +358,30 @@ $(document).ready(function() {
                         <a class="item active" data-tab="appointment_history">Appointment History</a>
                     </div>
                     <div class="ui tab segment active" data-tab="appointment_history">
-                        <button class="ui mini green button right floated"><i class="icon plus"></i> Add New</button>
+                        <button class="mini teal ui button right floated"><i class="icon edit"></i> Edit</button>
                         <br>
-<!-- appointment start -->
-
-<!-- <div class="ui yellow segment center aligned"> -->
-    <h2 class="ui grey header center aligned">--- NOT APPOINTED ---</h2>
-<!-- </div> -->
-
-
-<table class="ui very small compact structured celled table" hidden>
-        <thead>
-            <tr>
-                <th>Item No.</th>
-                <th>Position Title</th>
-                <th>Function</th>
-                <th>Department</th>
-                <th>Date of Appointment</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="center aligned">
-                <td colspan="6" style="color: grey;">
-                    --- NOT APPOINTED ---
-                </td>
-            </tr>
-        </tbody>
-</table>
-
-<!-- appointment end -->
+                        <table class="ui very small compact structured celled table">
+                            <thead>
+                                <tr>
+                                    <th>Office</th>
+                                    <th>Position</th>
+                                    <th>Date of Appointment</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="ui tab" data-tab="pds">
+                <div class="ui tab active" data-tab="pds">
                     <div class="ui pointing secondary blue menu fluid" id="pds">
-                        <a class="item active" data-tab="personal">Personal</a>
-                        <a class="item" data-tab="family">Family</a>
+                        <a class="item" data-tab="personal">Personal</a>
+                        <a class="item active" data-tab="family">Family</a>
                         <a class="item" data-tab="education">Education</a>
                         <a class="item" data-tab="eligibility">Eligibility</a>
                         <a class="item" data-tab="work_experience">Work Experiences</a>
@@ -298,10 +389,10 @@ $(document).ready(function() {
                         <a class="item" data-tab="trainings">Trainings</a>
                         <a class="item" data-tab="other_information">Other Information</a>
                     </div>
-                    <div class="ui tab segment active" data-tab="personal">
+                    <div class="ui tab segment" data-tab="personal">
                         <?php require 'pds_personal.php'?>
                     </div>
-                    <div class="ui tab segment" data-tab="family">
+                    <div class="ui tab segment active" data-tab="family">
                         <?php require 'pds_family.php';?>
                     </div>
                     <div class="ui tab segment" data-tab="education">
@@ -383,9 +474,9 @@ $(document).ready(function() {
                         </div>
                         <?php
 }
-
-require "employeeinfo_competencyProfile.php";
-
+	// } else {
+			require "employeeinfo_competencyProfile.php";
+	// }
 ?>
                     </div>
                     <div class="ui tab segment" data-tab="first/b">
@@ -446,11 +537,16 @@ require "employeeinfo_competencyProfile.php";
                         Individual Development Plan will be implemented here...
                     </div>
                     <div class="ui tab segment" data-tab="third/b">
-            <?php require_once "umbra/IDP/idpTable.php"; ?>
+                        <?php
+			// for IPCR (Reccomendation Portion)
+				require_once "umbra/IDP/idpTable.php";
+			 ?>
                     </div>
                     <div class="ui tab segment" data-tab="third/c">
-
-            <?php require_once "umbra/cmr/empCrmInfo.php"; ?>
+                        <!-- Coaching and Mentoring will be implemented here... -->
+                        <?php
+				require_once "umbra/cmr/empCrmInfo.php";
+			 ?>
                     </div>
                     <div class="ui tab segment" data-tab="third/d">
                         Feedback Mechanism will be implemented here...
@@ -470,111 +566,23 @@ require "employeeinfo_competencyProfile.php";
 
         </div>
     </div>
-    <!-- js scripts below-->
 
-    <script type="text/javascript">
-$(document).ready(function() {
-    $(load);
-    $("#editStat_drop").dropdown();
-    $("#genderModal").dropdown();
-    $("#natureOfAssignmentModal").dropdown();
-    $("#departmentModal").dropdown();
-    $("#positionModal").dropdown({
-        fullTextSearch: true,
-    });
-    $('#context1 .menu .item').tab({
-        context: $('#context1')
-    })
-});
 
-function editModalFunc() {
-    $("#editModal").modal({
-        onDeny: function() {
-            $(load);
-        },
-        onApprove: function() {
-            $(update);
-            // save msg animation start
-            $("#saveMsg").transition({
-                animation: 'fly down',
-                onComplete: function() {
-                    setTimeout(function() {
-                        $("#saveMsg").transition('fly down');
-                    }, 1000);
-                }
-            });
-            // save msg animation end
-        }
-    }).modal("show");
-}
-
-function load() {
-    $.post('employeeinfo.v2.ajax.php', {
-        loadProfile: true,
-        employees_id: <?php echo $employees_id; ?>
-    }, function(data, textStatus, xhr) {
-        var array = jQuery.parseJSON(data);
-        // alert(array.employees_id);
-        $("#employeeName").html(array.fullname);
-        $("#firstNameModal").val(array.firstName);
-        $("#middleNameModal").val(array.middleName);
-        $("#lastNameModal").val(array.lastName);
-        $("#extNameModal").val(array.extName);
-        $("#genderModal").val(array.gender).change();
-        $("#employees_idModal").val(array.employees_id);
-        $("#editStat_drop").dropdown("set selected", array.status);
-        $("#editStat_date").val(array.statusDate);
-        $("#editStat_dateIPCR").val(array.dateIPCR);
-        $("#employmentStatusModal").dropdown("set selected", array.employmentStatus);
-        $("#natureOfAssignmentModal").val(array.natureOfAssignment).change();
-        $("#departmentModal").val(array.department_id).change();
-        $("#positionModal").val(array.position_id).change();
-        $("#categoryModal").val(array.category);
-        $("#levelModal").val(array.level);
-        $("#salaryGradeModal").val(array.salaryGrade);
-
-        // for table start
-        $("#status").html(array.status);
-        $("#statusDate").html(array.statusDateStr);
-        $("#dateIPCRView").html(array.dateIPCRView);
-        $("#employees_idView").html(array.employees_id_padded);
-        $("#departmentView").html(array.department);
-        $("#levelView").html(array.level);
-        $("#genderView").html(array.gender);
-        $("#positionView").html(array.position);
-        $("#categoryView").html(array.category);
-        $("#employmentStatusView").html(array.employmentStatus);
-        $("#natureOfAssignmentView").html(array.natureOfAssignment);
-        $("#salaryGradeView").html(array.salaryGrade);
-        // for table end
-    });
-}
-
-function update() {
-    $.post('employeeinfo.v2.ajax.php', {
-        update: true,
-        employees_id: <?php echo $employees_id; ?> ,
-        firstName : $("#firstNameModal").val(),
-        middleName: $("#middleNameModal").val(),
-        lastName: $("#lastNameModal").val(),
-        extName: $("#extNameModal").val(),
-        status: $("#editStat_drop").dropdown("get value"),
-        statusDate: $("#editStat_date").val(),
-        dateIPCR: $("#editStat_dateIPCR").val(),
-        gender: $("#genderModal").val(),
-        employmentStatus: $("#employmentStatusModal").dropdown("get value"),
-        natureOfAssignment: $("#natureOfAssignmentModal").val(),
-        department_id: $("#departmentModal").val(),
-        position_id: $("#positionModal").val()
-    }, function(data, textStatus, xhr) {
-        // console.log(data);
-        /*optional stuff to do after success */
-        $(load);
-    });
-
-}
-</script>
-    <script src="appointments/appointments.view.js"></script>
+    <!-- scripts -->
     <script src="pds/config.js"></script>
+    <script src="pds/pds_personal.js"></script>
+    <script src="pds/pds_family.js"></script>
+    
+    <!-- styles -->
+    <style>
+        .editState {
+            /*border: 2px solid green !important;*/
+            background-color: #ffffb05c !important;
+        }
+        .readOnly {
+            border: 1px solid white !important;
+            border-bottom: 1px solid lightgrey !important;
+            border-radius: 0px !important;
+        }
+    </style>
     <?php require_once "footer.php";?>
-
