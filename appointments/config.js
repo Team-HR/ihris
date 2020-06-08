@@ -143,10 +143,14 @@
                         "sworn_date"       :app.sworn_date,
                         "cert_issued_date" :app.cert_issued_date,
                 }
-                $.post('appointments/config.php',{
-                    set_appiontment:obj,
-                },function(data){
-                })
+
+                console.log(obj);
+
+                
+                // $.post('appointments/config.php',{
+                //     set_appiontment:obj,
+                // },function(data){   
+                // })
             }
         },watch:{
             employees_id:function () {

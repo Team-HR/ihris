@@ -375,7 +375,7 @@ function update() {
                                     <td></td>
                                 </tr> -->
                                 <tr class="center aligned">
-                                    <td colspan="3" style="color: lightgrey"> -- N/A --</td>
+                                    <td colspan="3" style="color: lightgrey"> -- Not Appointed --</td>
                                 </tr>
                             </tbody>
                         </table>

@@ -1,4 +1,22 @@
 <?php $title = "Appointments"; require_once "header.php"; require_once "_connect.db.php";?>
+
+<div class="ui fluid container" style="min-height: 600px; padding: 5px;">
+    <div class="ui borderless blue inverted mini menu">
+        <div class="left item" style="margin-right: 0px !important;">
+            <button onclick="window.history.back();" class="blue ui icon button"
+                title="Back" style="width: 65px;">
+                <i class="icon chevron left"></i> Back
+            </button>
+
+        </div>
+        <div class="item">
+            <h3 style="color: white;"><i class="icon edit"></i>
+              Appoint Employee
+            </h3>
+        </div>
+    </div>
+
+
 <div id="app" style="background: white; margin-top:30px; width:95%;;margin-left:40px;padding:20px">
    <div class="ui form">
     <div style="font-size:15x;box-shadow: -0px 3px gray; height:30px;">PLANTILLA INFORMATION</div><br><br>
@@ -373,6 +391,7 @@
 
     </div>
     </div>
+</div>
 </div>
 <script src="appointments/config.js"></script>  
 <?php require_once "footer.php";?>
