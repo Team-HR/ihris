@@ -653,33 +653,17 @@ function hasTrainingsLastThreeYears($mysqli,$employees_id){
 
 
     $years_with_trainings = [];
-    $sql = <<<SQL
-    SELECT 
-    DISTINCT(YEAR(fromDate)) as year
-    FROM requestandcomslist
-    LEFT JOIN requestandcoms
-    ON
-    requestandcomslist.controlNumber = requestandcoms.controlNumber
-    WHERE requestandcomslist.employees_id = '$employees_id'
-    AND isMeeting <> 'yes'
-    SQL;
+    $sql = "SELECT DISTINCT(YEAR(fromDate)) as year FROM requestandcomslist LEFT JOIN requestandcoms ON requestandcomslist.controlNumber = requestandcoms.controlNumber WHERE requestandcomslist.employees_id = '$employees_id' AND isMeeting <> 'yes'";
 
     $result = $mysqli->query($sql);
     
     if ($result->num_rows>0){
         while ($row = $result->fetch_array()){
-        $years_with_trainings[] = $row['year'];
-    }}
+        	$years_with_trainings[] = $row['year'];
+    	}
+	}
 
-	$sql = <<<SQL
-	SELECT 
-	DISTINCT(YEAR(startDate)) as year
-	FROM personneltrainingslist
-	LEFT JOIN personneltrainings
-	ON
-	personneltrainingslist.personneltrainings_id = personneltrainings.personneltrainings_id
-	WHERE personneltrainingslist.employees_id = '$employees_id'
-	SQL;
+	$sql = "SELECT DISTINCT(YEAR(startDate)) as year FROM personneltrainingslist LEFT JOIN personneltrainings ON personneltrainingslist.personneltrainings_id = personneltrainings.personneltrainings_id WHERE personneltrainingslist.employees_id = '$employees_id'";
 	
 	$result = $mysqli->query($sql);
 		while ($row = $result->fetch_array()) {

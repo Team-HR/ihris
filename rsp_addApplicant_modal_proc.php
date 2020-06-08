@@ -30,8 +30,7 @@ if (isset($_POST["addNew"])) {
         serialize($data[10]),
         serialize($data[11]),
         serialize($data[12]),
-        $data[8],
-);
+        $data[8]);
   $stmt->execute();
   $applicant_id = $stmt->insert_id;
   $stmt->close();
