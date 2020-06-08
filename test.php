@@ -1,81 +1,17 @@
 <?php
-require "_connect.db.php";
-
-$employee = array('lastName' => 'ANTIQUE',
-	    'firstName' => 'ANGELO',
-	    'middlename' => 'G.',
-	    'extName' => '',
-	    'employee_id' => 124,
-	    'birthdate' => '',
-	    'birthplace' => '',
-	    'gender' => '',
-	    'civil_status' => '',
-	    'citizenship' => '',
-	    'height_m' => '',
-	    'weight_kg' => '',
-	    'blood_type' => '',
-	    'gsis_id' => '',
-	    'pag_ibig_id' => '',
-	    'philhealth_id' => '',
-	    'sss_id' => '',
-	    'tin_id' => '',
-	    'res_house_no' => '',
-	    'res_street' => '',
-	    'res_subdivision' => '',
-	    'res_barangay' => '',
-	    'res_city' => '',
-	    'res_province' => '',
-	    'res_zip_code' => '',
-	    'res_tel' => '',
-	    'perm_house_no' => '',
-	    'perm_street' => '',
-	    'perm_subdivision' => '',
-	    'perm_barangay' => '',
-	    'perm_city' => '',
-	    'perm_province' => '',
-	    'perm_zip_code' => '',
-	    'perm_tel' => '',
-	    'mobile' => '',
-	    'email' => '',
-	    'spouse_last_name' => '',
-	    'spouse_first_name' => '',
-	    'spouse_middle_name' => '',
-	    'spouse_ext_name' => '',
-	    'spouse_occupation' => '',
-	    'spouse_employee' => '',
-	    'father_last_name' => '',
-	    'father_first_name' => '',
-	    'father_middle_name' => '',
-	    'father_ext_name' => '',
-	    'mother_last_name' => '',
-	    'mother_first_name' => '',
-	    'mother_middle_name' => '',
-	    'mother_ext_name' => '',
-	    'third_degree' => '',
-	    'third_degree_details' => '',
-	    'fourth_degree' => '',
-	    'fourth_degree_details' => '',
-	    'formally_charged' => '',
-	    'formally_charged_details' => '',
-	    'admin_offense' => '',
-	    'admin_offense_details' => '',
-	    'convicted' => '',
-	    'convicted_details' => '',
-	    'separated_from_service' => '',
-	    'separated_from_service_details' => '',
-	    'election_candidate' => '',
-	    'election_candidate_details' => '',
-	    'indigenous_member' => '',
-	    'indigenous_member_details' => '',
-	    'pwd' => '',
-	    'pwd_details' => '',
-	    'solo_parent' => '',
-	    'solo_parent_details' => '');
-
-    $sql = "UPDATE `pds` SET `birthdate` = ?,`birthplace` = ?,`citizenship` = ?,`gender` = ?,`civil_status` = ?,`height` = ?,`weight` = ?,`blood_type` = ?,`gsis_id` = ?,`pag_ibig_id` = ?,`philhealth_id` = ?,`sss_id` = ?,`tin_id` = ?,`res_house_no` = ?,`res_street` = ?,`res_subdivision` = ?,`res_barangay` = ?,`res_city` = ?,`res_province` = ?,`res_zip_code` = ?,`res_tel` = ?,`perm_house_no` = ?,`perm_street` = ?,`perm_subdivision` = ?,`perm_barangay` = ?,`perm_city` = ?,`perm_province` = ?,`perm_zip_code` = ?,`perm_tel` = ?,`mobile` = ?,`email` = ? WHERE `employee_id` = ?";
+ require '_connect.db.php';
+$data['children'] = [];
+    $sql = "SELECT `pds_children`.`child_name`,`pds_children`.`child_birthdate` FROM `pds_children` WHERE `pds_children`.`employee_id` = ?";
+    // $employee_id = 2158;
     $stmt = $mysqli->prepare($sql);
-    $stmt->bind_param("sssssssssssssssssssssssssssssssi",$employee['birthdate'],$employee['birthplace'],$employee['citizenship'],$employee['gender'],$employee['civil_status'],$employee['height'],$employee['weight'],$employee['blood_type'],$employee['gsis_id'],$employee['pag_ibig_id'],$employee['philhealth_id'],$employee['sss_id'],$employee['tin_id'],$employee['res_house_no'],$employee['res_street'],$employee['res_subdivision'],$employee['res_barangay'],$employee['res_city'],$employee['res_province'],$employee['res_zip_code'],$employee['res_tel'],$employee['perm_house_no'],$employee['perm_street'],$employee['perm_subdivision'],$employee['perm_barangay'],$employee['perm_city'],$employee['perm_province'],$employee['perm_zip_code'],$employee['perm_tel'],$employee['mobile'],$employee['email'],$employee['employee_id']);
+    $stmt->bind_param('i',$employee_id);
     $stmt->execute();
+ 
+    $result = $stmt->get_result();
 
-// echo "<pre>".print_r($data,true)."</pre>";
+    while ($row = $result->fetch_assoc()) {
+    	$data['children'][] = $row;
+    }
 
+echo $result->num_rows;
+echo "<pre>".print_r($data['children'],true)."</pre>";

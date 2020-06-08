@@ -2,7 +2,7 @@
 <div id="form_pds_family" class="ui tiny form">
     <button @click="goUpdate" id="btn_pds_family_update" class="ui mini teal button"><i class="icon edit"></i> Update</button>
 
-    <div id="btns_pds_family_update" class="ui mini buttons" style="display:none">
+    <div class="btns_pds_family_update ui mini buttons" style="display:none">
         <button @click="goSave" class="ui green button"><i class="icon save"></i> Save</button>
             <div class="or"></div>
         <button @click="goCancel" class="ui red button"><i class="icon trash"></i> Discard</button>
@@ -93,7 +93,7 @@
             <tr>
                 <th>Name of the Child</th>
                 <th>Date of Birth</th>
-                <th></th>
+                <th :hidden="readonly"></th>
             </tr>
         </thead>
         <tbody>
@@ -101,16 +101,16 @@
             <tr v-for="(child,i) in employee.children" :key="i">
                 <td>
                     <div class="ui fluid input">
-                      <input type="text" placeholder="Search...">
+                      <input :readonly="readonly" v-model="child.child_name" type="text" placeholder="Search...">
                     </div>
                 </td>
                 <td>
                     <div class="ui fluid input">
-                      <input type="date" placeholder="Search...">
+                      <input :readonly="readonly" v-model="child.child_birthdate" type="date" placeholder="Search...">
                     </div>
                 </td>
-                <td width="5">
-                    <button @click="alert(i)" class="ui mini button red icon"><i class="icon minus"></i> </button>
+                <td :hidden="readonly" width="5">
+                    <button @click="remChild(i)" class="ui mini button red icon"><i class="icon minus"></i> </button>
                 </td>
             </tr>
             </template>
@@ -119,13 +119,19 @@
                     <td colspan="3">-- N/A--</td>
                 </tr>
             </template>
-            <tr>
+            <template>
+            <tr :hidden="readonly">
                 <td colspan="3"><button @click="addChild()" class="ui mini button 3green"><i class="icon add"></i> Add</button></td>
             </tr>
+            </template>
         </tbody>
     </table>
 
-
+<div class="btns_pds_family_update ui mini buttons" style="display:none">
+        <button @click="goSave" class="ui green button"><i class="icon save"></i> Save</button>
+            <div class="or"></div>
+        <button @click="goCancel" class="ui red button"><i class="icon trash"></i> Discard</button>
+    </div>
 
 </div>
 </div>

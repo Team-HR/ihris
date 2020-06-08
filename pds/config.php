@@ -55,17 +55,44 @@ elseif (isset($_GET['getPdsFamily'])) {
     $result = $stmt->get_result();
     $data = $result->fetch_assoc();
     $stmt->close();
-    $data['children'] = [];
+$data['children'] = [];
+    $sql = "SELECT `pds_children`.`child_name`,`pds_children`.`child_birthdate` FROM `pds_children` WHERE `pds_children`.`employee_id` = ?";
+    // $employee_id = 2158;
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param('i',$employee_id);
+    $stmt->execute();
+ 
+    $result = $stmt->get_result();
+
+    while ($row = $result->fetch_assoc()) {
+        $data['children'][] = $row;
+    }
+    $stmt->close();
+
 
     echo json_encode($data);
 }
 
 elseif (isset($_POST['savePdsFamily'])) {
     $employee = $_POST['employee'];
-
-    array_walk($employee, function(&$item1){
-        $item1 = $item1?$item1:null;
+    // echo json_encode($employee);
+// print_r($employee);
+    array_walk($employee, function(&$item1,$key){
+        if ($key == "children") {
+            if (count($item1)>0) {
+foreach ($item1 as $index => $child) {
+                if ($child["child_name"] == "" && $child["child_birthdate"] == "") {
+                    unset($item1[$index]);
+                }
+}
+            }
+        } else {
+            $item1 = $item1?$item1:null;
+        }
     });
+
+    $children = [];
+    $children = isset($employee["children"])?$employee["children"]:[];
 
     $affected_rows = 0;
 
@@ -75,6 +102,25 @@ elseif (isset($_POST['savePdsFamily'])) {
     $stmt->execute();
     $affected_rows += $stmt->affected_rows;
     $stmt->close();
+
+
+    $sql = "DELETE FROM `pds_children` WHERE `pds_children`.`employee_id` = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i",$employee["employee_id"]);
+    $stmt->execute();
+    $affected_rows += $stmt->affected_rows;
+    $stmt->close();
+
+    if (count($children)>0) {
+        foreach ($children as $child) {
+            $sql = "INSERT INTO `pds_children` (`employee_id`, `child_name`, `child_birthdate`) VALUES (?,?,?)";
+            $stmt = $mysqli->prepare($sql);
+            $stmt->bind_param("iss",$employee["employee_id"],$child["child_name"],$child["child_birthdate"]);
+            $stmt->execute();
+            $affected_rows += $stmt->affected_rows;
+            $stmt->close();
+        }
+    }
     echo json_encode($affected_rows);
 }
 

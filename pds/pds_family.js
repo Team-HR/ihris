@@ -19,7 +19,7 @@ new Vue({
             spouse_middle_name:"",
             spouse_mobile:"",
             spouse_occupation:"",
-            children: []
+            children: {}
         },
 
     },
@@ -38,18 +38,20 @@ new Vue({
         goUpdate(){
             this.readonly = false
             $("#btn_pds_family_update").hide();
-            $("#btns_pds_family_update").show();
+            $(".btns_pds_family_update").show();
         },
         goSave(){
-            // console.log(this.employee);
+            console.log(this.employee);
             $.post("pds/config.php", {savePdsFamily: true, employee: this.employee},
                 (data, textStatus, jqXHR)=>{
+                    // console.log("saved! ",data);
                     if (data > 0) {
                         this.savedToast()
                     }
+                    this.getEmployeeData()
                     this.readonly = true
                     $("#btn_pds_family_update").show();
-                    $("#btns_pds_family_update").hide();
+                    $(".btns_pds_family_update").hide();
                 },
                 "json"
             );
@@ -70,14 +72,20 @@ new Vue({
             this.getEmployeeData()
             this.readonly = true
             $("#btn_pds_family_update").show();
-            $("#btns_pds_family_update").hide();
+            $(".btns_pds_family_update").hide();
         },
         addChild(){
-            this.employee.children.push ({
-                            child_name: "",
-                            child_birthdate: ""
-                        })
+            var insert_index = this.employee.children.push ({
+                child_name: "",
+                child_birthdate: ""
+            }) - 1;
+            // console.log(insert_index);
+
         },
+        remChild(i){
+            this.employee.children.splice(i,1)
+            // console.log(this.employee);
+        }
 
     },
     computed:{
@@ -89,4 +97,3 @@ new Vue({
         this.getEmployeeData()
     }
 })
-

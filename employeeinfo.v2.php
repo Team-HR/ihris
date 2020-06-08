@@ -338,10 +338,10 @@ function update() {
         <div class="ui segment grid">
             <div class="three wide column">
                 <div id="pim-menu" class="ui secondary vertical pointing menu fluid">
-                    <a class="item active" data-tab="appointments">
+                    <a class="item" data-tab="appointments">
                         Appointment
                     </a>
-                    <a class="item" data-tab="pds">
+                    <a class="item active" data-tab="pds">
                         PDS
                     </a>
                     <a class="item" data-tab="service_records">
@@ -353,7 +353,7 @@ function update() {
                 </div>
             </div>
             <div class="thirteen wide stretched column">
-                <div class="ui tab active" data-tab="appointments">
+                <div class="ui tab" data-tab="appointments">
                     <div class="ui pointing secondary blue menu fluid" id="pds">
                         <a class="item active" data-tab="appointment_history">Appointment History</a>
                     </div>
@@ -381,10 +381,10 @@ function update() {
                         </table>
                     </div>
                 </div>
-                <div class="ui tab" data-tab="pds">
+                <div class="ui tab active" data-tab="pds">
                     <div class="ui pointing secondary blue menu fluid" id="pds">
-                        <a class="item active" data-tab="personal">Personal</a>
-                        <a class="item" data-tab="family">Family</a>
+                        <a class="item" data-tab="personal">Personal</a>
+                        <a class="item active" data-tab="family">Family</a>
                         <a class="item" data-tab="education">Education</a>
                         <a class="item" data-tab="eligibility">Eligibility</a>
                         <a class="item" data-tab="work_experience">Work Experiences</a>
@@ -392,10 +392,10 @@ function update() {
                         <a class="item" data-tab="trainings">Trainings</a>
                         <a class="item" data-tab="other_information">Other Information</a>
                     </div>
-                    <div class="ui tab segment active" data-tab="personal">
+                    <div class="ui tab segment" data-tab="personal">
                         <?php require 'pds_personal.php'?>
                     </div>
-                    <div class="ui tab segment" data-tab="family">
+                    <div class="ui tab segment active" data-tab="family">
                         <?php require 'pds_family.php';?>
                     </div>
                     <div class="ui tab segment" data-tab="education">
