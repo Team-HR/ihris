@@ -55,7 +55,8 @@ elseif (isset($_GET['getPdsFamily'])) {
     $result = $stmt->get_result();
     $data = $result->fetch_assoc();
     $stmt->close();
-$data['children'] = [];
+
+    $data['children'] = [];
     $sql = "SELECT `pds_children`.`child_name`,`pds_children`.`child_birthdate` FROM `pds_children` WHERE `pds_children`.`employee_id` = ?";
     // $employee_id = 2158;
     $stmt = $mysqli->prepare($sql);
@@ -73,18 +74,52 @@ $data['children'] = [];
     echo json_encode($data);
 }
 
+elseif (isset($_GET['getPdsEducation'])) {
+    $employee_id = $_GET['employee_id'];
+
+
+    $schools = array(
+        "elementary"=>array(),
+        "secondary"=>array(),
+        "vocational"=>array(),
+        "college"=>array(),
+        "graduate_studies"=>array()
+    );
+    
+    $sql = "SELECT * FROM `pds_educations` WHERE `employee_id` = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i",$employee_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $school = array(
+            "school" => $row["school"],
+            "degree_course" => $row["degree_course"],
+            "year_graduated" => $row["year_graduated"],
+            "grade_level_units" => $row["grade_level_units"],
+            "ed_from" => $row["ed_from"],
+            "ed_to" => $row["ed_to"],
+            "scholarships_honors" => $row["scholarships_honors"]
+        );
+
+        $schools[$row["ed_level"]][]=$school;
+    }
+
+    echo json_encode($schools);
+}
+
 elseif (isset($_POST['savePdsFamily'])) {
     $employee = $_POST['employee'];
     // echo json_encode($employee);
-// print_r($employee);
+    // print_r($employee);
     array_walk($employee, function(&$item1,$key){
         if ($key == "children") {
             if (count($item1)>0) {
-foreach ($item1 as $index => $child) {
-                if ($child["child_name"] == "" && $child["child_birthdate"] == "") {
-                    unset($item1[$index]);
+                foreach ($item1 as $index => $child) {
+                    if ($child["child_name"] == "" && $child["child_birthdate"] == "") {
+                        unset($item1[$index]);
+                    }
                 }
-}
             }
         } else {
             $item1 = $item1?$item1:null;

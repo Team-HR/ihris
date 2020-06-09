@@ -1,17 +1,35 @@
 <?php
  require '_connect.db.php';
-$data['children'] = [];
-    $sql = "SELECT `pds_children`.`child_name`,`pds_children`.`child_birthdate` FROM `pds_children` WHERE `pds_children`.`employee_id` = ?";
-    // $employee_id = 2158;
-    $stmt = $mysqli->prepare($sql);
-    $stmt->bind_param('i',$employee_id);
-    $stmt->execute();
- 
-    $result = $stmt->get_result();
+ $employee_id = 2158;
 
+
+    $schools = array(
+        "elementary"=>array(),
+        "secondary"=>array(),
+        "vocational"=>array(),
+        "college"=>array(),
+        "graduate_studies"=>array()
+    );
+    
+    $sql = "SELECT * FROM `pds_educations` WHERE `employee_id` = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i",$employee_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
     while ($row = $result->fetch_assoc()) {
-    	$data['children'][] = $row;
+        $school = array(
+            "school" => $row["school"],
+            "degree_course" => $row["degree_course"],
+            "year_graduated" => $row["year_graduated"],
+            "grade_level_units" => $row["grade_level_units"],
+            "ed_from" => $row["ed_from"],
+            "ed_to" => $row["ed_to"],
+            "scholarships_honors" => $row["scholarships_honors"]
+        );
+
+        $schools[$row["ed_level"]][]=$school;
     }
 
-echo $result->num_rows;
-echo "<pre>".print_r($data['children'],true)."</pre>";
+    // echo json_encode($schools);
+
+echo "<pre>".print_r($schools,true)."</pre>";

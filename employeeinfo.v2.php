@@ -384,8 +384,8 @@ function update() {
                 <div class="ui tab active" data-tab="pds">
                     <div class="ui pointing secondary blue menu fluid" id="pds">
                         <a class="item" data-tab="personal">Personal</a>
-                        <a class="item active" data-tab="family">Family</a>
-                        <a class="item" data-tab="education">Education</a>
+                        <a class="item" data-tab="family">Family</a>
+                        <a class="item active" data-tab="education">Education</a>
                         <a class="item" data-tab="eligibility">Eligibility</a>
                         <a class="item" data-tab="work_experience">Work Experiences</a>
                         <a class="item" data-tab="voluntary_works">Voluntary Works</a>
@@ -395,10 +395,10 @@ function update() {
                     <div class="ui tab segment" data-tab="personal">
                         <?php require 'pds_personal.php'?>
                     </div>
-                    <div class="ui tab segment active" data-tab="family">
+                    <div class="ui tab segment" data-tab="family">
                         <?php require 'pds_family.php';?>
                     </div>
-                    <div class="ui tab segment" data-tab="education">
+                    <div class="ui tab segment active" data-tab="education">
                         <?php require 'pds_education.php';?>
                     </div>
                     <div class="ui tab segment" data-tab="eligibility">
@@ -573,8 +573,6 @@ function update() {
 
     <!-- scripts -->
     <script src="pds/config.js"></script>
-    <script src="pds/pds_personal.js"></script>
-    <script src="pds/pds_family.js"></script>
     
     <!-- styles -->
     <style>
