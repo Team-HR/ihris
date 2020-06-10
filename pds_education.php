@@ -26,7 +26,7 @@
         <tbody>
             <template>
             <tr>
-                <td colspan="7" class="teal">Elementary</td>
+                <td colspan="7" class="teal">ELEMENTARY</td>
             </tr>
             <tr v-for="(elementary,i) in educations.elementary">
                 <td>
@@ -62,7 +62,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="7" class="teal">Secondary</td>
+                <td colspan="7" class="teal">SECONDARY</td>
             </tr>
             <tr v-for="(secondary,i) in educations.secondary">
                 <td>
@@ -98,7 +98,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="teal" colspan="7">Vocational/Trade Course</td>
+                <td class="teal" colspan="7">VOCATIONAL/ TRADE COURSE</td>
             </tr>
             <tr v-for="(vocational,i) in educations.vocational">
                 <td>
@@ -134,7 +134,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="teal" colspan="7">College</td>
+                <td class="teal" colspan="7">COLLEGE</td>
             </tr>
             <tr v-for="(college,i) in educations.college">
                 <td>
@@ -170,7 +170,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="teal" colspan="7">Graduate Studies</td>
+                <td class="teal" colspan="7">GRADUATE STUDIES</td>
             </tr>
             <tr v-for="(graduate_studies,i) in educations.graduate_studies">
                 <td>
