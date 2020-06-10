@@ -121,13 +121,13 @@
             </template>
             <template>
             <tr :hidden="readonly">
-                <td colspan="3"><button @click="addChild()" class="ui mini button 3green"><i class="icon add"></i> Add</button></td>
+                <td colspan="3"><button @click="addChild()" class="ui mini button blue"><i class="icon add"></i> Add</button></td>
             </tr>
             </template>
         </tbody>
     </table>
 
-<div class="btns_pds_family_update ui mini buttons" style="display:none">
+    <div class="btns_pds_family_update ui mini buttons" style="display:none">
         <button @click="goSave" class="ui green button"><i class="icon save"></i> Save</button>
             <div class="or"></div>
         <button @click="goCancel" class="ui red button"><i class="icon trash"></i> Discard</button>

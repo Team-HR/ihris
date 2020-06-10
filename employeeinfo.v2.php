@@ -383,22 +383,22 @@ function update() {
                 </div>
                 <div class="ui tab active" data-tab="pds">
                     <div class="ui pointing secondary blue menu fluid" id="pds">
-                        <a class="item" data-tab="personal">Personal</a>
+                        <a class="item active" data-tab="personal">Personal</a>
                         <a class="item" data-tab="family">Family</a>
-                        <a class="item active" data-tab="education">Education</a>
+                        <a class="item" data-tab="education">Education</a>
                         <a class="item" data-tab="eligibility">Eligibility</a>
                         <a class="item" data-tab="work_experience">Work Experiences</a>
                         <a class="item" data-tab="voluntary_works">Voluntary Works</a>
                         <a class="item" data-tab="trainings">Trainings</a>
                         <a class="item" data-tab="other_information">Other Information</a>
                     </div>
-                    <div class="ui tab segment" data-tab="personal">
+                    <div class="ui tab segment active" data-tab="personal">
                         <?php require 'pds_personal.php'?>
                     </div>
                     <div class="ui tab segment" data-tab="family">
                         <?php require 'pds_family.php';?>
                     </div>
-                    <div class="ui tab segment active" data-tab="education">
+                    <div class="ui tab segment" data-tab="education">
                         <?php require 'pds_education.php';?>
                     </div>
                     <div class="ui tab segment" data-tab="eligibility">

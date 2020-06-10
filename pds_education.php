@@ -48,7 +48,7 @@
                     <input :class="{readOnly: readonly}" v-model="elementary.scholarships_honors" :readonly="readonly" type="text" placeholder="-- n/a --">
                 </td>
                 <td :hidden="readonly">
-                    <button @click="remSchool(i,'elementary')" class="ui mini button basic icon"><i class="icon times"></i></button>
+                    <button @click="remSchool(i,'elementary')" class="ui mini button red icon"><i class="icon times"></i></button>
                 </td>
             </tr>
             <tr v-if="numOfElementaries == 0">
@@ -56,7 +56,7 @@
             </tr>
             <tr :hidden="readonly">
                 <td colspan="7">
-                    <button class="ui mini basic icon button" @click="addSchool('elementary')">
+                    <button class="ui mini icon blue button" @click="addSchool('elementary')">
                         <i class="icon add"></i> Add
                     </button>
                 </td>
@@ -84,7 +84,7 @@
                     <input :class="{readOnly: readonly}" v-model="secondary.scholarships_honors" :readonly="readonly" type="text" placeholder="-- n/a --">
                 </td>
                 <td :hidden="readonly">
-                    <button @click="remSchool(i,'secondary')" class="ui mini button basic icon"><i class="icon times"></i></button>
+                    <button @click="remSchool(i,'secondary')" class="ui mini button red icon"><i class="icon times"></i></button>
                 </td>
             </tr>
             <tr v-if="numOfSecondaries == 0">
@@ -92,7 +92,7 @@
             </tr>
             <tr :hidden="readonly">
                 <td colspan="7">
-                    <button class="ui mini basic icon button" @click="addSchool('secondary')">
+                    <button class="ui mini icon blue button" @click="addSchool('secondary')">
                         <i class="icon add"></i> Add
                     </button>
                 </td>
@@ -120,7 +120,7 @@
                     <input :class="{readOnly: readonly}" v-model="vocational.scholarships_honors" :readonly="readonly" type="text" placeholder="-- n/a --">
                 </td>
                 <td :hidden="readonly">
-                    <button @click="remSchool(i,'vocational')" class="ui mini button basic icon"><i class="icon times"></i></button>
+                    <button @click="remSchool(i,'vocational')" class="ui mini button red icon"><i class="icon times"></i></button>
                 </td>
             </tr>
             <tr v-if="numOfVocationals == 0">
@@ -128,7 +128,7 @@
             </tr>
             <tr :hidden="readonly">
                 <td colspan="7">
-                    <button class="ui mini basic icon button" @click="addSchool('vocational')">
+                    <button class="ui mini icon blue button" @click="addSchool('vocational')">
                         <i class="icon add"></i> Add
                     </button>
                 </td>
@@ -156,7 +156,7 @@
                     <input :class="{readOnly: readonly}" v-model="college.scholarships_honors" :readonly="readonly" type="text" placeholder="-- n/a --">
                 </td>
                 <td :hidden="readonly">
-                    <button @click="remSchool(i,'college')" class="ui mini button basic icon"><i class="icon times"></i></button>
+                    <button @click="remSchool(i,'college')" class="ui mini red button icon"><i class="icon times"></i></button>
                 </td>
             </tr>
             <tr v-if="numOfColleges == 0">
@@ -164,7 +164,7 @@
             </tr>
             <tr :hidden="readonly">
                 <td colspan="7">
-                    <button class="ui mini basic icon button" @click="addSchool('college')">
+                    <button class="ui mini icon blue button" @click="addSchool('college')">
                         <i class="icon add"></i> Add
                     </button>
                 </td>
@@ -192,7 +192,7 @@
                     <input :class="{readOnly: readonly}" v-model="graduate_studies.scholarships_honors" :readonly="readonly" type="text" placeholder="-- n/a --">
                 </td>
                 <td :hidden="readonly">
-                    <button @click="remSchool(i,'graduate_studies')" class="ui mini button basic icon"><i class="icon times"></i></button>
+                    <button @click="remSchool(i,'graduate_studies')" class="ui mini button red icon"><i class="icon times"></i></button>
                 </td>
             </tr>
             <tr v-if="numOfGraduateStudies == 0">
@@ -200,7 +200,7 @@
             </tr>
             <tr :hidden="readonly">
                 <td colspan="7">
-                    <button class="ui mini basic icon button" @click="addSchool('graduate_studies')">
+                    <button class="ui mini icon blue button" @click="addSchool('graduate_studies')">
                         <i class="icon add"></i> Add
                     </button>
                 </td>
@@ -208,6 +208,13 @@
             </template>
         </tbody>
     </table>
+
+    <div class="btns_pds_education_update ui mini buttons" style="display:none">
+        <button @click="goSave" class="ui green button"><i class="icon save"></i> Save</button>
+            <div class="or"></div>
+        <button @click="goCancel" class="ui red button"><i class="icon trash"></i> Discard</button>
+    </div>
+
 </div>
 </div>
 <script src="pds/pds_education.js"></script>
