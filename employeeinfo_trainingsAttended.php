@@ -20,7 +20,7 @@ $employees_id = $_GET["employees_id"];
     <tr>
         <th></th> 
         <!-- <th>Link</th> -->
-        <th>Title of Training</th>
+        <th>Developmental Intervention</th>
         <!-- <th>Remarks</th> -->
         <th>Date</th>
         <th>No. of Hours</th>

@@ -17,7 +17,6 @@ if (isset($_POST['getTrainingRows'])) {
             } elseif ($training['personneltrainings_id']) {
                 $link = '<a href="personneltrainingspreview.php?personneltrainings_id='.$training['personneltrainings_id'].'"><i class="icon external alternate"></i></a>';    
             }
-
             $html .= '<td>'.$link.'     '.$training['training'].'</td>';
             
             $numHours = $training['numHours'];
@@ -27,9 +26,9 @@ if (isset($_POST['getTrainingRows'])) {
             $html .= '<td>'.($numHours === "8" ? date("F d, Y", strtotime($startDate)):date("F d", strtotime($startDate))." - ".date("d, Y", strtotime($endDate))).'</td>';
             $html .= '<td>'.$training['numHours'].'</td>';
             $html .= '<td>'.$training['venue'].'</td>';
-        $html .= '</tr>';
-        
+            $html .= '</tr>';
     }
+            $html .= spms_feedBacking($num);
     echo json_encode($html);
     // echo json_encode(var_dump($_POST['getRows']));
 } elseif (isset($_POST['addTraining'])) {
@@ -38,6 +37,43 @@ if (isset($_POST['getTrainingRows'])) {
     echo json_encode($employees_id);
 
 }
+
+/*******
+ * 
+ * @author Pascual Tomulto
+ * @description 
+     -- spms feedbacking
+*/
+    function spms_feedBacking($count){
+        $mysqli = $GLOBALS['mysqli'];
+        $html = "";
+        $sql = "SELECT * from `spms_feedbacking` where `feedbacking_emp`='$_POST[employees_id]'";
+        $sql = $mysqli->query($sql);
+
+        while($details = $sql->fetch_assoc()){
+            $html .= "<tr>
+                        <td>$count</td>
+                        <td><a href='umbra/feedback/pdf.php?reference=$_POST[employees_id]&feedBackYR=$details[feedbacking_year]' target='_blank    '><i class='icon external alternate'></i></a>Feedback Monitoring</td>
+                        <td>".date('F j, Y',strtotime($details['date_conducted']))."</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                    </tr>";
+            $count++;
+        }
+        return $html;
+    }
+
+    function 
+
+
+
+/***************
+ * 
+ * end of pascual code
+ * 
+ */
+
+
 
 function getNumHours($date_early,$date_late)
 {

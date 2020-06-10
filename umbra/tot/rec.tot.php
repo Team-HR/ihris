@@ -17,8 +17,8 @@
 		<thead style="text-align: center">
 			<tr>
 				<th colspan ="4">Name</th>
-				<th rowspan ="2">Date-Submited</th>
-				<th rowspan ="2">Date-Appraised</th>
+				<th rowspan ="2">Date-Submited <br>(mm/dd/yyyy)</th>
+				<th rowspan ="2">Date-Appraised <br>(mm/dd/yyyy)</th>
 				<th rowspan ="2">Total</th>
 			</tr>
 			<tr>
@@ -46,14 +46,24 @@
 						$total = date_diff($d1,$d2);
 						$total = $total->format('%a');
 					}
+					
+					$date_submitted = "-";
+					if ($row['date_submitted'] != "0000-00-00") {
+						$date_submitted = date('m/d/Y',strtotime($row['date_submitted']));
+					}					
+					$date_appraised = "-";
+					if ($row['date_appraised'] != "0000-00-00") {
+						$date_appraised = date('m/d/Y',strtotime($row['date_appraised']));
+					}
+
 					$view .= "
 						<tr>
 							<td>$emp[lastName]</td>
 							<td>$emp[firstName]</td>
 							<td>$emp[middleName]</td>
 							<td>$emp[extName]</td>
-							<td>$row[date_submitted]</td>
-							<td>$row[date_appraised]</td>
+							<td>$date_submitted</td>
+							<td>$date_appraised</td>
 							<td>".$total." days</td>
 						</tr>
 					";

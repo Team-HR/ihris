@@ -117,7 +117,7 @@
 							<div class="ui animated list">
           			<a class="item" href="performanceratingreport.php">Performance Rating Report</a>
           			<a class="item" href="cmr.php">Coaching and Mentoring Report</a>
-          			<a class="item" href="spmsFeedback.php">Feedback Mechanism Report</a>
+          			<a class="item" href="spmsFeedback.php">Feedback and Monitoring Report</a>
           			<a class="item" href="tot.php">Turn Around Time</a>
           			<a class="item" href="cdp.php">Summary of Comments for Development Intervention</a>
 							</div>

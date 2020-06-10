@@ -2,7 +2,11 @@
 $title = "Feedback";
 require_once "header.php";
 ?>
-<div class='ui segment' style="width:80%;margin:auto" id="app">
+<div id='app'>
+  <div class="ui dimmer" :class="dimmer_status" style="position:fixed">
+      <div class="ui text loader" >Fetching Data...</div>
+  </div>
+<div class='ui segment' style="width:80%;margin:auto">
   <!-- content -->
     <div style="position:fixed;right:0;min-width:50%;z-index:5000;top:0;">
         <div class="ui icon message" style="display:none" id="fetching_msg">
@@ -42,9 +46,13 @@ require_once "header.php";
         <div class="content">
             <form class="ui form" @submit.prevent="saveFeed">
                 <div class="field">
+                    <label>Date</label>
+                    <input type="date" v-model="txtdate" required>
+                </div>
+                <div class="field">
                     <label>Feedback</label>
                     <textarea v-model="txtfeed" required></textarea>
-                </div>
+                </div>                
                 <div class="field">
                     <button class='ui primary button fluid' name="saveBTN">SAVE</button>
                 </div>
@@ -57,7 +65,7 @@ require_once "header.php";
     </div>
 
     <div>
-        <h1>Feedback and Monitoring</h1>
+        <h1>Feedback and Monitoring Year {{feedBackYR}}</h1>
     </div>
     <div>
         <div class="ui divider"></div>
@@ -87,7 +95,7 @@ require_once "header.php";
                     <!-- <th>Employee's Name</th>
                     <th>Dapartment</th> -->
                     <th>Fullname</th>
-                    <th>GENDER</th>
+                    <th>Gender</th>
                     <th>Status</th>
                     <th>Colors</th>
                     <th>Options</th>
@@ -95,7 +103,7 @@ require_once "header.php";
             </thead>
             <tbody>
                 <tr v-for="e in mergedData" class="ui" :class='e.color' :key="e.employees_id">
-                    <td>{{e.lastName}} {{ e.firstName }}</td>
+                    <td>{{e.lastName}}, {{ e.firstName }}</td>
                     <td>{{Employees[e.employees_id].gender}}</td>
                     <td>{{Employees[e.employees_id].employmentStatus}}</td>
                     <td style="text-align:center">
@@ -107,12 +115,13 @@ require_once "header.php";
                     </td>
                     <td style="text-align:center">
                         <button class="ui positive button" @click="openFeed(e.employees_id)">Open form</button>
-                    </td>
-                    
+                        <a class="ui button" @click="hyperLinker(e.employees_id)" target="_blank">Print</a>
+                    </td>                    
                 </tr>
             </tbody>
         </table>
     </div>
+</div>
 </div>
 <script>
     var app = new Vue({
@@ -125,9 +134,11 @@ require_once "header.php";
             mergedData  :[],
             txtfeed     :"",
             txtid       :0,
+            txtdate     :"",
             server_msg  :"",
             searchData  :"",
             gender      :"",
+            dimmer_status:"active",
         },
         methods:{
            getEmployees:()=>{
@@ -180,6 +191,7 @@ require_once "header.php";
                     }else{       
                         app.mergedData[ind] = {employees_id:Employee['employees_id'],lastName:Employee['lastName'],firstName:Employee['firstName'],middleName:Employee['middleName'],extName:Employee['extName'],feedbacking_id:"", feedbacking_feedback:"",color: "yellow"}
                     }
+                }
                         app.mergedData = app.mergedData.filter(()=>true);
                         app.mergedData = app.mergedData.sort(function(a,b){
                             if (a.lastName < b.lastName) {
@@ -191,9 +203,11 @@ require_once "header.php";
                             // names must be equal
                             return 0;
                         })
-                }
-                app._("fetching_msg").style.display="none"
-           },
+                        setTimeout(() => {
+                            app._("fetching_msg").style.display="none"
+                            app.dimmer_status = ""
+                        }, 1000);
+            },
            openFeed: function(dataId){
                 app.txtfeed = ""
                 app.txtid   = dataId
@@ -219,6 +233,7 @@ require_once "header.php";
                     fd.append('yr',app.feedBackYR)
                     fd.append('emp',app.txtid)
                     fd.append('feedback',app.txtfeed)
+                    fd.append('date',app.txtdate)
                 var xhr = new XMLHttpRequest()
                     xhr.onload = function(){
                         app.checkYr()
@@ -299,7 +314,12 @@ require_once "header.php";
                             }
                         }
                     }
+                },
+                hyperLinker:function(employees_id){
+                    // return window.location.href = "umbra/feedback/pdf.php?reference="+employees_id+"&feedBackYR="+app.feedBackYR
+                    return window.open("umbra/feedback/pdf.php?reference="+employees_id+"&feedBackYR="+app.feedBackYR,'_blank');
                 }
+
         },
         watch:{
             pre_feedBackYR:()=>{

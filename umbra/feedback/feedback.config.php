@@ -3,7 +3,8 @@
     if(isset($_POST['savefeedback'])){
         $yr = $_POST['yr'];
         $emp = $_POST['emp'];
-        $feedback = $_POST['feedback'];
+        $feedback =  $mysqli->real_escape_string($_POST['feedback']);
+        $date = $_POST['date']; 
         $success = true;
         $mess = "";
         $check = "SELECT * from `spms_feedbacking` where `feedbacking_year`='$yr' and `feedbacking_emp`='$emp'";
@@ -13,7 +14,7 @@
         if($check->num_rows){
             $mess = "Data has been modified";    
             $check = $check->fetch_assoc();
-            $sql = "UPDATE `spms_feedbacking` SET `feedbacking_feedback` = '$feedback' WHERE `spms_feedbacking`.`feedbacking_id` = '$check[feedbacking_id]'";
+            $sql = "UPDATE `spms_feedbacking` SET `feedbacking_feedback` = '$feedback',`date_conducted` = '$date' WHERE `spms_feedbacking`.`feedbacking_id` = '$check[feedbacking_id]'";
             $sql = $mysqli->query($sql);
             if(!$sql){
                 $mess = $mysqli->error;
@@ -22,8 +23,8 @@
         }else{
             $mess = "Data is saved";    
             $sql = "INSERT into `spms_feedbacking` 
-                    (`feedbacking_id`,`feedbacking_year`,`feedbacking_emp`,`feedbacking_feedback`,`color`)
-                    values ('','$yr','$emp','$feedback','1')";
+                    (`feedbacking_id`,`feedbacking_year`,`feedbacking_emp`,`feedbacking_feedback`,`color`,`date_conducted`)
+                    values ('','$yr','$emp','$feedback','1','$date')";
             $sql = $mysqli->query($sql);
             if(!$sql){
                 $mess = $mysqli->error;
@@ -71,7 +72,7 @@
             $mess = "Data color is changed";    
             $sql = "INSERT into `spms_feedbacking` 
                     (`feedbacking_id`,`feedbacking_year`,`feedbacking_emp`,`color`)
-                    values ('','$yr','$emp','1')";
+                    values ('','$yr','$emp','$dat')";
             $sql = $mysqli->query($sql);
             if(!$sql){
                 $mess = $mysqli->error;
