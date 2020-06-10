@@ -7,7 +7,7 @@
             where `feedbacking_emp`='$emp' and `feedbacking_year`='$yr'";
     $sql = $mysqli->query($sql);
     $data = $sql->fetch_assoc();
-    $date = date("m-d-Y", strtotime($data['date_conducted']));
+    $date = date("F j, Y", strtotime($data['date_conducted']));
     $fullname = $data['lastName'].", ".$data['firstName'];
 
 

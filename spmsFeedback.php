@@ -103,7 +103,7 @@ require_once "header.php";
             </thead>
             <tbody>
                 <tr v-for="e in mergedData" class="ui" :class='e.color' :key="e.employees_id">
-                    <td>{{e.lastName}} {{ e.firstName }}</td>
+                    <td>{{e.lastName}}, {{ e.firstName }}</td>
                     <td>{{Employees[e.employees_id].gender}}</td>
                     <td>{{Employees[e.employees_id].employmentStatus}}</td>
                     <td style="text-align:center">

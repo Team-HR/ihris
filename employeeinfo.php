@@ -438,7 +438,7 @@ if (isset($_GET["spms"])) {
   </div>
   <div class="ui bottom attached tab segment" data-tab="second">
     <div class="ui pointing secondary blue menu">
-      <a class="item active" data-tab="second/a">Trainings Attended</a>
+      <a class="item active" data-tab="second/a">Developmental Intervention</a>
 <!--       <a class="item" data-tab="second/b">2B</a>
       <a class="item" data-tab="second/c">2C</a> -->
     </div>

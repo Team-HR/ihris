@@ -103,9 +103,9 @@ $title = title($mysqli);
             <th rowspan="2">CSID</th>
             <th colspan="4">Employees Name</th>
             <th rowspan="2">Gender</th>
-            <th rowspan="2">Date Submitted</th>
+            <th rowspan="2">Date Submitted (mm-dd-yyyy)</th>
             <th rowspan="2">Appraisal Type</th>
-            <th rowspan="2">Date Appraised (mm/dd/yy)</th>
+            <th rowspan="2">Date Appraised (mm/dd/yyyy)</th>
             <th colspan="2">Rating</th>
             <th rowspan="2">Remarks</th>
             <th rowspan="2" colspan="4" class="noprint">Option</th>

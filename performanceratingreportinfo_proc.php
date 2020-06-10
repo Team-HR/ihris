@@ -41,6 +41,18 @@ function view($mysqli,$counter,$prr_id){
       $color = "CYAN";
     }
 
+    $date_submitted = "-";
+    if($row1['date_submitted'] != "0000-00-00"){
+      $date_submitted = date("m/d/Y", strtotime($row1['date_submitted']));
+    }
+
+    $date_appraised = "-";
+    if($row1['date_appraised'] != "0000-00-00"){
+      $date_appraised = date("m/d/Y", strtotime($row1['date_appraised']));
+    }
+
+
+
     $tr .= "
     <tr style='background:$color'>
     <td class='noprint'>
@@ -52,9 +64,9 @@ function view($mysqli,$counter,$prr_id){
     <td align='center'>".mb_convert_case(($middleName?$middleName[0].'.':''),MB_CASE_TITLE, 'UTF-8')."</td>
     <td align='center'>$extName</td>
     <td align='center'>$gender[0]</td>
-    <td style='width:100px;text-align:center'>".$row1['date_submitted']."</td>
+    <td style='width:100px;text-align:center'>".$date_submitted."</td>
     <td>$row1[appraisal_type]</td>
-    <td style='width:100px;text-align:center'>$row1[date_appraised]</td>
+    <td style='width:100px;text-align:center'>".$date_appraised."</td>
     <td style='text-align:center'>$row1[numerical]</td>
     <td style='text-align:center'>$row1[adjectival]</td>
     <td>$row1[remarks]</td>
@@ -206,7 +218,7 @@ function addempprr(i){
       <th rowspan="2">CSID</th>
       <th colspan="4">Employees Name</th>
       <th rowspan="2">Gender</th>
-      <th rowspan="2">Date Submitted</th>
+      <th rowspan="2">Date Submitted (mm/dd/yy)</th>
       <th rowspan="2">Appraisal Type</th>
       <th rowspan="2">Date Appraised (mm/dd/yy)</th>
       <th colspan="2">Rating</th>
