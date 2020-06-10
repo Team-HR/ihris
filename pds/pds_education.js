@@ -31,19 +31,19 @@ new Vue({
         },
         goSave(){
             console.log(this.employee);
-            $.post("pds/config.php", {savePdsFamily: true, employee: this.employee},
-                (data, textStatus, jqXHR)=>{
-                    // console.log("saved! ",data);
-                    if (data > 0) {
-                        this.savedToast()
-                    }
-                    this.getEmployeeData()
-                    this.readonly = true
-                    $("#btn_pds_education_update").show();
-                    $(".btns_pds_education_update").hide();
-                },
-                "json"
-            );
+            // $.post("pds/config.php", {savePdsFamily: true, employee: this.employee},
+            //     (data, textStatus, jqXHR)=>{
+            //         // console.log("saved! ",data);
+            //         if (data > 0) {
+            //             this.savedToast()
+            //         }
+            //         this.getEmployeeData()
+            //         this.readonly = true
+            //         $("#btn_pds_education_update").show();
+            //         $(".btns_pds_education_update").hide();
+            //     },
+            //     "json"
+            // );
         },
         savedToast(){
             $('#form_pds_education').toast({
@@ -63,16 +63,21 @@ new Vue({
             $("#btn_pds_education_update").show();
             $(".btns_pds_education_update").hide();
         },
-        addChild(){
-            var insert_index = this.employee.children.push ({
-                child_name: "",
-                child_birthdate: ""
+        addSchool(school){
+            var insert_index = this.employee[school].push ({
+                school: null,
+                degree_course: null,
+                ed_from: null,
+                ed_to: null,
+                grade_level_units: null,
+                year_graduated: null,
+                scholarships_honors: null
             }) - 1;
-            // console.log(insert_index);
+            console.log(this.employee);
 
         },
-        remChild(i){
-            this.employee.children.splice(i,1)
+        remSchool(i,school){
+            this.employee[school].splice(i,1)
             // console.log(this.employee);
         }
 

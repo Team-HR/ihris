@@ -95,10 +95,9 @@ elseif (isset($_GET['getPdsEducation'])) {
         $school = array(
             "school" => $row["school"],
             "degree_course" => $row["degree_course"],
+            "ed_period" => $row["ed_period"],
             "year_graduated" => $row["year_graduated"],
             "grade_level_units" => $row["grade_level_units"],
-            "ed_from" => $row["ed_from"],
-            "ed_to" => $row["ed_to"],
             "scholarships_honors" => $row["scholarships_honors"]
         );
 

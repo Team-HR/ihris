@@ -9,8 +9,6 @@
         <button @click="goCancel" class="ui red button"><i class="icon trash"></i> Discard</button>
     </div>
 
-
-
     <h4 class="ui header">III. EDUCATIONAL BACKGROUND</h4>
     <hr>
     <table class="ui very compact small celled table">
@@ -22,32 +20,49 @@
                 <th>Highest Level/Units Earned</th>
                 <th>Year Graduated </th>
                 <th>Scholarship/ Academic Honors Received</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td colspan="6" class="teal">Elementary</td>
+                <td colspan="7" class="teal">Elementary</td>
             </tr>
             <template>
             <tr v-for="(elementary,i) in employee.elementary">
-                <td v-if="elementary.school">{{elementary.school}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="elementary.degree_course">{{elementary.degree_course}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="elementary.ed_from">{{elementary.ed_from+" - "+elementary.ed_to}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="elementary.grade_level_units">{{elementary.grade_level_units}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="elementary.year_graduated">{{elementary.year_graduated}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="elementary.scholarships_honors">{{elementary.scholarships_honors}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
+                <td>
+                    <input v-model="elementary.school" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input v-model="elementary.degree_course" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input v-model="elementary.ed_period" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input v-model="elementary.grade_level_units" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input v-model="elementary.year_graduated" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input v-model="elementary.scholarships_honors" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <button @click="remSchool(i,'elementary')" class="ui mini button basic icon"><i class="icon times"></i></button>
+                </td>
             </tr>
             <tr v-if="numOfElementaries == 0">
-                <td colspan="6" style="text-align: center; color: lightgrey;"> -- N/A --</td>
+                <td colspan="7" style="text-align: center; color: lightgrey;"> -- N/A --</td>
+            </tr>
+            <tr :hidden="readonly">
+                <td colspan="7">
+                    <button class="ui mini basic icon button" @click="addSchool('elementary')">
+                        <i class="icon add"></i> Add
+                    </button>
+                </td>
             </tr>
             <tr>
-                <td colspan="6" class="teal">Secondary</td>
+                <td colspan="7" class="teal">Secondary</td>
             </tr>
             <tr v-for="(secondary,i) in employee.secondary">
                 <td v-if="secondary.school">{{secondary.school}}</td>
@@ -64,10 +79,10 @@
                 <td v-else style="color:lightgrey">-- n/a --</td>
             </tr>
             <tr v-if="numOfSecondaries == 0">
-                <td colspan="6" style="text-align: center; color: lightgrey;"> -- N/A --</td>
+                <td colspan="7" style="text-align: center; color: lightgrey;"> -- N/A --</td>
             </tr>
             <tr>
-                <td class="teal" colspan="6">Vocational/Trade Course</td>
+                <td class="teal" colspan="7">Vocational/Trade Course</td>
             </tr>
             <tr v-for="(vocational,i) in employee.vocational">
                 <td v-if="vocational.school">{{vocational.school}}</td>
@@ -84,10 +99,10 @@
                 <td v-else style="color:lightgrey">-- n/a --</td>
             </tr>
             <tr v-if="numOfVocationals == 0">
-                <td colspan="6" style="text-align: center; color: lightgrey;"> -- N/A --</td>
+                <td colspan="7" style="text-align: center; color: lightgrey;"> -- N/A --</td>
             </tr>
             <tr>
-                <td class="teal" colspan="6">College</td>
+                <td class="teal" colspan="7">College</td>
             </tr>
             <tr v-for="(college,i) in employee.college">
                 <td v-if="college.school">{{college.school}}</td>
@@ -104,10 +119,10 @@
                 <td v-else style="color:lightgrey">-- n/a --</td>
             </tr>
             <tr v-if="numOfColleges == 0">
-                <td colspan="6" style="text-align: center; color: lightgrey;"> -- N/A --</td>
+                <td colspan="7" style="text-align: center; color: lightgrey;"> -- N/A --</td>
             </tr>
             <tr>
-                <td class="teal" colspan="6">Graduate Studies</td>
+                <td class="teal" colspan="7">Graduate Studies</td>
             </tr>
             <tr v-for="(graduate_studies,i) in employee.graduate_studies">
                 <td v-if="graduate_studies.school">{{graduate_studies.school}}</td>
@@ -124,7 +139,7 @@
                 <td v-else style="color:lightgrey">-- n/a --</td>
             </tr>
             <tr v-if="numOfGraduateStudies == 0">
-                <td colspan="6" style="text-align: center; color: lightgrey;"> -- N/A --</td>
+                <td colspan="7" style="text-align: center; color: lightgrey;"> -- N/A --</td>
             </tr>
             </template>
         </tbody>
