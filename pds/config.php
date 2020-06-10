@@ -77,8 +77,7 @@ elseif (isset($_GET['getPdsFamily'])) {
 elseif (isset($_GET['getPdsEducation'])) {
     $employee_id = $_GET['employee_id'];
 
-
-    $schools = array(
+    $data = array(
         "elementary"=>array(),
         "secondary"=>array(),
         "vocational"=>array(),
@@ -100,11 +99,44 @@ elseif (isset($_GET['getPdsEducation'])) {
             "grade_level_units" => $row["grade_level_units"],
             "scholarships_honors" => $row["scholarships_honors"]
         );
-
-        $schools[$row["ed_level"]][]=$school;
+        $data[$row["ed_level"]][] = $school;
     }
 
-    echo json_encode($schools);
+    echo json_encode($data);
+}
+
+elseif (isset($_POST['savePdsEducation'])) {
+
+    $data = isset($_POST['data'])?$_POST['data']:[];
+    $employee_id = $_POST['employee_id'];
+    
+    $affected_rows = 0;
+
+    $sql = "DELETE FROM `pds_educations` WHERE `pds_educations`.`employee_id` = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i",$employee_id);
+    $stmt->execute();
+    $affected_rows += $stmt->affected_rows;
+    $stmt->close();
+
+
+    foreach ($data as $ed_level => $schools) {
+        foreach ($schools as $school) {
+            $countNull = 0;
+            foreach ($school as $key => $value) {
+                if (empty($value)) $countNull++;
+            }
+            if($countNull == 6) continue;
+            $sql = "INSERT INTO `pds_educations` (`employee_id`, `ed_level`, `school`, `degree_course`, `ed_period`, `year_graduated`, `grade_level_units`, `scholarships_honors`) VALUES (?,?,?,?,?,?,?,?)";
+            $stmt = $mysqli->prepare($sql);
+            $stmt->bind_param("issssiss",$employee_id, $ed_level, $school['school'], $school['degree_course'], $school['ed_period'], $school['year_graduated'], $school['grade_level_units'], $school['scholarships_honors']);
+            $stmt->execute();
+            $affected_rows += $stmt->affected_rows;
+            $stmt->close();
+        }
+    }
+    
+    echo json_encode($affected_rows);
 }
 
 elseif (isset($_POST['savePdsFamily'])) {

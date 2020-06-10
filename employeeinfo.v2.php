@@ -576,6 +576,10 @@ function update() {
     
     <!-- styles -->
     <style>
+        .readOnlyEdu {
+            border: 0px solid white !important;
+            padding: 0px !important;
+        }
         .editState {
             /*border: 2px solid green !important;*/
             background-color: #ffffb05c !important;

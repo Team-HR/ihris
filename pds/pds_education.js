@@ -2,8 +2,8 @@ new Vue({
     el: "#pds_education",
     data: {
         readonly: true,
-        employee: {
-            employee_id: 0,
+        employee_id: null,
+        educations: {
             elementary: {},
             secondary:{},
             vocational:{},
@@ -15,11 +15,11 @@ new Vue({
     methods: {
         getEmployeeData(){
             window.$_GET = new URLSearchParams(location.search);
-            this.employee.employee_id = $_GET.get('employees_id');
-            $.get("pds/config.php",{getPdsEducation: true, employee_id: this.employee.employee_id},
+            this.employee_id = $_GET.get('employees_id');
+            $.get("pds/config.php",{getPdsEducation: true, employee_id: this.employee_id},
                 (data, textStatus, jqXHR)=>{
-                    this.employee = data
-                    console.log(this.employee);
+                    this.educations = data
+                    // console.log(this.educations);
                 },
                 "json"
             );
@@ -30,20 +30,20 @@ new Vue({
             $(".btns_pds_education_update").show();
         },
         goSave(){
-            console.log(this.employee);
-            // $.post("pds/config.php", {savePdsFamily: true, employee: this.employee},
-            //     (data, textStatus, jqXHR)=>{
-            //         // console.log("saved! ",data);
-            //         if (data > 0) {
-            //             this.savedToast()
-            //         }
-            //         this.getEmployeeData()
-            //         this.readonly = true
-            //         $("#btn_pds_education_update").show();
-            //         $(".btns_pds_education_update").hide();
-            //     },
-            //     "json"
-            // );
+            // console.log(this.educations);
+            $.post("pds/config.php", {savePdsEducation: true, employee_id: this.employee_id, data: this.educations},
+                (data, textStatus, jqXHR)=>{    
+                    // console.log("saved! ",data);
+                    if (data > 0) {
+                        this.savedToast()
+                    }
+                    this.getEmployeeData()
+                    this.readonly = true
+                    $("#btn_pds_education_update").show();
+                    $(".btns_pds_education_update").hide();
+                },
+                "json"
+            );
         },
         savedToast(){
             $('#form_pds_education').toast({
@@ -64,42 +64,44 @@ new Vue({
             $(".btns_pds_education_update").hide();
         },
         addSchool(school){
-            var insert_index = this.employee[school].push ({
+            var insert_index = this.educations[school].push ({
                 school: null,
                 degree_course: null,
-                ed_from: null,
-                ed_to: null,
+                ed_period: null,
                 grade_level_units: null,
                 year_graduated: null,
                 scholarships_honors: null
             }) - 1;
-            console.log(this.employee);
-
         },
         remSchool(i,school){
-            this.employee[school].splice(i,1)
-            // console.log(this.employee);
+            this.educations[school].splice(i,1)
         }
 
     },
     computed:{
         numOfElementaries(){
-            return this.employee.elementary.length;
+            return this.educations.elementary.length;
         },
         numOfSecondaries(){
-            return this.employee.secondary.length;
+            return this.educations.secondary.length;
         },
         numOfVocationals(){
-            return this.employee.vocational.length;
+            return this.educations.vocational.length;
         },
         numOfColleges(){
-            return this.employee.college.length;
+            return this.educations.college.length;
         },
         numOfGraduateStudies(){
-            return this.employee.graduate_studies.length;
+            return this.educations.graduate_studies.length;
         }
     },
     created() {
-        this.getEmployeeData()
+        var checkLoaded = setInterval(() => {
+            // console.log(document.readyState);
+            if (document.readyState == 'complete') {
+                this.getEmployeeData()
+                clearInterval(checkLoaded);
+            }
+        }, 100);
     }
 })

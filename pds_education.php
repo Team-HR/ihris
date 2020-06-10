@@ -14,7 +14,7 @@
     <table class="ui very compact small celled table">
         <thead>
             <tr class="center aligned">
-                <th>Name of School</th>
+                <th style="min-width: 300px !important;">Name of School</th>
                 <th>Basic Educational/ Degree/ Course </th>
                 <th>Period of Attendance</th>
                 <th>Highest Level/Units Earned</th>
@@ -24,30 +24,30 @@
             </tr>
         </thead>
         <tbody>
+            <template>
             <tr>
                 <td colspan="7" class="teal">Elementary</td>
             </tr>
-            <template>
-            <tr v-for="(elementary,i) in employee.elementary">
+            <tr v-for="(elementary,i) in educations.elementary">
                 <td>
-                    <input v-model="elementary.school" :readonly="readonly" type="text" placeholder="-- n/a --">
+                    <input :class="{readOnly: readonly}" v-model="elementary.school" :readonly="readonly" type="text" placeholder="-- n/a --">
                 </td>
                 <td>
-                    <input v-model="elementary.degree_course" :readonly="readonly" type="text" placeholder="-- n/a --">
+                    <input :class="{readOnly: readonly}" v-model="elementary.degree_course" :readonly="readonly" type="text" placeholder="-- n/a --">
                 </td>
                 <td>
-                    <input v-model="elementary.ed_period" :readonly="readonly" type="text" placeholder="-- n/a --">
+                    <input :class="{readOnly: readonly}" v-model="elementary.ed_period" :readonly="readonly" type="text" placeholder="-- n/a --">
                 </td>
                 <td>
-                    <input v-model="elementary.grade_level_units" :readonly="readonly" type="text" placeholder="-- n/a --">
+                    <input :class="{readOnly: readonly}" v-model="elementary.grade_level_units" :readonly="readonly" type="text" placeholder="-- n/a --">
                 </td>
                 <td>
-                    <input v-model="elementary.year_graduated" :readonly="readonly" type="text" placeholder="-- n/a --">
+                    <input :class="{readOnly: readonly}" v-model="elementary.year_graduated" :readonly="readonly" type="number" placeholder="-- n/a --">
                 </td>
                 <td>
-                    <input v-model="elementary.scholarships_honors" :readonly="readonly" type="text" placeholder="-- n/a --">
+                    <input :class="{readOnly: readonly}" v-model="elementary.scholarships_honors" :readonly="readonly" type="text" placeholder="-- n/a --">
                 </td>
-                <td>
+                <td :hidden="readonly">
                     <button @click="remSchool(i,'elementary')" class="ui mini button basic icon"><i class="icon times"></i></button>
                 </td>
             </tr>
@@ -64,82 +64,146 @@
             <tr>
                 <td colspan="7" class="teal">Secondary</td>
             </tr>
-            <tr v-for="(secondary,i) in employee.secondary">
-                <td v-if="secondary.school">{{secondary.school}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="secondary.degree_course">{{secondary.degree_course}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="secondary.ed_from">{{secondary.ed_from+" - "+secondary.ed_to}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="secondary.grade_level_units">{{secondary.grade_level_units}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="secondary.year_graduated">{{secondary.year_graduated}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="secondary.scholarships_honors">{{secondary.scholarships_honors}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
+            <tr v-for="(secondary,i) in educations.secondary">
+                <td>
+                    <input :class="{readOnly: readonly}" v-model="secondary.school" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input :class="{readOnly: readonly}" v-model="secondary.degree_course" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input :class="{readOnly: readonly}" v-model="secondary.ed_period" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input :class="{readOnly: readonly}" v-model="secondary.grade_level_units" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input :class="{readOnly: readonly}" v-model="secondary.year_graduated" :readonly="readonly" type="number" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input :class="{readOnly: readonly}" v-model="secondary.scholarships_honors" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td :hidden="readonly">
+                    <button @click="remSchool(i,'secondary')" class="ui mini button basic icon"><i class="icon times"></i></button>
+                </td>
             </tr>
             <tr v-if="numOfSecondaries == 0">
                 <td colspan="7" style="text-align: center; color: lightgrey;"> -- N/A --</td>
             </tr>
+            <tr :hidden="readonly">
+                <td colspan="7">
+                    <button class="ui mini basic icon button" @click="addSchool('secondary')">
+                        <i class="icon add"></i> Add
+                    </button>
+                </td>
+            </tr>
             <tr>
                 <td class="teal" colspan="7">Vocational/Trade Course</td>
             </tr>
-            <tr v-for="(vocational,i) in employee.vocational">
-                <td v-if="vocational.school">{{vocational.school}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="vocational.degree_course">{{vocational.degree_course}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="vocational.ed_from">{{vocational.ed_from+" - "+vocational.ed_to}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="vocational.grade_level_units">{{vocational.grade_level_units}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="vocational.year_graduated">{{vocational.year_graduated}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="vocational.scholarships_honors">{{vocational.scholarships_honors}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
+            <tr v-for="(vocational,i) in educations.vocational">
+                <td>
+                    <input :class="{readOnly: readonly}" v-model="vocational.school" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input :class="{readOnly: readonly}" v-model="vocational.degree_course" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input :class="{readOnly: readonly}" v-model="vocational.ed_period" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input :class="{readOnly: readonly}" v-model="vocational.grade_level_units" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input :class="{readOnly: readonly}" v-model="vocational.year_graduated" :readonly="readonly" type="number" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input :class="{readOnly: readonly}" v-model="vocational.scholarships_honors" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td :hidden="readonly">
+                    <button @click="remSchool(i,'vocational')" class="ui mini button basic icon"><i class="icon times"></i></button>
+                </td>
             </tr>
             <tr v-if="numOfVocationals == 0">
                 <td colspan="7" style="text-align: center; color: lightgrey;"> -- N/A --</td>
             </tr>
+            <tr :hidden="readonly">
+                <td colspan="7">
+                    <button class="ui mini basic icon button" @click="addSchool('vocational')">
+                        <i class="icon add"></i> Add
+                    </button>
+                </td>
+            </tr>
             <tr>
                 <td class="teal" colspan="7">College</td>
             </tr>
-            <tr v-for="(college,i) in employee.college">
-                <td v-if="college.school">{{college.school}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="college.degree_course">{{college.degree_course}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="college.ed_from">{{college.ed_from+" - "+college.ed_to}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="college.grade_level_units">{{college.grade_level_units}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="college.year_graduated">{{college.year_graduated}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="college.scholarships_honors">{{college.scholarships_honors}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
+            <tr v-for="(college,i) in educations.college">
+                <td>
+                    <input :class="{readOnly: readonly}" v-model="college.school" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input :class="{readOnly: readonly}" v-model="college.degree_course" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input :class="{readOnly: readonly}" v-model="college.ed_period" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input :class="{readOnly: readonly}" v-model="college.grade_level_units" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input :class="{readOnly: readonly}" v-model="college.year_graduated" :readonly="readonly" type="number" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input :class="{readOnly: readonly}" v-model="college.scholarships_honors" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td :hidden="readonly">
+                    <button @click="remSchool(i,'college')" class="ui mini button basic icon"><i class="icon times"></i></button>
+                </td>
             </tr>
             <tr v-if="numOfColleges == 0">
                 <td colspan="7" style="text-align: center; color: lightgrey;"> -- N/A --</td>
             </tr>
+            <tr :hidden="readonly">
+                <td colspan="7">
+                    <button class="ui mini basic icon button" @click="addSchool('college')">
+                        <i class="icon add"></i> Add
+                    </button>
+                </td>
+            </tr>
             <tr>
                 <td class="teal" colspan="7">Graduate Studies</td>
             </tr>
-            <tr v-for="(graduate_studies,i) in employee.graduate_studies">
-                <td v-if="graduate_studies.school">{{graduate_studies.school}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="graduate_studies.degree_course">{{graduate_studies.degree_course}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="graduate_studies.ed_from">{{graduate_studies.ed_from+" - "+graduate_studies.ed_to}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="graduate_studies.grade_level_units">{{graduate_studies.grade_level_units}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="graduate_studies.year_graduated">{{graduate_studies.year_graduated}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
-                <td v-if="graduate_studies.scholarships_honors">{{graduate_studies.scholarships_honors}}</td>
-                <td v-else style="color:lightgrey">-- n/a --</td>
+            <tr v-for="(graduate_studies,i) in educations.graduate_studies">
+                <td>
+                    <input :class="{readOnly: readonly}" v-model="graduate_studies.school" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input :class="{readOnly: readonly}" v-model="graduate_studies.degree_course" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input :class="{readOnly: readonly}" v-model="graduate_studies.ed_period" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input :class="{readOnly: readonly}" v-model="graduate_studies.grade_level_units" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input :class="{readOnly: readonly}" v-model="graduate_studies.year_graduated" :readonly="readonly" type="number" placeholder="-- n/a --">
+                </td>
+                <td>
+                    <input :class="{readOnly: readonly}" v-model="graduate_studies.scholarships_honors" :readonly="readonly" type="text" placeholder="-- n/a --">
+                </td>
+                <td :hidden="readonly">
+                    <button @click="remSchool(i,'graduate_studies')" class="ui mini button basic icon"><i class="icon times"></i></button>
+                </td>
             </tr>
             <tr v-if="numOfGraduateStudies == 0">
                 <td colspan="7" style="text-align: center; color: lightgrey;"> -- N/A --</td>
+            </tr>
+            <tr :hidden="readonly">
+                <td colspan="7">
+                    <button class="ui mini basic icon button" @click="addSchool('graduate_studies')">
+                        <i class="icon add"></i> Add
+                    </button>
+                </td>
             </tr>
             </template>
         </tbody>
