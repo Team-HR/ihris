@@ -63,7 +63,6 @@ if (isset($_POST['getTrainingRows'])) {
         return $html;
     }
 
-    function 
 
 
 

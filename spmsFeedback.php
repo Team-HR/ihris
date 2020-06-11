@@ -142,7 +142,7 @@ require_once "header.php";
         },
         methods:{
            getEmployees:()=>{
-                app._("fetching_msg").style.display=""
+                $('body').toast({ title:'Employees',message: 'Fecthing........'});
                 var xml = new XMLHttpRequest()
                     xml.onload = ()=>{
                         app.Employees = JSON.parse(xml.responseText)
@@ -152,8 +152,8 @@ require_once "header.php";
            },
            getFeedback:()=>{
                if(app.pre_feedBackYR.toString().length==4){
-                app._("fetching_msg").style.display=""
                 app.feedBackYR = app.pre_feedBackYR
+                    $('body').toast({title:'Feedback',message:'Loading..... '});
                     var fd = new FormData();
                         fd.append('year',app.feedBackYR)
                         fd.append('getFeedback',true)
@@ -204,7 +204,6 @@ require_once "header.php";
                             return 0;
                         })
                         setTimeout(() => {
-                            app._("fetching_msg").style.display="none"
                             app.dimmer_status = ""
                         }, 1000);
             },
@@ -238,18 +237,11 @@ require_once "header.php";
                     xhr.onload = function(){
                         app.checkYr()
                         var msg = JSON.parse(this.responseText);
-                        app.server_msg = msg.message
                         if(msg.success){
-                            app._('success_msg').style.display = ""
-                            setTimeout(() => {
-                                app._('success_msg').style.display = "none"
-                            }, 2000); 
+                            $('body').toast( {class: 'success',message: msg.message});
                             $("#feedbackSaveModal").modal('hide')        
                         }else{
-                            app._('error_msg').style.display = ""
-                            setTimeout(() => {
-                                app._('error_msg').style.display = "none"
-                            }, 2000); 
+                            $('body').toast({class: 'error',message: msg.message});
                         } 
                         el.innerHTML = "SAVE"
                         el.disabled = false
@@ -276,16 +268,9 @@ require_once "header.php";
                         var msg = JSON.parse(this.responseText)
                             app.server_msg = msg.message
                         if(msg.success){
-                            app._('success_msg').style.display = ""
-                            setTimeout(() => {
-                                app._('success_msg').style.display = "none"
-                            }, 2000); 
-                            $("#feedbackSaveModal").modal('hide')        
+                            $('body').toast({class: 'success',message: msg.message});
                         }else{
-                            app._('error_msg').style.display = ""
-                            setTimeout(() => {
-                                app._('error_msg').style.display = "none"
-                            }, 2000); 
+                            $('body').toast({class: 'error',message: msg.message});
                         }
                         el.disabled = false
                     }
