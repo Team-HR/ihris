@@ -105,6 +105,60 @@ elseif (isset($_GET['getPdsEducation'])) {
     echo json_encode($data);
 }
 
+elseif (isset($_GET['getPdsEligibility'])) {
+    $employee_id = $_GET['employee_id'];
+    $data = array();
+    
+    $sql = "SELECT * FROM `pds_eligibilities` WHERE `employee_id` = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i",$employee_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $datum = array(
+            "elig_title" => $row["elig_title"],
+            "rating" => $row["rating"],
+            "exam_date" => $row["exam_date"],
+            "exam_place" => $row["exam_place"],
+            "license_id" => $row["license_id"],
+            "release_date" => $row["release_date"]
+        );
+        $data[] = $datum;
+    }
+    echo json_encode($data);
+}
+
+
+elseif (isset($_POST['savePdsEligibility'])) {
+    // $data = $_POST['data'];
+    $data = isset($_POST['data'])?$_POST['data']:[];
+    $employee_id = $_POST["employee_id"];
+
+    $affected_rows = 0;
+
+    $sql = "DELETE FROM `pds_eligibilities` WHERE `pds_eligibilities`.`employee_id` = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i",$employee_id);
+    $stmt->execute();
+    $affected_rows += $stmt->affected_rows;
+    $stmt->close();
+
+    if (count($data)>0) {
+        foreach ($data as $elig) {
+            $sql = "INSERT INTO `pds_eligibilities` (`employee_id`,`elig_title`,`rating`,`exam_date`,`exam_place`,`license_id`,`release_date`) VALUES (?,?,?,?,?,?,?)";
+            $stmt = $mysqli->prepare($sql);
+            $stmt->bind_param("issssss",$employee_id,$elig["elig_title"],$elig["rating"],$elig["exam_date"],$elig["exam_place"],$elig["license_id"],$elig["release_date"]
+        );
+            $stmt->execute();
+            $affected_rows += $stmt->affected_rows;
+            $stmt->close();
+        }
+    }
+    echo json_encode($data);
+}
+
+
+
 elseif (isset($_POST['savePdsEducation'])) {
 
     $data = isset($_POST['data'])?$_POST['data']:[];
