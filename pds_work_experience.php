@@ -21,7 +21,7 @@
             <th class="th-nopadding" rowspan="2">SG-Step</th>
             <th class="th-nopadding" rowspan="2">Status of Appointment</th>
             <th class="th-nopadding" rowspan="2">Gov't Service (Yes/No)</th>
-            <th class="th-nopadding" rowspan="2"></th>
+            <th :hidden="readonly" class="th-nopadding" rowspan="2"></th>
         </tr>
         <tr>
             <th>From</th>

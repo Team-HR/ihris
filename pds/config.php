@@ -153,6 +153,64 @@ elseif (isset($_GET['getPdsExperiences'])) {
     echo json_encode($data);
 }
 
+elseif (isset($_GET['getPdsVoluntaries'])) {
+    $employee_id = $_GET['employee_id'];
+    $data = array();
+    
+    $sql = "SELECT * FROM `pds_voluntaries` WHERE `employee_id` = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i",$employee_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $datum = array(
+            "vw_organization" => $row["vw_organization"],
+            "vw_from" => $row["vw_from"],
+            "vw_to" => $row["vw_to"],
+            "vw_hours" => $row["vw_hours"],
+            "vw_nature_work" => $row["vw_nature_work"]
+        );
+        $data[] = $datum;
+    }
+    echo json_encode($data);
+}
+
+
+elseif (isset($_POST['savePdsVoluntaries'])) {
+
+    $data = isset($_POST['data'])?$_POST['data']:[];
+    // echo json_encode($data);
+    // nullifier
+    array_walk($data, function(&$data1){
+        array_walk($data1, function(&$item1){
+            $item1 = $item1?$item1:null;
+        });
+    });
+    $employee_id = $_POST["employee_id"];
+
+    $affected_rows = 0;
+
+    $sql = "DELETE FROM `pds_voluntaries` WHERE `pds_voluntaries`.`employee_id` = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i",$employee_id);
+    $stmt->execute();
+    $affected_rows += $stmt->affected_rows;
+    $stmt->close();
+
+    if (count($data)>0) {
+        foreach ($data as $datum) {
+            $sql = "INSERT INTO `pds_voluntaries` (`employee_id`,`vw_organization`,`vw_from`,`vw_to`,`vw_hours`,`vw_nature_work`) VALUES (?,?,?,?,?,?)";
+            $stmt = $mysqli->prepare($sql);
+            $stmt->bind_param("isssds",$employee_id,$datum["vw_organization"],$datum["vw_from"],$datum["vw_to"],$datum["vw_hours"],$datum["vw_nature_work"]);
+            $stmt->execute();
+            $affected_rows += $stmt->affected_rows;
+            $stmt->close();
+        }
+    }
+    echo json_encode($affected_rows);
+}
+
+
 elseif (isset($_POST['savePdsExperiences'])) {
 
     $data = isset($_POST['data'])?$_POST['data']:[];
