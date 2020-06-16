@@ -386,8 +386,8 @@ function update() {
                         <a class="item" data-tab="personal">Personal</a>
                         <a class="item" data-tab="family">Family</a>
                         <a class="item" data-tab="education">Education</a>
-                        <a class="item active" data-tab="eligibility">Eligibility</a>
-                        <a class="item" data-tab="work_experience">Work Experiences</a>
+                        <a class="item" data-tab="eligibility">Eligibility</a>
+                        <a class="item active" data-tab="work_experience">Work Experiences</a>
                         <a class="item" data-tab="voluntary_works">Voluntary Works</a>
                         <a class="item" data-tab="trainings">Trainings</a>
                         <a class="item" data-tab="other_information">Other Information</a>
@@ -401,10 +401,10 @@ function update() {
                     <div class="ui tab segment" data-tab="education">
                         <?php require 'pds_education.php';?>
                     </div>
-                    <div class="ui tab segment active" data-tab="eligibility">
+                    <div class="ui tab segment" data-tab="eligibility">
                         <?php require 'pds_eligibility.php'?>
                     </div>
-                    <div class="ui tab segment" data-tab="work_experience">
+                    <div class="ui tab segment active" data-tab="work_experience">
                         <?php require 'pds_work_experience.php'?>
                     </div>
                     <div class="ui tab segment" data-tab="voluntary_works">

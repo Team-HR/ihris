@@ -128,6 +128,64 @@ elseif (isset($_GET['getPdsEligibility'])) {
     echo json_encode($data);
 }
 
+elseif (isset($_GET['getPdsExperiences'])) {
+    $employee_id = $_GET['employee_id'];
+    $data = array();
+    
+    $sql = "SELECT * FROM `pds_experiences` WHERE `employee_id` = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i",$employee_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $datum = array(
+            "exp_from" => $row["exp_from"],
+            "exp_to" => $row["exp_to"],
+            "exp_position" => $row["exp_position"],
+            "exp_company" => $row["exp_company"],
+            "exp_monthly_salary" => $row["exp_monthly_salary"],
+            "exp_sg" => $row["exp_sg"],
+            "exp_status_of_appointment" => $row["exp_status_of_appointment"],
+            "exp_govt" => $row["exp_govt"]
+        );
+        $data[] = $datum;
+    }
+    echo json_encode($data);
+}
+
+elseif (isset($_POST['savePdsExperiences'])) {
+
+    $data = isset($_POST['data'])?$_POST['data']:[];
+    // nullifier
+    array_walk($data, function(&$data1){
+        array_walk($data1, function(&$item1){
+            $item1 = $item1?$item1:null;
+        });
+    });
+    $employee_id = $_POST["employee_id"];
+
+    $affected_rows = 0;
+
+    $sql = "DELETE FROM `pds_experiences` WHERE `pds_experiences`.`employee_id` = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i",$employee_id);
+    $stmt->execute();
+    $affected_rows += $stmt->affected_rows;
+    $stmt->close();
+
+    if (count($data)>0) {
+        foreach ($data as $datum) {
+            $sql = "INSERT INTO `pds_experiences` (
+            `employee_id`,`exp_from`,`exp_to`,`exp_position`,`exp_company`,`exp_monthly_salary`,`exp_sg`,`exp_status_of_appointment`,`exp_govt`) VALUES (?,?,?,?,?,?,?,?,?)";
+            $stmt = $mysqli->prepare($sql);
+            $stmt->bind_param("issssssss",$employee_id,$datum["exp_from"],$datum["exp_to"],$datum["exp_position"],$datum["exp_company"],$datum["exp_monthly_salary"],$datum["exp_sg"],$datum["exp_status_of_appointment"],$datum["exp_govt"]);
+            $stmt->execute();
+            $affected_rows += $stmt->affected_rows;
+            $stmt->close();
+        }
+    }
+    echo json_encode($affected_rows);
+}
 
 elseif (isset($_POST['savePdsEligibility'])) {
 
