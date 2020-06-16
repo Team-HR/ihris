@@ -28,8 +28,16 @@ if (isset($_POST['getTrainingRows'])) {
             $html .= '<td>'.$training['venue'].'</td>';
             $html .= '</tr>';
     }
-            $html .= spms_feedBacking($num);
-    echo json_encode($html);
+
+        // toto
+        $feedbacking = spms_feedBacking($num);
+            $html .= $feedbacking['HTML'];
+        $cmr = cmr($feedbacking['COUNT']);
+        
+        // end
+   
+   
+        echo json_encode($html);
     // echo json_encode(var_dump($_POST['getRows']));
 } elseif (isset($_POST['addTraining'])) {
 
@@ -60,7 +68,19 @@ if (isset($_POST['getTrainingRows'])) {
                     </tr>";
             $count++;
         }
-        return $html;
+        return ['HTML' => $html,'COUNT' => $count];
+    }
+
+    function cmr(){
+        $mysqli = $GLOBALS['mysqli'];
+        $sql = "SELECT * from `cmremp` where `cmremp`.`emp_id`='$_POST[employees_id]'";
+        $sql = $mysqli->query($sql);
+            while ($details = $sql->fetch_assoc()) {
+
+            }
+
+
+ 
     }
 
 
