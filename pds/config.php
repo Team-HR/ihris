@@ -175,6 +175,75 @@ elseif (isset($_GET['getPdsVoluntaries'])) {
     echo json_encode($data);
 }
 
+elseif (isset($_GET['getPdsTrainings'])) {
+    $employee_id = $_GET['employee_id'];
+    $data = array();
+    
+    $sql = "SELECT * FROM `pds_trainings` WHERE `employee_id` = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i",$employee_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $datum = array(
+            "tr_title"=>$row["tr_title"],
+            "tr_from"=>$row["tr_from"],
+            "tr_to"=>$row["tr_to"],
+            "tr_hours"=>$row["tr_hours"],
+            "tr_by"=>$row["tr_by"]
+        );
+        $data[] = $datum;
+    }
+    echo json_encode($data);
+}
+
+
+
+elseif (isset($_POST['savePdsTrainings'])) {
+
+    $data = isset($_POST['data'])?$_POST['data']:[];
+    // echo json_encode($data);
+    // nullifier
+    array_walk($data, function(&$data1){
+        array_walk($data1, function(&$item1){
+            if ($item1 == "0000-00-00") {
+                $item1  = null;
+            }
+            $item1 = !empty($item1)?$item1:null;
+        });
+    });
+    $employee_id = $_POST["employee_id"];
+
+    $affected_rows = 0;
+
+    $sql = "DELETE FROM `pds_trainings` WHERE `pds_trainings`.`employee_id` = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i",$employee_id);
+    $stmt->execute();
+    $affected_rows += $stmt->affected_rows;
+    $stmt->close();
+
+    if (count($data)>0) {
+        foreach ($data as $datum) {
+            $countNull = 0;
+            foreach ($datum as $key => $value) {
+                if (empty($value)) $countNull++;
+                elseif ($value=="0000-00-00") {
+                    $countNull++;
+                }
+            }
+            if($countNull == 5) continue;
+                $sql = "INSERT INTO `pds_trainings` (`employee_id`,`tr_title`,`tr_from`,`tr_to`,`tr_hours`,`tr_by`) VALUES (?,?,?,?,?,?)";
+                $stmt = $mysqli->prepare($sql);
+                $stmt->bind_param("isssds",$employee_id,$datum["tr_title"],$datum["tr_from"],$datum["tr_to"],$datum["tr_hours"],$datum["tr_by"]);
+                $stmt->execute();
+                $affected_rows += $stmt->affected_rows;
+                $stmt->close();
+        }
+    }
+    echo json_encode($affected_rows);
+}
+
 
 elseif (isset($_POST['savePdsVoluntaries'])) {
 
@@ -199,12 +268,20 @@ elseif (isset($_POST['savePdsVoluntaries'])) {
 
     if (count($data)>0) {
         foreach ($data as $datum) {
-            $sql = "INSERT INTO `pds_voluntaries` (`employee_id`,`vw_organization`,`vw_from`,`vw_to`,`vw_hours`,`vw_nature_work`) VALUES (?,?,?,?,?,?)";
-            $stmt = $mysqli->prepare($sql);
-            $stmt->bind_param("isssds",$employee_id,$datum["vw_organization"],$datum["vw_from"],$datum["vw_to"],$datum["vw_hours"],$datum["vw_nature_work"]);
-            $stmt->execute();
-            $affected_rows += $stmt->affected_rows;
-            $stmt->close();
+            $countNull = 0;
+            foreach ($datum as $key => $value) {
+                if (empty($value)) $countNull++;
+                elseif ($value=="0000-00-00") {
+                    $countNull++;
+                }
+            }
+            if($countNull == 5) continue;
+                $sql = "INSERT INTO `pds_voluntaries` (`employee_id`,`vw_organization`,`vw_from`,`vw_to`,`vw_hours`,`vw_nature_work`) VALUES (?,?,?,?,?,?)";
+                $stmt = $mysqli->prepare($sql);
+                $stmt->bind_param("isssds",$employee_id,$datum["vw_organization"],$datum["vw_from"],$datum["vw_to"],$datum["vw_hours"],$datum["vw_nature_work"]);
+                $stmt->execute();
+                $affected_rows += $stmt->affected_rows;
+                $stmt->close();
         }
     }
     echo json_encode($affected_rows);
@@ -233,13 +310,21 @@ elseif (isset($_POST['savePdsExperiences'])) {
 
     if (count($data)>0) {
         foreach ($data as $datum) {
-            $sql = "INSERT INTO `pds_experiences` (
-            `employee_id`,`exp_from`,`exp_to`,`exp_position`,`exp_company`,`exp_monthly_salary`,`exp_sg`,`exp_status_of_appointment`,`exp_govt`) VALUES (?,?,?,?,?,?,?,?,?)";
-            $stmt = $mysqli->prepare($sql);
-            $stmt->bind_param("issssssss",$employee_id,$datum["exp_from"],$datum["exp_to"],$datum["exp_position"],$datum["exp_company"],$datum["exp_monthly_salary"],$datum["exp_sg"],$datum["exp_status_of_appointment"],$datum["exp_govt"]);
-            $stmt->execute();
-            $affected_rows += $stmt->affected_rows;
-            $stmt->close();
+            $countNull = 0;
+            foreach ($datum as $key => $value) {
+                if (empty($value)) $countNull++;
+                elseif ($value=="0000-00-00") {
+                    $countNull++;
+                }
+            }
+            if($countNull == 8) continue;
+                $sql = "INSERT INTO `pds_experiences` (
+                `employee_id`,`exp_from`,`exp_to`,`exp_position`,`exp_company`,`exp_monthly_salary`,`exp_sg`,`exp_status_of_appointment`,`exp_govt`) VALUES (?,?,?,?,?,?,?,?,?)";
+                $stmt = $mysqli->prepare($sql);
+                $stmt->bind_param("issssssss",$employee_id,$datum["exp_from"],$datum["exp_to"],$datum["exp_position"],$datum["exp_company"],$datum["exp_monthly_salary"],$datum["exp_sg"],$datum["exp_status_of_appointment"],$datum["exp_govt"]);
+                $stmt->execute();
+                $affected_rows += $stmt->affected_rows;
+                $stmt->close();
         }
     }
     echo json_encode($affected_rows);
@@ -266,14 +351,22 @@ elseif (isset($_POST['savePdsEligibility'])) {
     $stmt->close();
 
     if (count($data)>0) {
-        foreach ($data as $elig) {
-            $sql = "INSERT INTO `pds_eligibilities` (`employee_id`,`elig_title`,`rating`,`exam_date`,`exam_place`,`license_id`,`release_date`) VALUES (?,?,?,?,?,?,?)";
-            $stmt = $mysqli->prepare($sql);
-            $stmt->bind_param("issssss",$employee_id,$elig["elig_title"],$elig["rating"],$elig["exam_date"],$elig["exam_place"],$elig["license_id"],$elig["release_date"]
-        );
-            $stmt->execute();
-            $affected_rows += $stmt->affected_rows;
-            $stmt->close();
+        foreach ($data as $datum) {
+            $countNull = 0;
+            foreach ($datum as $key => $value) {
+                if (empty($value)) $countNull++;
+                elseif ($value=="0000-00-00") {
+                    $countNull++;
+                }
+            }
+            if($countNull == 6) continue;
+                $sql = "INSERT INTO `pds_eligibilities` (`employee_id`,`elig_title`,`rating`,`exam_date`,`exam_place`,`license_id`,`release_date`) VALUES (?,?,?,?,?,?,?)";
+                $stmt = $mysqli->prepare($sql);
+                $stmt->bind_param("issssss",$employee_id,$datum["elig_title"],$datum["rating"],$datum["exam_date"],$datum["exam_place"],$datum["license_id"],$datum["release_date"]
+            );
+                $stmt->execute();
+                $affected_rows += $stmt->affected_rows;
+                $stmt->close();
         }
     }
     echo json_encode($affected_rows);
