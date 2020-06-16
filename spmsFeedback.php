@@ -127,7 +127,7 @@ require_once "header.php";
     var app = new Vue({
         el:"#app",
         data:{
-            pre_feedBackYR  :new Date().getFullYear(),
+            pre_feedBackYR  : <?=$_GET['year']?>,
             feedBackYR  :0,
             Employees   :[],
             feedbacks   :[],
