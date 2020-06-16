@@ -130,8 +130,14 @@ elseif (isset($_GET['getPdsEligibility'])) {
 
 
 elseif (isset($_POST['savePdsEligibility'])) {
-    // $data = $_POST['data'];
+
     $data = isset($_POST['data'])?$_POST['data']:[];
+    // nullifier
+    array_walk($data, function(&$data1){
+        array_walk($data1, function(&$item1){
+            $item1 = $item1?$item1:null;
+        });
+    });
     $employee_id = $_POST["employee_id"];
 
     $affected_rows = 0;
@@ -154,7 +160,7 @@ elseif (isset($_POST['savePdsEligibility'])) {
             $stmt->close();
         }
     }
-    echo json_encode($data);
+    echo json_encode($affected_rows);
 }
 
 

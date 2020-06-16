@@ -13,14 +13,14 @@ new Vue({
             release_date: null
         },
     },
-    methods: {
+    methods: {  
         getEmployeeData(){
             window.$_GET = new URLSearchParams(location.search);
             this.employee_id = $_GET.get('employees_id');
             $.get("pds/config.php",{getPdsEligibility: true, employee_id: this.employee_id},
                 (data, textStatus, jqXHR)=>{
                     this.eligs = data
-                    console.log("test:",this.eligs);
+                    // console.log("test:",this.eligs);
                 },
                 "json"
             );
@@ -32,7 +32,7 @@ new Vue({
             
         },
         goSave(){
-            console.log(this.eligs);
+            // console.log(this.eligs);
             $.post("pds/config.php", {savePdsEligibility: true, employee_id: this.employee_id, data: this.eligs},
                 (data, textStatus, jqXHR)=>{    
                     // console.log("saved! ",data);
