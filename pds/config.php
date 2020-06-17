@@ -234,11 +234,69 @@ elseif (isset($_GET['getPdsOtherInformation'])) {
     }
     $stmt->close();
 
+    $pds_references = array();
+    $sql = "SELECT * FROM `pds_references` WHERE `employee_id` = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i",$employee_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $pds_reference = array(
+            "ref_name"=>$row["ref_name"],
+            "ref_address"=>$row["ref_address"],
+            "ref_tel"=>$row["ref_tel"]
+        );
+        $pds_references[] = $pds_reference;
+    }
+    $stmt->close();
+
     $data[] = $pds_hobbies_and_skills;
     $data[] = $pds_non_academic_recognitions;
     $data[] = $pds_org_memberships;
+    $data[] = $pds_references;
     echo json_encode($data);
 }
+
+
+elseif (isset($_POST['save_pds_references'])) {
+
+    $data = isset($_POST['data'])?$_POST['data']:[];
+
+    array_walk($data, function(&$data1){
+        array_walk($data1, function(&$item1){
+            $item1 = !empty($item1)?$item1:null;
+        });
+    });
+
+    $employee_id = $_POST["employee_id"];
+
+    $affected_rows = 0;
+
+    $sql = "DELETE FROM `pds_references` WHERE `pds_references`.`employee_id` = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i",$employee_id);
+    $stmt->execute();
+    $affected_rows += $stmt->affected_rows;
+    $stmt->close();
+
+    if (count($data)>0) {
+        foreach ($data as $datum) {
+            $countNull = 0;
+            foreach ($datum as $key => $value) {
+                if (empty($value)) $countNull++;
+            }
+            if($countNull == 3) continue;
+            $sql = "INSERT INTO `pds_references` (`employee_id`,`ref_name`,`ref_address`,`ref_tel`) VALUES (?,?,?,?)";
+            $stmt = $mysqli->prepare($sql);
+            $stmt->bind_param("isss",$employee_id,$datum["ref_name"],$datum["ref_address"],$datum["ref_tel"]);
+            $stmt->execute();
+            $affected_rows += $stmt->affected_rows;
+            $stmt->close();
+        }
+    }
+    echo json_encode($affected_rows);
+}
+
 
 elseif (isset($_POST['save_pds_org_memberships'])) {
 
