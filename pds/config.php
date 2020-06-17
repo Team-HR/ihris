@@ -197,6 +197,134 @@ elseif (isset($_GET['getPdsTrainings'])) {
     echo json_encode($data);
 }
 
+elseif (isset($_GET['getPdsOtherInformation'])) {
+    $employee_id = $_GET['employee_id'];
+    $data = array();
+    
+    $pds_hobbies_and_skills = array();
+    $sql = "SELECT * FROM `pds_hobbies_and_skills` WHERE `employee_id` = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i",$employee_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $pds_hobbies_and_skills[] = $row["hs_name"];
+    }
+    $stmt->close();
+
+    $pds_non_academic_recognitions = array();
+    $sql = "SELECT * FROM `pds_non_academic_recognitions` WHERE `employee_id` = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i",$employee_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $pds_non_academic_recognitions[] = $row["nar_title"];
+    }
+    $stmt->close();
+
+    $pds_org_memberships = array();
+    $sql = "SELECT * FROM `pds_org_memberships` WHERE `employee_id` = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i",$employee_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $pds_org_memberships[] = $row["org_name"];
+    }
+    $stmt->close();
+
+    $data[] = $pds_hobbies_and_skills;
+    $data[] = $pds_non_academic_recognitions;
+    $data[] = $pds_org_memberships;
+    echo json_encode($data);
+}
+
+elseif (isset($_POST['save_pds_org_memberships'])) {
+
+    $data = isset($_POST['data'])?$_POST['data']:[];
+    $employee_id = $_POST["employee_id"];
+
+    $affected_rows = 0;
+
+    $sql = "DELETE FROM `pds_org_memberships` WHERE `pds_org_memberships`.`employee_id` = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i",$employee_id);
+    $stmt->execute();
+    $affected_rows += $stmt->affected_rows;
+    $stmt->close();
+
+    if (count($data)>0) {
+        foreach ($data as $datum) {
+            if (empty($datum)) continue;
+            $sql = "INSERT INTO `pds_org_memberships` (`employee_id`,`org_name`) VALUES (?,?)";
+            $stmt = $mysqli->prepare($sql);
+            $stmt->bind_param("is",$employee_id,$datum);
+            $stmt->execute();
+            $affected_rows += $stmt->affected_rows;
+            $stmt->close();
+        }
+    }
+    echo json_encode($affected_rows);
+}
+
+elseif (isset($_POST['save_pds_non_academic_recognitions'])) {
+
+    $data = isset($_POST['data'])?$_POST['data']:[];
+    $employee_id = $_POST["employee_id"];
+
+    $affected_rows = 0;
+
+    $sql = "DELETE FROM `pds_non_academic_recognitions` WHERE `pds_non_academic_recognitions`.`employee_id` = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i",$employee_id);
+    $stmt->execute();
+    $affected_rows += $stmt->affected_rows;
+    $stmt->close();
+
+    if (count($data)>0) {
+        foreach ($data as $datum) {
+            if (empty($datum)) continue;
+            $sql = "INSERT INTO `pds_non_academic_recognitions` (`employee_id`,`nar_title`) VALUES (?,?)";
+            $stmt = $mysqli->prepare($sql);
+            $stmt->bind_param("is",$employee_id,$datum);
+            $stmt->execute();
+            $affected_rows += $stmt->affected_rows;
+            $stmt->close();
+        }
+    }
+    echo json_encode($affected_rows);
+}
+
+elseif (isset($_POST['save_pds_hobbies_and_skills'])) {
+
+    $data = isset($_POST['data'])?$_POST['data']:[];
+    $employee_id = $_POST["employee_id"];
+
+    $affected_rows = 0;
+
+    $sql = "DELETE FROM `pds_hobbies_and_skills` WHERE `pds_hobbies_and_skills`.`employee_id` = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i",$employee_id);
+    $stmt->execute();
+    $affected_rows += $stmt->affected_rows;
+    $stmt->close();
+
+    if (count($data)>0) {
+        foreach ($data as $datum) {
+            if (empty($datum)) continue;
+            $sql = "INSERT INTO `pds_hobbies_and_skills` (`employee_id`,`hs_name`) VALUES (?,?)";
+            $stmt = $mysqli->prepare($sql);
+            $stmt->bind_param("is",$employee_id,$datum);
+            $stmt->execute();
+            $affected_rows += $stmt->affected_rows;
+            $stmt->close();
+        }
+    }
+    echo json_encode($affected_rows);
+}
+
+
 
 
 elseif (isset($_POST['savePdsTrainings'])) {
