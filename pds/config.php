@@ -250,11 +250,73 @@ elseif (isset($_GET['getPdsOtherInformation'])) {
     }
     $stmt->close();
 
+    $pds_personal = array();
+    $sql = "SELECT * FROM `pds_personal` WHERE `employee_id` = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i",$employee_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $pds_personal["third_degree"] = $row["third_degree"];
+    $pds_personal["fourth_degree"] = $row["fourth_degree"];
+    $pds_personal["degree_details"] = $row["degree_details"];
+    $pds_personal["admin_offense"] = $row["admin_offense"];
+    $pds_personal["admin_offense_details"] = $row["admin_offense_details"];
+    $pds_personal["criminally_charged"] = $row["criminally_charged"];
+    $pds_personal["case_date_filed"] = $row["case_date_filed"];
+    $pds_personal["case_status"] = $row["case_status"];
+    $pds_personal["convicted"] = $row["convicted"];
+    $pds_personal["convicted_details"] = $row["convicted_details"];
+    $pds_personal["separated_from_service"] = $row["separated_from_service"];
+    $pds_personal["separated_from_service_details"] = $row["separated_from_service_details"];
+    $pds_personal["election_candidate"] = $row["election_candidate"];
+    $pds_personal["election_candidate_details"] = $row["election_candidate_details"];
+    $pds_personal["resigned_gov_to_campaign"] = $row["resigned_gov_to_campaign"];
+    $pds_personal["resigned_gov_to_campaign_details"] = $row["resigned_gov_to_campaign_details"];
+    $pds_personal["immigrant"] = $row["immigrant"];
+    $pds_personal["immigrant_details"] = $row["immigrant_details"];
+    $pds_personal["indigenous_member"] = $row["indigenous_member"];
+    $pds_personal["indigenous_member_details"] = $row["indigenous_member_details"];
+    $pds_personal["pwd"] = $row["pwd"];
+    $pds_personal["pwd_details"] = $row["pwd_details"];
+    $pds_personal["solo_parent"] = $row["solo_parent"];
+    $pds_personal["solo_parent_details"] = $row["solo_parent_details"];
+    $stmt->close();    
+
     $data[] = $pds_hobbies_and_skills;
     $data[] = $pds_non_academic_recognitions;
     $data[] = $pds_org_memberships;
     $data[] = $pds_references;
+    $data[] = $pds_personal;
     echo json_encode($data);
+}
+
+elseif (isset($_POST['save_pds_personal'])) {
+    
+    $data = isset($_POST['data'])?$_POST['data']:[];
+    // echo json_encode($data);
+    array_walk($data, function(&$data1){
+        if ($data1=="true"||$data1=="false") {
+            $data1 = $data1=="true"?1:0;
+        } else {
+            $data1 = !empty($data1)?$data1:null;
+        }
+    });
+
+    $employee_id = $_POST["employee_id"];
+
+    $affected_rows = 0;
+
+
+    $sql = "UPDATE `pds_personal` SET `third_degree`=?,`fourth_degree`=?,`degree_details`=?,`admin_offense`=?,`admin_offense_details`=?,`criminally_charged`=?,`case_date_filed`=?,`case_status`=?,`convicted`=?,`convicted_details`=?,`separated_from_service`=?,`separated_from_service_details`=?,`election_candidate`=?,`election_candidate_details`=?,`resigned_gov_to_campaign`=?,`resigned_gov_to_campaign_details`=?,`immigrant`=?,`immigrant_details`=?,`indigenous_member`=?,`indigenous_member_details`=?,`pwd`=?,`pwd_details`=?,`solo_parent`=?,`solo_parent_details`=? WHERE `employee_id` = ?";
+
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("iisisissisisisisisisisisi",$data["third_degree"],$data["fourth_degree"],$data["degree_details"],$data["admin_offense"],$data["admin_offense_details"],$data["criminally_charged"],$data["case_date_filed"],$data["case_status"],$data["convicted"],$data["convicted_details"],$data["separated_from_service"],$data["separated_from_service_details"],$data["election_candidate"],$data["election_candidate_details"],$data["resigned_gov_to_campaign"],$data["resigned_gov_to_campaign_details"],$data["immigrant"],$data["immigrant_details"],$data["indigenous_member"],$data["indigenous_member_details"],$data["pwd"],$data["pwd_details"],$data["solo_parent"],$data["solo_parent_details"],$employee_id);
+    $stmt->execute();
+    $affected_rows += $stmt->affected_rows;
+    $stmt->close();
+
+    echo json_encode($affected_rows);
 }
 
 
