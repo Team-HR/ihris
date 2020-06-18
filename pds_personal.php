@@ -129,6 +129,12 @@
     </div>
     <i>Permanent Address</i> 
     <hr>
+    <div class="ui checkbox" style="margin-top: 20px; margin-bottom: 20px;">
+      <input :readonly="readonly" type="checkbox" @change="employee.permadd_resadd_same=!employee.permadd_resadd_same" :checked="employee.permadd_resadd_same">
+      <label>Same as Residential Address</label>
+    </div>
+    <br>
+    <div :hidden="employee.permadd_resadd_same">
     <div class="three fields">
         <div class="field">
             <label>House/Block/Lot No.:</label>
@@ -164,6 +170,7 @@
             <label>Tel#:</label>
             <input v-bind:class="{editState:!readonly,readOnly:readonly}" :readonly = "readonly" v-model="employee.perm_tel" type="text" placeholder="--- N/A ---">
         </div>
+    </div>
     </div>
     <i>Contact Details:</i>
     <hr>

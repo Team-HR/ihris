@@ -2,7 +2,7 @@ new Vue({
     el: "#pds_personal",
     data: {
         readonly: true,
-        employee: {employee_id: 0,lastName: "",firstName: "",middleName: "",extName: "",birthdate: "",birthplace: "",citizenship: "",gender: "",civil_status: "",height: "",weight: "",blood_type: "",gsis_id: "",pag_ibig_id: "",philhealth_id: "",sss_id: "",tin_id: "",res_house_no: "",res_street: "",res_subdivision: "",res_barangay: "",res_city: "",res_province: "",res_zip_code: "",res_tel: "",perm_house_no: "",perm_street: "",perm_subdivision: "",perm_barangay: "",perm_city: "",perm_province: "",perm_zip_code: "",perm_tel: "",mobile: "",email: "",
+        employee: {employee_id: 0,lastName: "",firstName: "",middleName: "",extName: "",birthdate: "",birthplace: "",citizenship: "",gender: "",civil_status: "",height: "",weight: "",blood_type: "",gsis_id: "",pag_ibig_id: "",philhealth_id: "",sss_id: "",tin_id: "",res_house_no: "",res_street: "",res_subdivision: "",res_barangay: "",res_city: "",res_province: "",res_zip_code: "",res_tel: "",permadd_resadd_same: false,perm_house_no: "",perm_street: "",perm_subdivision: "",perm_barangay: "",perm_city: "",perm_province: "",perm_zip_code: "",perm_tel: "",mobile: "",email: "",
         },
     },
     methods: {
@@ -57,6 +57,40 @@ new Vue({
     },
     created() {
         this.getEmployeeData()
+        $('.ui.checkbox').checkbox();
+    },
+    watch: {
+        permadd_resadd_same: function (val,oldVal){
+            // console.log(val+" "+oldVal);
+            if (val == true) {
+
+            this.employee.perm_house_no = this.employee.res_house_no
+            this.employee.perm_street = this.employee.res_street
+            this.employee.perm_subdivision = this.employee.res_subdivision
+            this.employee.perm_barangay = this.employee.res_barangay
+            this.employee.perm_city = this.employee.res_city
+            this.employee.perm_province = this.employee.res_province
+            this.employee.perm_zip_code = this.employee.res_zip_code
+            this.employee.perm_tel = this.employee.res_tel
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            }
+        }
     }
+
 })
 
