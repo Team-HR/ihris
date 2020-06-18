@@ -1,7 +1,7 @@
 <div id="pds_education">
 <div id="form_pds_education" class="ui tiny form">
     
-    <button @click="goUpdate" id="btn_pds_education_update" class="ui mini teal button"><i class="icon edit"></i> Update</button>
+    <button @click="goUpdate" id="btn_pds_education_update" class="ui mini blue button"><i class="icon edit"></i> Update</button>
 
     <div class="btns_pds_education_update ui mini buttons" style="display:none">
         <button @click="goSave" class="ui green button"><i class="icon save"></i> Save</button>
@@ -26,7 +26,9 @@
         <tbody>
             <template>
             <tr>
-                <td colspan="7" class="teal">ELEMENTARY</td>
+                <td colspan="7" class="teal">
+                    <a class="ui teal ribbon label">Elementary</a>
+                </td>
             </tr>
             <tr v-for="(elementary,i) in educations.elementary">
                 <td>
@@ -62,7 +64,9 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="7" class="teal">SECONDARY</td>
+                <td colspan="7" class="teal">
+                    <a class="ui teal ribbon label">Secondary</a>
+                </td>
             </tr>
             <tr v-for="(secondary,i) in educations.secondary">
                 <td>
@@ -98,7 +102,9 @@
                 </td>
             </tr>
             <tr>
-                <td class="teal" colspan="7">VOCATIONAL/ TRADE COURSE</td>
+                <td class="teal" colspan="7">
+                    <a class="ui teal ribbon label">Vocational/ Trade Course</a>
+                </td>
             </tr>
             <tr v-for="(vocational,i) in educations.vocational">
                 <td>
@@ -134,7 +140,9 @@
                 </td>
             </tr>
             <tr>
-                <td class="teal" colspan="7">COLLEGE</td>
+                <td class="teal" colspan="7">
+                    <a class="ui teal ribbon label">College</a>
+                </td>
             </tr>
             <tr v-for="(college,i) in educations.college">
                 <td>
@@ -170,7 +178,9 @@
                 </td>
             </tr>
             <tr>
-                <td class="teal" colspan="7">GRADUATE STUDIES</td>
+                <td class="teal" colspan="7">
+                    <a class="ui teal ribbon label">Graduate Studies</a>
+                </td>
             </tr>
             <tr v-for="(graduate_studies,i) in educations.graduate_studies">
                 <td>

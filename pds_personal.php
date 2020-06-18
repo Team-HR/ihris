@@ -1,6 +1,6 @@
 <div id="pds_personal">
 <div id="form_pds_personal" class="ui tiny form">
-    <button @click="goUpdate" id="btn_pds_personal_update" class="ui mini teal button"><i class="icon edit"></i> Update</button>
+    <button @click="goUpdate" id="btn_pds_personal_update" class="ui mini blue button"><i class="icon edit"></i> Update</button>
 
     <div id="btns_pds_personal_update" class="ui mini buttons" style="display:none">
         <button @click="goSave" class="ui green button"><i class="icon save"></i> Save</button>
@@ -9,7 +9,8 @@
     </div>
 
     <h4 class="ui header">I. PERSONAL INFORMATION</h4>
-    <i>Bio</i>
+    <!-- <div class="ui mini header block blue">Bio</div> -->
+    <a class="ui teal ribbon label">Bio</a>
     <hr>
     <div class="four fields">
         <div class="field">
@@ -65,7 +66,8 @@
             <input v-bind:class="{editState:!readonly,readOnly:readonly}" :readonly = "readonly" v-model="employee.blood_type" type="text" placeholder="--- N/A ---"> 
         </div>
     </div>
-    <i>Government Agency Details</i>
+    <!-- <i>Government Agency Details</i> -->
+    <a class="ui teal ribbon label">Government Agency Details</a>
     <hr>
     <div class="five fields">
         <div class="field">
@@ -89,7 +91,8 @@
             <input v-bind:class="{editState:!readonly,readOnly:readonly}" :readonly = "readonly" v-model="employee.tin_id" type="text" placeholder="--- N/A ---"> 
         </div>
     </div>
-    <i>Residential Address</i> 
+    <!-- <i>Residential Address</i>  -->
+    <a class="ui teal ribbon label">Residential Address</a>
     <hr>
     <div class="three fields">
         <div class="field">
@@ -127,7 +130,8 @@
             <input v-bind:class="{editState:!readonly,readOnly:readonly}" :readonly = "readonly" v-model="employee.res_tel" type="text" placeholder="--- N/A ---">
         </div>
     </div>
-    <i>Permanent Address</i> 
+    <!-- <i>Permanent Address</i>  -->
+    <a class="ui teal ribbon label">Permanent Address</a>
     <hr>
     <div class="ui checkbox" style="margin-top: 20px; margin-bottom: 20px;">
       <input :readonly="readonly" type="checkbox" @change="employee.permadd_resadd_same=!employee.permadd_resadd_same" :checked="employee.permadd_resadd_same">
@@ -172,7 +176,8 @@
         </div>
     </div>
     </div>
-    <i>Contact Details:</i>
+    <!-- <i>Contact Details:</i> -->
+    <a class="ui teal ribbon label">Contact Details</a>
     <hr>
     <div class="three fields">
         <div class="field">

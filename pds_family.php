@@ -1,6 +1,6 @@
 <div id="pds_family">
 <div id="form_pds_family" class="ui tiny form">
-    <button @click="goUpdate" id="btn_pds_family_update" class="ui mini teal button"><i class="icon edit"></i> Update</button>
+    <button @click="goUpdate" id="btn_pds_family_update" class="ui mini blue button"><i class="icon edit"></i> Update</button>
 
     <div class="btns_pds_family_update ui mini buttons" style="display:none">
         <button @click="goSave" class="ui green button"><i class="icon save"></i> Save</button>
@@ -9,7 +9,8 @@
     </div>
 
     <h4 class="ui header">II. FAMILY BACKGROUND</h4>
-    <i>Spouse's Informaion</i>
+    <!-- <i>Spouse's Information</i> -->
+    <a class="ui teal ribbon label">Spouse's Information</a>
     <hr>
     <div class="four fields">
         <div class="field">
@@ -48,7 +49,8 @@
         </div>
     </div>
 
-    <i>Father's Name</i>
+    <!-- <i>Father's Name</i> -->
+    <a class="ui teal ribbon label">Father's Name</a>
     <hr>
     <div class="four fields">
         <div class="field">
@@ -68,7 +70,8 @@
             <input v-bind:class="{editState:!readonly,readOnly:readonly}" :readonly = "readonly" v-model="employee.father_ext_name" type="text" placeholder="--- N/A ---">
         </div>
     </div>
-    <i>Mother's Maiden Name</i>
+    <!-- <i>Mother's Maiden Name</i> -->
+    <a class="ui teal ribbon label">Mother's Maiden Name</a>
     <hr>
     <div class="three fields">
         <div class="field">
@@ -84,10 +87,9 @@
             <input v-bind:class="{editState:!readonly,readOnly:readonly}" :readonly = "readonly" v-model="employee.mother_middle_name" type="text" placeholder="--- N/A ---">
         </div>
     </div>
-    <i>Children</i>
+    <!-- <i>Children</i> -->
+    <a class="ui teal ribbon label">Children</a>
     <hr>
-    
-
     <table class="ui very small compact structured celled table">
         <thead>
             <tr>

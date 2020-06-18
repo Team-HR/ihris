@@ -1,6 +1,6 @@
 <div id="pds_exp">
 <div id="form_pds_exp" class="ui tiny form">
-    <button @click="goUpdate" id="btn_pds_exp_update" class="ui mini teal button"><i class="icon edit"></i> Update</button>
+    <button @click="goUpdate" id="btn_pds_exp_update" class="ui mini blue button"><i class="icon edit"></i> Update</button>
 
     <div class="btns_pds_exp_update ui mini buttons" style="display:none">
         <button @click="goSave" class="ui green button"><i class="icon save"></i> Save</button>

@@ -1,5 +1,5 @@
 <div id="pds_other_information" class="ui tiny form">
-    <button @click="readonly=false;" id="go_update_btn" class="ui mini teal button" :style="{display:!readonly?'none':''}"><i class="icon edit"></i> Update</button>
+    <button @click="readonly=false;" id="go_update_btn" class="ui mini blue button" :style="{display:!readonly?'none':''}"><i class="icon edit"></i> Update</button>
 
     <div class="ui mini buttons" :style="{display:readonly?'none':''}">
         <button @click="goSave" class="ui green button"><i class="icon save"></i> Save</button>
@@ -279,7 +279,8 @@
             </div>
         </div>
     </div>
-        <h5>REFERENCES</h5>
+        <!-- <h5>REFERENCES</h5> -->
+        <a class="ui teal ribbon label">REFERENCES</a>
     <table class="ui very small compact structured celled table">
         <thead>
         <tr class="center aligned">
@@ -313,7 +314,7 @@
         </tr>
         </tbody>
     </table>
-    <button @click="readonly=false;" id="go_update_btn" class="ui mini teal button" :style="{display:!readonly?'none':''}"><i class="icon edit"></i> Update</button>
+    <button @click="readonly=false;" id="go_update_btn" class="ui mini blue button" :style="{display:!readonly?'none':''}"><i class="icon edit"></i> Update</button>
 
     <div class="ui mini buttons" :style="{display:readonly?'none':''}">
         <button @click="goSave" class="ui green button"><i class="icon save"></i> Save</button>
