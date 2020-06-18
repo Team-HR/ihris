@@ -101,6 +101,9 @@ var app = new Vue({
                 xml.open('POST','umbra/salary_adjustment/config.php');
                 xml.send(fd);
         },
+        gotopage:function(dat){
+            window.location.href = "salary_adjustment_setup.php?dat="+dat;
+        }
     },
     mounted:function(){
         var i = setInterval(() => {
@@ -110,5 +113,5 @@ var app = new Vue({
                 clearInterval(i);
                 }  
             },500 );
-    }
+    },
 });

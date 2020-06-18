@@ -109,7 +109,7 @@ require_once "header.php";
                                 <div v-else style="color:red;font-weight:bolder">NO</div>
                             </td>
                             <td style="text-align:center">
-                                <div class="ui button primary">Open </div>
+                                <div class="ui button primary" @click='gotopage(salary_adjustment.id)'>Open </div>
                                 <div class="ui button " @click = "editData(index)">Edit</div>
                                 <div class="ui button red" @click = "removeData(index)">Remove</div>
                             </td>
