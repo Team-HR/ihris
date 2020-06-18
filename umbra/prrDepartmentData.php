@@ -1,8 +1,8 @@
 <?php
 require_once '../_connect.db.php';
 if (isset($_POST['dep'])) {
-	$dep = $_POST['dep'];
-	$prrId = $_POST['prrc_id'];
+	$dep = $mysqli->real_escape_string($_POST['dep']);
+	$prrId = $mysqli->real_escape_string($_POST['prrc_id']);
 	$sql = "SELECT * FROM `employees` where employees.department_id='$dep' ORDER BY  employmentStatus DESC ,lastName ASC ";
 	$result = $mysqli->query($sql);
 	$Folder = "SELECT * FROM prr where prr_id='$prrId'";
