@@ -31,10 +31,36 @@
      </a>
     <!-- <a class="item" href="employeelist.php"><i class="users icon"></i>Employee List</a> -->
     <a class="item" href="employeelist.v2.php"><i class="users icon"></i>Employee List</a>
-    <a class="item" href="departmentsetup.php"><i class="building outline icon"></i>Departments</a>
-    <a class="item" href="positionsetup.php"><i class="briefcase icon"></i>Positions</a>
+    <!-- <a class="item" href="departmentsetup.php"><i class="building outline icon"></i>Departments</a>
+    <a class="item" href="positionsetup.php"><i class="briefcase icon"></i>Positions</a> -->
     <!-- <a class="item" href="accountsetup.php"><i class="user icon"></i>Account Setup</a> -->
     <a class="item" onclick="_calendar()"><i class="calendar outline icon"></i>Calendar</a>
+    
+
+
+    <div id="setup_dropdown" class="ui pointing dropdown link item">
+    <i class="icon settings"></i>
+    <span class="text">Setup</span>
+    <i class="dropdown icon"></i>
+    <div class="menu">
+      <!-- <div class="header">Categories</div> -->
+      <a href="departmentsetup.php" class="item"><i class="icon building"></i> Departments</a>
+      <a href="positionsetup.php" class="item"><i class="icon briefcase"></i> Positions</a>
+      <a href="salary_adjustment.php" class="item"><i class="icon money check alternate"></i> Salary Schedule</a>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
     <div class="right menu">
     <a title="Lead Deliver Nurture" href="ldn-resources" class="item" style="padding: 7px;">
       <!-- <img src="assets/ico/favicon.ico" style="width: 25px; height: 25px;"> -->
@@ -45,3 +71,9 @@
     </div>
   </div>
 
+
+<script>
+$(document).ready(function () {
+  $('#setup_dropdown').dropdown();
+});
+</script>
