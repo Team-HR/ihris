@@ -2,28 +2,26 @@
 $title = "Salary Schedule";
 require_once "header.php";
 ?>
-<style>
-    table ,th ,td ,tr{
-        margin:auto;
-        border:1px solid #757272; 
-        border-collapse:collapse;
-        font-family:'Calibri';
-    }
-    table{
-            width:85%;
-    }
-    th{
-        font-size:15px;
-        padding:7px;
-        background:#7572721f;
-    }
-    td{
-        padding:4px;
-    }
-</style>
-<div id="app">
+<div id="app" class="ui container">
+    
+  <div class="ui borderless blue inverted mini menu">
+    <div class="left item" style="margin-right: 0px !important;">
+      <button onclick="window.history.back();" class="blue ui icon button" title="Back" style="width: 65px;">
+        <i class="icon chevron left"></i> Back
+      </button>
+    </div>
+    <div class="item">
+      <h3><i class="icon money check alternate"></i> Salary Schedule</h3>
+    </div>
+    <div class="right item">
+    <div class="ui right input">
+      <button class="ui icon mini green button" @click="openform()" style="margin-right: 5px;" title="Add New Department"><i class="icon plus"></i>Add</button>
+    </div>
+    </div>
+  </div>
+
     <div class="ui segment" :class="loader">
-        <div class="ui modal" id="salaryAdjustmentModal">
+        <div class="ui modal" id="salaryAdjustmentModal" style="margin-top: 20px !important;">
                 <i class="close icon"></i>
             <div class="header">
                 Update Your Settings
@@ -68,16 +66,11 @@ require_once "header.php";
                 </form>
             </div>
         </div>
-        <h1 class="ui header">Salary Schedule</h1>
-        <div class="ui button primary" tabindex="0" @click="openform()">
-            <i class="icon add"></i> Add
-        </div>
-        <hr>
         <div>
-            <table>
+            <table class="ui mini compact celled table">
                 <thead>
                     <tr>
-                        <th colspan="6">SALARY SCHEDULE EFFECTIVITY</th>
+                        <th colspan="6" style="font-size: 20px;">SALARY SCHEDULE EFFECTIVITY</th>
                     </tr>
                     <tr>
                         <th>Date Approved</th>
@@ -109,9 +102,9 @@ require_once "header.php";
                                 <div v-else style="color:red;font-weight:bolder">NO</div>
                             </td>
                             <td style="text-align:center">
-                                <div class="ui button primary" @click='gotopage(salary_adjustment.id)'>Open </div>
-                                <div class="ui button " @click = "editData(index)">Edit</div>
-                                <div class="ui button red" @click = "removeData(index)">Remove</div>
+                                <div class="ui mini button primary" @click='gotopage(salary_adjustment.id)'>Open </div>
+                                <div class="ui mini button " @click = "editData(index)">Edit</div>
+                                <div class="ui mini button red" @click = "removeData(index)">Remove</div>
                             </td>
                         </tr>
                     </template>

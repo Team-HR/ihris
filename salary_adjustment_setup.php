@@ -3,8 +3,8 @@ $title = "Salary Schedule";
 require_once "header.php";
     $dataId = $_GET['dat'];
 ?>
-<div id="app" style="padding:10px">
-    <div class="ui modal" id="salaryModalSetup" style="width:300px">
+<div id="app" class="ui container">
+    <div class="ui modal" id="salaryModalSetup" style="width:300px; margin-top: 20px !important;">
     <br>
         <i class="close icon"></i>
         <div class="header">
@@ -32,13 +32,26 @@ require_once "header.php";
 
         </div>
     </div>
+
+  <div class="ui borderless blue inverted mini menu">
+    <div class="left item" style="margin-right: 0px !important;">
+      <a href="salary_adjustment.php" class="blue ui icon button" title="Back" style="width: 65px;">
+        <i class="icon chevron left"></i> Back
+      </a>
+    </div>
+    <div class="item">
+      <h3><i class="icon money check alternate"></i> Salary Schedule Setup</h3>
+    </div>
+    <div class="right item">
+    <div class="ui right input">
+      <button class="ui icon mini green button" @click="showModal()" style="margin-right: 5px;" title="Add New Department"><i class="icon plus"></i>Add</button>
+    </div>
+    </div>
+  </div>
+
+
     <div class="ui segment" :class="load" style="min-height:400px">
-        <h1>Salary Adjustment Setup</h1>
-        <div class="ui button primary" @click="showModal()">
-            <i class="add icon"></i> Add
-        </div>
-        <hr>
-        <table class="ui celled table" id="setup_table" data-id="<?=$_GET['dat']?>" style="width:500px;margin:auto">
+        <table class="ui mini compact celled table" id="setup_table" data-id="<?=$_GET['dat']?>">
             <thead>
                 <tr>
                     <th>Salary Grade</th>
@@ -57,10 +70,10 @@ require_once "header.php";
                     <tr v-for="(d,index) in dat">
                         <td>{{ d.salary_grade }}</td>
                         <td>{{ d.step_no }}</td>
-                        <td>{{ d.monthly_salary }}</td>
+                        <td>{{ "Php. "+d.monthly_salary }}</td>
                         <td>
-                            <button class="ui button primary" @click="setup_update(index)">Edit</button>
-                            <button class="ui button red" @click="removeSetup(d.id)">Delete</button>
+                            <button class="ui mini button primary" @click="setup_update(index)">Edit</button>
+                            <button class="ui mini button red" @click="removeSetup(d.id)">Delete</button>
                         </td>
                     </tr>
                 </template>
@@ -69,6 +82,7 @@ require_once "header.php";
     </div>  
 </div>
 <script src="umbra/salary_adjustment/config_setup.js"></script>
+
 <?
 require_once "footer.php";
 ?>  
