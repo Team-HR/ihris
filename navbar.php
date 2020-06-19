@@ -29,8 +29,8 @@
       <!-- <img src="assets/ico/favicon.ico" style="width: 25px; height: 25px;"> -->
       <img src="favicon.ico" style="width: 36px; height: 36px;" title="Integrated Human Resource System"> 
      </a>
-    <a class="item" href="employeelist.php"><i class="users icon"></i>Employee List</a>
-    <a class="item" href="employeelist.v2.php"><i class="users icon"></i>Employee List (experimental) </a>
+    <!-- <a class="item" href="employeelist.php"><i class="users icon"></i>Employee List</a> -->
+    <a class="item" href="employeelist.v2.php"><i class="users icon"></i>Employee List</a>
     <a class="item" href="departmentsetup.php"><i class="building outline icon"></i>Departments</a>
     <a class="item" href="positionsetup.php"><i class="briefcase icon"></i>Positions</a>
     <!-- <a class="item" href="accountsetup.php"><i class="user icon"></i>Account Setup</a> -->
