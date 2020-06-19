@@ -70,7 +70,7 @@ require_once "header.php";
                     <tr v-for="(d,index) in dat">
                         <td>{{ d.salary_grade }}</td>
                         <td>{{ d.step_no }}</td>
-                        <td>{{ "Php. "+d.monthly_salary }}</td>
+                        <td>{{ "Php. "+formatNumber(d.monthly_salary) }}</td>
                         <td>
                             <button class="ui mini button primary" @click="setup_update(index)">Edit</button>
                             <button class="ui mini button red" @click="removeSetup(d.id)">Delete</button>
