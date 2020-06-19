@@ -291,7 +291,7 @@
         </tr>
         </thead>
         <tbody>
-        <template v-for="(pds_reference,i) in pds_references" :key="i">
+        <template v-for="(pds_reference,i) in pds_references">
             <tr>
                 <td><input :readonly="readonly" :class="{readOnly:readonly}" type="text" v-model="pds_reference.ref_name"></td>
                 <td><input :readonly="readonly" :class="{readOnly:readonly}" type="text" v-model="pds_reference.ref_address"></td>
