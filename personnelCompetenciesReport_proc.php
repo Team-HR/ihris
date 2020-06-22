@@ -168,45 +168,9 @@ elseif (isset($_POST["fetchData"])) {
       $queries[] = $sql;
   }
   
-  $sql_ave = <<<SQL
-  SELECT 
-  ROUND(AVG(`competency`.`Adaptability`)) 'adaptability',
-  ROUND(AVG(`competency`.`ContinousLearning`)) 'continuous_learning',
-  ROUND(AVG(`competency`.`Communication`)) 'communication',
-  ROUND(AVG(`competency`.`OrganizationalAwareness`)) 'organizational_awareness',
-  ROUND(AVG(`competency`.`CreativeThinking`)) 'creative_thinking',
-  ROUND(AVG(`competency`.`NetworkingRelationshipBuilding`)) 'networking_relationship_building',
-  ROUND(AVG(`competency`.`ConflictManagement`)) 'conflict_management',
-  ROUND(AVG(`competency`.`StewardshipofResources`)) 'stewardship_of_resources',
-  ROUND(AVG(`competency`.`RiskManagement`)) 'risk_management',
-  ROUND(AVG(`competency`.`StressManagement`)) 'stress_management',
-  ROUND(AVG(`competency`.`Influence`)) 'influence',
-  ROUND(AVG(`competency`.`Initiative`)) 'initiative',
-  ROUND(AVG(`competency`.`TeamLeadership`)) 'team_leadership',
-  ROUND(AVG(`competency`.`ChangeLeadership`)) 'change_leadership',
-  ROUND(AVG(`competency`.`ClientFocus`)) 'client_focus',
-  ROUND(AVG(`competency`.`Partnering`)) 'partnering',
-  ROUND(AVG(`competency`.`DevelopingOthers`)) 'developing_others',
-  ROUND(AVG(`competency`.`PlanningandOrganizing`)) 'planning_and_organizing',
-  ROUND(AVG(`competency`.`DecisionMaking`)) 'decision_making',
-  ROUND(AVG(`competency`.`AnalyticalThinking`)) 'analytical_thinking',
-  ROUND(AVG(`competency`.`ResultsOrientation`)) 'results_orientation',
-  ROUND(AVG(`competency`.`Teamwork`)) 'teamwork',
-  ROUND(AVG(`competency`.`ValuesandEthics`)) 'values_and_ethics',
-  ROUND(AVG(`competency`.`VisioningandStrategicDirection`)) 'visioning_and_strategic_direction'
-  FROM
-  `competency`
-  LEFT JOIN `employees` ON `competency`.`employees_id` = `employees`.`employees_id` LEFT JOIN `positiontitles` ON `employees`.`position_id` = `positiontitles`.`position_id` 
-  SQL;
+  $sql_ave = "SELECT ROUND(AVG(`competency`.`Adaptability`)) 'adaptability', ROUND(AVG(`competency`.`ContinousLearning`)) 'continuous_learning', ROUND(AVG(`competency`.`Communication`)) 'communication', ROUND(AVG(`competency`.`OrganizationalAwareness`)) 'organizational_awareness', ROUND(AVG(`competency`.`CreativeThinking`)) 'creative_thinking', ROUND(AVG(`competency`.`NetworkingRelationshipBuilding`)) 'networking_relationship_building', ROUND(AVG(`competency`.`ConflictManagement`)) 'conflict_management', ROUND(AVG(`competency`.`StewardshipofResources`)) 'stewardship_of_resources', ROUND(AVG(`competency`.`RiskManagement`)) 'risk_management', ROUND(AVG(`competency`.`StressManagement`)) 'stress_management', ROUND(AVG(`competency`.`Influence`)) 'influence', ROUND(AVG(`competency`.`Initiative`)) 'initiative', ROUND(AVG(`competency`.`TeamLeadership`)) 'team_leadership', ROUND(AVG(`competency`.`ChangeLeadership`)) 'change_leadership', ROUND(AVG(`competency`.`ClientFocus`)) 'client_focus', ROUND(AVG(`competency`.`Partnering`)) 'partnering', ROUND(AVG(`competency`.`DevelopingOthers`)) 'developing_others', ROUND(AVG(`competency`.`PlanningandOrganizing`)) 'planning_and_organizing', ROUND(AVG(`competency`.`DecisionMaking`)) 'decision_making', ROUND(AVG(`competency`.`AnalyticalThinking`)) 'analytical_thinking', ROUND(AVG(`competency`.`ResultsOrientation`)) 'results_orientation', ROUND(AVG(`competency`.`Teamwork`)) 'teamwork', ROUND(AVG(`competency`.`ValuesandEthics`)) 'values_and_ethics', ROUND(AVG(`competency`.`VisioningandStrategicDirection`)) 'visioning_and_strategic_direction' FROM `competency` LEFT JOIN `employees` ON `competency`.`employees_id` = `employees`.`employees_id` LEFT JOIN `positiontitles` ON `employees`.`position_id` = `positiontitles`.`position_id`";
   
-  $sql_emp = <<<SQL
-  SELECT 
-      -- `employees`.`employees_id`,
-      CONCAT(`employees`.`lastName`,', ',`employees`.`firstName`,' ',`employees`.`middleName`,' ',`employees`.`extName`) AS fullName
-  FROM
-  `competency`
-  LEFT JOIN `employees` ON `competency`.`employees_id` = `employees`.`employees_id` LEFT JOIN `positiontitles` ON `employees`.`position_id` = `positiontitles`.`position_id` 
-  SQL;
+  $sql_emp = "SELECT CONCAT(`employees`.`lastName`,', ',`employees`.`firstName`,' ',`employees`.`middleName`,' ',`employees`.`extName`) AS fullName FROM `competency` LEFT JOIN `employees` ON `competency`.`employees_id` = `employees`.`employees_id` LEFT JOIN `positiontitles` ON `employees`.`position_id` = `positiontitles`.`position_id`";
   
   foreach ($queries as $qk => $qry) {
       $key = $filters[$qk][0].";".$filters[$qk][1];
@@ -250,36 +214,33 @@ elseif (isset($_POST["get_average_data"])) {
   $filters = $_POST["filters"];
   $sql = construct_sql($filters);
   $result = $mysqli->query($sql);
-  // $compTotal = array();
-  // for ($i=0; $i < 24 ; $i++) {
-  //   $compTotal[] = 0;
-  // }
+
    $num_rows = $result->num_rows;
    $compTotal = array(
-    'Adaptability'=>0,
-    'Continous_Learning'=>0,
-    'Communication'=>0,
-    'Organizational_Awareness'=>0,
-    'Creative_Thinking'=>0,
-    'Networking_Relationship_Building'=>0,
-    'Conflict_Management'=>0,
-    'Stewardship_of_Resources'=>0,
-    'Risk_Management'=>0,
-    'Stress_Management'=>0,
-    'Influence'=>0,
-    'Initiative'=>0,
-    'Team_Leadership'=>0,
-    'Change_Leadership'=>0,
-    'Client_Focus'=>0,
-    'Partnering'=>0,
-    'Developing_Others'=>0,
-    'Planning_and_Organizing'=>0,
-    'Decision_Making'=>0,
-    'Analytical_Thinking'=>0,
-    'Results_Orientation'=>0,
-    'Teamwork'=>0,
-    'Values_and_Ethics'=>0,
-    'Visioning_and_Strategic_Direction'=>0
+    "Adaptability"=>0,
+    "Continous_Learning"=>0,
+    "Communication"=>0,
+    "Organizational_Awareness"=>0,
+    "Creative_Thinking"=>0,
+    "Networking_Relationship_Building"=>0,
+    "Conflict_Management"=>0,
+    "Stewardship_of_Resources"=>0,
+    "Risk_Management"=>0,
+    "Stress_Management"=>0,
+    "Influence"=>0,
+    "Initiative"=>0,
+    "Team_Leadership"=>0,
+    "Change_Leadership"=>0,
+    "Client_Focus"=>0,
+    "Partnering"=>0,
+    "Developing_Others"=>0,
+    "Planning_and_Organizing"=>0,
+    "Decision_Making"=>0,
+    "Analytical_Thinking"=>0,
+    "Results_Orientation"=>0,
+    "Teamwork"=>0,
+    "Values_and_Ethics"=>0,
+    "Visioning_and_Strategic_Direction"=>0
    );
  while ($row = $result->fetch_assoc()) {
     $datetime = $row['datetime'];

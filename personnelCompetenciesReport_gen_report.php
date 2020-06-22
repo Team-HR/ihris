@@ -61,21 +61,26 @@ require_once "_connect.db.php"; ?>
     data: {
       data: [],
     },
-    calculated: {},
     methods: {
       combineCat(arr) {
         return arr[0] + " :: " + arr[1]
       },
       fetchData() {
-        $.post("personnelCompetenciesReport_proc.php", {
+
+        $.ajax({
+          type: "post",
+          url: "personnelCompetenciesReport_proc.php",
+          data: {
             fetchData: true
           },
-          (data, textStatus, jqXHR) => {
-            this.data = data;
-            // console.log(this.data)
+          dataType: "json",
+          success: (response)=>{
+            this.data = response
           },
-          "json"
-        )
+          async:false
+        });
+              
+
       },
       combineMaleAndFemaleData(arr1,arr2){
         return {
@@ -85,7 +90,8 @@ require_once "_connect.db.php"; ?>
       }
 
     },
-    created: function() {
+    mounted() {
+      console.log("mounted!");
       this.fetchData()
       $(".myChart").each(function (index, element) {
         // element == this
