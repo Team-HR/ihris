@@ -45,11 +45,32 @@
         </div>
         <div class="field">
             <label>Sex:</label>
-            <input v-bind:class="{editState:!readonly,readOnly:readonly}" :readonly = "readonly" v-model="employee.gender" type="text" placeholder="--- N/A ---"> 
+            <input :style="{display: !readonly?'none':''}" type="text" class="readOnly" readonly :value="employee.gender" placeholder="--- N/A ---">
+            <div :style="{display: readonly?'none':''}" v-bind:class="{editState:!readonly,readOnly:readonly}" class="ui selection dropdown" id="pds_gender">
+                <input type="hidden" name="gender">
+                <i class="dropdown icon"></i>
+                <div class="default text">Gender</div>
+                <div class="menu">
+                    <div class="item" data-value="MALE">MALE</div>
+                    <div class="item" data-value="FEMALE">FEMALE</div>
+                </div>
+            </div>
         </div>
         <div class="field">
             <label>Civil Status:</label>
-            <input v-bind:class="{editState:!readonly,readOnly:readonly}" :readonly = "readonly" v-model="employee.civil_status" type="text" placeholder="--- N/A ---"> 
+            <input :style="{display: !readonly?'none':''}" type="text" class="readOnly" readonly :value="employee.civil_status" placeholder="--- N/A ---">
+            <div :style="{display: readonly?'none':''}" v-bind:class="{editState:!readonly,readOnly:readonly}" class="ui selection fluid dropdown" id="pds_civil_status">
+                <input type="hidden" name="civil_status">
+                <i class="dropdown icon"></i>
+                <div class="default text">Civil Status</div>
+                <div class="menu">
+                    <div class="item" data-value="MARRIED">MARRIED</div>
+                    <div class="item" data-value="SINGLE">SINGLE</div>
+                    <div class="item" data-value="WIDOWED">WIDOWED</div>
+                    <div class="item" data-value="SEPARATED">SEPARATED</div>
+                    <div class="item" data-value="DIVORCED">DIVORCED</div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="fields">
@@ -63,7 +84,29 @@
         </div>
         <div class="field">
             <label>Blood Type:</label>
-            <input v-bind:class="{editState:!readonly,readOnly:readonly}" :readonly = "readonly" v-model="employee.blood_type" type="text" placeholder="--- N/A ---"> 
+            <!-- <input v-bind:class="{editState:!readonly,readOnly:readonly}" :readonly = "readonly" v-model="employee.blood_type" type="text" placeholder="--- N/A ---">  -->
+
+            <input :style="{display: !readonly?'none':''}" type="text" class="readOnly" readonly :value="employee.blood_type" placeholder="--- N/A ---">
+            <div :style="{display: readonly?'none':''}" v-bind:class="{editState:!readonly,readOnly:readonly}" class="ui selection fluid dropdown" id="pds_blood_type">
+                <input type="hidden" name="blood_type">
+                <i class="dropdown icon"></i>
+                <div class="default text">Blood Type</div>
+                <div class="menu">
+                    <div class="item" data-value="A+">A+</div>
+                    <div class="item" data-value="A-">A-</div>
+                    <div class="item" data-value="B+">B+</div>
+                    <div class="item" data-value="B-">B-</div>
+                    <div class="item" data-value="O+">O+</div>
+                    <div class="item" data-value="O-">O-</div>
+                    <div class="item" data-value="AB+">AB+</div>
+                    <div class="item" data-value="AB-">AB-</div>
+                </div>
+            </div>
+
+
+
+
+
         </div>
     </div>
     <!-- <i>Government Agency Details</i> -->

@@ -1,3 +1,4 @@
+
 new Vue({
     el: "#pds_personal",
     data: {
@@ -9,13 +10,20 @@ new Vue({
         getEmployeeData(){
             window.$_GET = new URLSearchParams(location.search);
             this.employee.employee_id = $_GET.get('employees_id');
-            $.get("pds/config.php",{getPdsPersonal: true, employee_id: this.employee.employee_id},
-                (data, textStatus, jqXHR)=>{
-                    this.employee = data
-                    // console.log(this.employee);
-                },
-                "json"
-            );
+
+                $.ajax({
+                    type: "get",
+                    url: "pds/config.php",
+                    data: {
+                        getPdsPersonal: true, employee_id: this.employee.employee_id
+                    },
+                    dataType: "json",
+                    success: (response) => {
+                        this.employee = response
+                    },
+                    async: false,
+                });
+
         },
         goUpdate(){
             this.readonly = false
@@ -23,7 +31,7 @@ new Vue({
             $("#btns_pds_personal_update").show();
         },
         goSave(){
-            // console.log(this.employee);
+            console.log(this.employee);
             $.post("pds/config.php", {savePdsPersonal: true, employee: this.employee},
                 (data, textStatus, jqXHR)=>{
                     if (data > 0) {
@@ -55,9 +63,29 @@ new Vue({
             $("#btns_pds_personal_update").hide();
         }
     },
-    created() {
+    mounted() {
+        
         this.getEmployeeData()
         $('.ui.checkbox').checkbox();
+        $('#pds_gender').dropdown({
+             onChange: (value, text, $choice)=>{
+                this.employee["gender"] = value;
+             }
+        });
+        $('#pds_gender').dropdown('set selected',this.employee.gender);
+        $('#pds_civil_status').dropdown({
+            onChange: (value, text, $choice)=>{
+               this.employee["civil_status"] = value;
+            }
+        });
+        $('#pds_civil_status').dropdown('set selected',this.employee.civil_status);
+        $('#pds_blood_type').dropdown({
+            onChange: (value, text, $choice)=>{
+            this.employee["blood_type"] = value;
+            }
+        });
+        $('#pds_blood_type').dropdown('set selected',this.employee.blood_type);
+        
     },
     watch: {
         permadd_resadd_same: function (val,oldVal){
@@ -94,3 +122,6 @@ new Vue({
 
 })
 
+// $(document).ready(function () {
+//     $('#pds_gender').dropdown();
+// });
