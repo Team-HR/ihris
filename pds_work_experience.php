@@ -33,7 +33,16 @@
  <template v-if="exps.length != 0">
         <tr v-for="(exp,i) in exps" :key="i">
             <td><input :readonly="readonly" :class="{readOnly: readonly}" type="date" v-model="exp.exp_from"></td>
-            <td><input :readonly="readonly" :class="{readOnly: readonly}" type="date" v-model="exp.exp_to"></td>
+            <td>
+                <input :readonly="readonly" :style="{display:nullDate(exp.exp_to)&&readonly?'none':''}" :class="{readOnly: readonly}" type="date" v-model="exp.exp_to" >
+
+                <div class="ui checkbox" :style="{display:readonly?'none':''}">
+                    <input :checked="nullDate(exp.exp_to)" type="checkbox" @change="exp.exp_to=null">
+                    <label>PRESENT</label>
+                </div>
+
+                <span :hidden="!nullDate(exp.exp_to) || !readonly">PRESENT</span>
+            </td>
             <td><input :readonly="readonly" :class="{readOnly: readonly}" type="text" v-model="exp.exp_position"></td>
             <td><input :readonly="readonly" :class="{readOnly: readonly}" type="text" v-model="exp.exp_company"></td>
             <td><input :readonly="readonly" :class="{readOnly: readonly}" type="text" v-model="exp.exp_monthly_salary"></td>

@@ -5,7 +5,10 @@ new Vue({
         employee_id: null,
         exps: []
     },
-    methods: {  
+    methods: {
+        nullDate(date){
+            return date=="0000-00-00"||date==null||date==""?true:false;
+        },
         getEmployeeData(){
             window.$_GET = new URLSearchParams(location.search);
             this.employee_id = $_GET.get('employees_id');
@@ -77,5 +80,5 @@ new Vue({
                 clearInterval(checkLoaded);
             }
         }, 100);
-    }
+    },
 })
