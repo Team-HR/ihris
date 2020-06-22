@@ -33,7 +33,7 @@ require_once "_connect.db.php"; ?>
             <h5 class="ui header"><i class="ui icon mars"></i> MALE</h5>
             <hr class="ui divider">
             <ol class="ui ol" :class="{ divideColumn: cat.male.employees.length > 10?true:false}">
-              <li v-for="employee in cat.male.employees">{{employee.toUpperCase()}}</li>
+              <li v-for="employee in cat.male.employees">{{employee}}</li>
             </ol>
             <h1 class="ui header grey center aligned" v-if="cat.male.employees == ''">--None--</h1>
           </div>
@@ -43,7 +43,7 @@ require_once "_connect.db.php"; ?>
             <h5 class="ui header"><i class="ui icon venus"></i> FEMALE</h5>
             <hr class="ui divider">
             <ol class="ui ol" :class="{ divideColumn: cat.female.employees.length > 10?true:false}">
-              <li v-for="employee in cat.female.employees">{{employee.toUpperCase()}}</li>
+              <li v-for="employee in cat.female.employees">{{employee}}</li>
             </ol>
             <h1 class="ui header grey center aligned" v-if="cat.male.employees == ''">--None--</h1>
           </div>
@@ -91,11 +91,9 @@ require_once "_connect.db.php"; ?>
 
     },
     mounted() {
-      console.log("mounted!");
       this.fetchData()
       $(".myChart").each(function (index, element) {
         // element == this
-        console.log(element);
       });
     }
 
@@ -107,8 +105,8 @@ require_once "_connect.db.php"; ?>
       chartData:Object
     },
     mounted() {
-      console.log(this.chartData);
-      console.log(this.$el);
+      // console.log(this.chartData);
+      // console.log(this.$el);
 
 var myChart = new Chart(this.$el.getContext('2d'), {
     type: 'bar',
