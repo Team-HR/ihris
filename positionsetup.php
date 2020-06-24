@@ -41,19 +41,20 @@
       level: $("#levelDropDown").val(),
       category: $("#catDropDown").val(),
       salaryGrade: $("#salaryGrade").val(),
+      salaryShedule:$('#salaryShedule').val(),
     },function(data,status){
       $(load);
       $(clear);
     });
   }
 
-  function editPos(position_id,position,functional,level,category,salaryGrade){
+  function editPos(position_id,position,functional,level,category,salaryGrade,sched){
     $("#editPosInput").val(position);
     $("#editFuncInput").val(functional);
     $("#levelDropDownEdit").val(level).change();
     $("#catDropDownEdit").val(category).change();
     $("#salaryGradeEdit").val(salaryGrade);
-
+    $("#salaryScheduleEdit").val(sched);
     $("#renameModal").modal({
       onApprove: function(){
         // alert($("#editDeptInput").val());
@@ -65,6 +66,7 @@
           level: $("#levelDropDownEdit").val(),
           category: $("#catDropDownEdit").val(),
           salaryGrade: $("#salaryGradeEdit").val(),
+          salaryShedule:$('#salaryScheduleEdit').val(),
         }, function(data, textStatus, xhr) {
           // $(load);
           // alert(data);
@@ -140,8 +142,8 @@
       <input id="inputFunc" type="text" placeholder="Functional">
     </div>
   </div>
-  <div class="fields">
-    <div class="four wide field">
+  <div class="two fields">
+    <div class="field">
       <label>Level:</label>
       <select name="level" class="ui  fluid dropdown" id="levelDropDown">
         <option value="">Level</option>
@@ -150,7 +152,7 @@
         <option value="3">3</option>
       </select>
     </div>
-    <div class="seven wide field">
+    <div class="field">
       <label>Category:</label>
       <select name="category" class="ui  fluid dropdown" id="catDropDown">
         <option value="">Category</option>
@@ -159,13 +161,21 @@
         <option value="Key Position">Key Position</option>
       </select>
     </div>
-    <div class="five wide field">
+  </div>
+  <div class="two fields">
+    <div class="field">
       <label>Salary Grade:</label>
       <input id="salaryGrade" type="text" placeholder="SG">
     </div>
+    <div class="field">
+      <label>Salary Schedule:</label>
+      <select id="salaryShedule" type="text" placeholder="Schedule">
+            <option value="1">1st class</option>
+            <option value="2">2nd class</option>
+      </select>
+    </div>
   </div>
 </div>
-
   </div>
   <div class="actions">
     <div class="ui deny button mini">
@@ -224,9 +234,18 @@
           <option value="Key Position">Key Position</option>
         </select>
       </div>
-      <div class="three wide field">
+    </div>
+    <div class="two fields">
+    <div class="field">
         <label>SG:</label>
         <input id="salaryGradeEdit" type="text" placeholder="sg">
+      </div>
+      <div class="field">
+        <label>Schedule:</label>
+        <select id="salaryScheduleEdit" type="text" placeholder="schedule">
+          <option value="1">1st class</option>
+          <option value="2">2nd class</option>
+        </select>
       </div>
     </div>
 </div>
@@ -306,6 +325,7 @@
       <th>Level</th>
       <th>Category</th>
       <th>Salary Grade</th>
+      <th>Schedule</th>
       <th></th>
     </tr>
   </thead>
