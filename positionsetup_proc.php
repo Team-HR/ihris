@@ -6,8 +6,8 @@ require_once "_connect.db.php";
 // addpos starts here
 if (isset($_POST["addPosition"])) {
 
-	$position = addslashes($_POST["position"]);
-	$functional = addslashes($_POST["functional"]);
+	$position = strtoupper(addslashes($_POST["position"]));
+	$functional = strtoupper(addslashes($_POST["functional"]));
 	if (isset($_POST["level"])) {
 		$level = $_POST["level"];
 		$category = $_POST["category"];
@@ -17,14 +17,14 @@ if (isset($_POST["addPosition"])) {
 		$category = "";
 	}
 	$salaryGrade = $_POST["salaryGrade"];
-	
+	$salaryShedule = $_POST["salaryShedule"];
 	//check first if the post is already in the database
-	$sql = "SELECT * FROM `positiontitles` WHERE `position` = '$position' AND `functional` = '$functional'";
+	$sql = "SELECT * FROM `positiontitles` WHERE `position` = '$position' AND `functional` = '$functional' AND `salary_schedule` = '$salaryShedule'";
 	$result = $mysqli->query($sql);
 	if ($result->num_rows == 0) {
 	//If None existing Add to DB
 		if (!empty($position)) {
-			$sql="INSERT INTO `positiontitles` (`position_id`, `position`,`functional`,`level`,`category`,`salaryGrade`) VALUES (NULL, '$position','$functional','$level','$category','$salaryGrade')";
+			$sql="INSERT INTO `positiontitles` (`position_id`, `position`,`functional`,`level`,`category`,`salaryGrade`,`salary_schedule`) VALUES (NULL, '$position','$functional','$level','$category','$salaryGrade','$salaryShedule')";
 			$mysqli->query($sql);
 			echo "1";
 		}
@@ -49,6 +49,14 @@ while ($row = $result->fetch_assoc()) {
 	$level = $row["level"];
 	$category = $row["category"];
 	$salaryGrade = $row["salaryGrade"];
+	$sched = $row["salary_schedule"];
+	if($sched=='1'){
+		$schedule = "1st Class";
+	}elseif ($sched=='2') {
+		$schedule = "2nd Class";
+	}else{
+		$schedule = "<b style='color:red'>UNSET</b>";
+	}
 ?>
 	<tr id="<?php echo $position_id."row";?>">
 		<td><?php  echo "(".$counter.")"?></td>
@@ -57,8 +65,9 @@ while ($row = $result->fetch_assoc()) {
 		<td><?php echo $level;?></td>
 		<td><?php echo $category;?></td>
 		<td><?php echo $salaryGrade;?></td>
+		<td><?php echo $schedule;?></td>
 		<td class="right aligned">
-			<i class="edit outline icon" title="Edit" style="cursor: pointer;" onclick="editPos(<?php echo "'".$position_id."','".addslashes($position)."','".addslashes($functional)."','".$level."','".$category."','".$salaryGrade."'";?>)"></i>
+			<i class="edit outline icon" title="Edit" style="cursor: pointer;" onclick="editPos(<?php echo "'".$position_id."','".addslashes($position)."','".addslashes($functional)."','".$level."','".$category."','".$salaryGrade."','".$sched."'";?>)"></i>
 			<i class="trash alternate outline icon" title="Delete" style="cursor: pointer;" onclick="deleteRow('<?php echo $position_id; ?>')"></i>
 		</td>
 	</tr>
@@ -75,7 +84,8 @@ elseif (isset($_POST["editPosition"])) {
 	$level = $_POST["level"];
 	$category = $_POST["category"];
 	$salaryGrade = $_POST["salaryGrade"];
-	$sql = "UPDATE `positiontitles` SET `position` = '$position',`functional` = '$functional', `level` = '$level', `category` = '$category', `salaryGrade` = '$salaryGrade' WHERE `position_id` = '$position_id'";
+	$salaryShedule = $_POST["salaryShedule"];
+	$sql = "UPDATE `positiontitles` SET `salary_schedule`='$salaryShedule',`position` = '$position',`functional` = '$functional', `level` = '$level', `category` = '$category', `salaryGrade` = '$salaryGrade' WHERE `position_id` = '$position_id'";
 	$mysqli->query($sql);
 	echo "#".$position_id."row";
 }
