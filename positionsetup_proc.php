@@ -38,7 +38,7 @@ if (isset($_POST["addPosition"])) {
 // addpos ends here
 	// load starts here
 elseif (isset($_POST["load"])){
-$sql = "SELECT * FROM `positiontitles` ORDER BY `position_id` DESC";
+$sql = "SELECT * FROM `positiontitles` ORDER BY `position` ASC";
 $result = $mysqli->query($sql);
 $counter = 0;
 while ($row = $result->fetch_assoc()) {
