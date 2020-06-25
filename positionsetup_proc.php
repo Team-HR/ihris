@@ -6,8 +6,8 @@ require_once "_connect.db.php";
 // addpos starts here
 if (isset($_POST["addPosition"])) {
 
-	$position = addslashes($_POST["position"]);
-	$functional = addslashes($_POST["functional"]);
+	$position = strtoupper(addslashes($_POST["position"]));
+	$functional = strtoupper(addslashes($_POST["functional"]));
 	if (isset($_POST["level"])) {
 		$level = $_POST["level"];
 		$category = $_POST["category"];
@@ -19,7 +19,7 @@ if (isset($_POST["addPosition"])) {
 	$salaryGrade = $_POST["salaryGrade"];
 	$salaryShedule = $_POST["salaryShedule"];
 	//check first if the post is already in the database
-	$sql = "SELECT * FROM `positiontitles` WHERE `position` = '$position' AND `functional` = '$functional'";
+	$sql = "SELECT * FROM `positiontitles` WHERE `position` = '$position' AND `functional` = '$functional' AND `salary_schedule` = '$salaryShedule'";
 	$result = $mysqli->query($sql);
 	if ($result->num_rows == 0) {
 	//If None existing Add to DB
@@ -38,7 +38,7 @@ if (isset($_POST["addPosition"])) {
 // addpos ends here
 	// load starts here
 elseif (isset($_POST["load"])){
-$sql = "SELECT * FROM `positiontitles` ORDER BY `position` ASC";
+$sql = "SELECT * FROM `positiontitles` ORDER BY `position_id` DESC";
 $result = $mysqli->query($sql);
 $counter = 0;
 while ($row = $result->fetch_assoc()) {

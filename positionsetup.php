@@ -43,8 +43,20 @@
       salaryGrade: $("#salaryGrade").val(),
       salaryShedule:$('#salaryShedule').val(),
     },function(data,status){
-      $(load);
-      $(clear);
+      if(data != 2){
+          // save msg animation start 
+          $("#saveMsg").transition({
+              animation: 'fly down',
+              onComplete: function () {
+                setTimeout(function(){ $("#saveMsg").transition('fly down'); }, 1000);
+              }
+            });
+          // save msg animation end
+        $(load);
+        $(clear);
+      } else {
+        alert('Position already existing!');
+      }
     });
   }
 
@@ -94,14 +106,6 @@
     $("#addModal").modal({
         onApprove : function() {
           $(addPos);
-        // save msg animation start 
-          $("#saveMsg").transition({
-            animation: 'fly down',
-            onComplete: function () {
-              setTimeout(function(){ $("#saveMsg").transition('fly down'); }, 1000);
-            }
-          });
-        // save msg animation end
       }
     }).modal("show");
   }
@@ -115,7 +119,7 @@
 <!-- savae msg alert end -->
 <div class="ui container">
 <!-- add pos start -->
-<div id="addModal" class="ui mini modal">
+<div id="addModal" class="ui modal" style="margin-top: 50px !important;">
   <i class="close icon"></i>
   <div class="header">
     Add New Position
