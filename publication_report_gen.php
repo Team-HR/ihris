@@ -3,6 +3,9 @@
 require "vendor/autoload.php";
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Style;
+use PhpOffice\PhpSpreadsheet\Style\Font;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 // Create new Spreadsheet object
 $spreadsheet = new Spreadsheet();
@@ -101,95 +104,8 @@ $spreadsheet->getActiveSheet()->getStyle('K'.($aRow+16).':K'.($aRow+17))->getFon
 ========================
 */
 $data = array();
-$test = array(
-    array(
-        "position_title"=>"Administrative Officer I (Supply Officer I)",
-        "item_no"=>"GSO-10.1",
-        "sg"=>"10",
-        "monthly_salary"=>"19,208.00",
-        "education"=>"Bachelor's Degree",
-        "training"=>"None Required",
-        "experience"=>"None Required",
-        "eligibility"=>"CS-Professional (2nd Level Eligibilty)",
-        "competency"=>"None",
-        "department"=>"City General Services Office",
-    ),
-    array(
-        "position_title"=>"Administrative Officer I (Supply Officer I)",
-        "item_no"=>"GSO-10.2",
-        "sg"=>"10",
-        "monthly_salary"=>"19, 208.00",
-        "education"=>"Bachelor's Degree",
-        "training"=>"None Required",
-        "experience"=>"None Required",
-        "eligibility"=>"CS-Professional (2nd Level Eligibilty)",
-        "competency"=>"None",
-        "department"=>"City General Services Office",
-    ),
-    array(
-        "position_title"=>"Engineer III",
-        "item_no"=>"GSO-22",
-        "sg"=>"19",
-        "monthly_salary"=>"44,451.00",
-        "education"=>"Bachelor's Degree in Engineering relevant to the job",
-        "training"=>"8 hours of relevant training",
-        "experience"=>"2 years of relevant experience",
-        "eligibility"=>"RA 1080",
-        "competency"=>"None",
-        "department"=>"City General Services Office",
-    ),
-    array(
-        "position_title"=>"Revenue Collection Clerk I",
-        "item_no"=>"CTO-24.1",
-        "sg"=>"5",
-        "monthly_salary"=>"13,909.00",
-        "education"=>"Completion of two years studies in college",
-        "training"=>"None Required",
-        "experience"=>"None Required",
-        "eligibility"=>"CS-Subprofessional (1st Level Eligibilty)",
-        "competency"=>"None",
-        "department"=>"City Treasurer's Office",
-    ),
-    array(
-        "position_title"=>"Revenue Collection Clerk I",
-        "item_no"=>"CTO-24.3",
-        "sg"=>"5",
-        "monthly_salary"=>"13,909.00",
-        "education"=>"Completion of two years studies in college",
-        "training"=>"None Required",
-        "experience"=>"None Required",
-        "eligibility"=>"CS-Subprofessional (1st Level Eligibilty)",
-        "competency"=>"None",
-        "department"=>"City Treasurer's Office",
-    ),
-    array(
-        "position_title"=>"Medical Officer IV",
-        "item_no"=>"CHO-8.2",
-        "sg"=>"23",
-        "monthly_salary"=>"75,359.00",
-        "education"=>"Doctor of Medicine",
-        "training"=>"4 hours of relevant training",
-        "experience"=>"1 year of relevant experience",
-        "eligibility"=>"RA 1080",
-        "competency"=>"None",
-        "department"=>"City Health Office",
-    ),
-    array(
-        "position_title"=>"Engineer III",
-        "item_no"=>"CEO-30",
-        "sg"=>"19",
-        "monthly_salary"=>"44,451.00",
-        "education"=>"Bachelor's Degree in  Engineering relevant to the job",
-        "training"=>"8 hours of relevant training",
-        "experience"=>"2 years of relevant experience",
-        "eligibility"=>"RA 1080",
-        "competency"=>"None",
-        "department"=>"City Engineering Office",
-    ),
-
-
-);
-$data = $test;
+// $test = array();
+// $data = $test;
 
 $no = 0;
 $aRow = $aRow+17;
@@ -292,12 +208,31 @@ $spreadsheet->getActiveSheet()->getStyle('A'.($aRow+7))->getFont()->setSize(11)-
 
 
 
+// $spreadsheet->getActiveSheet()->setBreak('A10', \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::BREAK_ROW);
+// $spreadsheet->getActiveSheet()->setBreak('D10', \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::BREAK_COLUMN);
+
+
+
+$spreadsheet->getActiveSheet()->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+$spreadsheet->getActiveSheet()->getPageSetup()->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A4);
+$spreadsheet->getActiveSheet()->getPageMargins()->setTop(0.43);
+$spreadsheet->getActiveSheet()->getPageMargins()->setRight(0.12);
+$spreadsheet->getActiveSheet()->getPageMargins()->setLeft(0.18);
+$spreadsheet->getActiveSheet()->getPageMargins()->setBottom(0.25);
+
+// $spreadsheet->getActiveSheet()->getPageSetup()->setPrintArea('A1:E5,G4:M20');
+
+$spreadsheet->getActiveSheet()->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 17);
+$spreadsheet->getActiveSheet()->getPageSetup()->setFitToWidth(1);
+$spreadsheet->getActiveSheet()->getPageSetup()->setFitToHeight(0);
 
 
 
 
 
 
+// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+$spreadsheet->setActiveSheetIndex(0);
 
 // Column widths
 $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(5);
@@ -308,10 +243,6 @@ $spreadsheet->getActiveSheet()->getColumnDimension('E')->setWidth(10);
 
 // Rename worksheet
 $spreadsheet->getActiveSheet()->setTitle('Sheet1');
-
-// Set active sheet index to the first sheet, so Excel opens this as the first sheet
-$spreadsheet->setActiveSheetIndex(0);
-
 // Redirect output to a client’s web browser (Xlsx)
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 header('Content-Disposition: attachment;filename="test.xlsx"');
