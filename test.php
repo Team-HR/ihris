@@ -906,7 +906,16 @@ echo count($employee_ids);
 
 foreach ($employee_ids as $old_id => $new_id){
     // echo $old_id."=>".$new_id."<br>";
-    $sql = "UPDATE `ihris`.`competency`  SET emp_id = '$new_id' WHERE emp_id = '$old_id'";
+    $sql = "UPDATE 
+    -- `ihris_new`.`pds_trainings` 
+    -- `ihris_new`.`pds_voluntaries` 
+    -- `ihris_new`.`personnelcompetencies` 
+    -- `ihris_new`.`personneltrainingslist` 
+    -- `ihris_new`.`prrlist` 
+    -- `ihris_new`.`requestandcomslist` 
+    -- `ihris_new`.`rnr_recognitions` 
+    `ihris_new`.`spms_feedbacking` 
+     SET feedbacking_emp = '$new_id' WHERE feedbacking_emp = '$old_id'";
     $mysqli->query($sql);
 }
-competency pa ko
+// competency pa ko
