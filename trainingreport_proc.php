@@ -525,7 +525,7 @@ function listEmployees($mysqli, $gender, $employmentStatus, $department_id,$year
 					<td><?=$employmentStatus?></td>
 					<td><?=$department?></td>
 					<td><?=$position?></td>
-					<td colspan="4" ><i style="color: grey;">No trainings attended<?=$yearStmnt?></i></td>
+					<td colspan="4" ><i style="color: grey;">No trainings attended nor had feedbacks<?=$yearStmnt?></i></td>
 				</tr>
 				<?php
 			}
@@ -559,9 +559,11 @@ function createTrainings($mysqli,$employees_id,$year){
 	if ($year !== "all") {
 		$filterByYear  = "AND year(personneltrainings.startDate) = '$year'";
 		$filterByYear2  = "AND year(`requestandcoms`.`fromDate`) = '$year'";
+		$filterByYear3  = "YEAR(`date_conducted`) = '$year' AND";
 	} else {
 		$filterByYear = "";
 		$filterByYear2 = "";
+		$filterByYear3 = "";
 	}
 
 
@@ -617,6 +619,28 @@ function createTrainings($mysqli,$employees_id,$year){
 
 		array_push($arrMaster, $insertArr);
 	} 
+
+
+	$sql3 = "SELECT * FROM `ihris_dev`.`spms_feedbacking` 
+	WHERE $filterByYear3 `feedbacking_emp` = '$employees_id' AND `date_conducted` <> '0000-00-00'";
+	$result2 = $mysqli->query($sql3);
+	while ($row2 = $result2->fetch_assoc()) {
+		$training = $row2["feedbacking_feedback"];
+		$startDate = $row2["date_conducted"];
+		$endDate = $row2["date_conducted"];
+		$numHours = getNumHours($startDate,$endDate);
+		$insertArr = array(
+			'training' => $training,
+			'startDate' => $startDate,
+			'endDate' => $endDate,
+			'numHours' => $numHours,
+			'remarks' => ""
+		);
+
+		array_push($arrMaster, $insertArr);
+	} 
+
+
 	usort($arrMaster, function($a, $b) {
 		return $b['startDate'] <=> $a['startDate'];
 	});
