@@ -52,7 +52,7 @@ $html = <<<EOD
         <th rowspan="2">DATE OF BIRTH</th>
         <th rowspan="2">DATE OF ORIG. APPOINTMENT</th>
         <th rowspan="2">DATE OF LAST PROMOTION</th>
-        <th rowspan="2">EMPLOYMENT STATUS</th>
+        <th rowspan="2">STATUS</th>
         <th rowspan="2">ELIGIBILITY</th>
     </tr>
     <tr>
@@ -85,16 +85,29 @@ while ($row = $result->fetch_assoc()) {
          <td>$row[area_code]</td>
          <td>$row[area_type]</td>
          <td>$row[level]</td>
-         <td style="white-space:nowrap">$row[last_name]</td>
-         <td style="white-space:nowrap">$row[first_name]</td>
-         <td style="white-space:nowrap">$row[middle_name]</td>
-         <td style="white-space:nowrap">$row[ext_name]</td>
-         <td>$row[gender]</td>
-         <td>$row[date_of_birth]</td>
-         <td>$row[date_of_orig_appointment]</td>
-         <td>$row[date_of_last_promotion]</td>
-         <td>$row[status]</td>
-         <td style="white-space:nowrap">$row[eligibility]</td>
+    EOD;
+
+if ($row["abolish"] == "1" || $row["last_name"] == "( VACANT )") {
+    $html .= <<<EOD
+        <td colspan="10" style="white-space:nowrap; text-align:center;">$row[last_name]</td>
+    EOD;
+} else {
+    $html .= <<<EOD
+        <td style="white-space:nowrap">$row[last_name]</td>
+        <td style="white-space:nowrap">$row[first_name]</td>
+        <td style="white-space:nowrap">$row[middle_name]</td>
+        <td style="white-space:nowrap">$row[ext_name]</td>
+        <td>$row[gender]</td>
+        <td>$row[date_of_birth]</td>
+        <td>$row[date_of_orig_appointment]</td>
+        <td>$row[date_of_last_promotion]</td>
+        <td>$row[status]</td>
+        <td style="white-space:nowrap">$row[eligibility]</td>
+    EOD;
+}
+    
+
+    $html .= <<<EOD
      </tr>
     EOD;
     
