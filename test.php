@@ -1,5 +1,6 @@
 <?php
 require "vendor/autoload.php";
+require "_connect.db.php";
 
 $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4-L',
     'margin_top' => 3,
@@ -41,7 +42,6 @@ $html = <<<EOD
         <th rowspan="2" style="white-space:nowrap">ITEM NO.</th>
         <th rowspan="2" style="white-space:nowrap">POSITION TITLE</th>
         <th rowspan="2" style="white-space:nowrap">FUNCTIONAL TITLE</th>
-        <th rowspan="2" text-rotate="90">LEVEL</th>
         <th rowspan="2">SG</th>
         <th colspan="2">ANNUAL SALARY</th>
         <th rowspan="2" text-rotate="90">STEP</th>
@@ -69,33 +69,37 @@ $html = <<<EOD
     <tbody>
 EOD;
 
-for($i=0; $i < 100; $i++){
+$sql = "SELECT * FROM `ihris_dev`.`plantillas` WHERE `department_id` = '21' ORDER BY `item_no` ASC";
+$result = $mysqli->query($sql);
+while ($row = $result->fetch_assoc()) {
+
     $html .= <<<EOD
     <tr>
-         <td>ACC-17</td>
-         <td style="white-space:nowrap">SUPERVISING ADMINISTRATIVE OFFICER</td>
-         <td style="white-space:nowrap">MANAGEMENT AND AUDIT ANALYST IV</td>
-         <td>1</td>
-         <td>22</td>
-         <td>762288</td>
-         <td>762288</td>
-         <td>1</td>
-         <td>7</td>
-         <td>C</td>
-         <td>A</td>
-         <td style="white-space:nowrap">RIZADA</td>
-         <td style="white-space:nowrap">MARY DECEE</td>
-         <td style="white-space:nowrap">BOLOTAOLO</td>
-         <td style="white-space:nowrap"></td>
-         <td>F</td>
-         <td>3/11/1976</td>
-         <td>5/1/2003</td>
-         <td>10/16/2019</td>
-         <td>PERMANENT</td>
-         <td style="white-space:nowrap">PD 907 (HONOR GRADUATE)</td>
+         <td>$row[item_no]</td>
+         <td style="white-space:nowrap">$row[position_title]</td>
+         <td style="white-space:nowrap">$row[functional_title]</td>
+         <td>$row[sg]</td>
+         <td>$row[authorized_salary]</td>
+         <td>$row[actual_salary]</td>
+         <td>$row[step]</td>
+         <td>$row[area_code]</td>
+         <td>$row[area_type]</td>
+         <td>$row[level]</td>
+         <td style="white-space:nowrap">$row[last_name]</td>
+         <td style="white-space:nowrap">$row[first_name]</td>
+         <td style="white-space:nowrap">$row[middle_name]</td>
+         <td style="white-space:nowrap">$row[ext_name]</td>
+         <td>$row[gender]</td>
+         <td>$row[date_of_birth]</td>
+         <td>$row[date_of_orig_appointment]</td>
+         <td>$row[date_of_last_promotion]</td>
+         <td>$row[status]</td>
+         <td style="white-space:nowrap">$row[eligibility]</td>
      </tr>
     EOD;
+    
 }
+
 
 $html .= <<<EOD
     </tbody>
