@@ -3,12 +3,19 @@ require "vendor/autoload.php";
 require "_connect.db.php";
 
 $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4-L',
-    'margin_top' => 3,
+    'margin_top' => 5,
 	'margin_left' => 3,
     'margin_right' => 3,
-    'margin_bottom' => 4,
-    'margin_footer' => 1
+    'margin_bottom' => 5,
+    'margin_footer' => 1,
+    'default_font' => 'helvetica'
 ]);
+$department_id = 21;
+$department = "";
+$sql = "SELECT `department` from `department` WHERE `department_id` = '$department_id'";
+$result = $mysqli->query($sql);
+$row = $result->fetch_assoc();
+$department = strtoupper($row["department"]);
 
 $mpdf->Bookmark('Start of the document');
 $html = <<<EOD
@@ -18,14 +25,6 @@ $html = <<<EOD
         border-collapse: collapse;
         padding-left: 5px;
     }
-    .rotate {
-        -moz-transform: rotate(-90.0deg);
-        -o-transform: rotate(-90.0deg);
-        -webkit-transform: rotate(-90.0deg);
-        filter: progid: DXImageTransform.Microsoft.BasicImage(rotation=0.083);
-        -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0.083)";
-        transform: rotate(-90.0deg);
-      }
 </style>
 
 <div style="position: fixed; left: 370px; top: 2px;">
@@ -37,7 +36,6 @@ $html = <<<EOD
     City of Bayawan</p>
 </div>
 <table>
-    
     <tr>
         <th rowspan="2" style="white-space:nowrap">ITEM NO.</th>
         <th rowspan="2" style="white-space:nowrap">POSITION TITLE</th>
@@ -52,7 +50,7 @@ $html = <<<EOD
         <th rowspan="2">DATE OF BIRTH</th>
         <th rowspan="2">DATE OF ORIG. APPOINTMENT</th>
         <th rowspan="2">DATE OF LAST PROMOTION</th>
-        <th rowspan="2">STATUS</th>
+        <th rowspan="2">EMPLOYMENT STATUS</th>
         <th rowspan="2">ELIGIBILITY</th>
     </tr>
     <tr>
@@ -65,11 +63,14 @@ $html = <<<EOD
         <th style="white-space:nowrap">MIDDLE NAME</th>
         <th style="white-space:nowrap">EXT.</th>
     </tr>
-    
+    <tr>
+        <th colspan="20" style="text-align:left;">
+            $department
+        </th>
+    </tr>
     <tbody>
 EOD;
-
-$sql = "SELECT * FROM `ihris_dev`.`plantillas` WHERE `department_id` = '21' ORDER BY `item_no` ASC";
+$sql = "SELECT * FROM `ihris_dev`.`plantillas` WHERE `department_id` = '$department_id' ORDER BY `item_no` ASC";
 $result = $mysqli->query($sql);
 while ($row = $result->fetch_assoc()) {
 
@@ -78,13 +79,13 @@ while ($row = $result->fetch_assoc()) {
          <td>$row[item_no]</td>
          <td style="white-space:nowrap">$row[position_title]</td>
          <td style="white-space:nowrap">$row[functional_title]</td>
-         <td>$row[sg]</td>
-         <td>$row[authorized_salary]</td>
-         <td>$row[actual_salary]</td>
-         <td>$row[step]</td>
-         <td>$row[area_code]</td>
-         <td>$row[area_type]</td>
-         <td>$row[level]</td>
+         <td style="text-align:center">$row[sg]</td>
+         <td style="text-align:center">$row[authorized_salary]</td>
+         <td style="text-align:center">$row[actual_salary]</td>
+         <td style="text-align:center">$row[step]</td>
+         <td style="text-align:center">$row[area_code]</td>
+         <td style="text-align:center">$row[area_type]</td>
+         <td style="text-align:center">$row[level]</td>
     EOD;
 
 if ($row["abolish"] == "1" || $row["last_name"] == "( VACANT )") {
@@ -92,17 +93,21 @@ if ($row["abolish"] == "1" || $row["last_name"] == "( VACANT )") {
         <td colspan="10" style="white-space:nowrap; text-align:center;">$row[last_name]</td>
     EOD;
 } else {
+
+    $date_of_birth = formatDate($row["date_of_birth"]);
+    $date_of_orig_appointment = formatDate($row["date_of_orig_appointment"]);
+    $date_of_last_promotion = formatDate($row["date_of_last_promotion"]);
     $html .= <<<EOD
         <td style="white-space:nowrap">$row[last_name]</td>
         <td style="white-space:nowrap">$row[first_name]</td>
         <td style="white-space:nowrap">$row[middle_name]</td>
         <td style="white-space:nowrap">$row[ext_name]</td>
-        <td>$row[gender]</td>
-        <td>$row[date_of_birth]</td>
-        <td>$row[date_of_orig_appointment]</td>
-        <td>$row[date_of_last_promotion]</td>
-        <td>$row[status]</td>
-        <td style="white-space:nowrap">$row[eligibility]</td>
+        <td style="text-align:center;">$row[gender]</td>
+        <td style="text-align:center;">$date_of_birth</td>
+        <td style="text-align:center;">$date_of_orig_appointment</td>
+        <td style="text-align:center;">$date_of_last_promotion</td>
+        <td style="text-align:center;">$row[status]</td>
+        <td style="white-space:nowrap;">$row[eligibility]</td>
     EOD;
 }
     
@@ -150,3 +155,9 @@ EOD;
   $mpdf->setFooter('Page {PAGENO} of {nb}');
 $mpdf->WriteHTML($html);
 $mpdf->Output();
+
+function formatDate($date_in){
+    if (!$date_in) return "";
+    $date=date_create($date_in);
+    return date_format($date,"m/d/Y");
+}
