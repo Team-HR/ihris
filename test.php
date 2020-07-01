@@ -27,6 +27,17 @@ $html = <<<EOD
     }
 </style>
 
+<htmlpagefooter name="myFooter2">
+    <table width="100%" style="border: none; font-size: 9px;">
+        <tr>
+            <td style="border:none;" width="33%"></td>
+            <td style="border:none;" width="33%" align="center">Page {PAGENO} of {nbpg}</td>
+            <td width="33%" style="text-align: right; border:none;">Printed on {DATE F d, Y}</td>
+        </tr>
+    </table>
+</htmlpagefooter>
+<sethtmlpagefooter name="myFooter2" value="on" />
+
 <div style="position: fixed; left: 370px; top: 2px;">
     <img src="bayawanLogo.png" width="60">
 </div>
@@ -148,11 +159,13 @@ $html .= <<<EOD
 </tr>
 </table>
 </div>
+
+
 EOD;
-  $mpdf->defaultheaderline = 0;
-  $mpdf->defaultfooterline = 0;
-  $mpdf->defaultfooterline = 0;
-  $mpdf->setFooter('Page {PAGENO} of {nb}');
+$mpdf->defaultheaderline = 0;
+$mpdf->defaultfooterline = 0;
+$mpdf->defaultfooterline = 0;
+
 $mpdf->WriteHTML($html);
 $mpdf->Output();
 
