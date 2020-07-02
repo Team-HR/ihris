@@ -24,9 +24,10 @@ $item_no = "ADM-7.1";
 $plantilla_page_no = "2";
 $approved_plantilla_year = "Approved Plantilla of Personnel CY 2017.";
 $mayor = "PRYDE HENRY A. TEVES";
+
 $date_of_signing = "June 01, 2017";
 $html = <<<EOD
-<div style="position: fixed; left: 200px; top: 35px;">
+<div style="position: fixed; left: 290px; top: 35px;">
     <img src="bayawanLogo.png" width="60">
 </div>
 <div style="border: 3px double black;">
