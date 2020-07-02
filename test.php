@@ -2,7 +2,7 @@
 require "vendor/autoload.php";
 require "_connect.db.php";
 
-$mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'B4-P',
+$mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'FOLIO-P',
     'margin_top' => 15,
 	'margin_left' => 5,
     'margin_right' => 5,
@@ -24,10 +24,10 @@ $item_no = "ADM-7.1";
 $plantilla_page_no = "2";
 $approved_plantilla_year = "Approved Plantilla of Personnel CY 2017.";
 $mayor = "PRYDE HENRY A. TEVES";
-
 $date_of_signing = "June 01, 2017";
+
 $html = <<<EOD
-<div style="position: fixed; left: 290px; top: 35px;">
+<div style="position: fixed; left: 230px; top: 35px;">
     <img src="bayawanLogo.png" width="60">
 </div>
 <div style="border: 3px double black;">
