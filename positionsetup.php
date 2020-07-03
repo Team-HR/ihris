@@ -41,7 +41,7 @@
       level: $("#levelDropDown").val(),
       category: $("#catDropDown").val(),
       salaryGrade: $("#salaryGrade").val(),
-      salaryShedule:$('#salaryShedule').val(),
+      // salaryShedule:$('#salaryShedule').val(),
     },function(data,status){
       if(data != 2){
           // save msg animation start 
@@ -78,7 +78,7 @@
           level: $("#levelDropDownEdit").val(),
           category: $("#catDropDownEdit").val(),
           salaryGrade: $("#salaryGradeEdit").val(),
-          salaryShedule:$('#salaryScheduleEdit').val(),
+          // salaryShedule:$('#salaryScheduleEdit').val(),
         }, function(data, textStatus, xhr) {
           // $(load);
           // alert(data);
@@ -171,13 +171,13 @@
       <label>Salary Grade:</label>
       <input id="salaryGrade" type="text" placeholder="SG">
     </div>
-    <div class="field">
+    <!-- <div class="field">
       <label>Salary Schedule:</label>
       <select id="salaryShedule" type="text" placeholder="Schedule">
             <option value="1">1st class</option>
             <option value="2">2nd class</option>
       </select>
-    </div>
+    </div> -->
   </div>
 </div>
   </div>
@@ -244,13 +244,13 @@
         <label>SG:</label>
         <input id="salaryGradeEdit" type="text" placeholder="sg">
       </div>
-      <div class="field">
+      <!-- <div class="field">
         <label>Schedule:</label>
         <select id="salaryScheduleEdit" type="text" placeholder="schedule">
           <option value="1">1st class</option>
           <option value="2">2nd class</option>
         </select>
-      </div>
+      </div> -->
     </div>
 </div>
 
