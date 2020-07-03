@@ -1,29 +1,6 @@
 <?php
-	// Initialize the session
-	// session_start();
-
-	// // Check if the user is logged in, if not then redirect him to login page
-	// if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
-	//   header("location: login.php");
-	//   exit;
-	// }
 	$title = "Home";
-
-?>
-<!-- <!DOCTYPE html>
-<html>
-<head>
-	<title>Home</title>
-	 <meta charset="UTF-8" name="google" value="notranslate" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-	 <meta name="viewport" content="width=device-width, initial-scale=1">
-	 <link rel="stylesheet" type="text/css" href="ui/dist/semantic.css">
-	 <script src="jquery/jquery-3.3.1.min.js"></script>
-	 <script src="ui/dist/semantic.min.js"></script>
-</head>
-<body> -->
-<?php
 	require 'header.php';
-	// require "navbar.php";
 ?>
 
 
@@ -68,23 +45,21 @@
 			</div>
 			<div class="five wide column" style="padding: 0px; margin: 0px;">
 				<!-- RECRUITMENT, SELECTION AND PLANNING START -->
-				<div style="width: 360px; height: 250px; background-color: green; margin-bottom: 5px;">
+				<div style="width: 360px; height: 300px; background-color: green; margin-bottom: 5px;">
 			<div class="ui move up reveal">
-				<div class="visible content" style="height: 250px; width: 360px;">
+				<div class="visible content" style="height: 300px; width: 360px;">
 					<!-- <p style="padding: 20px;">RECRUITMENT, SELECTION, AND PLACEMENT</p> -->
-					<img src="assets/images/rsp-cover.png" style="height: 250px; width: 360px;">
+					<img src="assets/images/rsp-cover.png" style="height: 300px; width: 410px;">
 				</div>
 				<div class="hidden content">
-					<div class="ui green segment" style="height: 250px; width: 360px;">
+					<div class="ui green segment" style="height: 300px; width: 360px;">
 						<div class="content" style="color: green; font-weight: bold; font-style: italic;">
 							RECRUITMENT, SELECTION, AND PLACEMENT (RSP)
 						</div>
 						<hr>
 						<div class="content">
 							<div class="ui animated list">
-								<!-- <a class="item" href="comparativedata.php">Comparative Assessment</a> -->
-						<!-- 		<a class="item" href="vacantpositionsetup.php">Setup Vacant Positions</a> -->
-								<!-- <a class="item" href="applicantsProfile.php">Applicants' Profile</a> -->
+								<a class="item" href="publication.php">Publication</a>
 								<a class="item" href="comparativeData.php">Comparative Data</a>
 								<a class="item" href="indTurnAroundTime.php">Individual Turn Around Time</a>
 								<a class="item" href="">System of Ranking Position</a>

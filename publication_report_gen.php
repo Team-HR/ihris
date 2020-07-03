@@ -104,8 +104,51 @@ $spreadsheet->getActiveSheet()->getStyle('K'.($aRow+16).':K'.($aRow+17))->getFon
 ========================
 */
 $data = array();
-// $test = array();
+
+require "_connect.db.php";
+$sql = "SELECT
+-- *
+positiontitles.position,
+positiontitles.functional,
+plantillas.item_no,
+plantillas.sg,
+-- 	plantillas.actual_salary,
+( plantillas.actual_salary / 12 ) AS monthly_salary,
+qualification_standards.education,
+qualification_standards.experience,
+qualification_standards.training,
+qualification_standards.eligibility,
+qualification_standards.competency,
+qualification_standards.others,
+department.department 
+FROM
+	plantillas
+	LEFT JOIN positiontitles ON plantillas.position_id = positiontitles.position_id
+	LEFT JOIN qualification_standards ON qualification_standards.position_id = positiontitles.position_id
+	LEFT JOIN department ON plantillas.department_id = department.department_id 
+WHERE
+	plantillas.incumbent IS NULL 
+ORDER BY
+	positiontitles.position ASC";
+
 // $data = $test;
+
+$result = $mysqli->query($sql);
+while($row = $result->fetch_assoc())
+{
+    $data[] = array(
+        "position_title"=>$row["position"],
+        "item_no"=>$row["item_no"],
+        "sg"=>$row["sg"],
+        "monthly_salary"=>$row["monthly_salary"],
+        "education"=>$row["education"],
+        "training"=>$row["training"],
+        "experience"=>$row["experience"],
+        "eligibility"=>$row["eligibility"],
+        "competency"=>$row["competency"],
+        "department"=>$row["department"]
+    );
+}
 
 $no = 0;
 $aRow = $aRow+17;
@@ -206,34 +249,6 @@ $spreadsheet->getActiveSheet()->setCellValue('A'.($aRow+7), 'APPLICATIONS WITH I
 // $spreadsheet->getActiveSheet()->getStyle('A'.($aRow+7))->getBorders()->getBottom()->setBorderStyle('thin');
 $spreadsheet->getActiveSheet()->getStyle('A'.($aRow+7))->getFont()->setSize(11)->setBold(true);
 
-
-
-// $spreadsheet->getActiveSheet()->setBreak('A10', \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::BREAK_ROW);
-// $spreadsheet->getActiveSheet()->setBreak('D10', \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::BREAK_COLUMN);
-
-
-
-$spreadsheet->getActiveSheet()->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
-$spreadsheet->getActiveSheet()->getPageSetup()->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A4);
-$spreadsheet->getActiveSheet()->getPageMargins()->setTop(0.43);
-$spreadsheet->getActiveSheet()->getPageMargins()->setRight(0.12);
-$spreadsheet->getActiveSheet()->getPageMargins()->setLeft(0.18);
-$spreadsheet->getActiveSheet()->getPageMargins()->setBottom(0.25);
-
-// $spreadsheet->getActiveSheet()->getPageSetup()->setPrintArea('A1:E5,G4:M20');
-
-$spreadsheet->getActiveSheet()->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 17);
-$spreadsheet->getActiveSheet()->getPageSetup()->setFitToWidth(1);
-$spreadsheet->getActiveSheet()->getPageSetup()->setFitToHeight(0);
-
-
-
-
-
-
-// Set active sheet index to the first sheet, so Excel opens this as the first sheet
-$spreadsheet->setActiveSheetIndex(0);
-
 // Column widths
 $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(5);
 $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(41);
@@ -241,11 +256,28 @@ $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(11);
 $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(10);
 $spreadsheet->getActiveSheet()->getColumnDimension('E')->setWidth(10);
 
+
+$spreadsheet->getActiveSheet()->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+$spreadsheet->getActiveSheet()->getPageSetup()->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A4);
+$spreadsheet->getActiveSheet()->getPageMargins()->setTop(0.14);
+$spreadsheet->getActiveSheet()->getPageMargins()->setRight(0.12);
+$spreadsheet->getActiveSheet()->getPageMargins()->setLeft(0.18);
+$spreadsheet->getActiveSheet()->getPageMargins()->setBottom(0.12);
+
+// $spreadsheet->getActiveSheet()->getPageSetup()->setPrintArea('A1:E5,G4:M20');
+
+$spreadsheet->getActiveSheet()->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 17);
+$spreadsheet->getActiveSheet()->getPageSetup()->setFitToWidth(1);
+$spreadsheet->getActiveSheet()->getPageSetup()->setFitToHeight(0);
+
+// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+$spreadsheet->setActiveSheetIndex(0);
+
 // Rename worksheet
 $spreadsheet->getActiveSheet()->setTitle('Sheet1');
 // Redirect output to a client’s web browser (Xlsx)
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment;filename="test.xlsx"');
+header('Content-Disposition: attachment;filename="Publication'.date('F_d_yy').'.xlsx"');
 header('Cache-Control: max-age=0');
 // If you're serving to IE 9, then the following may be needed
 header('Cache-Control: max-age=1');
