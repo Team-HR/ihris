@@ -47,6 +47,7 @@
       <a href="departmentsetup.php" class="item"><i class="icon building"></i> Departments</a>
       <a href="positionsetup.php" class="item"><i class="icon briefcase"></i> Positions</a>
       <a href="salary_adjustment.php" class="item"><i class="icon money check alternate"></i> Salary Schedule</a>
+      <a href="qualification_standards.php" class="item"><i class="icon money check alternate"></i> Qualification Standards</a>
     </div>
   </div>
 
