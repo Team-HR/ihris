@@ -41,23 +41,119 @@ require_once "header.php";
                         <div class="field">
                             <label>EDUCATION</label>
                             <textarea rows="2" v-model="education_form"></textarea>
+                            <hr>
+                            <div class="ui three cards">
+                                <div class="card" v-for="(edu,index) in education_suggest" :key="index">
+                                    <div class="content">
+                                    <div class="description">
+                                        {{ edu }}
+                                    </div>
+                                    </div>
+                                    <div class="extra content">
+                                    <span class="right floated">
+                                        <!-- <input class="ui button red" type="button" value="Close"> -->
+                                    </span>
+                                    <span>
+                                        <input class="ui button primary" type="button" value="Use" @click="use_sug(index,'education')">
+                                    </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>  
+                        <br>
                         <div class="field">
                             <label>EXPERIENCE</label>
                             <textarea rows="2" v-model="experience_form"></textarea>
+                            <hr>
+                            <div class="ui three cards">
+                                <div class="card" v-for="(exp,index) in experience_suggest" :key="index">
+                                    <div class="content">
+                                    <div class="description">
+                                        {{ exp }}
+                                    </div>
+                                    </div>
+                                    <div class="extra content">
+                                    <span class="right floated">
+                                        <!-- <input class="ui button red" type="button" value="Close"> -->
+                                    </span>
+                                    <span>
+                                        <input class="ui button primary" type="button" value="Use" @click="use_sug(index,'experience')">
+                                    </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>  
+                        <br>
                         <div class="field">
                             <label>TRAINING</label>
                             <textarea rows="2" v-model="training_form"></textarea>
+                            <hr>
+                            <div class="ui three cards">
+                                <div class="card" v-for="(train,index) in training_suggest" :key="index">
+                                    <div class="content">
+                                    <div class="description">
+                                        {{ train }}
+                                    </div>
+                                    </div>
+                                    <div class="extra content">
+                                    <span class="right floated">
+                                        <!-- <input class="ui button red" type="button" value="Close"> -->
+                                    </span>
+                                    <span>
+                                        <input class="ui button primary" type="button" value="Use" @click="use_sug(index,'training')">
+                                    </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>  
+                        <br>
                         <div class="field">
                             <label>ELIGIBILITY</label>
                             <textarea rows="2" v-model="eligibility_form"></textarea>
-                        </div>  
+                            <hr>
+                            <div class="ui three cards">
+                                <div class="card" v-for="(eli,index) in eligibility_suggest" :key="index">
+                                    <div class="content">
+                                    <div class="description">
+                                        {{ eli }}
+                                    </div>
+                                    </div>
+                                    <div class="extra content">
+                                    <span class="right floated">
+                                        <!-- <input class="ui button red" type="button" value="Close"> -->
+                                    </span>
+                                    <span>
+                                        <input class="ui button primary" type="button" value="Use" @click="use_sug(index,'eligibility')">
+                                    </span>
+                                    </div>
+                                </div>
+                            </div>    
+                        </div> 
+                        <br> 
                         <div class="field">
                             <label>COMPETENCY</label>
                             <textarea rows="2" v-model="competency_form"></textarea>
+                            <hr>
+                            <div class="ui three cards">
+                            <div class="card" v-for="(comp,index) in competency_suggest" :key="index">
+                                    <div class="content">
+                                    <div class="description">
+                                        {{ comp }}
+                                    </div>
+                                    </div>
+                                    <div class="extra content">
+                                    <span class="right floated">
+                                        <!-- <input class="ui button red" type="button" value="Close"> -->
+                                    </span>
+                                    <span>
+                                        <input class="ui button primary" type="button" value="Use" @click="use_sug(index,'competency')">
+                                    </span>
+                                    </div>
+                                </div>
+                            </div>    
                         </div>  
+                        <br>
+                        <br>
                         <input class="ui button primary" type="submit" value="SAVE">
                         <input class="ui button red" type="button" value="CANCEL" @click="closeModal()">
                     </form>
