@@ -175,60 +175,25 @@ var app = new Vue({
                 }
               }
         },education_form:function(){
-            s = 0;
-            var i = setInterval(() => {            
-                s++;
-                if(s==3){
-                    clearInterval(i);
-                    if(app.education_form.length>=3){
-                        app.finder('education',app.education_form);
-                    }
-                }
-            }, 1000);
+            if(app.education_form.length>=3){
+                app.finder('education',app.education_form);
+            }
         },experience_form:function(){
-            s = 0;
-            var i = setInterval(() => {            
-                s++;
-                if(s==3){
-                    clearInterval(i);
-                    if(app.experience_form.length>=3){
-                        app.finder('experience',app.experience_form);
-                    }
-                }
-            }, 1000);
+            if(app.experience_form.length>=3){
+                app.finder('experience',app.experience_form);
+            }
         },training_form:function(){
-            s = 0;
-            var i = setInterval(() => {            
-                s++;
-                if(s==3){
-                    clearInterval(i);
-                    if(app.training_form.length>=3){
-                        app.finder('training',app.training_form);
-                    }
-                }
-            }, 1000);
+            if(app.training_form.length>=3){
+                app.finder('training',app.training_form);
+            }
         },eligibility_form:function(){
-            s = 0;
-            var i = setInterval(() => {            
-                s++;
-                if(s==3){
-                    clearInterval(i);
-                    if(app.eligibility_form.length>=3){
-                        app.finder('eligibility',app.eligibility_form);
-                    }
-                }
-            }, 1000);
+            if(app.eligibility_form.length>=3){
+                app.finder('eligibility',app.eligibility_form);
+            }
         },competency_form:function(){
-            s = 0;
-            var i = setInterval(() => {            
-                s++;
-                if(s==3){
-                    clearInterval(i);
-                    if(app.competency_form.length>=3){
-                        app.finder('competency',app.competency_form);
-                    }
-                }
-            }, 1000);
+            if(app.competency_form.length>=3){
+                app.finder('competency',app.competency_form);
+            }
         }
     },
     mounted:function(){
