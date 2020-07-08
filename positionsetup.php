@@ -41,32 +41,19 @@
       level: $("#levelDropDown").val(),
       category: $("#catDropDown").val(),
       salaryGrade: $("#salaryGrade").val(),
-      // salaryShedule:$('#salaryShedule').val(),
     },function(data,status){
-      if(data != 2){
-          // save msg animation start 
-          $("#saveMsg").transition({
-              animation: 'fly down',
-              onComplete: function () {
-                setTimeout(function(){ $("#saveMsg").transition('fly down'); }, 1000);
-              }
-            });
-          // save msg animation end
-        $(load);
-        $(clear);
-      } else {
-        alert('Position already existing!');
-      }
+      $(load);
+      $(clear);
     });
   }
 
-  function editPos(position_id,position,functional,level,category,salaryGrade,sched){
+  function editPos(position_id,position,functional,level,category,salaryGrade){
     $("#editPosInput").val(position);
     $("#editFuncInput").val(functional);
     $("#levelDropDownEdit").val(level).change();
     $("#catDropDownEdit").val(category).change();
     $("#salaryGradeEdit").val(salaryGrade);
-    $("#salaryScheduleEdit").val(sched);
+
     $("#renameModal").modal({
       onApprove: function(){
         // alert($("#editDeptInput").val());
@@ -78,7 +65,6 @@
           level: $("#levelDropDownEdit").val(),
           category: $("#catDropDownEdit").val(),
           salaryGrade: $("#salaryGradeEdit").val(),
-          // salaryShedule:$('#salaryScheduleEdit').val(),
         }, function(data, textStatus, xhr) {
           // $(load);
           // alert(data);
@@ -106,6 +92,14 @@
     $("#addModal").modal({
         onApprove : function() {
           $(addPos);
+        // save msg animation start 
+          $("#saveMsg").transition({
+            animation: 'fly down',
+            onComplete: function () {
+              setTimeout(function(){ $("#saveMsg").transition('fly down'); }, 1000);
+            }
+          });
+        // save msg animation end
       }
     }).modal("show");
   }
@@ -119,7 +113,7 @@
 <!-- savae msg alert end -->
 <div class="ui container">
 <!-- add pos start -->
-<div id="addModal" class="ui modal" style="margin-top: 50px !important;">
+<div id="addModal" class="ui mini modal">
   <i class="close icon"></i>
   <div class="header">
     Add New Position
@@ -146,8 +140,8 @@
       <input id="inputFunc" type="text" placeholder="Functional">
     </div>
   </div>
-  <div class="two fields">
-    <div class="field">
+  <div class="fields">
+    <div class="four wide field">
       <label>Level:</label>
       <select name="level" class="ui  fluid dropdown" id="levelDropDown">
         <option value="">Level</option>
@@ -156,7 +150,7 @@
         <option value="3">3</option>
       </select>
     </div>
-    <div class="field">
+    <div class="seven wide field">
       <label>Category:</label>
       <select name="category" class="ui  fluid dropdown" id="catDropDown">
         <option value="">Category</option>
@@ -165,21 +159,13 @@
         <option value="Key Position">Key Position</option>
       </select>
     </div>
-  </div>
-  <div class="two fields">
-    <div class="field">
+    <div class="five wide field">
       <label>Salary Grade:</label>
       <input id="salaryGrade" type="text" placeholder="SG">
     </div>
-    <!-- <div class="field">
-      <label>Salary Schedule:</label>
-      <select id="salaryShedule" type="text" placeholder="Schedule">
-            <option value="1">1st class</option>
-            <option value="2">2nd class</option>
-      </select>
-    </div> -->
   </div>
 </div>
+
   </div>
   <div class="actions">
     <div class="ui deny button mini">
@@ -238,19 +224,10 @@
           <option value="Key Position">Key Position</option>
         </select>
       </div>
-    </div>
-    <div class="two fields">
-    <div class="field">
+      <div class="three wide field">
         <label>SG:</label>
         <input id="salaryGradeEdit" type="text" placeholder="sg">
       </div>
-      <!-- <div class="field">
-        <label>Schedule:</label>
-        <select id="salaryScheduleEdit" type="text" placeholder="schedule">
-          <option value="1">1st class</option>
-          <option value="2">2nd class</option>
-        </select>
-      </div> -->
     </div>
 </div>
 
@@ -329,7 +306,6 @@
       <th>Level</th>
       <th>Category</th>
       <th>Salary Grade</th>
-      <th>Schedule</th>
       <th></th>
     </tr>
   </thead>
