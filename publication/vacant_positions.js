@@ -41,21 +41,48 @@
         func = "("+str+")";
         return func;
       },
-      publish(el){
-        console.log(el);
-        $(el).addClass('loading');
-        // $("`#${el}`").addClass('loading');
-        // $.ajax({
-        //   type: "post",
-        //   url: "plantilla_vacantpos_proc.php",
-        //   data: {publish: true, plantilla_id: plantilla_id},
-        //   dataType: "json",
-        //   success: (response)=>{
-        //     // console.log(response);
-        //     // $('#'+el).removeClass('loading');
-        //   }
-        // });
+
+      publish(plantilla_id){
+        $.ajax({
+          type: "post",
+          url: "plantilla_vacantpos_proc.php",
+          data: {publish: true, plantilla_id: plantilla_id},
+          dataType: "json",
+          success: (response)=>{
+            console.log(response);
+            if(response.length === 0) this.plantillas['id_'+plantilla_id].isPublished = true;
+            this.toasted(true)
+          }
+        });
+      },
+      restore(plantilla_id){
+        $.ajax({
+          type: "post",
+          url: "plantilla_vacantpos_proc.php",
+          data: {restore: true, plantilla_id: plantilla_id},
+          dataType: "json",
+          success: (response)=>{
+            console.log(response);
+            if(response.length === 0) this.plantillas['id_'+plantilla_id].isPublished = false;
+            this.toasted(false)
+          }
+        });
+      },
+
+      toasted(published){
+        $('body').toast({
+          title: published?'Item Published!':'Item Restored!',
+          class: published?'success':'warning',
+          message: published?'Item ready for publication!':'Item ready for placement!',
+          showProgress: 'bottom',
+          classProgress: published?'green':'warning',
+          position: 'bottom right',
+          className: {
+            toast: 'ui mini message'
+          }
+        });
       }
+    
     },
     mounted(){
       this.init()

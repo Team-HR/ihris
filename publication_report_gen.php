@@ -127,7 +127,9 @@ FROM
 	LEFT JOIN qualification_standards ON qualification_standards.position_id = positiontitles.position_id
 	LEFT JOIN department ON plantillas.department_id = department.department_id 
 WHERE
-	plantillas.incumbent IS NULL 
+`plantillas`.`id` IN (SELECT `publications`.`plantilla_id` FROM publications)
+AND	plantillas.incumbent IS NULL 
+	AND plantillas.abolish IS NULL
 ORDER BY
 	positiontitles.position ASC";
 

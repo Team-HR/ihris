@@ -14,10 +14,9 @@
       <h3><i class="briefcase icon"></i>Vacant Positions</h3>
     </div>
     <div class="right item">
-      <!-- 
-      <button onclick="addModalFunc()" class="circular blue ui icon button" style="margin-right: 10px;" title="Add New Personnel">
-        <i class="icon plus circle"></i>
-      </button> -->
+      <div class="ui right input">
+        <a href="publication_report_gen.php" target="_blank" class="ui mini green button" style="margin-right: 5px;" title="Generate File for Publication"><i class="icon file excel outline"></i>Generate File</a>
+      </div>
     <div class="ui right input">
   
       <div class="ui icon fluid input" style="width: 300px;">
@@ -28,32 +27,36 @@
     </div>
   </div>
 
-<table class="ui selectable very compact small striped celled table">
+<table class="ui selectable very compact mini striped celled table">
   <thead>
     <tr>
-      <th>Item No.</th>
+      <th>#</th>
+      <th class="center aligned" width="150">Options</th>
+      <th width="80" class="center aligned">Item No.</th>
       <th>Position</th>
       <th>Department</th>
       <th class="center aligned">Vacated By</th>
-      <th class="center aligned">Options</th>
     </tr>
   </thead>
   <tbody>
-    <template v-for="(plantilla,i) in plantillas">
-      <tr>
-        <td>{{plantilla.item_no}}</td>
+    <template v-for="(plantilla,key,i) in plantillas">
+      <tr :key="plantilla.id" :class="{green: plantilla.isPublished?true:false}">
+        <td>{{i+1}}</td>
+        <td class="center aligned">
+          <button :style="{display: plantilla.isPublished?'none':''}" class="ui mini fluid primary button" @click="publish(plantilla.id)"><i class="paper plane outline icon"></i> Publish</button>
+          <div :style="{display: !plantilla.isPublished?'none':''}" class="ui animated mini green fluid button" @click="restore(plantilla.id)">
+            <div class="visible content">
+              <i class="check icon"></i> Published
+            </div>
+            <div class="hidden content">
+              <i class="undo alternative icon"></i> Restore
+            </div>
+          </div>
+        </td>
+        <td class="center aligned">{{plantilla.item_no}}</td>
         <td>{{plantilla.position}} <i style="color: grey;">{{formatFunc(plantilla.functional)}}</i></td>
         <td>{{plantilla.department}}</td>
         <td>{{plantilla.vacated_by}}</td>
-        <td class="center aligned">
-              <div :id="'publishbtn'+plantilla.id" class="ui animated green mini button" v-on:click.self="publish(event)">
-                <div class="visible content"><i class="paper plane outline icon"></i></div>
-                <div class="hidden content">
-                  <!-- Publish -->
-                  {{plantilla.item_no}}
-                </div>
-              </div>
-        </td>
       </tr>
     </template>
   </tbody>
