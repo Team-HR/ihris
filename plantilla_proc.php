@@ -5,7 +5,7 @@ require_once "_connect.db.php";
 <?php
 if(isset($_POST["load"])){
 $sql = "SELECT * FROM `plantillas_test` LEFT JOIN `department` ON `plantillas_test`.`department_id` = `department`.`department_id`  
-									LEFT JOIN `positiontitles` ON `plantillas_test`.`position_title` = `positiontitles`.`position_id` 
+									LEFT JOIN `positiontitles` ON `plantillas_test`.`position_id` = `positiontitles`.`position_id` 
 									LEFT JOIN `employees` ON `plantillas_test`.`incumbent` = `employees`.`employees_id` 
 															
 			ORDER BY `id` DESC";	
@@ -88,7 +88,7 @@ while ($row = $result->fetch_assoc()) {
 		<td><?php  echo $page_no;?></td>
 		<td><?php echo $position;?></td>
 		<td><?php echo $functional_title;?></td>
-		<td><?php echo $category[0];?></td>
+		<td><?php echo $category;?></td>
 		<td><?php echo $level;?></td>
 		<td><?php echo $sg;?></td>
 		<td>P<?php echo $sql3['monthly_salary'];?>.00</td>
