@@ -4,7 +4,8 @@
     "fomantic-ui": "^2.8.5",
     "jquery": "^3.5.1",
     "moment": "^2.24.0",
-    "vue": "^2.6.11"
+    "vue": "^2.6.11",
+    "vue-avatar-editor-improved": "^1.0.5"
   },
   "devDependencies": {
     "gulp-build": "^0.5.3"
