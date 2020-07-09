@@ -3,11 +3,11 @@ require "vendor/autoload.php";
 require "_connect.db.php";
 
 $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4-P',
-    'margin_top' => 5,
-	'margin_left' => 3,
-    'margin_right' => 3,
-    'margin_bottom' => 5,
-    'margin_footer' => 1,
+    'margin_top' => 0.5,
+	'margin_left' => 0.5,
+    'margin_right' => 0.5,
+    'margin_bottom' => 0.5,
+    'margin_footer' => 0.5,
     'default_font' => 'helvetica'
 ]);
 $department_id = 21;
@@ -26,18 +26,18 @@ $html = <<<EOD
     <table width="100%">
         <tr>
             <td align="right" width="">
-                <img src="bayawanLogo.png" width="50" style="display: inline-block">     
+                <img src="bayawanLogo.png" width="70" style="display: inline-block">     
             </td>
             <td align="center" color="darkred">
                 Republic of the Philippines<br>
                 Province of Negros Oriental<br>
-                Bayawan City
+                <strong>Bayawan City</strong>
             </td>
             <td width="10%"></td>
         </tr>
         <tr><td colspan="3" height="20"></td></tr>
         <tr>
-            <td colspan="3" align="center">
+            <td colspan="3" align="center" style="padding: none">
                 <img src="bayawanLogo.png" width="120" height="120" style="border: 1px solid black;">
             </td>
         </tr>
@@ -75,53 +75,62 @@ $html = <<<EOD
 
 
 <table width="100%">
-<tr><td colspan="3" height="25"></td></tr>
+<tr><td colspan="4" height="25"></td></tr>
 <tr>
-    <td colspan="3" align="center">Signature</td>
+    <td colspan="4" align="center">Signature</td>
 </tr>
-<tr><td colspan="3" height="25"></td></tr>
+<tr><td colspan="4" height="25"></td></tr>
 <tr>
-    <td colspan="3" align="center">Signature of Dep't Head</td>
+    <td colspan="4" align="center">Signature of Dep't Head</td>
 </tr>
-<tr><td colspan="3" height="25"></td></tr>
+<tr><td colspan="4" height="25"></td></tr>
 <tr>
-    <td colspan="3" align="center">PRYDE HENRY A. TEVES</td>
+    <td colspan="4" align="center">PRYDE HENRY A. TEVES</td>
 </tr>
 <tr>
-    <td colspan="3" align="center">City Mayor</td>
+    <td colspan="4" align="center">City Mayor</td>
 </tr>
-<tr><td colspan="3" height="10"></td></tr>
+<tr><td colspan="4" height="10"></td></tr>
 <tr>
-    <td align="right">Date of Birth:</td>
+    <td width="25"></td>
+    <td align="left">Address:</td>
+    <td width="20"></td>
+    <td align="left">San Vicente, Brgy. Villareal, Bayawan City</td>
+</tr>
+<tr>
+    <td width="25"></td>
+    <td align="left">Gender:</td>
+    <td width="20"></td>
+    <td align="left">Male</td>
+</tr>
+<tr>
+    <td width="25"></td>
+    <td align="left">Date of Birth:</td>
     <td width="20"></td>
     <td align="left">September 9, 1994</td>
 </tr>
 <tr>
-    <td align="right">Place of Birth:</td>
+    <td width="25"></td>
+    <td align="left">Place of Birth:</td>
     <td width="20"></td>
     <td align="left">Dumaguete City</td>
 </tr>
-<tr><td colspan="3" height="10"></td></tr>
-<tr><td colspan="3" align="left">VALIDATION:</td></tr>
 <tr>
-    <td align="right">Jan 01 - June 30, 2000</td>
+    <td width="25"></td>
+    <td align="left">Contact No:</td>
     <td width="20"></td>
-    <td align="left">July 01 - Dec 30, 2000</td>
+    <td align="left">09161498007</td>
 </tr>
-<tr><td colspan="3" height="10"></td></tr>
-<tr><td colspan="3" align="left">Continous Service...up to</td></tr>
+<tr><td colspan="4" height="10"></td></tr>
 <tr>
-    <td align="right">Jan 01 - June 30, 2001</td>
+    <td width="25"></td>
+    <td align="left">VALIDITY:</td>
     <td width="20"></td>
-    <td align="left">July 01 - Dec 30, 2001</td>
+    <td align="left">June 01 - July 30, 2020</td>
 </tr>
+<tr><td colspan="4" height="30"></td></tr>
 <tr>
-    <td align="right">Jan 01 - June 30, 2002</td>
-    <td width="20"></td>
-    <td align="left">July 01 - Dec 30, 2002</td>
-</tr>
-<tr>
-    <td colspan="3" align="center" color="darkred" style="font-size: 10px; padding: none;">Note: If found, please return to:<br>
+    <td colspan="4" align="center" color="black" style="font-size: 10px; padding: none;">Note: If found, please return to:<br>
         HRMO, LGU-Bayawan City<br>
         Tel. No.: (035) 531 - 0020 loc. 1065
     </td>
