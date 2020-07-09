@@ -24,13 +24,13 @@
       step=0.02
       v-model='scale'
     />
-    <input
+    <!-- <input
       type="range"
       min=1
       max=3
       step=0.02
       v-model='rotation'
-    />
+    /> -->
     <br>
     <button v-on:click="saveClicked">Click</button>
     <br>
