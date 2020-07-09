@@ -5,9 +5,38 @@
     "jquery": "^3.5.1",
     "moment": "^2.24.0",
     "vue": "^2.6.11",
+    "vue-avatar-editor": "^1.0.4",
     "vue-avatar-editor-improved": "^1.0.5"
   },
   "devDependencies": {
-    "gulp-build": "^0.5.3"
-  }
+    "css-loader": "^3.6.0",
+    "csv-loader": "^3.0.3",
+    "file-loader": "^6.0.0",
+    "gulp-build": "^0.5.3",
+    "style-loader": "^1.2.1",
+    "vue-loader": "^15.9.3",
+    "vue-template-compiler": "^2.6.11",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12",
+    "xml-loader": "^1.2.1"
+  },
+  "name": "ihris_dev",
+  "description": "**Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Team-HR/ihris.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Team-HR/ihris/issues"
+  },
+  "homepage": "https://github.com/Team-HR/ihris#readme"
 }
