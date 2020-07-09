@@ -38,7 +38,7 @@ $html = <<<EOD
         <tr><td colspan="3" height="20"></td></tr>
         <tr>
             <td colspan="3" align="center" style="padding: none">
-                <img src="bayawanLogo.png" width="120" height="120" style="border: 1px solid black;">
+                <img src="takay_1x1/000080.jpeg" width="120" height="120" style="border: 1px solid black;">
             </td>
         </tr>
         <tr><td colspan="3" height="20"></td></tr>
