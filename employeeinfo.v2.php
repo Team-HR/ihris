@@ -417,7 +417,9 @@ function update() {
                         <?php require 'pds_other_information.php'?>
                     </div>
                 </div>
-                <div class="ui tab" data-tab="service_records"></div>
+                <div class="ui tab" data-tab="service_records">
+                    <?php require_once "service_record.php"; ?>
+                </div>
                 <div class="ui tab" data-tab="leave_records"></div>
                 </>
             </div>
@@ -502,11 +504,7 @@ function update() {
 		 	$reflector = 0;
 		 	$theorist = 0;
 		 	$pragmatist = 0;
-			
-
-
 		 } else {
-
 		 	$row = $result->fetch_assoc();
 		 	$activist = $row['activist'];
 		 	$reflector = $row['reflector'];
