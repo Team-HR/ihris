@@ -1,26 +1,9 @@
+
 Date.prototype.toDateInputValue = (function() {
   var local = new Date(this);
   local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
   return local.toJSON().slice(0,10);
 });
-
- $("#disBtn").submit(function (e) {
-    e.preventDefault();
-    $("#publishBtn").attr("disabled", true);
-    return true;
-  });
-
-  $(document).ready(function() { 
-
-    $("#data_search").on("keyup", function() {
-      var value = $(this).val().toLowerCase();
-      $("#plantilla_table tr").filter(function() {
-        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-      });
-    });
-
-  });
-
 
   new Vue({
     el: "#app",
@@ -104,5 +87,13 @@ Date.prototype.toDateInputValue = (function() {
       this.init()
       this.date_of_publication = new Date().toDateInputValue()
       this.date_of_deadline = new Date().toDateInputValue()
+
+      $("#data_search").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#tableBody tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+
     }
   });

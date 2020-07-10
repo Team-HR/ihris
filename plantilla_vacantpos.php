@@ -67,7 +67,7 @@
       <th style="padding: 5px;" class="center aligned">Eligibility</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody id="tableBody">
     <template v-for="(plantilla,key,i) in plantillas">
       <tr :key="plantilla.id" :class="{green: plantilla.isPublished?true:false}">
         <td>{{i+1}}</td>
