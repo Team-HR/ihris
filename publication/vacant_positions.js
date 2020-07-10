@@ -1,3 +1,8 @@
+Date.prototype.toDateInputValue = (function() {
+  var local = new Date(this);
+  local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+  return local.toJSON().slice(0,10);
+});
 
  $("#disBtn").submit(function (e) {
     e.preventDefault();
@@ -20,7 +25,9 @@
   new Vue({
     el: "#app",
     data: {
-      plantillas: []
+      plantillas: [],
+      date_of_publication:"",
+      date_of_deadline:""
     },
     methods: {
       init(){
@@ -35,6 +42,7 @@
           async: false
         });
       },
+
       formatFunc(str){
         func = "";
         if (str == ""||str == null) return func;
@@ -81,11 +89,20 @@
             toast: 'ui mini message'
           }
         });
+      },
+      generateFile(){
+        $("#generateFileModal").modal("show").modal({
+          onApprove: ()=>{
+            var win = window.open('publication_report_gen.php?date_of_publication='+this.date_of_publication+'&date_of_deadline='+this.date_of_deadline, '_blank');
+            // win.focus();
+          },
+        });
       }
     
     },
     mounted(){
       this.init()
-      // console.log(this.plantillas);
+      this.date_of_publication = new Date().toDateInputValue()
+      this.date_of_deadline = new Date().toDateInputValue()
     }
   });

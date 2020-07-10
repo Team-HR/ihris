@@ -1,6 +1,9 @@
 <?php
-
 require "vendor/autoload.php";
+
+$date_of_publication = $_GET["date_of_publication"];
+$date_of_deadline = $_GET["date_of_deadline"];
+
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Style;
@@ -55,7 +58,7 @@ $spreadsheet->getActiveSheet()->getStyle('I'.($aRow+11).':K'.($aRow+11))->getFon
 $spreadsheet->getActiveSheet()->mergeCells('I'.($aRow+12).':K'.($aRow+12))->setCellValue('I'.($aRow+12),'HRMO IV')->getStyle('I'.($aRow+12).':K'.($aRow+12))->getAlignment()->setHorizontal('center');
 $spreadsheet->getActiveSheet()->getStyle('I'.($aRow+12).':K'.($aRow+12))->getBorders()->getTop()->setBorderStyle('thin');
 $spreadsheet->getActiveSheet()->setCellValue('I'.($aRow+14), 'Date:')->getStyle('I'.($aRow+14))->getAlignment()->setHorizontal('right');
-$spreadsheet->getActiveSheet()->mergeCells('J'.($aRow+14).':K'.($aRow+14))->setCellValue('J'.($aRow+14), date('F d, yy'));
+$spreadsheet->getActiveSheet()->mergeCells('J'.($aRow+14).':K'.($aRow+14))->setCellValue('J'.($aRow+14), date("F d, Y", strtotime($date_of_publication)));
 $spreadsheet->getActiveSheet()->getStyle('J'.($aRow+14).':K'.($aRow+14))->getFont()->setBold(true);
 $spreadsheet->getActiveSheet()->getStyle('J'.($aRow+14).':K'.($aRow+14))->getBorders()->getBottom()->setBorderStyle('thin');
 
@@ -184,7 +187,7 @@ $text = $richText->createTextRun("Interested and qualified applicants should sig
 $text->getFont()->setSize(11);
 $spreadsheet->getActiveSheet()->setCellValue('A'.($aRow+2), $richText);
 
-$spreadsheet->getActiveSheet()->setCellValue('B'.($aRow+3), date('F d, yy'))->getStyle('B'.($aRow+3))->getAlignment()->setHorizontal('center')->setVertical('center')->setWrapText(true);
+$spreadsheet->getActiveSheet()->setCellValue('B'.($aRow+3), date("F d, Y", strtotime($date_of_deadline)))->getStyle('B'.($aRow+3))->getAlignment()->setHorizontal('center')->setVertical('center')->setWrapText(true);
 $spreadsheet->getActiveSheet()->getStyle('B'.($aRow+3))->getBorders()->getBottom()->setBorderStyle('thin');
 $spreadsheet->getActiveSheet()->getStyle('B'.($aRow+3))->getFont()->setSize(12)->setBold(true);
 $spreadsheet->getActiveSheet()->getStyle('B'.($aRow+3))->getFill()
@@ -279,7 +282,7 @@ $spreadsheet->setActiveSheetIndex(0);
 $spreadsheet->getActiveSheet()->setTitle('Sheet1');
 // Redirect output to a client’s web browser (Xlsx)
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment;filename="Publication'.date('F_d_yy').'.xlsx"');
+header('Content-Disposition: attachment;filename="Publication_'.date("F-d-Y", strtotime($date_of_publication)).'.xlsx"');
 header('Cache-Control: max-age=0');
 // If you're serving to IE 9, then the following may be needed
 header('Cache-Control: max-age=1');

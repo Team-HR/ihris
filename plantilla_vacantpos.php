@@ -15,7 +15,29 @@
     </div>
     <div class="right item">
       <div class="ui right input">
-        <a href="publication_report_gen.php" target="_blank" class="ui mini green button" style="margin-right: 5px;" title="Generate File for Publication"><i class="icon file excel outline"></i>Generate File</a>
+        <!-- <a href="publication_report_gen.php" target="_blank" class="ui mini green button" style="margin-right: 5px;" title="Generate File for Publication"><i class="icon file excel outline"></i>Generate File</a> -->
+        <button class="ui mini green button" style="margin-right: 5px;" title="Generate File for Publication" @click="generateFile"><i class="icon file excel outline"></i>Generate File</button>
+<!-- generate file modal start -->
+        <div class="ui mini modal" id="generateFileModal">
+          <div class="header">Generate Publication Xlsx File</div>
+          <div class="content">
+            <div class="ui form">
+              <div class="field">
+                <label>Date of Publication:</label>
+                <input type="date" v-model="date_of_publication" value="<?= Date("yy-m-d");?>">
+              </div>
+              <div class="field">
+                <label>Requirements Submission Deadline:</label>
+                <input type="date" v-model="date_of_deadline" value="<?= Date("yy-m-d");?>">
+              </div>
+            </div>
+          </div>
+          <div class="actions">
+            <div class="ui green mini approve button">Generate</div>
+            <div class="ui red mini cancel button">Cancel</div>
+          </div>
+        </div>
+<!-- generate file modal end -->
       </div>
     <div class="ui right input">
   
