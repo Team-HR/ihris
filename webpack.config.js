@@ -2,7 +2,12 @@ const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = {
-    mode: 'production',
+  mode: 'production',
+  watch: true,
+  watchOptions: {
+    aggregateTimeout: 200,
+    poll: 1000
+  },
   entry: './src/index.js',
   output: {
     filename: 'main.js',
