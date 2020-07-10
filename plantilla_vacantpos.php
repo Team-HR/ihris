@@ -27,15 +27,22 @@
     </div>
   </div>
 
-<table class="ui selectable very compact mini striped celled table">
+<table class="ui selectable very compact mini striped structured celled table">
   <thead>
     <tr>
-      <th>#</th>
-      <th class="center aligned" width="150">Options</th>
-      <th width="80" class="center aligned">Item No.</th>
-      <th>Position</th>
-      <th>Department</th>
-      <th class="center aligned">Vacated By</th>
+      <th style="padding: 0px;" rowspan="2">#</th>
+      <th style="padding: 0px;" rowspan="2" class="center aligned" width="120">Options</th>
+      <th style="padding: 0px;" rowspan="2" width="80" class="center aligned">Item No.</th>
+      <th style="padding: 0px;" rowspan="2" class="center aligned">Position</th>
+      <th style="padding: 0px;" rowspan="2" class="center aligned">Department</th>
+      <th style="padding: 0px;" colspan="4" class="center aligned">Qualification Standards</th>
+      <th style="padding: 0px;" rowspan="2" class="center aligned">Vacated By</th>
+    </tr>
+    <tr>
+      <th style="padding: 5px;" class="center aligned">Education</th>
+      <th style="padding: 5px;" class="center aligned">Experience</th>
+      <th style="padding: 5px;" class="center aligned">Training</th>
+      <th style="padding: 5px;" class="center aligned">Eligibility</th>
     </tr>
   </thead>
   <tbody>
@@ -56,6 +63,10 @@
         <td class="center aligned">{{plantilla.item_no}}</td>
         <td>{{plantilla.position}} <i style="color: grey;">{{formatFunc(plantilla.functional)}}</i></td>
         <td>{{plantilla.department}}</td>
+        <td>{{plantilla.education}}</td>
+        <td>{{plantilla.experience}}</td>
+        <td>{{plantilla.training}}</td>
+        <td>{{plantilla.eligibility}}</td>
         <td>{{plantilla.vacated_by}}</td>
       </tr>
     </template>

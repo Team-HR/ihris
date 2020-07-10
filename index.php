@@ -59,7 +59,7 @@
 						<hr>
 						<div class="content">
 							<div class="ui animated list">
-								<a class="item" href="publication.php">Publication</a>
+								<a class="item" href="plantilla_vacantpos.php">Publication</a>
 								<a class="item" href="comparativeData.php">Comparative Data</a>
 								<a class="item" href="indTurnAroundTime.php">Individual Turn Around Time</a>
 								<a class="item" href="">System of Ranking Position</a>

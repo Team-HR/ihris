@@ -11,6 +11,7 @@ FROM
 	`plantillas_test`
 	LEFT JOIN `department` ON `plantillas_test`.`department_id` = `department`.`department_id`
 	LEFT JOIN `positiontitles` ON `plantillas_test`.`position_id` = `positiontitles`.`position_id`
+	LEFT JOIN `qualification_standards` ON `plantillas_test`.`position_id` = `qualification_standards`.`position_id`
 	LEFT JOIN `employees` ON `plantillas_test`.`incumbent` = `employees`.`employees_id` 
 	LEFT JOIN `publications` ON `plantillas_test`.`id` = `publications`.`plantilla_id`
 WHERE
@@ -32,6 +33,10 @@ while ($row = $result->fetch_assoc()) {
 			"position" => $row["position"],
 			"functional" => $row["functional"],
 			"department" => $row["department"],
+			"education" => $row["education"],
+			"experience" => $row["experience"],
+			"training" => $row["training"],
+			"eligibility" => $row["eligibility"],
 			"vacated_by" => $row["vacated_by"]
 		);
 		// $index = 'pla'.$id;
