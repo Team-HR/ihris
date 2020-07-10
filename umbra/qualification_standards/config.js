@@ -17,6 +17,12 @@ var app = new Vue({
         competency_form:"",
         edID:"",
         findValue:"",
+        education_suggest:[],
+        experience_suggest:[],
+        training_suggest:[],
+        eligibility_suggest:[],
+        competency_suggest:[],
+
     },methods:{ 
         openQsModal:function(i){
             $('#qs_modal').modal('show');
@@ -32,6 +38,12 @@ var app = new Vue({
             app.eligibility_form = ""
             app.competency_form = ""
             app.edID = ""
+            app.education_suggest=[]
+            app.experience_suggest=[]
+            app.training_suggest=[]
+            app.eligibility_suggest=[]
+            app.competency_suggest=[]
+    
         },
         closeModal:function(){
             $('#qs_modal').modal('hide');
@@ -107,7 +119,45 @@ var app = new Vue({
                     xml.open('POST','umbra/qualification_standards/config.php',false)
                     xml.send(fd)
             }
+        },finder:function(type,find){
+            var fd = new FormData();
+                fd.append('col',type);
+                fd.append('find',find);
+            var xml = new XMLHttpRequest();
+                xml.onload = function(){
+                    if(type=='education'){
+                        app.education_suggest = JSON.parse(xml.responseText);
+                    }else if(type=='experience'){
+                        app.experience_suggest = JSON.parse(xml.responseText);
+                    }else if(type=='training'){
+                        app.training_suggest = JSON.parse(xml.responseText);
+                    }else if(type=='eligibility'){
+                        app.eligibility_suggest = JSON.parse(xml.responseText);
+                    }else if(type=='competency'){
+                        app.competency_suggest = JSON.parse(xml.responseText);
+                    }
+                }
+                xml.open('POST','umbra/qualification_standards/suggestions.php',false)
+                xml.send(fd);
         },
+        use_sug:function(index,type){
+            if(type=="education"){
+                app.education_form = app.education_suggest[index];
+                app.education_suggest = [];
+            }else if(type=="experience"){
+                app.experience_form = app.experience_suggest[index];
+                app.experience_suggest = [];
+            }else if(type=="training"){
+                app.training_form = app.training_suggest[index];
+                app.training_suggest = [];
+            }else if(type=="eligibility"){
+                app.eligibility_form = app.eligibility_suggest[index];
+                app.eligibility_suggest = [];
+            }else if(type=="competency"){
+                app.competency_form = app.competency_suggest[index];
+                app.competency_suggest = [];
+            }
+        }
     },watch:{
         findValue:function(){
             var table = document.getElementById('qs_table');
@@ -124,6 +174,26 @@ var app = new Vue({
                   }
                 }
               }
+        },education_form:function(){
+            if(app.education_form.length>=3){
+                app.finder('education',app.education_form);
+            }
+        },experience_form:function(){
+            if(app.experience_form.length>=3){
+                app.finder('experience',app.experience_form);
+            }
+        },training_form:function(){
+            if(app.training_form.length>=3){
+                app.finder('training',app.training_form);
+            }
+        },eligibility_form:function(){
+            if(app.eligibility_form.length>=3){
+                app.finder('eligibility',app.eligibility_form);
+            }
+        },competency_form:function(){
+            if(app.competency_form.length>=3){
+                app.finder('competency',app.competency_form);
+            }
         }
     },
     mounted:function(){
