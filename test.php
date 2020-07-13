@@ -18,6 +18,36 @@ $row = $result->fetch_assoc();
 $department = strtoupper($row["department"]);
 
 $mpdf->Bookmark('Start of the document');
+
+$last_name = "Valencia";
+$first_name = "Franz joshua";
+$middle_name = "Alcazar";
+$ext_name = "Jr.";
+
+$upperFontSize = 30;
+$lowerFontSize = 30;
+
+$name_upper = upperNameFormatter($last_name,$ext_name);
+$name_lower = lowerNameFormatter($first_name,$middle_name);
+function upperNameFormatter($last_name="",$ext_name=""){
+    $str = $last_name.($ext_name?", ".$ext_name:"");
+    $str = str_replace(".","",$str);
+    return strtoupper($str);
+}
+function lowerNameFormatter($first_name,$middle_name){
+    $str = $first_name.($middle_name && $middle_name != "."?" ".$middle_name[0].".":"");
+    return strtoupper($str);
+}
+
+$id = "";
+$id_src = $id;
+$address = "";
+$gender = "";
+$date_of_birth = "";
+$place_of_birth = "";
+$contact_no = "";
+$validity = "";
+
 $html = <<<EOD
 
 <table width="100%" style="font-family: times; background: url(bayaswanLogo.png);background-repeat: no-repeat;background-position: center;" >
@@ -50,9 +80,9 @@ $html = <<<EOD
 <table width="100%">
     <tr>
         <td width="20"></td>
-        <td padding="20" align="center" style="border: 1px solid black; background: url(bayawanLogo.png);background-repeat: no-repeat;background-position: center;">
-            <strong color="#313182" style="font-size: 30px;">VALENCIA</strong><br>
-            <strong color="#313182" style="font-size: 30px;">FRANZ JOSHUA A.</strong>
+        <td padding="20" align="center" style="border: 1px solid black; background: url(bayaswanLogo.png);background-repeat: no-repeat;background-position: center;">
+            <strong color="#313182" style="font-size:   $upperFontSize.px;">$name_upper</strong><br>
+            <strong color="#313182" style="font-size: $lowerFontSize.px;">$name_lower</strong>
         </td>
         <td width="20"></td>
     </tr>
@@ -60,7 +90,7 @@ $html = <<<EOD
     <tr>
         <td width="20"></td>
         <td padding="20" align="center" color="darkred">
-            <strong>ID NO: 1234</strong>
+            <strong>ID NO: $id</strong>
         </td>
         <td width="20"></td>
     </tr>
@@ -95,38 +125,38 @@ $html = <<<EOD
     <td width="25"></td>
     <td align="left">Address:</td>
     <td width="20"></td>
-    <td align="left">San Vicente, Brgy. Villareal, Bayawan City</td>
+    <td align="left">$address</td>
 </tr>
 <tr>
     <td width="25"></td>
     <td align="left">Gender:</td>
     <td width="20"></td>
-    <td align="left">Male</td>
+    <td align="left">$gender</td>
 </tr>
 <tr>
     <td width="25"></td>
     <td align="left">Date of Birth:</td>
     <td width="20"></td>
-    <td align="left">September 9, 1994</td>
+    <td align="left">$date_of_birth</td>
 </tr>
 <tr>
     <td width="25"></td>
     <td align="left">Place of Birth:</td>
     <td width="20"></td>
-    <td align="left">Dumaguete City</td>
+    <td align="left">$place_of_birth</td>
 </tr>
 <tr>
     <td width="25"></td>
     <td align="left">Contact No:</td>
     <td width="20"></td>
-    <td align="left">09161498007</td>
+    <td align="left">$contact_no</td>
 </tr>
 <tr><td colspan="4" height="10"></td></tr>
 <tr>
     <td width="25"></td>
     <td align="left">VALIDITY:</td>
     <td width="20"></td>
-    <td align="left">June 01 - July 30, 2020</td>
+    <td align="left">$validity</td>
 </tr>
 <tr><td colspan="4" height="30"></td></tr>
 <tr>
