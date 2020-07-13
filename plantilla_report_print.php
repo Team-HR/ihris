@@ -93,7 +93,7 @@ ORDER BY
 `item_no` ASC";
 $result = $mysqli->query($sql);
 while ($row = $result->fetch_assoc()) {
-    $sg = "";//$row["sg"];
+    $sg = $row["salaryGrade"];
     $authorized_salary = "";
     $actual_salary = "";
     $step = $row["step"];
