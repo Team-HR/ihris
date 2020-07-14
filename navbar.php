@@ -84,7 +84,10 @@
 
     <script>
       $(document).ready(function() {
-        $('.ui .dropdown').dropdown({
+        $('#setup_dropdown').dropdown({
+          action: 'hide'
+        });
+        $('#reports_dropdown').dropdown({
           action: 'hide'
         });
       });
