@@ -33,7 +33,7 @@
         }
       }
     </style>
-    <div class="noprint ui stackable menu mini" style="margin-top: 10px; ">
+    <div class="noprint ui stackable menu" style="margin-top: 10px; ">
       <a title="Home" href="index.php" class="item" style="padding: 7px;">
         <!-- <img src="assets/ico/favicon.ico" style="width: 25px; height: 25px;"> -->
         <img src="favicon.ico" style="width: 36px; height: 36px;" title="Integrated Human Resource System">
@@ -84,7 +84,8 @@
 
     <script>
       $(document).ready(function() {
-        $('#setup_dropdown').dropdown();
-        $('#reports_dropdown').dropdown();
+        $('.ui .dropdown').dropdown({
+          action: 'hide'
+        });
       });
     </script>
