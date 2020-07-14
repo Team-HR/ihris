@@ -6,7 +6,7 @@
 
 <script type="text/javascript">
 
-    $("#editIncumbent").dropdown();
+    $("#incumbent").dropdown();
     $("#editDept").dropdown();
 
   $(document).ready(function() {
@@ -100,24 +100,24 @@
 
   }
 
-  function vacateRow(id,item_no,incumbent,endService,reason_of_vacancy,other){
+  function vacateRow(id,incumbent,position,endService,reason_of_vacancy,other){
 
-    $("#editItem").val(item_no);
-    $("#editIncumbent").val(incumbent);
+    $("#incumbent").dropdown('set selected',incumbent);
+    $("#editPos").val(position);
 
     $("#vacateModal").modal({
       onApprove: function(){
         $.post('plantilla_proc.php', {
           vacatePos: true,
           id:id,
-          incumbent: $("#editIncumbent").val(),
+          incumbent: $("#incumbent").val(),
           endService: $("#addEnd").val(),
           reason_of_vacancy: $("#addReason").val(),
           other: $("#addOther").val(),   
         }, function(data, textStatus, xhr) {
           /*optional stuff to do after success */
           $(load);
-
+          alert(data)
         });
       }
     }).modal("show");
@@ -200,12 +200,25 @@
        <div class="ui form">
 
              <div class="field">
-                  <label>Incumbent:</label>  
-                 <input type="text" id="editItem" disabled> </input>
+                  <label>Name:</label>  
+                 <select  class= "ui search dropdown" id="incumbent" disabled>
+                            <option>Employee:</option>  
+                               <?php
+                                  $result = $mysqli->query("SELECT * FROM `employees`");
+                                      while ($row = $result->fetch_assoc()) {
+                                        $employees_id = $row["employees_id"];
+                                        $firstName = $row["firstName"];
+                                        $middleName = $row["middleName"];
+                                        $lastName = $row["lastName"];
+                                        $extName = $row["extName"];
+                                              print "<option value=\"{$employees_id}\">{$firstName} {$middleName} {$lastName} {$extName}</option>";
+                                        }
+                          ?>
+                     </select>
              </div>
 
               <div class="field">
-                  <label>Position:</label>  
+                  <label>Position Vacated:</label>  
                  <input type="text" id="editPos" disabled> </input>
              </div>
 

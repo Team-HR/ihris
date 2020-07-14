@@ -28,7 +28,6 @@ $sql3 = "SELECT * FROM  `setup_salary_adjustments_setup` WHERE `parent_id` = '$s
 $sql4 = "SELECT * FROM  `plantillas` LEFT JOIN `employees` ON `plantillas`.`vacated_by`= `employees`.`employees_id` WHERE `vacated_by` ='$row[vacated_by]' ";
 	$sql4 = $mysqli->query($sql4);
 	$sql4 = $sql4 ->fetch_assoc();
-
 	$counter++;
 
 	$id = $row["id"];
@@ -38,41 +37,13 @@ $sql4 = "SELECT * FROM  `plantillas` LEFT JOIN `employees` ON `plantillas`.`vaca
 	$position= addslashes($row["position"]);
 
 
-		$firstName	=	$row["firstName"];
-		$lastName	=	$row["lastName"];
-		
-		if ($row["middleName"] == "") {
-			$middleName = "";
-		} else {
-			$middleName	= $row["middleName"];
-			$middleName = $middleName[0]." ";
-		}
-
-		$extName	=	strtoupper($row["extName"]);
-		$exts = array('JR','SR');
-
-		if (in_array(substr($extName,0,2), $exts)) {
-			$extName = " ";
-
-		} else {
-			$extName = " ".$extName;
-		}
-		
-		if (!$lastName) {
-			$lastName = "<i style='color:grey'>N/A</i>";
-		}
-		
-		$fullname = (" $firstName $middleName $lastName ").$extName;
-
-	
-					
 
 	$functional_title = addslashes($row["functional"]);
 		if (!$functional_title) {
 			$functional_title = "<i style='color:grey'>N/A</i>";
 		}
 
-		$incumbent =($row["incumbent"]);
+	$incumbent =($row["incumbent"]);
 		if ($incumbent ==  '' || $incumbent == 0) {
 			$incumbent = "<a href='appointments.php?id=$id' class='ui mini positive button' title='Appoint Employee'>Appoint</a>";
 		}
@@ -111,7 +82,7 @@ $sql4 = "SELECT * FROM  `plantillas` LEFT JOIN `employees` ON `plantillas`.`vaca
 		<td><?=$sql4['firstName']?> <?=$sql4['middleName']?> <?=$sql4['lastName']?> <?=$sql4['extName']?></td>
 		<td class=" align">
 
-		<button class="ui mini positive button" title="Vacate" onclick="vacateRow(<?php echo $id;?>)" >Vacate</button>
+		<button class="ui mini positive button" title="Vacate"  onclick="vacateRow('<?=$id?>','<?=$row["incumbent"]?>','<?=$row["position"]?>') "></i>Vacate</button>
 
 		<!-- <div class="ui mini basic icon buttons" >
 			  <button class="ui positive button" title="Edit"><i class="edit outline icon" title="Edit" style="cursor: pointer;" onclick="editRow('<?=$id?>',
@@ -137,7 +108,6 @@ $sql4 = "SELECT * FROM  `plantillas` LEFT JOIN `employees` ON `plantillas`.`vaca
 			</div>
 		
 		 -->
-
 			
 		</td>
 	</tr>
@@ -211,7 +181,7 @@ elseif (isset($_POST["editPlantilla"])) {
 										 `casual_promotion` = '$casual_promotion',
 										 `last_promotion` = '$last_promotion' ,
 										 `vacated_by` = '$vacated_by',
-										 `reason_of_vacancy` = '$reason_of_vacancy', 
+										 `reason_of_vacancy` = '$reason_of_vacancy', s
 										 `other` = '$other',
 										 `supervisor` = '$supervisor',
 										 `abolish` = '$abolish'
@@ -229,10 +199,12 @@ elseif (isset($_POST["vacatePos"])) {
 	$vacated_by = $_POST["incumbent"];
 	$reason_of_vacancy = $_POST["reason_of_vacancy"];
 	$other = $_POST["other"];
+	$endService = $_POST["endService"];
 	$sql = "UPDATE `plantillas` SET `vacated_by` = '$incumbent', 
 										 `incumbent` = '',
 										 `reason_of_vacancy` = '$reason_of_vacancy', 
-										 `other` = '$other'
+										 `other` = '$other',
+										 `endService` = '$endService'
 
 
 										 WHERE `id` = '$id'";
