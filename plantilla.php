@@ -1,35 +1,129 @@
 <?php 
   $title = "Plantilla"; 
-  require_once "header.php";
+  require_once "header.php"; 
 ?>
+
+
 <script type="text/javascript">
+
+    $("#editIncumbent").dropdown();
+    $("#editDept").dropdown();
 
   $(document).ready(function() {
     var loading = $("#loading_el");
 
-    $("#addPos").dropdown();
-    $("#addIncumbent").dropdown();
-    $("#addDept").dropdown();
-    $("#addOffice").dropdown();
-    $("#addSchedule").dropdown();
-    $("#addVacator").dropdown();
-    $("#addReason").dropdown();
-    $("#addSupervisor").dropdown();
-    $("#addAbolish").dropdown();
+    // $("#addPos").dropdown();
+    // $("#addIncumbent").dropdown();
+    // $("#addDept").dropdown();
+    // $("#addOffice").dropdown();
+    // $("#addSchedule").dropdown();
+    // $("#addVacator").dropdown();
+    //$("#addReason").dropdown();
+    // $("#addSupervisor").dropdown();
+    // $("#addAbolish").dropdown();
+
+      $("#data_search").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#plantilla_table tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
 
 
+    $(".dropdown").dropdown({
+      fullTextSearch:true,
+    })
     
     $(load);
+
   });
-  
+
+
   function load(){
     $("#tableContent").load("plantilla_proc.php",{
       load: true
     });
   }
 
+  function editRow(id,position,incumbent,department,office, step, schedule,item_no,page_no,original_appointment,last_promotion,casual_promotion,
+                      vacated_by,reason_of_vacancy,other,supervisor,abolish){
+
+    // alert(position);
+    $("#editPos").dropdown('set selected',position);
+    $("#editDept").dropdown('set selected',department);
+    $("#editIncumbent").dropdown('set selected',incumbent);
+    $("#editOffice").val(office).change();
+    $("#editStep").val(step);
+    $("#editSchedule").dropdown('set selected',schedule);
+    $("#editItem").val(item_no);
+    $("#editPage").val(page_no);
+    $("#editOriginal").val(original_appointment);
+    $("#editLastPromo").val(last_promotion);
+    $("#editCasualPromo").val(casual_promotion);
+    $("#editVacator").dropdown('set selected',vacated_by);
+    $("#editReason").dropdown('set selected',reason_of_vacancy);
+    $("#editOther").val(other);
+    $("#editSupervisor").dropdown('set selected',supervisor);
+    $("#editAbolish").dropdown('set selected',abolish);
+
+
+    $("#editModal").modal({
+      onApprove: function(){
+
+        // alert($("#editDeptInput").val());
+        $.post('plantilla_proc.php', {
+          editPlantilla: true,
+          id: id,
+          position: $("#editPos").val(),
+          incumbent: $("#editIncumbent").val(),
+          department: $("#editDept").val(),
+          office: $("#editOffice").val(),
+          schedule: $("#editSchedule").val(),
+          step: $("#editStep").val(),
+          item_no: $("#editItem").val(),
+          page_no: $("#editPage").val(),
+          original_appointment: $("#editOriginal").val(),
+          last_promotion: $("#editLastPromo").val(),
+          casual_promotion: $("#editCasualPromo").val(),
+          vacated_by: $("#editVacator").val(),
+          reason_of_vacancy: $("#editReason").val(),
+          other: $("#editOther").val(),
+          supervisor: $("#editSupervisor").val(),
+          abolish: $("#editAbolish").val(),
+
+        }, function(data, textStatus, xhr) {
+          // alert(data);
+         $(load);
+        });
+      },
+    }).modal('show');
+
+  }
+
+  function vacateRow(id,item_no,incumbent,endService,reason_of_vacancy,other){
+
+    $("#editItem").val(item_no);
+    $("#editIncumbent").val(incumbent);
+
+    $("#vacateModal").modal({
+      onApprove: function(){
+        $.post('plantilla_proc.php', {
+          vacatePos: true,
+          id:id,
+          incumbent: $("#editIncumbent").val(),
+          endService: $("#addEnd").val(),
+          reason_of_vacancy: $("#addReason").val(),
+          other: $("#addOther").val(),   
+        }, function(data, textStatus, xhr) {
+          /*optional stuff to do after success */
+          $(load);
+
+        });
+      }
+    }).modal("show");
+  }
  
-  function addPlantilla(){
+  function addPlantillas(){
     $.post("plantilla_proc.php",{
       addPlantilla:true,
       position: $("#addPos").val(),
@@ -48,12 +142,31 @@
       other: $("#addOther").val(),
       supervisor: $("#addSupervisor").val(),
       abolish: $("#addAbolish").val(),
-    },function(data,status){
+    },function(data,status){  
       $(load);
-      $(clear);
+  
     });
+  } 
+
+
+  function addModalFunc(){
+    $("#addModal").modal({
+        onApprove : function() {
+          $(addPlantillas);
+        // save msg animation start 
+          $("#saveMsg").transition({
+            animation: 'fly down',
+            onComplete: function () {
+              setTimeout(function(){ $("#saveMsg").transition('fly down'); }, 1000);
+            }
+          });
+        // save msg animation end
+      }
+    }).modal("show");
+  
   }
 
+ 
 
   function deleteRow(id){
     $("#deleteModal").modal({
@@ -68,22 +181,7 @@
       }
     }).modal("show");
   }
-    function addModalFunc(){
-    $("#addModal").modal({
-        onApprove : function() {
-          $(addPlantilla);
-        // save msg animation start 
-          $("#saveMsg").transition({
-            animation: 'fly down',
-            onComplete: function () {
-              setTimeout(function(){ $("#saveMsg").transition('fly down'); }, 1000);
-            }
-          });
-        // save msg animation end
-      }
-    }).modal("show");
   
-  }
 </script>
 <!-- savae msg alert start -->
 <div id="saveMsg" class="" style="top: 15px; display: none; position: fixed; z-index: 10; width: 100%; left: 0; text-align: center;">
@@ -91,22 +189,49 @@
     <i class="checkmark icon"></i> Added!
   </div>
 </div>
-<!-- save msg alert end -->
-<div id="editSuccess" class="" style="top: 15px; display: none; position: fixed; z-index: 10; width: 100%; left: 0; text-align: center;">
-  <div class="ui center green inverted aligned segment" style="width: 100px; margin-left: auto; margin-right: auto;">
-    <i class="checkmark icon"></i> Edit successful!
-  </div>
-</div>
 
-<!-- delete pos start -->
-<div id="deleteModal" class="ui mini modal">
+<!-- vacate modal start-->
+<div id="vacateModal" class="ui mini modal">
   <i class="close icon"></i>
   <div class="header">
-    Deleting Data
+   Vacate Position
   </div>
-  <div class="content">
-    <p>Are you sure you want to delete this data?</p>
-  </div>
+  <div class= "ui content">
+       <div class="ui form">
+
+             <div class="field">
+                  <label>Incumbent:</label>  
+                 <input type="text" id="editItem" disabled> </input>
+             </div>
+
+              <div class="field">
+                  <label>Position:</label>  
+                 <input type="text" id="editPos" disabled> </input>
+             </div>
+
+               <div class="field">
+                  <label>Last day of service:</label>
+                  <input type="date" name="" id="addEnd">
+               </div>
+      
+               <div class="field">
+                   <label>Reason of Vacancy:</label>
+                      <select id="addReason" class="ui search dropdown" >
+                        <option value="">---</option>
+                          <option value="Transfer">Transfer</option>
+                          <option value="promotion">Promotion</option>
+                          <option value="Retirement">Retirement</option>
+                          <option value="Others">Others:</option>
+                      </select>  
+               </div>
+
+               <div class="field">
+                   <label>Add other reason:</label>
+                     <input type="text" name="" id="addOther" placeholder="Add other reason..">
+             </div>
+      </div>
+
+   </div> 
   <div class="actions">
     <div class="ui deny button mini">
       No
@@ -117,7 +242,9 @@
     </div>
   </div>
 </div>
-<!-- delete pos end -->
+
+<!-- vacate modal end -->
+
 
 <!----add data---->
 <div class="ui container">
@@ -127,77 +254,71 @@
   </div>
 <div class="content">
   <div class="ui form">
-
     <div class="two fields">
-        <div class="eight wide field">
-          <label>Employee:</label>
-            <input  id="addIncumbent" list="employees" name="employees" type="text" placeholder="Select Employee">
-                  <datalist id="employees">    
-                     <?php $result = $mysqli->query("SELECT * FROM `employees`");
-                       while ($row= $result->fetch_assoc()){
+        <div class="nine wide field">
+          <label>Employee:</label> 
+             <select class= "ui search dropdown" id="addIncumbent">
+                    <option value="">Employee:</option>
+                  <?php
+                    $result = $mysqli->query("SELECT * FROM `employees`");
+                        while ($row = $result->fetch_assoc()) {
                           $employees_id = $row["employees_id"];
                           $firstName = $row["firstName"];
                           $middleName = $row["middleName"];
                           $lastName = $row["lastName"];
                           $extName = $row["extName"];
-                          
-                          print "<option value=\"{$employees_id}\"> {$firstName} {$middleName} {$lastName} {$extName}</option>";
-                        }
-                ?>
-            </datalist>
-     </div>
+                                print "<option value=\"{$employees_id}\">{$firstName} {$middleName} {$lastName} {$extName}</option>";
+                          }
+                  ?>
+              </select>
+      </div>
 
-
-         <div class="eight wide field">
-      <label>Position:</label>
-      <!-- <input id="editPosInput" type="text" placeholder="Position"> -->
-        <input  id="addPos" list="positions" name="position" type="text" placeholder="Position">
-          <datalist id="positions">
-          <?php
-          $result = $mysqli->query("SELECT * FROM `positiontitles`");
-              while ($rsltRow = $result->fetch_assoc()) {
-                      $position_id = $rsltRow["position_id"];
-                      $position = $rsltRow["position"];
-                      $functional = $rsltRow["functional"];
-                  print " <option value=\"{$position_id}\"> {$position} - {$functional}";
-                  } 
-          ?>
-          </datalist>
-    </div>
+  <div class="eight wide field">
+          <label>Position:</label>
+             <select class= "ui search dropdown" id="addPos">
+                    <option value="">Select Position</option>
+                  <?php
+                    $result = $mysqli->query("SELECT * FROM `positiontitles`");
+                        while ($row = $result->fetch_assoc()) {
+                          $position_id = $row["position"];
+                          $position = $row["position"];
+                          $functional = $row["functional"];
+                                print "<option value=\"{$position_id}\">{$position} ({$functional})</option>";
+                          }
+                  ?>
+              </select>
+</div>
 
         
   </div>
 
    <div class="two fields">
-       
-
         <div class="eight wide field">
           <label>Department:</label>
-    <input  id="addDept" list="department" name="department" type="text" placeholder="Department">
-              <datalist id="department">
-                    <option value="">Select Department</option>
+             <select class= "ui search dropdown" id="addDept">
+                    <option value="">Select Office</option>
                   <?php
                     $result = $mysqli->query("SELECT * FROM `department`");
-                      while ($row = $result->fetch_assoc()) {
+                        while ($row = $result->fetch_assoc()) {
                           $department_id = $row["department_id"];
                           $department = $row["department"];
-                              print "<option value=\"{$department_id}\">{$department}</option>";
+                                print "<option value=\"{$department_id}\">{$department}</option>";
                           }
                   ?>
-              </datalist>
+              </select>
         </div>
 
 
         <div class="eight wide field">
           <label>Office Assignment:</label>
-              <select id="addOffice">
+              <select class= "ui search dropdown" id="addOffice">
                     <option value="">Select Office</option>
                   <?php
                     $result = $mysqli->query("SELECT * FROM `department`");
-                      while ($row = $result->fetch_assoc()) {
+                        while ($row = $result->fetch_assoc()) {
                           $department_id = $row["department_id"];
                           $department = $row["department"];
-                              print "<option value=\"{$department_id}\">{$department}</option>";
+                                print "<option value=\"{$department_id}\">{$department}</option>";
                           }
                   ?>
               </select>
@@ -206,108 +327,74 @@
   </div>
 
   <div class="four fields">
-     
-        <div class="four wide field">
-         <label>Salary Shedule</label>
-           <select id="addSchedule">
-                <option value="">---</option>
-                <option value="1">1st Class</option>
-                <option value="2">2nd Class</option>
-            </select>
-      </div>
-
+  
       <div class="four wide field">
          <label>Step No.</label>
-          <input  id="addStep" type="number" placeholder="No" autocomplete="off" required="">
+          <input  id="addStep" type="number" placeholder="No">
       </div>
 
    
        <div class="four wide field">
             <label>Item No:</label>
-              <input  id="addItem" type="text" placeholder="Item No" autocomplete="off" required="">
+              <input  id="addItem" type="text" placeholder="Item No">
         </div>
         
         <div class="four wide field">
             <label>Page No:</label>
-              <input id="addPage"  type="number" placeholder="Page" autocomplete="off" required="">
+              <input id="addPage"  type="number" placeholder="Page">
         </div>
+
+
+      <div class="four wide field">
+         <label>Salary Shedule</label>
+           <select id="addSchedule" class="ui search dropdown">
+                <option value="">---</option>
+                <option value="1">1st Class</option>
+                <option value="2">2nd Class</option>
+            </select>
+      </div>
     
   </div>
 
     <div class="three fields">
       <div class="eight wide field">
       <label>Original Appointment</label>
-        <input  id="addOriginal" type="date" autocomplete="off" required="">
+        <input  id="addOriginal" type="date" >
       </div>
       <div class="eight wide field">
       <label>Last Promotion:</label>
-        <input  id="addLastPromo" type="date" autocomplete="off" required="">
+        <input  id="addLastPromo" type="date">
       </div>
       <div class="eight wide field">
       <label>Casual Promotion:</label>
-        <input  id="addCasualPromo" type="date" autocomplete="off" required="">
+        <input  id="addCasualPromo" type="date">
       </div>
   </div>
   
-  <div class="three fields">
-    <div class="eight wide field">
-          <label>Vacated by::</label>
-            <input  id="addVacator" list="employees" name="employees" type="text" placeholder="Select Vacator">
-                  <datalist id="employees">    
-                     <?php $result = $mysqli->query("SELECT * FROM `employees`");
-                       while ($row= $result->fetch_assoc()){
-                          $employees_id = $row["employees_id"];
-                          $firstName = $row["firstName"];
-                          $middleName = $row["middleName"];
-                          $lastName = $row["lastName"];
-                          $extName = $row["extName"];
-                          
-                          print "<option value=\"{$employees_id}\"> {$firstName} {$middleName} {$lastName} {$extName}</option>";
-                        }
-                ?>
-            </datalist>
-     </div>
   
-      <div class="five wide field">
-        <label>Reason of Vacancy:</label>
-            <select id="addReason">
-                <option value="">---</option>
-                <option value="transfer">Transfer</option>
-                <option value="promotion">Promotion</option>
-                <option value="retirement">Retirement</option>
-                <option value="others">Others</option>    
-            </select>
-        </div>
-
-         <div class="five wide field">
-           <label>-</label>
-             <input  id="addOther" type="text" placeholder="Other reason" >        
-          </div>
-
-  </div>
- 
   <div class="two fields">
       <div class="eight wide field">
           <label>Supervisor:</label>
-            <input  id="addSupervisor" list="employees" name="employees" type="text" placeholder="Select Supersvisor">
-                  <datalist id="employees">    
-                     <?php $result = $mysqli->query("SELECT * FROM `employees`");
-                       while ($row= $result->fetch_assoc()){
+
+            <select class= "ui search dropdown" id="addSupervisor">
+                    <option value="">Supervisor:</option>
+                  <?php
+                    $result = $mysqli->query("SELECT * FROM `employees`");
+                        while ($row = $result->fetch_assoc()) {
                           $employees_id = $row["employees_id"];
                           $firstName = $row["firstName"];
                           $middleName = $row["middleName"];
                           $lastName = $row["lastName"];
                           $extName = $row["extName"];
-                          
-                          print "<option value=\"{$employees_id}\"> {$firstName} {$middleName} {$lastName} {$extName}</option>";
-                        }
-                ?>
-            </datalist>
+                                print "<option value=\"{$employees_id}\">{$firstName} {$middleName} {$lastName} {$extName}</option>";
+                          }
+                  ?>
+              </select>
      </div>
   
         <div class="eight wide field">
           <label>Abolish ?:</label>
-            <select class="ui fluid dropdown" id="addAbolish">
+            <select class="ui search dropdown" id="addAbolish">
               <option value="">---</option>
               <option value="Yes">Yes</option>
               <option value="No">No</option>
@@ -327,165 +414,201 @@
     </div>
   </div>
 </div>
+</div>
 <!-- end of adding -->
 
 
-<!----edit--->
+<!----edit data---->
+
+<div class="ui container">
 <div id="editModal" class="ui small modal">
   <div class="header">
-  Edit Plantilla Detail
+   Edit Plantilla Detail
   </div>
 <div class="content">
   <div class="ui form">
 
     <div class="two fields">
-        <div class="eight wide field">
-          <label>Employee:</label>
-              <!-- <input id="inputPos" type="text" placeholder="Position"> -->
-                  <select id="editIncumbent">
-                     <option value="">Employee Name</option>
-                     <?php $result = $mysqli->query("SELECT * FROM `employees`");
-                       while ($row= $result->fetch_assoc()){
-                          $employees_id = $row["employees_id"];
-                          $firstName = $row["firstName"];
-                          $middleName = $row["middleName"];
-                          $lastName = $row["lastName"];
-                          $extName = $row["extName"];
-                          
-                          print "<option value=\"{$employees_id}\"> {$firstName} {$middleName} {$lastName} {$extName}</option>";
-                        }
-                ?>
-            </select>
-     </div>
+        <!-- <div class="nine wide field">
+          <label>Employee:</label>  
+         <select  class= "ui search dropdown" id="editIncumbent">
+                    <option>Employee:</option>  
+                       <?php
+                          $result = $mysqli->query("SELECT * FROM `employees`");
+                              while ($row = $result->fetch_assoc()) {
+                                $employees_id = $row["employees_id"];
+                                $firstName = $row["firstName"];
+                                $middleName = $row["middleName"];
+                                $lastName = $row["lastName"];
+                                $extName = $row["extName"];
+                                      print "<option value=\"{$employees_id}\">{$firstName} {$middleName} {$lastName} {$extName}</option>";
+                                }
+                  ?>
+             </select>
+     </div> -->
+
+   <div class="eight wide field">
+          <label>Position:</label>
+             <select class= "ui search dropdown" id="editPos">
+                    <option value="">Select Position</option>
+                      <?php
+                        $result = $mysqli->query("SELECT * FROM `positiontitles`");
+                            while ($row = $result->fetch_assoc()) {
+                              $position_id = $row["position_id"];
+                              $position = $row["position"];
+                              $functional = $row["functional"];
+                                    print "<option value=\"{$position_id}\">{$position} ({$functional})</option>";
+                              }
+                      ?>
+              </select>
+</div>
+
+
         
+  </div>
+
+   <div class="two fields">
+       
+
         <div class="eight wide field">
           <label>Department:</label>
-              <select id="editDept">
+             <select class= "ui search dropdown" id="editDept" >
                     <option value="">Select Department</option>
                   <?php
                     $result = $mysqli->query("SELECT * FROM `department`");
-                      while ($row = $result->fetch_assoc()) {
+                        while ($row = $result->fetch_assoc()) {
                           $department_id = $row["department_id"];
                           $department = $row["department"];
-                              print "<option value=\"{$department_id}\">{$department}</option>";
+                                print "<option value=\"{$department_id}\">{$department}</option>";
                           }
                   ?>
               </select>
         </div>
+
+
+        <div class="eight wide field">
+          <label>Office Assignment:</label>
+              <select class= "ui search dropdown" id="editOffice">
+                    <option value="">Select Office</option>
+                  <?php
+                    $result = $mysqli->query("SELECT * FROM `department`");
+                        while ($row = $result->fetch_assoc()) {
+                          $department_id = $row["department_id"];
+                          $department = $row["department"];
+                                print "<option value=\"{$department_id}\">{$department}</option>";
+                          }
+                  ?>
+              </select>
+        </div>
+        
   </div>
 
   <div class="four fields">
-     <div class="eight wide field">
-        <label>Position:</label>
-          <select id="editPos">
-        <!-- <input id="inputPos" type="text" placeholder="Position"> -->
-          <option value="">Position</option>
-               <?php $result = $mysqli->query("SELECT * FROM `positiontitles` ORDER BY `position` ASC");
-              while ($row= $result->fetch_assoc()){
-                    $position_id = $row["position_id"];
-                    $position = $row["position"];
-                    $salary = $row["salary"];
-                    if ($row["functional"] == "") {
-                      $functional = $row["functional"];
-                    } else {
-                      $functional = " - ".$row["functional"];
-                    }
-                   print "<option value= \"{$position_id}\">$position $functional</option>";
-                  }
-                ?>
-            </select>
-     </div>
+   
 
-      <div class="three wide field">
+      <div class="four wide field">
          <label>Step No.</label>
-          <input  id="editStep" type="number" placeholder="No" autocomplete="off" required="">
+          <input  id="editStep" type="number" placeholder="Step No">
       </div>
 
-       <div class="three wide field">
+   
+       <div class="four wide field">
             <label>Item No:</label>
-              <input  id="editItem" type="text" placeholder="Item No" autocomplete="off" required="">
+              <input  id="editItem" >
         </div>
         
-        <div class="three wide field">
+        <div class="four wide field">
             <label>Page No:</label>
-              <input id="editPage"  type="number" placeholder="Page" autocomplete="off" required="">
+              <input id="editPage"  type="number" placeholder="Page">
         </div>
+
+
+      <div class="four wide field">
+         <label>Salary Shedule</label>
+           <select id="editSchedule" class="ui search dropdown">
+                <option value="">---</option>
+                <option value="1">1st Class</option>
+                <option value="2">2nd Class</option>
+            </select>
+      </div>
     
   </div>
 
     <div class="three fields">
       <div class="eight wide field">
       <label>Original Appointment</label>
-        <input  id="editOriginal" type="date" placeholder="Select Department" autocomplete="off" required="">
+        <input  id="editOriginal" type="date">
       </div>
       <div class="eight wide field">
       <label>Last Promotion:</label>
-        <input  id="editastPromo" type="date" placeholder="Select Department" autocomplete="off" required="">
+        <input  id="editLastPromo" type="date" >
       </div>
-
+      <div class="eight wide field">
+      <label>Casual Promotion:</label>
+        <input  id="editCasualPromo" type="date">
+      </div>
   </div>
   
-  <div class="four fields">
-    <div class="seven wide field">
-      <label>Vacated By:</label>
-       
-                  <select id="editVacator">
-                      <option value="">Vacated by</option>
-                     <?php $result = $mysqli->query("SELECT * FROM `employees`");
-                    while ($row= $result->fetch_assoc()){
+  <div class="three fields">
+    <div class="eight wide field">
+          <label>Vacated by::</label>
+            <select class= "ui search dropdown" id="editVacator"> 
+                    <option value="">Employee:</option>
+                  <?php
+                    $result = $mysqli->query("SELECT * FROM `employees`");
+                        while ($row = $result->fetch_assoc()) {
                           $employees_id = $row["employees_id"];
                           $firstName = $row["firstName"];
                           $middleName = $row["middleName"];
                           $lastName = $row["lastName"];
                           $extName = $row["extName"];
-                          
-                        
-                            print "<option value=\"{$firstName} {$middleName} {$lastName} {$extName}\"> {$firstName} {$middleName} {$lastName} {$extName}</option>";
-                        }
-                ?>
-            </select>
-    </div>
-
+                                print "<option value=\"{$employees_id}\">{$firstName} {$middleName} {$lastName} {$extName}</option>";
+                          }
+                  ?>
+              </select>
+     </div>
   
-      <div class="four wide field">
+      <div class="five wide field">
         <label>Reason of Vacancy:</label>
-            <select id="editReason">
-                <option value="">---</option>
-                <option value="transfer">Transfer</option>
+            <select id="editReason" class="ui search dropdown" >
+              <option value="">---</option>
+                <option value="Transfer">Transfer</option>
                 <option value="promotion">Promotion</option>
-                <option value="retirement">Retirement</option>
-                <option value="others">Others</option>    
+                <option value="Retirement">Retirement</option>
+                <option value="Others">Others</option>
             </select>
         </div>
 
-      <div class="five wide field">
-          <label> - </label>
-            <input  id="editOther" type="text" placeholder="Other reason" >
-      </div>
+         <div class="five wide field">
+           <label>-</label>
+             <input  id="editOther" type="text" placeholder="Other reason" value="">        
+          </div>
+
   </div>
  
   <div class="two fields">
-        <div class="eight wide field">
+      <div class="eight wide field">
           <label>Supervisor:</label>
-             <select id="editSupervisor">
-                     <option value="">Supervisor</option>
-                     <?php $result = $mysqli->query("SELECT * FROM `employees`");
-                       while ($row= $result->fetch_assoc()){
+
+            <select class= "ui search dropdown" id="editSupervisor">
+                    <option value="">Supervisor:</option>
+                  <?php
+                    $result = $mysqli->query("SELECT * FROM `employees`");
+                        while ($row = $result->fetch_assoc()) {
                           $employees_id = $row["employees_id"];
                           $firstName = $row["firstName"];
                           $middleName = $row["middleName"];
                           $lastName = $row["lastName"];
                           $extName = $row["extName"];
-
-                            print "<option value=\"{$firstName} {$middleName} {$lastName} {$extName}\"> {$firstName} {$middleName} {$lastName} {$extName}</option>";
+                                print "<option value=\"{$employees_id}\">{$firstName} {$middleName} {$lastName} {$extName}</option>";
                           }
-                ?>
-            </select>
-        </div>
-
+                  ?>
+              </select>
+     </div>
+  
         <div class="eight wide field">
           <label>Abolish ?:</label>
-            <select class="ui fluid dropdown" id="editAbolish">
+            <select class="ui search dropdown" id="editAbolish">
               <option value="">---</option>
               <option value="Yes">Yes</option>
               <option value="No">No</option>
@@ -497,7 +620,7 @@
 </div>
   <div class="actions">
     <div class="ui deny button mini">
-      No
+      Cancel
     </div>
     <div class="ui blue right labeled icon approve button mini">
       Update
@@ -505,9 +628,10 @@
     </div>
   </div>
 </div>
+<!-- end of editing
 
 
-<!----end---->
+
 
 
 <!----load table data---->
@@ -553,7 +677,8 @@
       <th rowspan="2">Incumbent</th>
       <th rowspan="2">Reason of Vacancy</th>
       <th rowspan="2">Vacated By</th>
-      <th rowspan="2"></th>
+      <th rowspan="2">
+      </th>
     </tr>
       <tr style="text-align: center;">
         <th>Category</th>
