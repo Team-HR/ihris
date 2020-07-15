@@ -4,7 +4,7 @@ require_once "header.php";
 $id = $_GET["id"];
 
   
-$sql = "SELECT *,`plantillas`.`position_id` AS `post_id` ,`plantillas`.`department_id` AS `dept_id` ,`plantillas`.`office_id` AS `of_id` ,`plantillas`.`schedule` AS `sched` 
+$sql = "SELECT *,`plantillas`.`position_id` AS `post_id` ,`plantillas`.`department_id` AS `dept_id` ,`plantillas`.`schedule` AS `sched` 
 
                      FROM `plantillas` LEFT JOIN `department` ON `plantillas`.`department_id` = `department`.`department_id`  
                     LEFT JOIN `positiontitles` ON `plantillas`.`position_id` = `positiontitles`.`position_id` 
@@ -13,16 +13,11 @@ $sql = "SELECT *,`plantillas`.`position_id` AS `post_id` ,`plantillas`.`departme
 
 $result = $mysqli->query($sql);
 $counter = 0;
-
 while ($row = $result->fetch_assoc()) {
 
    $sql2 = "SELECT * FROM  `plantillas` LEFT JOIN `employees` ON `plantillas`.`vacated_by`= `employees`.`employees_id` WHERE `vacated_by` ='$row[vacated_by]' ";
     $sql2 = $mysqli->query($sql2);
     $sql2 = $sql2 ->fetch_assoc();
-
-  $sql3= "SELECT * FROM  `plantillas` LEFT JOIN `employees` ON `plantillas`.`supervisor`= `employees`.`employees_id` WHERE `supervisor` ='$row[supervisor]' ";
-    $sql3 = $mysqli->query($sql3);
-    $sql3 = $sql3 ->fetch_assoc();
 
    $sql4= "SELECT * FROM  `plantillas` LEFT JOIN `qualification_standards` ON `plantillas`.`position_id`= `qualification_standards`.`position_id` WHERE `plantillas`.`id`='$id' "; 
     $sql4 = $mysqli->query($sql4);
@@ -36,7 +31,7 @@ while ($row = $result->fetch_assoc()) {
   $level = $row["level"];
   $category = $row["category"];
   $item_no = $row["item_no"];
-  $page_no = $row["page_no"];
+  
   $position= addslashes($row["position"]);
   $functional= $row["functional"];
   $department= $row["department"];
@@ -66,13 +61,8 @@ while ($row = $result->fetch_assoc()) {
     }
     
     $fullname = (" $firstName $middleName $lastName ").$extName;
-
-   $original_appointment= $row["original_appointment"];
-   $last_promotion= $row["last_promotion"];
    $step= $row["step"];
    $vacated_by= $row["vacated_by"];
-   $reason= $row["reason_of_vacancy"];
-   $supervisor= $row["supervisor"];
    $abolish= $row["abolish"];
 
 }
@@ -202,14 +192,12 @@ function addWorkStatement(){
         </div>
 
         <div class="item">
-          <h3 style="color: white;"><?php echo $position?></h3>
+          <h4 style="color: white;"><?php echo $position?> (<?=$functional?>)</h4>
         </div>
         <!--- <h3><i class=" icon"></i> Department Setup</h3>---->
-      </div>
-
-
-      
+      </div>     
 </div>
+
 
 
 <?php 
