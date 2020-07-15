@@ -55,6 +55,7 @@ $sql4 = "SELECT * FROM  `plantillas` LEFT JOIN `employees` ON `plantillas`.`vaca
 	$category = $row["category"];
 	$sg = $row["salaryGrade"];
 	$department = $row["department"];
+	
 	$vacated_by = addslashes($row["vacated_by"]);
 		if ($vacated_by == '' || $vacated_by == 0) {
 			$vacated_by = "<i style='color:grey'>N/A</i>";
@@ -147,11 +148,24 @@ elseif (isset($_POST["vacatePos"])) {
 	$id = $_POST["id"];
 	$incumbent = $_POST["incumbent"];
 	$vacated_by = $_POST["incumbent"];
-	$sql = "UPDATE `plantillas` SET   `vacated_by` = '$incumbent', 
-										`incumbent` = ''
-										 
-										 WHERE `id` = '$id'";
+	$reason_of_vacancy = $_POST["reason_of_vacancy"];
+	$other = $_POST["other"];
+	$endService = $_POST["endService"];
+
+	$sql = "UPDATE `appointments`	SET `last_day_of_service` ='$endService',
+										`reason_of_vacancy` = '$reason_of_vacancy',
+										`reason_of_vacancy` = '$other'
+								WHERE `plantilla_id` = '$id'
+				";
+
+	$sql2 = "UPDATE `plantillas` SET   `vacated_by` = '$incumbent', 
+										`incumbent` = ''									 
+								WHERE `id` = '$id'
+		";
+
 	$mysqli->query($sql);
+	$mysqli->query($sql2);
 	echo $mysqli->error;
+
 }
 ?>

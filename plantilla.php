@@ -71,7 +71,7 @@
           abolish: $("#editAbolish").val(),
 
         }, function(data, textStatus, xhr) {
-          // alert(data);
+          alert(data);
          $(load);
           $("#updateMsg").transition({
             animation: 'fly down',
@@ -242,7 +242,7 @@
       
                <div class="field">
                    <label>Reason of Vacancy:</label>
-                      <select id="addReason" class="ui search dropdown" >
+                      <select id="addReason" class="ui search dropdown" required="">
                         <option value="">---</option>
                           <option value="Transfer">Transfer</option>
                           <option value="promotion">Promotion</option>
