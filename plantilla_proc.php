@@ -4,13 +4,52 @@ require_once "_connect.db.php";
 
 <?php
 if(isset($_POST["load"])){
-$sql = "SELECT *,`plantillas`.`position_id` AS `post_id` ,`plantillas`.`department_id` AS `dept_id` ,`plantillas`.`schedule` AS `sched` 
+/*$sql = "SELECT *,`plantillas`.`position_id` AS `post_id` ,`plantillas`.`department_id` AS `dept_id` ,`plantillas`.`schedule` AS `sched`
 
 										 FROM `plantillas` LEFT JOIN `department` ON `plantillas`.`department_id` = `department`.`department_id`  
 										 LEFT JOIN `positiontitles` ON `plantillas`.`position_id` = `positiontitles`.`position_id` 
 										 LEFT JOIN `employees` ON `plantillas`.`incumbent`= `employees`.`employees_id`
 										 LEFT JOIN appointments ON `plantillas`.`id` = `appointments`.`plantilla_id`
-			ORDER BY incumbent ASC";	
+			ORDER BY incumbent ASC ";	*/
+
+
+ $sql = "SELECT *,`plantillas`.`position_id` AS `post_id` ,`plantillas`.`department_id` AS `dept_id` ,`plantillas`.`schedule` AS `sched`,
+		
+		department.department, 
+		appointments.appointment_id, 
+		positiontitles.position, 
+		positiontitles.functional, 
+		positiontitles.`level`, 
+		positiontitles.category, 
+		positiontitles.salaryGrade, 
+		appointments.employee_id, 
+		plantillas.step, 
+		plantillas.`schedule`, 
+		employees.employees_id, 
+		employees.lastName, 
+		employees.firstName, 
+		employees.middleName, 
+		employees.extName, 
+		plantillas.incumbent
+	FROM
+		plantillas
+		LEFT JOIN
+		appointments
+		ON 
+			plantillas.incumbent = appointments.appointment_id
+		LEFT JOIN
+		department
+		ON 
+			plantillas.department_id = department.department_id
+		LEFT JOIN
+		positiontitles
+		ON 
+			plantillas.position_id = positiontitles.position_id
+		LEFT JOIN
+		employees
+		ON 
+			appointments.employee_id = employees.employees_id
+	";
 
 $result = $mysqli->query($sql);
 echo $mysqli->error;
@@ -26,18 +65,45 @@ $sql3 = "SELECT * FROM  `setup_salary_adjustments_setup` WHERE `parent_id` = '$s
 	$sql3 = $sql3 ->fetch_assoc();
 	
 
-$sql4 = "SELECT * FROM  `plantillas` LEFT JOIN `employees` ON `plantillas`.`vacated_by`= `employees`.`employees_id` WHERE `vacated_by` ='$row[vacated_by]' ";
-	$sql4 = $mysqli->query($sql4);
-	$sql4 = $sql4 ->fetch_assoc();
-	$counter++;
+$sql4 = "SELECT appointments.appointment_id, 
+		employees.employees_id, 
+		employees.firstName, 
+		employees.lastName, 
+		employees.middleName, 
+		employees.extName, 
+		appointments.reason_of_vacancy,
+		appointments.employee_id
+	FROM plantillas LEFT JOIN appointments ON plantillas.vacated_by = appointments.appointment_id LEFT JOIN employees ON appointments.employee_id = employees.employees_id
+	WHERE
+		plantillas.id = '$row[id]'";
+		$sql4 = $mysqli->query($sql4);
+		$sql4 = $sql4 ->fetch_assoc();
 
+$sql5="SELECT
+		appointments.appointment_id, 
+		employees.employees_id, 
+		employees.firstName, 
+		employees.lastName, 
+		employees.middleName, 
+		employees.extName, 
+		appointments.employee_id
+	FROM
+		plantillas LEFT JOIN appointments ON plantillas.incumbent = appointments.appointment_id	LEFT JOIN employees ON appointments.employee_id = employees.employees_id
+	WHERE
+		plantillas.id = '$row[id]'";
+	$sql5 = $mysqli->query($sql5);
+	$sql5 = $sql5 ->fetch_assoc();		
+
+	$counter++;
 	$id = $row["id"];
+	$employee_id = $sql5['employee_id'];
+	$plantilla_id = $row["id"];
 	$schedule = $row["schedule"];
 	$item_no = $row["item_no"];
 	$position= addslashes($row["position"]);
 
-	$reason_of_vacancy = addslashes($row["reason_of_vacancy"]);
-		if (!$reason_of_vacancy) {
+	$reason_of_vacancy = addslashes($sql4["reason_of_vacancy"]);
+		if ($reason_of_vacancy=='') {
 			$reason_of_vacancy = "<i style='color:grey'>N/A</i>";
 		}
 	$functional_title = addslashes($row["functional"]);
@@ -45,21 +111,21 @@ $sql4 = "SELECT * FROM  `plantillas` LEFT JOIN `employees` ON `plantillas`.`vaca
 			$functional_title = "<i style='color:grey'>N/A</i>";
 		}
 
-	$incumbent =($row["incumbent"]);
-		if ($incumbent ==  '' || $incumbent == 0) {
+	$incumbent = $sql5['firstName']." ".$sql5['middleName']." ".$sql5['lastName']." ".$sql5['extName'];
+		if (!$row['incumbent']) {
 			$incumbent = "<a href='appointments.php?id=$id' class='ui mini positive button' title='Appoint Employee'>Appoint</a>";
 		}
-
-	$firstName=$row["firstName"];
 	$level = $row["level"];
 	$category = $row["category"];
 	$sg = $row["salaryGrade"];
 	$department = $row["department"];
 	
-	$vacated_by = addslashes($row["vacated_by"]);
-		if ($vacated_by == '' || $vacated_by == 0) {
-			$vacated_by = "<i style='color:grey'>N/A</i>";
+	$vacated_by = $sql4['firstName']." ".$sql4['middleName']." ".$sql4['lastName']." ".$sql4['extName'];
+		if (!$row['vacated_by']){
+			$vacated_by = "<i style='color:grey'>N/A</i>";				
 		}
+
+
 ?>
 	<tr id="<?php echo $id."row";?>" style="text-align:center">
 		<td><a href="plantilla_detail.php?id=<?php echo $id;?>" title="View Plantilla Details"><i class=" open folder book icon"></a></i>
@@ -81,91 +147,121 @@ $sql4 = "SELECT * FROM  `plantillas` LEFT JOIN `employees` ON `plantillas`.`vaca
 		<td><?=$category?></td>
 		<td><?=$level;?></td>
 		<td><?=$sg;?></td>
-		<td>P<?=$sql3['monthly_salary'];?>.00</td>
+		<td>P<?=$sql3['monthly_salary'];?>.00</td>	
 		<td><?=$department?></td>
 		<td><?=$incumbent?></td>
 		<td><?=$reason_of_vacancy?></td>
-		<td><?=$sql4['firstName']?> <?=$sql4['middleName']?> <?=$sql4['lastName']?> <?=$sql4['extName']?></td>
-		<td class=" align">
-
-		<button class="ui mini negative button" title="Vacate"  onclick="vacateRow('<?=$id?>','<?=$row["incumbent"]?>','<?=$row["position"]?>') "></i>Vacate</button>	
+		<td><?=$vacated_by?></td>
+		<td class=" align">  
+		
+		<button class="ui mini negative button" id="bt_vacate" title="Vacate Position" onclick="vacateRow('<?=$plantilla_id?>','<?=$row["incumbent"]?>','<?=$row["position"]?>')"
+			></i>Vacate</button> 
 		</td>
-	</tr>
-<?php
+	</tr><?php
+		}
 	}
-}
-// load ends here
-elseif (isset($_POST["addPlantilla"])) {
-	$position = $_POST["position"];
-	$department = $_POST["department"];
-	$step = $_POST["step"];
-	$schedule = $_POST["schedule"];
-	$item_no = $_POST["item_no"];
-	$abolish = $_POST["abolish"];
+	
+	elseif (isset($_POST["addPlantilla"])) {
+		$position = $_POST["position"];
+		$department = $_POST["department"];
+		$step = $_POST["step"];
+		$schedule = $_POST["schedule"];
+		$item_no = $_POST["item_no"];
+		$abolish = $_POST["abolish"];
+			$sql = "INSERT INTO `plantillas` (`id`, `item_no`,  `department_id`,  `position_id`, `step`, `schedule`, `incumbent`,  `vacated_by`,  `abolish`)
 
-		$sql = "INSERT INTO `plantillas` (`id`, `item_no`,  `department_id`,  `position_id`, `step`, `schedule`, `incumbent`,  `vacated_by`,  `abolish`, `endService`)
+					VALUES (NULL, '$item_no', '$department', '$position', '$step', '$schedule', NUll,NULL, '$abolish')";
+			$mysqli->query($sql);
+	}
 
-				VALUES (NULL, '$item_no', '$department', '$position', '$step', '$schedule', NUll,NULL, '$abolish', NULL)";
+
+	// deleteRow Start
+	elseif (isset($_POST["deleteData"])) {
+		$id = $_POST["id"];
+		$sql = "DELETE FROM `plantillas` WHERE `plantillas`.`id` = '$id'";
+		$sql2 = "DELETE `reason_of_vacancy` FROM `appointments` WHERE `appointments`.`plantilla_id` = '$id'";
+		$mysqli->query($sql);
+		$mysqli->query($sql2);
+	}
+
+
+	elseif (isset($_POST["editPlantilla"])) {
+		$id = $_POST["id"];
+		$position = $_POST["position"];
+		$incumbent = $_POST["incumbent"];
+		$department = $_POST["department"];
+		$step = $_POST["step"];
+		$schedule = $_POST["schedule"];
+		$item_no = $_POST["item_no"];
+		$abolish = $_POST["abolish"];
+
+		$sql = "UPDATE `plantillas` SET `position_id` = '$position', 
+											 `incumbent` = '$incumbent',
+											 `department_id` = '$department', 		
+											 `step` = '$step',
+											 `schedule` = '$schedule', 
+											 `item_no` = '$item_no',	
+											 `abolish` = '$abolish'
+											
+											 WHERE `id` = '$id' ";
 		$mysqli->query($sql);
 		echo $mysqli->error;
-}
-
-
-// deleteRow Start
-elseif (isset($_POST["deleteData"])) {
-	$id = $_POST["id"];
-	$sql = "DELETE FROM `plantillas` WHERE `plantillas`.`id` = '$id'";
-	$mysqli->query($sql);
-}
-
-
-elseif (isset($_POST["editPlantilla"])) {
-	$id = $_POST["id"];
-	$position = $_POST["position"];
-	$incumbent = $_POST["incumbent"];
-	$department = $_POST["department"];
-	$step = $_POST["step"];
-	$schedule = $_POST["schedule"];
-	$item_no = $_POST["item_no"];
-	$abolish = $_POST["abolish"];
-
-	$sql = "UPDATE `plantillas` SET `position_id` = '$position', 
-										 `incumbent` = '$incumbent',
-										 `department_id` = '$department', 		
-										 `step` = '$step',
-										 `schedule` = '$schedule', 
-										 `item_no` = '$item_no',	
-										 `abolish` = '$abolish'
-										
-										 WHERE `id` = '$id' ";
-	$mysqli->query($sql);
-	echo $mysqli->error;
-}
+	}
 
 
 
-elseif (isset($_POST["vacatePos"])) {
-	$id = $_POST["id"];
-	$incumbent = $_POST["incumbent"];
-	$vacated_by = $_POST["incumbent"];
-	$reason_of_vacancy = $_POST["reason_of_vacancy"];
-	$other = $_POST["other"];
-	$endService = $_POST["endService"];
+	/*elseif (isset($_POST["vacatePos"])) {
+		$id = $_POST["id"];
+		$incumbent = $_POST["incumbent"];
+		$vacated_by = $_POST["incumbent"];
+		$reason_of_vacancy = $_POST["reason_of_vacancy"];
+		$other = $_POST["other"];
+		$endService = $_POST["endService"];
 
-	$sql = "UPDATE `appointments`	SET `last_day_of_service` ='$endService',
-										`reason_of_vacancy` = '$reason_of_vacancy',
-										`reason_of_vacancy` = '$other'
-								WHERE `plantilla_id` = '$id'
+		$sql = "UPDATE `plantillas` SET     `vacated_by` = '$incumbent', 
+											`incumbent` = ''	
+									WHERE `id` = '$id'
 				";
 
-	$sql2 = "UPDATE `plantillas` SET   `vacated_by` = '$incumbent', 
-										`incumbent` = ''									 
-								WHERE `id` = '$id'
-		";
 
-	$mysqli->query($sql);
-	$mysqli->query($sql2);
-	echo $mysqli->error;
+		$sql2 = "UPDATE `appointments`	SET `last_day_of_service` ='$endService',
+											`reason_of_vacancy` = '$reason_of_vacancy $other'
+											
+										WHERE `appointment_id` = '$appointment_id'
+										";
 
-}
-?>
+		$mysqli->query($sql);
+		$mysqli->query($sql2);
+	
+
+	}*/
+
+
+	elseif (isset($_POST["vacatePos"])) {
+		$plantilla_id = $_POST['plantilla_id'];
+		$incumbent = $_POST["incumbent"];
+		$vacated_by = $_POST["incumbent"];
+		$reason_of_vacancy = $_POST["reason_of_vacancy"];
+		$other = $_POST["other"];
+		$endService = $_POST["endService"];
+
+		$sql1 = "UPDATE `plantillas` SET     `vacated_by` = '$incumbent', 
+										     `incumbent` = ''	
+
+									WHERE `id` = '$plantilla_id'
+									";
+
+
+		
+		$sql2 = "UPDATE `appointments`	SET `last_day_of_service` ='$endService',
+											`reason_of_vacancy` = '$reason_of_vacancy $other',
+											`predecessor` = '$incumbent'
+
+										WHERE `appointment_id` = '$incumbent'
+										";
+
+		$mysqli->query($sql1);
+		$mysqli->query($sql2);
+		
+	}
+	?>

@@ -4,80 +4,142 @@ require_once "header.php";
 $id = $_GET["id"];
 
   
-$sql = "SELECT *,`plantillas`.`position_id` AS `post_id` ,`plantillas`.`department_id` AS `dept_id` ,`plantillas`.`schedule` AS `sched` 
-
+$sql = "SELECT *,`plantillas`.`position_id` AS `post_id` ,`plantillas`.`department_id` AS `dept_id`
                      FROM `plantillas` LEFT JOIN `department` ON `plantillas`.`department_id` = `department`.`department_id`  
-                    LEFT JOIN `positiontitles` ON `plantillas`.`position_id` = `positiontitles`.`position_id` 
-                    LEFT JOIN `employees` ON `plantillas`.`incumbent`= `employees`.`employees_id`  WHERE `id` = '$id';
-      ";  
+                     LEFT JOIN `positiontitles` ON `plantillas`.`position_id` = `positiontitles`.`position_id` 
+                     LEFT JOIN `employees` ON `plantillas`.`incumbent`= `employees`.`employees_id`
+                     LEFT JOIN appointments ON `plantillas`.`id` = `appointments`.`plantilla_id`
+                     LEFT JOIN statement_of_duties ON plantillas.position_id = statement_of_duties.position_id 
+                     WHERE `id` = '$id'";  
 
-$result = $mysqli->query($sql);
-$counter = 0;
-while ($row = $result->fetch_assoc()) {
+    $result = $mysqli->query($sql);
+    while ($row = $result->fetch_assoc()) {
 
-   $sql2 = "SELECT * FROM  `plantillas` LEFT JOIN `employees` ON `plantillas`.`vacated_by`= `employees`.`employees_id` WHERE `vacated_by` ='$row[vacated_by]' ";
-    $sql2 = $mysqli->query($sql2);
-    $sql2 = $sql2 ->fetch_assoc();
+    $sql2 = "SELECT appointments.appointment_id, 
+      employees.employees_id, 
+      employees.firstName, 
+      employees.lastName, 
+      employees.middleName, 
+      employees.extName, 
+      appointments.reason_of_vacancy,
+      appointments.employee_id
+    FROM plantillas LEFT JOIN appointments ON plantillas.vacated_by = appointments.appointment_id LEFT JOIN employees ON appointments.employee_id = employees.employees_id
+    WHERE
+      plantillas.id = '$row[id]'";
+      $sql2 = $mysqli->query($sql2);
+      $sql2 = $sql2 ->fetch_assoc();
 
-   $sql4= "SELECT * FROM  `plantillas` LEFT JOIN `qualification_standards` ON `plantillas`.`position_id`= `qualification_standards`.`position_id` WHERE `plantillas`.`id`='$id' "; 
+  $sql3="SELECT
+      appointments.appointment_id, 
+      employees.employees_id, 
+      employees.firstName, 
+      employees.lastName, 
+      employees.middleName, 
+      employees.extName,
+      appointments.employee_id
+    FROM
+      plantillas LEFT JOIN appointments ON plantillas.incumbent = appointments.appointment_id LEFT JOIN employees ON appointments.employee_id = employees.employees_id
+    WHERE
+      plantillas.id = '$row[id]'";
+    $sql3 = $mysqli->query($sql3);
+    $sql3 = $sql3 ->fetch_assoc();  
+
+
+    $sql4= "SELECT * FROM  `plantillas` LEFT JOIN `qualification_standards` ON `plantillas`.`position_id`= `qualification_standards`.`position_id` WHERE `plantillas`.`id`='$id' "; 
     $sql4 = $mysqli->query($sql4);
     $sql4 = $sql4 ->fetch_assoc();
 
-    $sql5= "SELECT *  FROM  `plantillas` LEFT JOIN `statement_of_duties` ON `plantillas`.`position_id`= `statement_of_duties`.`position_id` WHERE `plantillas`.`id`='$id' "; 
-    $sql5 = $mysqli->query($sql5);
-    $sql5 = $sql5 ->fetch_assoc();
 
-  $id = $sql5["id"];
-  $level = $row["level"];
-  $category = $row["category"];
-  $item_no = $row["item_no"];
-  
-  $position= addslashes($row["position"]);
-  $functional= $row["functional"];
-  $department= $row["department"];
- 
-    $firstName  = $row["firstName"];
-    $lastName = $row["lastName"];
-    
-    if ($row["middleName"] == "") {
-      $middleName = "";
-    } else {
-      $middleName = $row["middleName"];
-      $middleName = $middleName[0]." ";
+  $sql6="SELECT
+      employees.employees_id, 
+      employees.firstName, 
+      employees.lastName, 
+      employees.middleName, 
+      employees.extName
+    FROM
+      appointments
+      INNER JOIN
+      employees
+      ON 
+      appointments.supervisor = employees.employees_id
+      WHERE
+      appointments.appointment_id = '$row[appointment_id]'";
+    $sql6 = $mysqli->query($sql6);
+    $sql6 = $sql6 ->fetch_assoc();
+
+     $id = $row["id"];
+     $statement_id = $row["statement_id"];
+     $no = $row["no"];
+     $workstatement = $row["workstatement"];
+     $level = $row["level"];
+     $category = $row["category"];
+     $item_no = $row["item_no"];  
+     $position= addslashes($row["position"]);
+     $functional= addslashes($row["functional"]);
+     $department= $row["department"];
+     $office_assignment= $row["office_assignment"];
+     $date_of_appointment= $row["date_of_appointment"];
+     $last_day_of_service= $row["last_day_of_service"];
+     $step= $row["step"];
+     $abolish= $row["abolish"];
+     $no= $row["no"];
+     $percentile= $row["percentile"];
+     $workstatement= $row["workstatement"];
+      $reason_of_vacancy = addslashes($sql2["reason_of_vacancy"]);
+       if (!$row['reason_of_vacancy']){
+        $reason_of_vacancy = "<i style='color:grey'>N/A</i>";
+      }  
+
+       $incumbent = $sql3['firstName']." ".$sql3['middleName']." ".$sql3['lastName']." ".$sql3['extName'];
+        if (!$row['incumbent']) {
+        $incumbent = "<i style='color:grey'>N/A</i>";
+        }
+
+      $supervisor =  $sql6['firstName']." ".$sql6['middleName']." ".$sql6['lastName']." ".$sql6['extName'];
+      if (!$row['supervisor']) {
+       $supervisor = "<i style='color:grey'>N/A</i>";
+      }
+
+      $vacated_by =  $sql2['firstName']." ".$sql2['middleName']." ".$sql2['lastName']." ".$sql2['extName'];
+      if (!$row['vacated_by']){
+        $vacated_by = "<i style='color:grey'>N/A</i>";        
+     }
+     
+  }
+
+    if (isset($_POST["addDuties"])) {
+
+      $no = $_POST["no"];
+      $percentile = $_POST["percentile"];
+      $workstatement = $_POST["workstatement"];
+
+        $sql = "INSERT INTO `statement_of_duties` (`id`, `position_id`, `no`, `percentile`, `workstatement`) VALUES (NULL, NULL,  '$no', '$percentile', '$workstatement',)";
+        $mysqli->query($sql);
+        echo $mysqli->error;
     }
 
-    $extName  = strtoupper($row["extName"]);
-    $exts = array('JR','SR');
-
-    if (in_array(substr($extName,0,2), $exts)) {
-      $extName = " ";
-
-    } else {
-      $extName = " ".$extName;
+    elseif (isset($_POST["deleteData"])) {
+      $statement_id = $_POST["statement_id"];
+      $sql = "DELETE FROM `statement_of_duties` WHERE `statement_of_duties`.`statement_id` = '$statement_id'";
+      $mysqli->query($sql);
     }
-    
-    if (!$lastName) {
-      $lastName = "<i style='color:grey'>N/A</i>";
-    }
-    
-    $fullname = (" $firstName $middleName $lastName ").$extName;
-   $step= $row["step"];
-   $vacated_by= $row["vacated_by"];
-   $abolish= $row["abolish"];
 
-}
-if (isset($_POST["addWorkStatement"])) {
-
-  $no = $_POST["no"];
-  $percentile = $_POST["percentile"];
-  $workstatement = $_POST["workstatement"];
-
-    $sql5 = "INSERT INTO `statement_of_duties` (`id`, `position_id`, `no`, `percentile`, `workstatement`) VALUES (NULL, NULL,  '$no', '$percentile', '$workstatement',)";
-    $mysqli->query($sql5);
+    elseif (isset($_POST["editData"])) {
+    $statement_id = $_POST["statement_id"];
+    $no = $_POST["no"];
+    $percentile = $_POST["percentile"];
+    $workstatement = $_POST["workstatement"];
+    $sql = "UPDATE `statement_of_duties` SET
+                       `no` = '$no',  
+                       `percentile` = '$percentile',
+                       `workstatement` = '$workstatement'
+                      
+                       WHERE `statement_id` = '$statement_id' ";
+    $mysqli->query($sql);
     echo $mysqli->error;
-}
+  }
 
-?>
+    ?>
 
 
 <script type="text/javascript">
@@ -87,26 +149,24 @@ $(document).ready(function() {
 
   });
 
-function load(){
-    $("#tableContent").load("plantilla_proc.php",{
-      load: true
-    });
-  }
-function addWorkStatement(){
+ 
+  /*function addRow(){
     $.post("plantilla_detail.php",{
-      addWorkStatement:true,
+      addDuties:true,
       no: $("#addNo").val(),
       percentile: $("#addPercentile").val(),
       workstatement: $("#addWorkStatement").val(),
     },function(data,status){  
       $(load);
+      alert(data);
   
     });
   } 
-  function addModalFunc(){
+
+  function addRowFunc(){
     $("#addModal").modal({
         onApprove : function() {
-          $(addWorkStatement);
+          $(addDuties);
         // save msg animation start 
           $("#saveMsg").transition({
             animation: 'fly down',
@@ -118,70 +178,152 @@ function addWorkStatement(){
       }
     }).modal("show");
   
+  }*/
+
+  function deleteRow(statement_id){
+    $("#deleteModal").modal({
+      onApprove: function(){
+        $.post('plantilla_detail.php', {
+          deleteData: true,
+          statement_id: statement_id,
+        }, function(data, textStatus, xhr) {
+
+            window.location.reload();
+        });
+      }
+    }).modal("show");
   }
 
-   function editRow(id,position,incumbent,department,office, step, schedule,item_no,page_no,original_appointment,last_promotion,casual_promotion,
-                      vacated_by,reason_of_vacancy,other,supervisor,abolish){
 
-    // alert(position);
-    $("#editPos").dropdown('set selected',position);
-    $("#editDept").dropdown('set selected',department);
-    $("#editIncumbent").dropdown('set selected',incumbent);
-    $("#editOffice").val(office).change();
-    $("#editStep").val(step);
-    $("#editSchedule").dropdown('set selected',schedule);
-    $("#editItem").val(item_no);
-    $("#editPage").val(page_no);
-    $("#editOriginal").val(original_appointment);
-    $("#editLastPromo").val(last_promotion);
-    $("#editCasualPromo").val(casual_promotion);
-    $("#editVacator").dropdown('set selected',vacated_by);
-    $("#editReason").dropdown('set selected',reason_of_vacancy);
-    $("#editOther").val(other);
-    $("#editSupervisor").dropdown('set selected',supervisor);
-    $("#editAbolish").dropdown('set selected',abolish);
-
-
+ function editRow(statement_id,no,percentile,workstatement){
+  
+    $("#editNo").val(no);
+    $("#editPercentile").val(percentile);
+    $("#editWorkstatement").val(workstatement);
     $("#editModal").modal({
       onApprove: function(){
-
-        // alert($("#editDeptInput").val());
-        $.post('plantilla_proc.php', {
-          editPlantilla: true,
-          id: id,
-          position: $("#editPos").val(),
-          incumbent: $("#editIncumbent").val(),
-          department: $("#editDept").val(),
-          office: $("#editOffice").val(),
-          schedule: $("#editSchedule").val(),
-          step: $("#editStep").val(),
-          item_no: $("#editItem").val(),
-          page_no: $("#editPage").val(),
-          original_appointment: $("#editOriginal").val(),
-          last_promotion: $("#editLastPromo").val(),
-          casual_promotion: $("#editCasualPromo").val(),
-          vacated_by: $("#editVacator").val(),
-          reason_of_vacancy: $("#editReason").val(),
-          other: $("#editOther").val(),
-          supervisor: $("#editSupervisor").val(),
-          abolish: $("#editAbolish").val(),
-
+        $.post('plantilla_detail.php', {
+          editData: true,
+          statement_id: statement_id,
+          no: $("#editNo").val(),
+          percentile: $("#editPercentile").val(),
+          workstatement: $("#editWorkstatement").val(),
         }, function(data, textStatus, xhr) {
-          // alert(data);
-         $(load);
+           window.location.reload();
         });
-      },
-    }).modal('show');
-
+      }
+    }).modal("show");
   }
-
+  
 </script>
-
+<!-- alerts start -->
 <div id="saveMsg" class="" style="top: 15px; display: none; position: fixed; z-index: 10; width: 100%; left: 0; text-align: center;">
-  <div class="ui center green inverted aligned segment" style="width: 100px; margin-left: auto; margin-right: auto;">
-    <i class="checkmark icon"></i> Added!
+   <div class="ui center green inverted aligned segment" style="width: 100px; margin-left: auto; margin-right: auto;">
+    Added
+    </div>
+</div>
+<!-- end alerts -->
+
+<!-- delete pos start -->
+<div id="deleteModal" class="ui mini modal">
+    <i class="close icon"></i>
+    <div class="header">
+      Delete Statement of Duties
+    </div>
+    <div class="content">
+      <p>Are you sure you want to delete this details?</p>
+    </div>
+    <div class="actions">
+        <div class="ui deny button mini">
+          No
+        </div>
+        <div class="ui blue right labeled icon approve button mini">
+          Yes
+          <i class="checkmark icon"></i>
+        </div>
+    </div>
+</div>
+<!-- delete pos end -->
+
+<!-- 
+<!----add data---->
+<div class="ui container">
+  <div id="addModal" class="ui mini modal">
+    <div class="header">
+    Add Statement of Duties
+    </div>
+
+      <div class="content">
+          <div class="ui form">   
+               <input  id="addPos">
+              <div class="two fields">
+                  <div class="field">
+
+                     <label>No.</label>
+                      <input  id="addNo" type="number">
+                  </div>
+                   <div class="field">
+                        <label>Percentile:</label>
+                          <input  id="addPercentile" >
+                    </div>   
+              </div>  
+            <div class="ui corner labeled input">
+                <textarea style="width:320px" id="addWorkStatement"></textarea>
+            </div>
+          </div>
+      </div>
+
+    <div class="actions">
+      <div class="ui deny button mini">
+        Cancel
+      </div>
+      <div class="ui blue right labeled icon approve button mini">
+        Add
+        <i class="checkmark icon"></i>
+      </div>
+    </div>
   </div>
 </div>
+<!-- end of adding ---->
+<!----edit data---->
+<div class="ui container">
+  <div id="editModal" class="ui mini modal">
+    <div class="header">
+     Edit Statement of Duties
+    </div>
+
+      <div class="content">
+          <div class="ui form">   
+              <div class="two fields">
+                  <div class="field">
+
+                     <label>No.</label>
+                      <input  id="editNo" type="number">
+                  </div>
+                   <div class="field">
+                        <label>Percentile:</label>
+                          <input  id="editPercentile" >
+                    </div>   
+              </div>  
+            <div class="ui corner labeled input">
+                <textarea style="width:320px" id="editWorkstatement"></textarea>
+            </div>
+          </div>
+      </div>
+
+    <div class="actions">
+      <div class="ui deny button mini">
+        Cancel
+      </div>
+      <div class="ui blue right labeled icon approve button mini">
+        Update
+        <i class="checkmark icon"></i>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end of editing ---->
+
 
 <div class="ui container">
     <div class="ui borderless blue inverted mini menu">
@@ -198,7 +340,122 @@ function addWorkStatement(){
       </div>     
 </div>
 
+<div class="ui container">
 
+<style type="text/css">
+  .actives{
+    background-color: #f2f2f2;
+    color: #4075a9;
+  }
+</style>
+    <table class="ui very compact small celled table" style="font-size: 12px;">
+      <tr>
+        <td class="actives">DEPARTMENT</td>
+        <td ><?=$department?></td>
+        <td class="actives">STEP NO</td>
+        <td><?=$step?></td>
+        <td class="actives">ORIGINAL APPOINTMENT</td>
+        <td><?=$date_of_appointment?></td>
+      </tr>
+      <tr>
+        <td class="actives">OFFICE ASSIGNMENT</td>
+        <td><?=$office_assignment?></td>
+        <td class="actives">PAGE NO</td>
+        <td><></td>
+        <td class="actives">LAST DATE OF PROMOTION</td>
+        <td><?=$last_day_of_service?></td>
+      </tr>
+      <tr>
+        <td class="actives">INCUMBENT EMPLOYEE</td>
+        <td><?=$incumbent?></td>
+        <td class="actives">LEVEL / CATEGORY</td>
+        <td><?=$category?> / <?=$level?></td>
+        <td class="actives">VACATED BY</td>
+        <td><?=$vacated_by?></td>
+      </tr>
+      <tr>
+        <td class="actives">REASON OF VACANCY</td>
+        <td><?=$reason_of_vacancy?></td>
+        <td class="actives">SUPERVISOR</td>
+        <td><?=$supervisor?></td>
+        <td class="actives">ABOLISH</td>
+        <td><?=$abolish?></td>
+      </tr>
+    </table>
+  </div>
+<br><br>
+
+<div class="ui container">
+
+    <div class="ui top attached tabular menu" id="tabs">
+      <a class="item active" data-tab="statement">STATEMENT OF DUTIES</a>
+      <a class="item" data-tab="qualification">QUALIFICATION STANDARDS</a>
+    </div>
+    <div class="ui bottom attached segment tab active" data-tab="statement">
+      <div id="tableContent">
+         <div class="ui form">
+             <table class="ui very compact small celled table" style="font-size: 12px;text-align:center" id="duties_table" >
+               <tbody>         
+                    <tr> 
+                        <td><b>No<b></td>
+                        <td><b>Percentage</b></td>
+                        <td><b>Duties</b></td>
+                        <td><b>Options</b></td>
+                       <tr id="<?php echo $id."row";?>">
+                           <td><?=$no?>.)</td>
+                           <td><?=$percentile?>%</td>
+                           <td><?=$workstatement?></td>
+                           <td class="align">  
+                              <center><button class=" ui positive mini button" onclick="editRow('<?=$statement_id?>',
+                                                        '<?=$no?>',
+                                                        '<?=$percentile?>',
+                                                        '<?=$workstatement?>')
+                                                        "><i class=" edit outline icon" title="Edit" style="cursor: pointer;"></i>Edit</button> 
+                              <button class="ui negative mini button"  onclick="deleteRow('<?php echo $statement_id; ?>')"> <i class="trash alternate outline icon" style="cursor: pointer;"  style="margin-right: 5px;" title="Delete"></i>Delete</button>
+                          </td>
+                      </tr>
+                </tbody>
+              </table>
+        </div>
+      </div>
+    </div>
+    <div class="ui bottom attached segment tab" data-tab="qualification">
+      <div id="sectionsContainer">
+        <div class="ui form">
+
+           <table class="ui very compact small celled table" style="font-size: 12px;">
+             <tbody>
+               <tr>
+                  <td class="actives"><b>Education</b></td>
+                  <td><?=$sql4['education']?></td>
+                </tr>
+                <tr>
+                  <td class="actives"><b>Training</b></td>
+                  <td><?=$sql4['training']?></td>
+                </tr>
+                <tr>
+                  <td class="actives"><b>Experience</b></td>
+                  <td><?=$sql4['experience']?></td>
+                </tr>
+                <tr>
+                  <td class="actives"><b>Eligibility</b></td>
+                  <td><?=$sql4['eligibility']?></td>
+                </tr>
+                <tr>
+                  <td class="actives"><b>Competency</b></td>
+                  <td><?=$sql4['competency']?></td>
+                </tr> 
+                  <tr>
+                  <td class="actives"><b>Others</b></td>
+                  <td><?=$sql4['others']?></td>
+                </tr> 
+              </tbody>
+            </table>
+        </div>
+      </div>
+    <div>
+  </div>
+</div>
 
 <?php 
  require_once "footer.php";

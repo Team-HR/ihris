@@ -2,7 +2,7 @@
   $title = "Plantilla"; 
   require_once "header.php"; 
 ?>
-
+   
 
 <script type="text/javascript">
 
@@ -54,7 +54,7 @@
     $("#editSchedule").dropdown('set selected',schedule);
     $("#editItem").val(item_no);
     $("#editAbolish").dropdown('set selected',abolish);
-
+     $("#editIncumbent").dropdown('set selected',incumbent);
     $("#editModal").modal({
       onApprove: function(){
 
@@ -71,7 +71,7 @@
           abolish: $("#editAbolish").val(),
 
         }, function(data, textStatus, xhr) {
-          alert(data);
+          //alert(data);
          $(load);
           $("#updateMsg").transition({
             animation: 'fly down',
@@ -85,24 +85,27 @@
 
   }
 
-  function vacateRow(id,incumbent,position,endService,reason_of_vacancy,other){
-
-    $("#incumbent").dropdown('set selected',incumbent);
+  function vacateRow(plantilla_id,incumbent,position,endService,reason_of_vacancy,other){
+    $("#incumbent").val(incumbent);
     $("#editPos").val(position);
-
     $("#vacateModal").modal({
       onApprove: function(){
         $.post('plantilla_proc.php', {
           vacatePos: true,
-          id:id,
+          plantilla_id:plantilla_id,
           incumbent: $("#incumbent").val(),
           endService: $("#addEnd").val(),
           reason_of_vacancy: $("#addReason").val(),
           other: $("#addOther").val(),   
         }, function(data, textStatus, xhr) {
-          /*optional stuff to do after success */
           $(load);
-         // alert(data);
+          $("#vacateMsg").transition({
+            animation: 'fly down',
+            onComplete: function () {
+              setTimeout(function(){ $("#vacateMsg").transition('fly down'); }, 1000);
+            }
+          });
+         //alert(data);
         });
       }
     }).modal("show");
@@ -119,11 +122,10 @@
       abolish: $("#addAbolish").val(),
     },function(data,status){  
       $(load);
-      alert(data);
+      //alert(data);
   
     });
   } 
-
 
   function addModalFunc(){
     $("#addModal").modal({
@@ -163,43 +165,50 @@
   }
   
 </script>
-<!-- savae msg alert start -->
+<!-- alerts start -->
 <div id="saveMsg" class="" style="top: 15px; display: none; position: fixed; z-index: 10; width: 100%; left: 0; text-align: center;">
-  <div class="ui center green inverted aligned segment" style="width: 100px; margin-left: auto; margin-right: auto;">
-    <i class="checkmark icon"></i> Added!
-  </div>
+   <div class="ui center green inverted aligned segment" style="width: 100px; margin-left: auto; margin-right: auto;">
+    Added
+    </div>
 </div>
 
 <div id="deleteMsg" class="" style="top: 15px; display: none; position: fixed; z-index: 10; width: 100%; left: 0; text-align: center;">
-  <div class="ui center red inverted aligned segment" style="width: 100px; margin-left: auto; margin-right: auto;">
-    <i class="checkmark icon"></i> Deleted!
-  </div>
+   <div class="ui center red inverted aligned segment" style="width: 100px; margin-left: auto; margin-right: auto;">
+   Deleted
+   </div>
 </div>
 
 <div id="updateMsg" class="" style="top: 15px; display: none; position: fixed; z-index: 10; width: 100%; left: 0; text-align: center;">
-  <div class="ui center yellow inverted aligned segment" style="width: 100px; margin-left: auto; margin-right: auto;">
-    <i class="checkmark icon"></i> Updated!
-  </div>
+   <div class="ui center yellow inverted aligned segment" style="width: 100px; margin-left: auto; margin-right: auto;">
+   Updated
+   </div>
 </div>
+
+<div id="vacateMsg" class="" style="top: 15px; display: none; position: fixed; z-index: 10; width: 100%; left: 0; text-align: center;">
+   <div class="ui center orange inverted aligned segment" style="width: 100px; margin-left: auto; margin-right: auto;">
+     Vacated
+   </div>
+</div>
+<!-- end alerts -->
 
 <!-- delete pos start -->
 <div id="deleteModal" class="ui mini modal">
-  <i class="close icon"></i>
-  <div class="header">
-    Delete Plantilla Details
-  </div>
-  <div class="content">
-    <p>Are you sure you want to delete this details?</p>
-  </div>
-  <div class="actions">
-    <div class="ui deny button mini">
-      No
+    <i class="close icon"></i>
+    <div class="header">
+      Delete Plantilla Details
     </div>
-    <div class="ui blue right labeled icon approve button mini">
-      Yes
-      <i class="checkmark icon"></i>
+    <div class="content">
+      <p>Are you sure you want to delete this details?</p>
     </div>
-  </div>
+    <div class="actions">
+        <div class="ui deny button mini">
+          No
+        </div>
+        <div class="ui blue right labeled icon approve button mini">
+          Yes
+          <i class="checkmark icon"></i>
+        </div>
+    </div>
 </div>
 <!-- delete pos end -->
 
@@ -207,31 +216,15 @@
 <div id="vacateModal" class="ui mini modal">
   <i class="close icon"></i>
   <div class="header">
-   Vacate Position
+  Vacate Position
   </div>
   <div class= "ui content">
        <div class="ui form">
-
-             <div class="field">
-                  <label>Name:</label>  
-                 <select  class= "ui search dropdown" id="incumbent" disabled>
-                            <option>Employee:</option>  
-                               <?php
-                                  $result = $mysqli->query("SELECT * FROM `employees`");
-                                      while ($row = $result->fetch_assoc()) {
-                                        $employees_id = $row["employees_id"];
-                                        $firstName = $row["firstName"];
-                                        $middleName = $row["middleName"];
-                                        $lastName = $row["lastName"];
-                                        $extName = $row["extName"];
-                                              print "<option value=\"{$employees_id}\">{$firstName} {$middleName} {$lastName} {$extName}</option>";
-                                        }
-                          ?>
-                     </select>
-             </div>
-
+            
+                  <input type="text" id="incumbent"hidden > </input>
+        
               <div class="field">
-                  <label>Position Vacated:</label>  
+                  <label >Position Vacated:</label>  
                  <input type="text" id="editPos" disabled> </input>
              </div>
 
@@ -242,12 +235,12 @@
       
                <div class="field">
                    <label>Reason of Vacancy:</label>
-                      <select id="addReason" class="ui search dropdown" required="">
-                        <option value="">---</option>
+                      <select id="addReason" class="ui search dropdown">
+                          <option value="">Select Reason</option>
                           <option value="Transfer">Transfer</option>
                           <option value="promotion">Promotion</option>
                           <option value="Retirement">Retirement</option>
-                          <option value="Others">Others:</option>
+                          <option value="Others:">Others</option>
                       </select>  
                </div>
 
@@ -258,16 +251,17 @@
       </div>
 
    </div> 
-  <div class="actions">
-    <div class="ui deny button mini">
-      No
+
+      <div class="actions">
+        <div class="ui deny button mini">
+          No
+        </div>
+        <div class="ui blue right labeled icon approve button mini">
+          Yes
+          <i class="checkmark icon"></i>
+        </div>
+      </div>
     </div>
-    <div class="ui blue right labeled icon approve button mini">
-      Yes
-      <i class="checkmark icon"></i>
-    </div>
-  </div>
-</div>
 
 <!-- vacate modal end -->
 
@@ -297,21 +291,20 @@
               </div>
               
                 <div class="field">
-                        <label>Position:</label>
-                           <select class= "ui search dropdown" id="addPos">
-                                  <option value="">Select Position</option>
-                                <?php
-                                  $result = $mysqli->query("SELECT * FROM `positiontitles`");
-                                      while ($row = $result->fetch_assoc()) {
-                                        $position_id = $row["position"];
-                                        $position = $row["position"];
-                                        $functional = $row["functional"];
-                                              print "<option value=\"{$position_id}\">{$position} ({$functional})</option>";
-                                        }
-                                ?>
-                            </select>
-        </div>      
-
+                <label>Position:</label>
+                   <select class= "ui search dropdown" id="addPos">
+                          <option value="">Select Position</option>
+                            <?php
+                              $result = $mysqli->query("SELECT * FROM `positiontitles`");
+                                  while ($row = $result->fetch_assoc()) {
+                                    $position_id = $row["position_id"];
+                                    $position = $row["position"];
+                                    $functional = $row["functional"];
+                                          print "<option value=\"{$position_id}\">{$position} ({$functional})</option>";
+                                    }
+                            ?>
+                    </select>
+         </div>
   <div class="two fields">
       <div class="field">
          <label>Step No.</label>
@@ -449,10 +442,6 @@
 </div>
 <!-- end of editing
 
-
-
-
-
 <!----load table data---->
 <div class="ui segment" :class="loader">
   <div class="ui container">
@@ -463,7 +452,7 @@
       </button>
     </div>
     <div class="item">
-      <h3><i class="notebook icon"></i>Plantilla</h3>
+      <h3><i class="briefcase icon"></i>Plantilla</h3>
     </div>
     <div class="right item">
       <!-- 
@@ -472,8 +461,8 @@
       </button> -->
     <div class="ui right input">
       <button class="ui icon mini green button" onclick="addModalFunc()" style="margin-right: 5px;" title="Add Detail"><i class="icon plus"></i>Add</button>
-      <div class="ui icon fluid input" style="width: 300px;">
-        <input id="data_search" type="text" placeholder="Search...">
+      <div class="ui icon fluid input" style="width: 300px;" >
+        <input id="data_search" type="text" placeholder="Search..." > 
         <i class="search icon"></i>
       </div>
     </div>
