@@ -3,6 +3,34 @@ $title = "Casual Plantilla Setup";
 require_once "header.php";
 ?>
 
+<div class="ui container borderless blue inverted mini menu">
+    <div class="left item" style="margin-right: 0px !important;">
+        <button onclick="window.history.back();" class="blue ui icon button" title="Back" style="width: 65px;">
+            <i class="icon chevron left"></i> Back
+        </button>
+    </div>
+    <div class="item">
+        <h3><i class="briefcase icon"></i>Casual Plantilla</h3>
+    </div>
+    <div class="right item">
+        <!-- 
+      <button onclick="addModalFunc()" class="circular blue ui icon button" style="margin-right: 10px;" title="Add New Personnel">
+        <i class="icon plus circle"></i>
+      </button> -->
+        <!-- <div class="ui right input">
+            <button class="ui icon mini green button" onclick="addModalFunc()" style="margin-right: 5px;" title="Add New Department"><i class="icon plus"></i>Add</button>
+            <div class="ui icon fluid input" style="width: 300px;">
+                <input id="pos_search" type="text" placeholder="Search...">
+                <i class="search icon"></i>
+            </div>
+        </div> -->
+        <!-- <div class="ui icon fluid input">
+        <input id="pos_search" type="text" placeholder="Search...">
+        <i class="search icon"></i>
+      </div> -->
+    </div>
+</div>
+
 <div class="ui container segment" id="app">
   <template>
     <table class="ui mini collapsing very compact celled structured table">

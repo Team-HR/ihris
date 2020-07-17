@@ -4,181 +4,157 @@ $id = $_GET["id"];
 require_once "header.php";
 ?>
 
+<div class="ui container borderless blue inverted mini menu">
+    <div class="left item" style="margin-right: 0px !important;">
+        <button onclick="window.history.back();" class="blue ui icon button" title="Back" style="width: 65px;">
+            <i class="icon chevron left"></i> Back
+        </button>
+    </div>
+    <div class="item">
+        <h3><i class="briefcase icon"></i>Casual Plantilla</h3>
+    </div>
+    <div class="right item">
+        <!-- 
+      <button onclick="addModalFunc()" class="circular blue ui icon button" style="margin-right: 10px;" title="Add New Personnel">
+        <i class="icon plus circle"></i>
+      </button> -->
+        <div class="ui right input">
+            <button class="ui icon mini green button" onclick="addModalFunc()" style="margin-right: 5px;" title="Add New Department"><i class="icon print"></i> Print</button>
+            <!-- <div class="ui icon fluid input" style="width: 300px;">
+                <input id="pos_search" type="text" placeholder="Search...">
+                <i class="search icon"></i>
+            </div> -->
+        </div>
+        <!-- <div class="ui icon fluid input">
+        <input id="pos_search" type="text" placeholder="Search...">
+        <i class="search icon"></i>
+      </div> -->
+    </div>
+</div>
+
 <div class="ui container segment" id="app">
-    <div class="ui form">
-        <div class="ui grid">
-            <div class="two column row">
+
+
+    <template>
+        <div class="ui form">
+            <div class="ui stackable grid">
                 <div class="column">
-                    <div class="field">
-                        <label>Search Employee to Add:</label>
-                        <select id="employeeSelector" class="ui clearable search dropdown" v-model="employeeToAdd">
-                            <option value="">e.g. Lastname</option>
-                            <template>
+                    <div class="fields">
+                        <div class="eight wide field">
+                            <label>Search Employee to Add:</label>
+                            <select id="employeeSelector" class="ui clearable search fluid dropdown" v-model="employeeToAdd">
+                                <option value="">e.g. Lastname</option>
                                 <option v-for="emp in casualEmployeesNotInlist" :value="emp.employee_id">{{emp.employee_name}}</option>
-                            </template>
-                        </select>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Pay Grade:</label>
+                            <input type="text" placeholder="01-1" v-model="pay_grade">
+                        </div>
+                        <div class="field">
+                            <label>Daily Wage:</label>
+                            <input type="number" placeholder="498.00" v-model="daily_wage">
+                        </div>
+                        <div class="field">
+                            <label>From:</label>
+                            <input type="date" v-model="from_date">
+                        </div>
+                        <div class="field">
+                            <label>To:</label>
+                            <input type="date" v-model="to_date">
+                        </div>
                     </div>
                     <button @click="addEmployee" class="ui green mini button">Add</button>
                 </div>
             </div>
         </div>
 
-
-    </div>
-
-    <table class="ui mini very compact celled structured table">
-        <thead>
-            <tr class="center aligned">
-                <th rowspan="2"></th>
-                <th colspan="4">Name of Appointee/s</th>
-                <th rowspan="2">Position Title</th>
-                <th rowspan="2">Pay Grade</th>
-                <th rowspan="2">Daily Wage</th>
-                <th colspan="2">Period of Employment</th>
-                <th rowspan="2">Nature of Appointment</th>
-            </tr>
-            <tr class="center aligned">
-                <th>Lastname</th>
-                <th>Firstname</th>
-                <th>ext</th>
-                <th>Middlename</th>
-                <th>From</th>
-                <th>To</th>
-            </tr>
-        </thead>
-        <tbody>
-            <template>
+        <table class="ui mini very compact celled structured table">
+            <thead>
+                <tr class="center aligned">
+                    <th rowspan="2">
+                        <!-- <input type="checkbox"> -->
+                    </th>
+                    <th colspan="4">Name of Appointee/s</th>
+                    <th rowspan="2">Position Title</th>
+                    <th rowspan="2">Pay Grade</th>
+                    <th rowspan="2">Daily Wage</th>
+                    <th colspan="2">Period of Employment</th>
+                    <th rowspan="2">Nature of Appointment</th>
+                </tr>
+                <tr class="center aligned">
+                    <th>Lastname</th>
+                    <th>Firstname</th>
+                    <th>ext</th>
+                    <th>Middlename</th>
+                    <th>From</th>
+                    <th>To</th>
+                </tr>
+            </thead>
+            <tbody>
                 <tr v-if="data.length == 0">
                     <td colspan="11" class="center aligned"> -- No Employees --</td>
                 </tr>
                 <tr v-for="dat in data">
-                    <td></td>
+                    <td class="center aligned">
+                        <div class="ui mini basic icon buttons">
+                            <button class="ui button" @click="edit(dat)">
+                                <i class="icon link edit"></i>
+                            </button>
+                            <button class="ui button" @click="console.log('delete')">
+                                <i class="icon link trash"></i>
+                            </button>
+                        </div>
+                    </td>
                     <td>{{ dat.lastName }}</td>
                     <td>{{ dat.firstName }}</td>
-                    <td>{{dat.extName}}</td>
+                    <td>{{ dat.extName }}</td>
                     <td>{{ dat.middleName }}</td>
                     <td class="center aligned">{{dat.position}}</td>
-                    <td class="center aligned"></td>
-                    <td class="center aligned"></td>
-                    <td class="center aligned"></td>
-                    <td class="center aligned"></td>
-                    <td class="center aligned"></td>
+                    <td class="center aligned">{{dat.pay_grade}}</td>
+                    <td class="center aligned">{{dat.daily_wage}}</td>
+                    <td class="center aligned">{{dat.from_date}}</td>
+                    <td class="center aligned">{{dat.to_date}}</td>
+                    <td class="center aligned">{{dat.nature}}</td>
                 </tr>
-            </template>
-        </tbody>
-    </table>
-    <!-- modal start -->
-    <div class="ui mini modal" id="addNewModal">
-        <div class="header">Add Casual Employee</div>
-        <div class="content">
-
+            </tbody>
+        </table>
+        <!-- modal start -->
+        <div class="ui mini modal" id="editModal">
+            <div class="header">Edit</div>
+            <div class="content">
+                <div class="ui form">
+                    <div class="field">
+                        <label>Search Employee to Add:</label>
+                        <input style="border: 0px; border-bottom: 1px solid lightgrey; border-radius: 0px;" readonly type="text" v-model="editData.employee_name">
+                    </div>
+                    <div class="field">
+                        <label>Pay Grade:</label>
+                        <input type="text" placeholder="01-1" v-model="editData.pay_grade">
+                    </div>
+                    <div class="field">
+                        <label>Daily Wage:</label>
+                        <input type="number" placeholder="498.00" v-model="editData.daily_wage">
+                    </div>
+                    <div class="field">
+                        <label>From:</label>
+                        <input type="date" v-model="editData.from_date">
+                    </div>
+                    <div class="field">
+                        <label>To:</label>
+                        <input type="date" v-model="editData.to_date">
+                    </div>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="ui green approve mini button">Save</button>
+                <button class="ui red deny mini button">Cancel</button>
+            </div>
         </div>
-        <div class="actions">
-            <button class="ui green approve mini button">Save</button>
-            <button class="ui red deny mini button">Cancel</button>
-        </div>
-    </div>
-    <!-- modal end -->
+        <!-- modal end -->
+    </template>
 </div>
-<script>
-    Date.prototype.toDateInputValue = (function() {
-        var local = new Date(this);
-        local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
-        return local.toJSON().slice(0, 4);
-    });
-    new Vue({
-        el: "#app",
-        data: {
-            employeeToAdd: "",
-            casualEmployeesNotInlist: [],
-            plantilla_id: 0,
-            data: []
-        },
-        methods: {
-            getData() {
-                $.ajax({
-                    type: "post",
-                    url: "casual_plantilla.ajax.php",
-                    data: {
-                        getEmployees: true,
-                        plantilla_id: this.plantilla_id
-                    },
-                    dataType: "json",
-                    success: (response) => {
-                        this.data = response
-                        // console.log(response);
-                    }
-                });
-            },
-            initAdd() {
-                $("#addNewModal").modal("show")
-            },
 
-            addEmployee() {
-                $.ajax({
-                    type: "post",
-                    url: "casual_plantilla.ajax.php",
-                    data: {
-                        addEmployee: true,
-                        plantilla_id: this.plantilla_id,
-                        employee_id: this.employeeToAdd
-                    },
-                    dataType: "json",
-                    success: (response) => {
-                        console.log(response);
-                        if (response > 0) {
-                            delete this.casualEmployeesNotInlist["id_" + this.employeeToAdd]
-                            $("#employeeSelector").dropdown("clear")
-                            this.getData()
-                        }
-                    },
-                    async: false
-                });
-            },
-
-            getCasualEmployeesNotInlist() {
-                $.ajax({
-                    type: "post",
-                    url: "casual_plantilla.ajax.php",
-                    data: {
-                        getCasualEmployeesNotInlist: true,
-                        plantilla_id: this.plantilla_id
-                    },
-                    dataType: "json",
-                    success: (response) => {
-                        this.casualEmployeesNotInlist = response
-                    },
-                    async: false
-                });
-            },
-
-            $_GET(param) {
-                var vars = {};
-                window.location.href.replace(location.hash, '').replace(
-                    /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
-                    function(m, key, value) { // callback
-                        vars[key] = value !== undefined ? value : '';
-                    }
-                );
-
-                if (param) {
-                    return vars[param] ? vars[param] : null;
-                }
-                return vars;
-            }
-
-
-        },
-        mounted() {
-            this.plantilla_id = this.$_GET("id")
-            this.getCasualEmployeesNotInlist()
-            this.getData()
-            $("#employeeSelector").dropdown({
-                fullTextSearch: true,
-                clearable: true
-            })
-        },
-    });
-</script>
+<script src="casual_plantilla_list.js"></script>
 
 <?php require_once "footer.php"; ?>
