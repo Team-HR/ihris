@@ -114,9 +114,12 @@ $sql = "SELECT
 positiontitles.position,
 positiontitles.functional,
 plantillas.item_no,
-plantillas.sg,
+positiontitles.salaryGrade AS salary_grade,
+plantillas.step,
+plantillas.`schedule`,
+'' AS monthly_salary,
 -- 	plantillas.actual_salary,
-( plantillas.actual_salary / 12 ) AS monthly_salary,
+-- ( plantillas.actual_salary / 12 ) AS monthly_salary,
 qualification_standards.education,
 qualification_standards.experience,
 qualification_standards.training,
@@ -134,7 +137,7 @@ WHERE
 AND	plantillas.incumbent IS NULL 
 	AND plantillas.abolish IS NULL
 ORDER BY
-	positiontitles.position ASC";
+    positiontitles.position ASC";
 
 // $data = $test;
 
@@ -144,8 +147,8 @@ while($row = $result->fetch_assoc())
     $data[] = array(
         "position_title"=>$row["position"],
         "item_no"=>$row["item_no"],
-        "sg"=>$row["sg"],
-        "monthly_salary"=>$row["monthly_salary"],
+        "sg"=>$row["salary_grade"],
+        "monthly_salary"=>getMonthlySalary($mysqli,$row["salary_grade"],$row["step"],$row["schedule"]),
         "education"=>$row["education"],
         "training"=>$row["training"],
         "experience"=>$row["experience"],
@@ -153,6 +156,29 @@ while($row = $result->fetch_assoc())
         "competency"=>$row["competency"],
         "department"=>$row["department"]
     );
+}
+
+function getMonthlySalary($mysqli,$sg,$step,$schedule) {
+    $monthly_salary = 0;
+    if(empty($sg) || empty($step) || empty($schedule)) return false;
+    $sql = "SELECT id FROM `ihris_dev`.`setup_salary_adjustments` WHERE schedule = ? AND active = '1'";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param('i',$schedule);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $parent_id = 0;
+    $parent_id = $row["id"];
+    $stmt->close();
+    if (empty($parent_id)) return false;
+    $sql = "SELECT monthly_salary FROM `ihris_dev`.`setup_salary_adjustments_setup` WHERE parent_id = ? AND salary_grade = ? AND step_no = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param('iii',$parent_id,$sg,$step);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();  
+    $monthly_salary = $row["monthly_salary"];
+    return $monthly_salary?number_format($monthly_salary,2,'.',','):"NOT FOUND";
 }
 
 $no = 0;

@@ -5,15 +5,15 @@ if(isset($_POST["load"])){
 	$data = array();
 	$sql = "SELECT
 	*,
-	`plantillas_test`.`id` AS plantillas_test_id,
+	`plantillas`.`id` AS plantillas_id,
 	`publications`.`plantilla_id` AS inPublication
 FROM
-	`plantillas_test`
-	LEFT JOIN `department` ON `plantillas_test`.`department_id` = `department`.`department_id`
-	LEFT JOIN `positiontitles` ON `plantillas_test`.`position_id` = `positiontitles`.`position_id`
-	LEFT JOIN `qualification_standards` ON `plantillas_test`.`position_id` = `qualification_standards`.`position_id`
-	LEFT JOIN `employees` ON `plantillas_test`.`incumbent` = `employees`.`employees_id` 
-	LEFT JOIN `publications` ON `plantillas_test`.`id` = `publications`.`plantilla_id`
+	`plantillas`
+	LEFT JOIN `department` ON `plantillas`.`department_id` = `department`.`department_id`
+	LEFT JOIN `positiontitles` ON `plantillas`.`position_id` = `positiontitles`.`position_id`
+	LEFT JOIN `qualification_standards` ON `plantillas`.`position_id` = `qualification_standards`.`position_id`
+	LEFT JOIN `employees` ON `plantillas`.`incumbent` = `employees`.`employees_id` 
+	LEFT JOIN `publications` ON `plantillas`.`id` = `publications`.`plantilla_id`
 WHERE
 	`incumbent` = '' 
 	OR `incumbent` IS NULL 
@@ -24,12 +24,12 @@ ORDER BY
 $result = $mysqli->query($sql);
 // echo $mysqli->error;
 while ($row = $result->fetch_assoc()) {
-		$id = $row["plantillas_test_id"];
+		$id = $row["plantillas_id"];
 		$datum = array(
 			"id" => $id,
 			"isPublished" => !empty($row["inPublication"])?true:false,
 			"item_no" => $row["item_no"],
-			"page_no" => $row["page_no"],
+			"page_no" => "",
 			"position" => $row["position"],
 			"functional" => $row["functional"],
 			"department" => $row["department"],
