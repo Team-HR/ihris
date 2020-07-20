@@ -2,27 +2,26 @@
         <div class="ui modal" id="addSR">
             <div class="header">SERVICE RECORD BUILDUP</div>
             <div class="content">
-                <div class='ui form' @submit.prevent="save_form_data(<?= $_GET['employees_id'] ?>)">
+                <div class="ui form">
                     <div class="field">
                         <label>Service Record Type:</label>
-                        <select class="ui search dropdown" v-model="sr_form" id="sr_form">
+                        <select class="ui search compact dropdown" v-model="type" id="type">
                             <option value="">Type here...</option>
-                            <option style="font-size: 20px;" v-for="(sr,index) in srtype_array" :key="index" :value="sr">{{ sr }}</option>
+                            <option v-for="(type,index) in record_types" :key="index" :value="type">{{ type }}</option>
                         </select>
                     </div>
                     <div class="field">
                         <label>Designation:</label>
-                        <!-- <input type="text" v-model="designation_form" id="designation_dropdown"></input> -->
-                        <select class="ui search dropdown" v-model="designation_form" id="designation_dropdown">
+                        <select class="ui search dropdown" v-model="designation" id="designation">
                             <option value="">Enter or Select Designation</option>
                             <option v-for="(position,index) in positions" :key='index' :value="position">{{ position }}</option>
                         </select>
                     </div>
                     <div class="field">
                         <label>Status</label>
-                        <select class="ui clearable search dropdown" v-model="status_form" id="status_form">
+                        <select class="ui clearable search dropdown" v-model="status" id="status">
                             <option value="">Type here...</option>
-                            <option v-for="(stat,index) in status_array" :key="index" :value="stat">{{ stat }}</option>
+                            <option v-for="(stat,index) in statuses" :key="index" :value="stat">{{ stat }}</option>
                         </select>
                     </div>
                     <div class="ui sub header">Salary Rate:</div>
@@ -30,11 +29,11 @@
                     <div class="fields">
                         <div class="six wide field">
                             <label>For build-up (ANNUAL RATE)*</label>
-                            <input :disabled="is_per_session" type="number" placeholder="000.00" v-model="salaryAnnual">
+                            <input :disabled="is_per_session" type="number" placeholder="000.00" v-model="rate">
                         </div>
                         <div class="six wide field">
                             <label>Session</label>
-                            <select class="ui search dropdown" v-model="session_form" id="session_form">
+                            <select class="ui search dropdown" v-model="is_per_session" id="is_per_session">
                                 <option value="" disabled>-------</option>
                                 <option value="0">No</option>
                                 <option value="1">Per Session</option>
@@ -42,50 +41,38 @@
                         </div>
                         <div class="six wide field">
                             <label>Rate on Schedule</label>
-                            <select :disabled="!is_per_session" class="ui search dropdown" v-model="salaryPerSchedule">
+                            <select :disabled="!is_per_session" class="ui search dropdown" v-model="rate_on_schedule" id="rate_on_schedule">
                                 <option value="">SELECT salary</option>
                                 <option value="0">-------</option>
-                                <option v-for="(sal,index) in salary_array" :value="sal.monthly_salary">{{"Php."+formatNumber(sal.monthly_salary) }}</option>
-
+                                <!-- <option v-for="(sal,index) in salary_array" :value="sal.monthly_salary">{{"Php."+formatNumber(sal.monthly_salary) }}</option> -->
                             </select>
                         </div>
                     </div>
                     <div class="fields">
                         <div class="eight wide field">
                             <label>Date From</label>
-                            <input type="date" v-model="from_form">
+                            <input type="date" v-model="date_from">
                         </div>
                         <div class="eight wide field">
                             <label>Date To</label>
-                            <input type="date" v-model="to_form">
+                            <input type="date" v-model="date_to">
                         </div>
                     </div>
                     <div class="fields">
-                        <div class="seven wide field">
+                        <div class="eight wide field">
                             <label> Place of Assignment </label>
-                            <!-- <input type="text" v-model="assign_form"> -->
-
-
-                            <!-- <div class="ui action input"> -->
-                            <select class="ui fluid search selection dropdown" v-model="assign_form" id="place_of_assignment_dropdown">
+                            <select class="ui fluid search selection dropdown" v-model="place_of_assignment" id="place_of_assignment">
                                 <option value="" disabled>Select</option>
-                                <option v-for="(position,index) in positions" :key='index' :value="position">{{ position }}</option>
+                                <!-- <option v-for="(position,index) in positions" :key='index' :value="position">{{ position }}</option> -->
                             </select>
-                            <!-- <div class=""> -->
-
-                            <!-- </div> -->
-
-                            <!-- </div> -->
-
-
                         </div>
-                        <div class="one wide field">
+                        <!-- <div class="one wide field">
                             <div class="ui icon button"> <i class="icon add"></i>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="eight wide field">
                             <label>Branch</label>
-                            <select class="ui search dropdown" v-model="branch_form" id="branch_form">
+                            <select class="ui search dropdown" v-model="branch" id="branch">
                                 <option value="">Type here...</option>
                                 <option value="Local">Local</option>
                                 <option value="National">National</option>
@@ -95,13 +82,13 @@
                     </div>
                     <div class="field">
                         <label>Remarks</label>
-                        <textarea rows="2" v-model="remarks_form"></textarea>
+                        <textarea rows="2" v-model="remarks"></textarea>
                     </div>
                     <div class="field">
-                        <label>MEMO</label>
-                        <textarea rows="4" v-model="memo_form"></textarea>
+                        <label>Memo</label>
+                        <textarea rows="4" v-model="memo"></textarea>
                     </div>
-                    <button class="ui button primary">SAVE</button>
+                    <button class="ui button primary" @click="save()"><i class="save icon"></i> Save</button>
                 </div>
             </div>
         </div>
@@ -113,7 +100,7 @@
                 <h2>Service Record</h2>
             </div>
             <div style="float:right">
-                <button class="ui button tiny icon primary" @click="openAddSr()" style="width: 100px;">
+                <button class="ui button tiny icon primary" @click="init_add()" style="width: 100px;">
                     <i class="angle up icon"></i> Build-up
                 </button>
                 <button class="ui button tiny icon green" style="width: 100px;">
@@ -142,7 +129,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <template v-if="sr_data.length<1">
+                    <!-- <template v-if="sr_data.length<1">
                         <tr>
                             <td colspan="9" style="font-size:20px;text-align:center;color:#5555557a;padding:20px">EMPTY</td>
                         </tr>
@@ -164,7 +151,7 @@
                                 </div>
                             </td>
                         </tr>
-                    </template>
+                    </template> -->
                 </tbody>
             </table>
         </div>
