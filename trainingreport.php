@@ -11,7 +11,7 @@ require_once "header.php";
             </button>
         </div>
         <div class="item">
-            <h3><i class="users icon"></i> Training Report</h3>
+            <h3><i class="users icon"></i> Training & Feedbacking Report</h3>
         </div>
         <div class="right item">
 
@@ -24,7 +24,7 @@ require_once "header.php";
                     <i class="icon print"></i> Print
                 </button>
 
-                <select id="sortYear" class="ui dropdown">
+                <select id="sortYear" class="ui compact dropdown">
                     <option value="">Filter by Year</option>
                     <option value="all">All</option>
                     <?php
@@ -38,7 +38,7 @@ require_once "header.php";
 					?>
                 </select>
 
-                <div style="width: 500px; margin-left: 10px;">
+                <div style="margin-left: 5px !important;">
                     <select id="sortDept" class="ui compact fluid dropdown">
                         <option value="">Filter by Department</option>
                         <option value="all">All</option>

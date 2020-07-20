@@ -579,7 +579,6 @@ function update() {
             padding: 0px !important;
         }
         .editState {
-            /*border: 2px solid green !important;*/
             background-color: #ffffb05c !important;
         }
         .readOnly {

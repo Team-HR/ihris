@@ -12,20 +12,16 @@ if (isset($_POST["load"])) {
 }
 elseif (isset($_POST["fetchPerfData"])) {
 	
-$sql = <<< SQL
-SELECT
+$sql = "SELECT
 	COUNT(personneltrainings_id) AS num_trainings,
--- 	startDate,
 	MONTH(startDate) AS month,
 	YEAR(startDate) AS year
 FROM
 	personneltrainings
 GROUP BY
 	MONTH(startDate)
-ORDER BY
--- MONTH(startDate) ASC,	
-YEAR(startDate) ASC
-SQL;
+ORDER BY	
+	YEAR(startDate) ASC";
 
 $data = [];
 $res = $mysqli->query($sql);
@@ -46,6 +42,48 @@ while ($row = $res->fetch_assoc()) {
 		];
 	} else $data['year_'.$year]['months'][$months['month']] = $months;
 }
+
+/*
+feedback and mentoring start
+*/
+
+$sql = "SELECT
+	COUNT(feedbacking_id) AS num_trainings,
+	MONTH(date_conducted) AS month,
+	YEAR(date_conducted) AS year
+FROM
+    `ihris_dev`.`spms_feedbacking`
+WHERE
+    date_conducted <> '0000-00-00' OR
+    date_conducted <> NULL
+GROUP BY
+	MONTH(date_conducted)
+ORDER BY	
+	YEAR(date_conducted) ASC";
+
+// $data = [];
+$res = $mysqli->query($sql);
+
+while ($row = $res->fetch_assoc()) {
+	$year = $row['year'];
+	$months = [
+		'month' => $row['month'],
+		'num_trainings' => $row['num_trainings']
+	];
+
+	if (!array_key_exists('year_'.$year, $data)) {
+		$data['year_'.$year] = [
+			'year'	=> $year,
+			'months' => [
+				$months['month'] => $months
+			]
+		];
+	} else $data['year_'.$year]['months'][$months['month']] = $months;
+}
+
+/*
+feedback and mentoring end
+*/
 
 echo json_encode($data);
 }
@@ -95,7 +133,7 @@ function createSummaryTable($mysqli,$department_id,$year){
 				<div class="ui grid">
 					<div class="eight wide column">
 						<ol class="ui list">
-							<li value=""><i class="check icon"></i> With Trainings:
+							<li value=""><i class="check icon"></i> With Trainings and Feedbacks:
 								<ol>
 									<li value="">Male: <?=$permanent[0]?></li>
 									<li value="">Female: <?=$permanent[1]?></li>
@@ -106,7 +144,7 @@ function createSummaryTable($mysqli,$department_id,$year){
 					</div>
 					<div class="eight wide column">
 						<ol class="ui list">
-							<li value=""><i class="times icon"></i> Without Trainings:
+							<li value=""><i class="times icon"></i> Without Trainings and Feedbacks:
 								<ol>
 									<li value="">Male: <?=$permanent[2]?></li>
 									<li value="">Female: <?=$permanent[3]?></li>
@@ -124,7 +162,7 @@ function createSummaryTable($mysqli,$department_id,$year){
 					<?php 
 						$percentPerW = getPercentage($sumPermW,$sumPermWo);
 						echo $percentPerW[0];
-					?>%</b> of permanent employees have our trainings.
+					?>%</b> of permanent employees have our trainings and feedbacks.
 					</p>
 						</div>
 						<div class="eight wide column">
@@ -132,7 +170,7 @@ function createSummaryTable($mysqli,$department_id,$year){
 					<b>						
 					<?php 
 						echo $percentPerW[1];
-					?>%</b> of permanent employees don't have our trainings.
+					?>%</b> of permanent employees don't have our trainings and feedbacks.
 					</p>
 						</div>
 					</div>
@@ -146,7 +184,7 @@ function createSummaryTable($mysqli,$department_id,$year){
 			<div class="ui grid">
 				<div class="eight wide column">
 					<ol class="ui list">
-						<li value=""><i class="check icon"></i> With Trainings:
+						<li value=""><i class="check icon"></i> With Trainings and Feedbacks:
 							<ol>
 								<li value="">Male: <?=$casual[0]?></li>
 								<li value="">Female: <?=$casual[1]?></li>
@@ -157,7 +195,7 @@ function createSummaryTable($mysqli,$department_id,$year){
 				</div>
 				<div class="eight wide column">
 					<ol class="ui list">
-						<li value=""><i class="times icon"></i> Without Trainings:
+						<li value=""><i class="times icon"></i> Without Trainings and Feedbacks:
 							<ol>
 								<li value="">Male: <?=$casual[2]?></li>
 								<li value="">Female: <?=$casual[3]?></li>
@@ -175,7 +213,7 @@ function createSummaryTable($mysqli,$department_id,$year){
 					<?php 
 						$percentCasW = getPercentage($sumCasW,$sumCasWo);
 						echo $percentCasW[0];
-					?>%</b> of casual employees have our trainings.
+					?>%</b> of casual employees have our trainings and feedbacks.
 					</p>
 						</div>
 						<div class="eight wide column">
@@ -183,7 +221,7 @@ function createSummaryTable($mysqli,$department_id,$year){
 					<b>						
 					<?php 
 						echo $percentCasW[1];
-					?>%</b> of casual employees don't have our trainings.
+					?>%</b> of casual employees don't have our trainings and feedbacks.
 					</p>
 						</div>
 					</div>
@@ -237,7 +275,7 @@ function createTable2($mysqli,$department_id,$year){
 				<div class="ui grid">
 					<div class="eight wide column">
 						<ol class="ui list">
-							<li value=""><i class="check icon"></i> With Trainings:
+							<li value=""><i class="check icon"></i> With Trainings and Feedbacks:
 								<ol>
 									<li value="">Male: <?=$permanent[0]?></li>
 									<li value="">Female: <?=$permanent[1]?></li>
@@ -248,7 +286,7 @@ function createTable2($mysqli,$department_id,$year){
 					</div>
 					<div class="eight wide column">
 						<ol class="ui list">
-							<li value=""><i class="times icon"></i> Without Trainings:
+							<li value=""><i class="times icon"></i> Without Trainings and Feedbacks:
 								<ol>
 									<li value="">Male: <?=$permanent[2]?></li>
 									<li value="">Female: <?=$permanent[3]?></li>
@@ -266,7 +304,7 @@ function createTable2($mysqli,$department_id,$year){
 			<div class="ui grid">
 				<div class="eight wide column">
 					<ol class="ui list">
-						<li value=""><i class="check icon"></i> With Trainings:
+						<li value=""><i class="check icon"></i> With Trainings and Feedbacks:
 							<ol>
 								<li value="">Male: <?=$casual[0]?></li>
 								<li value="">Female: <?=$casual[1]?></li>
@@ -277,7 +315,7 @@ function createTable2($mysqli,$department_id,$year){
 				</div>
 				<div class="eight wide column">
 					<ol class="ui list">
-						<li value=""><i class="times icon"></i> Without Trainings:
+						<li value=""><i class="times icon"></i> Without Trainings and Feedbacks:
 							<ol>
 								<li value="">Male: <?=$casual[2]?></li>
 								<li value="">Female: <?=$casual[3]?></li>
@@ -340,10 +378,10 @@ function createTable($mysqli,$employmentStatus,$department_id,$year){
 										<i class="icon venus"></i>FEMALE: <?=${$employmentStatus}[1]+${$employmentStatus}[3];?>
 									</div>
 									<div class="two wide field" style="font-style: italic;font-size: 12px;">
-										<i class="icon black circle outline"></i> With Trainings: <?=${$employmentStatus}[1];?>
+										<i class="icon black circle outline"></i> With Trainings and Feedbacks: <?=${$employmentStatus}[1];?>
 									</div>
 									<div class="two wide field" style="font-style: italic;font-size: 12px;">
-										<i class="icon circle outline" style="color: #ff2900;"></i> Without Trainings: <?=${$employmentStatus}[3];?>
+										<i class="icon circle outline" style="color: #ff2900;"></i> Without Trainings and Feedbacks: <?=${$employmentStatus}[3];?>
 									</div>
 								</div>
 							</div>
@@ -361,10 +399,10 @@ function createTable($mysqli,$employmentStatus,$department_id,$year){
 										<i class="icon mars"></i>MALE: <?=${$employmentStatus}[0]+${$employmentStatus}[2];?>
 									</div>
 									<div class="two wide field" style="font-style: italic;font-size: 12px;">
-										<i class="icon black circle outline"></i> With Trainings: <?=${$employmentStatus}[0];?>
+										<i class="icon black circle outline"></i> With Trainings and Feedbacks: <?=${$employmentStatus}[0];?>
 									</div>
 									<div class="two wide field" style="font-style: italic;font-size: 12px;">
-										<i class="icon circle outline" style="color: #ff2900;"></i> Without Trainings: <?=${$employmentStatus}[2];?>
+										<i class="icon circle outline" style="color: #ff2900;"></i> Without Trainings and Feedbacks: <?=${$employmentStatus}[2];?>
 									</div>
 								</div>
 							</div>
@@ -487,7 +525,7 @@ function listEmployees($mysqli, $gender, $employmentStatus, $department_id,$year
 					<td><?=$employmentStatus?></td>
 					<td><?=$department?></td>
 					<td><?=$position?></td>
-					<td colspan="4" ><i style="color: grey;">No trainings attended<?=$yearStmnt?></i></td>
+					<td colspan="4" ><i style="color: grey;">No trainings attended nor had feedbacks<?=$yearStmnt?></i></td>
 				</tr>
 				<?php
 			}
@@ -521,9 +559,11 @@ function createTrainings($mysqli,$employees_id,$year){
 	if ($year !== "all") {
 		$filterByYear  = "AND year(personneltrainings.startDate) = '$year'";
 		$filterByYear2  = "AND year(`requestandcoms`.`fromDate`) = '$year'";
+		$filterByYear3  = "YEAR(`date_conducted`) = '$year' AND";
 	} else {
 		$filterByYear = "";
 		$filterByYear2 = "";
+		$filterByYear3 = "";
 	}
 
 
@@ -579,6 +619,28 @@ function createTrainings($mysqli,$employees_id,$year){
 
 		array_push($arrMaster, $insertArr);
 	} 
+
+
+	$sql3 = "SELECT * FROM `ihris_dev`.`spms_feedbacking` 
+	WHERE $filterByYear3 `feedbacking_emp` = '$employees_id' AND `date_conducted` <> '0000-00-00'";
+	$result2 = $mysqli->query($sql3);
+	while ($row2 = $result2->fetch_assoc()) {
+		$training = $row2["feedbacking_feedback"];
+		$startDate = $row2["date_conducted"];
+		$endDate = $row2["date_conducted"];
+		$numHours = getNumHours($startDate,$endDate);
+		$insertArr = array(
+			'training' => $training,
+			'startDate' => $startDate,
+			'endDate' => $endDate,
+			'numHours' => $numHours,
+			'remarks' => ""
+		);
+
+		array_push($arrMaster, $insertArr);
+	} 
+
+
 	usort($arrMaster, function($a, $b) {
 		return $b['startDate'] <=> $a['startDate'];
 	});
@@ -620,31 +682,33 @@ function get_num($mysqli,$id,$stat,$gen,$year,$bool){
 	}
 	if ($year !== "all") {
 		$filterByYear = "WHERE year(startDate) = '$year'";
-		$filterByYear2 = "AND year(fromDate) = '$year'";
+        $filterByYear2 = "AND year(fromDate) = '$year'";
+        $filterByYear3 = "YEAR(date_conducted) = '$year' AND";
 	} else {
 		$filterByYear = "";
 		$filterByYear2 = "";
-
-	}
-	if ($bool == true) {
-		$in = "IN";
-	} else {
-		$in = "NOT IN";
+        $filterByYear3 = "";
 	}
 
-	$sql = "SELECT * FROM `employees` WHERE $filterByDept employmentStatus = '$stat' AND gender = '$gen' AND `status` = 'ACTIVE' AND employees_id $in (SELECT `employees_id` FROM `personneltrainingslist` WHERE `personneltrainings_id` IN (SELECT `personneltrainings_id` FROM `personneltrainings` $filterByYear))
+	$sql = "SELECT * FROM `employees` WHERE $filterByDept employmentStatus = '$stat' AND gender = '$gen' AND `status` = 'ACTIVE'";
+    $total = 0;
+    $result = $mysqli->query($sql);
+    $total = $result->num_rows;
+
+    $sql = "SELECT * FROM `employees` WHERE $filterByDept employmentStatus = '$stat' AND gender = '$gen' AND `status` = 'ACTIVE' AND employees_id IN (SELECT `employees_id` FROM `personneltrainingslist` WHERE `personneltrainings_id` IN (SELECT `personneltrainings_id` FROM `personneltrainings` $filterByYear))
 	UNION
-	SELECT * FROM `employees` WHERE $filterByDept employmentStatus = '$stat' AND gender = '$gen' AND `status` = 'ACTIVE' AND employees_id $in (SELECT `employees_id` FROM `requestandcomslist` WHERE `controlNumber` IN (SELECT `controlNumber` FROM `requestandcoms` WHERE `isMeeting` != 'yes' $filterByYear2))
-	";
+	SELECT * FROM `employees` WHERE $filterByDept employmentStatus = '$stat' AND gender = '$gen' AND `status` = 'ACTIVE' AND employees_id IN (SELECT `employees_id` FROM `requestandcomslist` WHERE `controlNumber` IN (SELECT `controlNumber` FROM `requestandcoms` WHERE `isMeeting` != 'yes' $filterByYear2))
+    UNION
+    SELECT * FROM `employees` WHERE $filterByDept employmentStatus = '$stat' AND gender = '$gen' AND `status` = 'ACTIVE' AND employees_id IN (SELECT feedbacking_emp AS employees_id FROM `ihris_dev`.`spms_feedbacking` WHERE $filterByYear3 date_conducted <> '0000-00-00' OR date_conducted <> NULL)
+    ";
+    
+    $in = 0;
+    $result = $mysqli->query($sql);
+	$in = $result->num_rows;
+    
+    $notIn = $total>$in?($total-$in):$in;
 
-	$result = $mysqli->query($sql);
-	$num_rows = $result->num_rows;
-
-	if (!$num_rows) {
-		$num_rows = 0;
-	}
-
-	return $num_rows;
+	return $bool?$in:$notIn;
 
 }
 

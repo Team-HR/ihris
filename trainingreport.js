@@ -62,7 +62,7 @@ $(document).ready(function () {
     var ctxPerformance = $("#performance_chart");
     $.post("trainingreport_proc.php",{fetchPerfData:true},
     function (jsonData, textStatus, jqXHR) {
-        // console.log(data);
+        // console.log('jsonData',jsonData);
         var datasets = [];
         var bgColors = ['#ff000070', '#00800075', '#0000ff70', '#ffa50070', '#ffff0070'];
         var colors = ['red', 'green', 'blue', 'orange', 'yellow'];
@@ -84,7 +84,7 @@ $(document).ready(function () {
             datasets.push(set);
             counter++;
         });
-        console.log(datasets);
+        // console.log('dataset',datasets);
         var pfChartCfg = {
             type: 'line',
 
@@ -93,46 +93,10 @@ $(document).ready(function () {
                 datasets: datasets
             },
             options: {
-                // legend: {
-                //     onClick: function (e, legendItem) {
-                //         var index = legendItem.datasetIndex;
-                //         var ci = this.chart;
-                //         var dataset_num = this.chart.config.data.datasets.length;
-                        
-                //         var thereIsHidden = false;
-                //         for (let i = 0; i < dataset_num; i++) {
-                //             meta = ci.getDatasetMeta(i);
-                //             if (meta.hidden){
-                //                 thereIsHidden = true;
-                //                 break;
-                //             }
-                //         }
-
-                //         if (thereIsHidden) {
-                //             for (let i = 0; i < dataset_num; i++) {
-                //                 if (i != index) {
-                //                     meta = ci.getDatasetMeta(i);
-                //                     meta.hidden = null;
-                //                 }
-                //             }
-                //         } else {
-                //             for (let i = 0; i < dataset_num; i++) {
-                //                 if (i != index) {
-                //                     meta = ci.getDatasetMeta(i);
-                //                     meta.hidden = true;
-                //                 } else {
-                //                     meta = ci.getDatasetMeta(i);
-                //                     meta.hidden = false;
-                //                 }
-                //             }
-                //         }
-                //         ci.update();
-                //     }
-                // },
                 responsive: true,
                 title: {
                     display: true,
-                    text: 'Training Conducted Performance'
+                    text: 'Trainings & Feedbackings Conducted Performance'
                 },
                 scales: {
                     xAxes: [{
@@ -167,8 +131,6 @@ function load(department_id, year) {
     }, function (data, textStatus, xhr) {
         /*optional stuff to do after success */
         json = $.parseJSON(data);
-        // console.log(json[0]);
-        // console.log([json[0][0]+json[0][1],json[0][2]+json[0][3]]);
         var ctx = $("#graph_permanent");
         var ctx_total = $("#graph_permanent_total");
         var ctx2 = $("#graph_casual");
@@ -177,10 +139,10 @@ function load(department_id, year) {
             type: 'horizontalBar',
             data: {
                 labels: [
-                    "Male w/ TR",
-                    "Female w/ TR",
-                    "Male w/o TR",
-                    "Female w/o TR",
+                    "Male w/ TR and FDBK",
+                    "Female w/ TR and FDBK",
+                    "Male w/o TR and FDBK",
+                    "Female w/o TR and FDBK",
                 ],
                 datasets: [{
                     label: 'Personnels',
@@ -205,7 +167,7 @@ function load(department_id, year) {
 
                 title: {
                     display: true,
-                    text: "Permanent With and Without Trainings (M/F)"
+                    text: "Permanent With and Without Trainings and Feedbacks(M/F)"
                 },
                 legend: {
                     display: false,
@@ -222,7 +184,7 @@ function load(department_id, year) {
 
         var config2 = jQuery.extend(true, {}, config);
         config2.data.datasets[0].data = json[1];
-        config2.options.title.text = "Casual With and Without Trainings (M/F)";
+        config2.options.title.text = "Casual With and Without Trainings and Feedbacks (M/F)";
 
         var config_total = {
             type: 'horizontalBar',
@@ -231,7 +193,7 @@ function load(department_id, year) {
                     "Number of Employees",
                 ],
                 datasets: [{
-                    label: 'With Training',
+                    label: 'With Trainings and Feedbacks',
                     data: [json[0][0] + json[0][1]],
                     backgroundColor: [
                         '#4075a9',
@@ -240,7 +202,7 @@ function load(department_id, year) {
                     borderWidth: 2,
                 },
                 {
-                    label: 'No Training',
+                    label: 'No Trainings and Feedbacks',
                     data: [json[0][2] + json[0][3]],
                     backgroundColor: [
                         '#4075a957',
@@ -253,7 +215,7 @@ function load(department_id, year) {
 
                 title: {
                     display: true,
-                    text: "Permanent Employees With vs Without Trainings"
+                    text: "Permanent Employees With vs Without Trainings and Feedbacks"
                 },
                 legend: {
                     display: true,
