@@ -25,7 +25,7 @@ if(isset($_POST["getData"])){
         LEFT JOIN qualification_standards ON qualification_standards.position_id = positiontitles.position_id
         LEFT JOIN department ON plantillas.department_id = department.department_id 
     WHERE
-        plantillas.incumbent IS NULL 
+        plantillas.incumbent IS NULL
     ORDER BY
         positiontitles.position ASC";
     

@@ -109,16 +109,14 @@ $spreadsheet->getActiveSheet()->getStyle('K'.($aRow+16).':K'.($aRow+17))->getFon
 $data = array();
 
 require "_connect.db.php";
-$sql = "SELECT
--- *
+$sql = "SELECT-- *
 positiontitles.position,
 positiontitles.functional,
 plantillas.item_no,
 positiontitles.salaryGrade AS salary_grade,
 plantillas.step,
 plantillas.`schedule`,
-'' AS monthly_salary,
--- 	plantillas.actual_salary,
+'' AS monthly_salary,-- 	plantillas.actual_salary,
 -- ( plantillas.actual_salary / 12 ) AS monthly_salary,
 qualification_standards.education,
 qualification_standards.experience,
@@ -133,11 +131,11 @@ FROM
 	LEFT JOIN qualification_standards ON qualification_standards.position_id = positiontitles.position_id
 	LEFT JOIN department ON plantillas.department_id = department.department_id 
 WHERE
-`plantillas`.`id` IN (SELECT `publications`.`plantilla_id` FROM publications)
-AND	plantillas.incumbent IS NULL 
-	AND plantillas.abolish IS NULL
+	`plantillas`.`id` IN ( SELECT `publications`.`plantilla_id` FROM publications ) 
+	AND plantillas.incumbent IN ('',NULL)
+	AND plantillas.abolish IN ('',NULL,'No')
 ORDER BY
-    positiontitles.position ASC";
+	positiontitles.position ASC";
 
 // $data = $test;
 
