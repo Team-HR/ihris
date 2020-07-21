@@ -5,9 +5,9 @@
  $title = "Appointments"; require_once "header.php"; require_once "_connect.db.php";
  ?>
   <div id="app" style="background: white; margin-top:30px; width:95%;;margin-left:40px;padding:20px">
-    <h2 class="ui dividing header">Appointment for Administrative III - clerk 1</h2>  
+    <h2 class="ui dividing header" id="headerAppoint">Appointment for Administrative III - clerk 1</h2>  
     <div class="ui fluid action input" style="padding-bottom:20px" v-if="employ==''">
-      <select class="ui search dropdown fluid" v-model="pre_employ">
+      <select class="ui search dropdown fluid" id="empList" v-model="pre_employ">
         <option value="">Search Employee</option>
         <option v-for="(emp,index) in Employees" :value="index">{{emp.lastName}} {{emp.firstName}} {{emp.middleName}} {{emp.extName}}</option>
       </select>
@@ -77,8 +77,7 @@
       <div class="two fields">
         <div class="field">
           <label>Vacated by:</label>
-          <input v-if="Plantilla['vac_firstName']" :value="Plantilla['vac_lastName']+' '+Plantilla['vac_firstName']+' '+Plantilla['vac_middleName']+' '+Plantilla['vac_extName']" readonly>
-          <input v-else>
+          <input :value="Plantilla['vac_lastName']+' '+Plantilla['vac_firstName']+' '+Plantilla['vac_middleName']+' '+Plantilla['vac_extName']" readonly>
         </div>
         <div class="field">
           <label>Reason of Vacancy</label>
@@ -110,7 +109,10 @@
         </div>
         <div class="field">
           <label>Committee Chair</label>
-          <input type="text" v-model="committee_chair" required>
+          <select class="ui search dropdown" v-model="committee_chair" required>
+              <option value="">Search Name</option>
+              <option v-for="(hr,index) in Employees" :key="index" value="hr.employee_id">{{hr.lastName}} {{hr.firstName}}</option>
+          </select>
         </div>
       </div>
       <div class="four fields">

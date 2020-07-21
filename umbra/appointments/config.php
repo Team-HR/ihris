@@ -6,20 +6,34 @@ require_once '../../_connect.db.php';
 // print("<pre>".print_r($echo,true)."</pre>");
 
 if(isset($_POST['Employees'])){
-    $sql = "SELECT * FROM `employees`";
+    $sql = "SELECT
+                employees.employees_id, 
+                employees.firstName, 
+                employees.lastName, 
+                employees.middleName, 
+                employees.extName
+            FROM
+                employees";
     $sql = $mysqli->query($sql);
     $dat = [];
     while ($row = $sql->fetch_assoc()) {
-        $dat[] = $row;
+        $s = "SELECT * from `plantillas` left join `appointments` on `plantillas`.`incumbent`=`appointments`.`appointment_id` where `appointments`.`employee_id`='$row[employees_id]'";
+        $s = $mysqli->query($s);
+        echo $mysqli->error;
+        if (!$s->num_rows) {
+            $dat[] = $row;
+        }
     }
     echo json_encode($dat);
 }elseif(isset($_POST['Plantilla'])){
     $dataId = $_POST['Plantilla'];
+    $sendDat = array('status' => '','dat'=>'' );
     $sql = "SELECT
                 plantillas.id as plantilla_id, 
                 plantillas.item_no, 
                 plantillas.step, 
                 plantillas.schedule, 
+                plantillas.incumbent,
                 positiontitles.position, 
                 positiontitles.functional, 
                 positiontitles.salaryGrade, 
@@ -51,11 +65,14 @@ if(isset($_POST['Employees'])){
                 plantillas.id = '$dataId'";
     $sql = $mysqli->query($sql);
     $plan = $sql->fetch_assoc();
-    $dat = [];
-    foreach ($plan as $key => $a) {
-        $dat[$key] =  $a; 
-    }    
-    $salary_sql = "SELECT
+    if($sql->num_rows== 0||$plan['incumbent']!="" ){
+        $sendDat['status'] = false;
+    }else{
+        $dat = [];
+        foreach ($plan as $key => $a) {
+            $dat[$key] =  $a; 
+        }    
+        $salary_sql = "SELECT
                         setup_salary_adjustments_setup.monthly_salary
                     FROM
                         setup_salary_adjustments_setup
@@ -69,10 +86,32 @@ if(isset($_POST['Employees'])){
                         setup_salary_adjustments_setup.salary_grade = $plan[salaryGrade] AND
                         setup_salary_adjustments.active = 1";
     $salary_sql = $mysqli->query($salary_sql);
+    
+    if($dat['vac_firstName']==""){
+        $dat['vac_firstName']=" ";
+    }
+    if($dat['vac_middleName']=="") {
+        $dat['vac_middleName'] = " ";
+    }
+    if($dat['vac_lastName']=="") {
+        $dat['vac_lastName'] = " ";
+    }
+    if($dat['vac_extName']=="") {
+        $dat['vac_extName'] = " ";
+    }
+    if ($dat['reason_of_vacancy']=="") {
+        $dat['reason_of_vacancy']= " ";
+    }
     echo $mysqli->error;
     $salary_sql = $salary_sql->fetch_assoc();
     $dat['monthly_salary'] = $salary_sql['monthly_salary'];
-    echo json_encode($dat);
+    $sendDat['status'] = true;
+    $sendDat['dat'] = $dat;
+    }
+    echo json_encode($sendDat);
+    
+
+
 }elseif (isset($_POST['saveAppointment'])) {
         $employees_id = $_POST['employees_id'];
         $plantilla_id = $_POST['plantilla_id'];
@@ -160,10 +199,19 @@ if(isset($_POST['Employees'])){
         $sql = $mysqli->query($sql);
         echo $mysqli->error;
         $lastInsertId = $mysqli->insert_id;
-        var_dump($lastInsertId);
         $sqlPlantilla = "UPDATE `plantillas` SET `incumbent`='$lastInsertId' where `id`='$plantilla_id'";
-        $mysqli->query($sqlPlantilla);
+        $sql1 = $mysqli->query($sqlPlantilla);
+        $d = [];
+        if(!$sql||!$sql1){
+            $d['status'] = false;
+            $d['color'] = 'error';
+            $d['msg'] = "An Error Occur";
+        }else{
+            $d['status'] = true;
+            $d['color'] = 'success';
+            $d['msg'] = "Successfull!!<br>Redirecting";
+        }
+        echo json_encode($d);
 }
-
 
 
