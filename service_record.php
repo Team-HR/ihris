@@ -1,4 +1,5 @@
     <div id="app_sr">
+        <template>
         <div class="ui modal" id="addSR">
             <div class="header">SERVICE RECORD BUILDUP</div>
             <div class="content">
@@ -6,7 +7,7 @@
                     <div class="field">
                         <label>Service Record Type:</label>
                         <select class="ui search compact dropdown" v-model="type" id="type">
-                            <option value="">Type here...</option>
+                            <option value="">Select Type</option>
                             <option v-for="(type,index) in record_types" :key="index" :value="type">{{ type }}</option>
                         </select>
                     </div>
@@ -19,7 +20,7 @@
                     </div>
                     <div class="field">
                         <label>Status</label>
-                        <select class="ui clearable search dropdown" v-model="status" id="status">
+                        <select class="ui clearable search dropdown" v-model="status" id="status_drp">
                             <option value="">Type here...</option>
                             <option v-for="(stat,index) in statuses" :key="index" :value="stat">{{ stat }}</option>
                         </select>
@@ -152,8 +153,10 @@
                             </td>
                         </tr>
                     </template> -->
+                    
                 </tbody>
             </table>
         </div>
+        </template>
     </div>
     <script src="umbra/service_record/config.js"></script>

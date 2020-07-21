@@ -60,14 +60,59 @@ new Vue({
         }
     },
     mounted() {
+
         var queryString = window.location.search;
         var urlParams = new URLSearchParams(queryString);
         var employee_id = urlParams.get('employees_id')
         this.employee_id = employee_id;
         this.init_load();
+        
+        $("#addSR").modal({
+            closable: false,
+            duration: 0
+        });
 
-
+        $("#type").dropdown({
+            clearable: true,
+            keepOnScreen: false,
+            showOnFocus: false,
+            allowTab: false,
+            fullTextSearch: "exact",
+            // allowAdditions: true
+        });
+        $("#designation").dropdown({
+            clearable: true,
+            allowAdditions: true,
+            forceSelection: false,
+            hideAdditions: false,
+            allowTab: false,
+            showOnFocus: false,
+        });
+        $("#status_drp").dropdown({
+            clearable: true,
+            keepOnScreen: false,
+            showOnFocus: false,
+            allowTab: false,
+            fullTextSearch: "exact",
+        });
+        $("#is_per_session").dropdown({
+            clearable: true,
+            keepOnScreen: false,
+            showOnFocus: false,
+            allowTab: false,
+            fullTextSearch: "exact",
+            // allowAdditions: true
+        });
+        $("#branch").dropdown({
+            clearable: true,
+            keepOnScreen: false,
+            showOnFocus: false,
+            allowTab: false,
+            fullTextSearch: "exact",
+            // allowAdditions: true
+        });
 
         // $("#addSR").modal();
+        this.init_add()
     },
 })
