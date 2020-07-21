@@ -9,33 +9,33 @@
                                 <!-- column 1 -->
                                 <div class="field">
                                     <label>Service Record Type:</label>
-                                    <select style="position:relative; z-index: 100;" class="ui selection compact dropdown" v-model="type" id="type_el">
+                                    <select style="position:relative; z-index: 100;" class="ui selection compact dropdown" v-model="sr_type" id="sr_type">
                                         <option value="">Select Type</option>
                                         <option v-for="(type,index) in record_types" :key="index" :value="type">{{ type }}</option>
                                     </select>
                                 </div>
                                 <div class="field">
                                     <label>Designation:</label>
-                                    <select class="ui fluid search dropdown" v-model="designation" id="designation_el">
+                                    <select class="ui fluid search dropdown" v-model="sr_designation" id="sr_designation">
                                         <option value="" disabled>Select</option>
                                         <option v-for="(position,index) in positions" :key='index' :value="position">{{ position }}</option>
                                     </select>
                                 </div>
                                 <div class="field">
                                     <label>Status:</label>
-                                    <select class="ui clearable selection dropdown" v-model="status" id="status_el">
+                                    <select class="ui selection dropdown" v-model="sr_status" id="sr_status">
                                         <option value="">Select Status</option>
                                         <option v-for="(stat,index) in statuses" :key="index" :value="stat">{{ stat }}</option>
                                     </select>
                                 </div>
                                 <!-- <div class="fields"> -->
-                                <div :hidden="is_per_session==1" class="field">
+                                <div :hidden="sr_is_per_session==1" class="field">
                                     <label>For build-up (Annual Rate)*:</label>
-                                    <input type="number" placeholder="000.00" v-model="rate">
+                                    <input type="number" placeholder="000.00" v-model="sr_salary_rate">
                                 </div>
-                                <div :hidden="is_per_session==0" class="field">
+                                <div :hidden="sr_is_per_session==0" class="field">
                                     <label class="ui sub header">Rate on Schedule:</label>
-                                    <select class="ui fluid selection dropdown" v-model="rate_on_schedule" id="rate_on_schedule_el">
+                                    <select class="ui fluid selection dropdown" v-model="sr_rate_on_schedule" id="sr_rate_on_schedule">
                                         <option value="">Select salary</option>
                                         <option value="0">-------</option>
                                         <option v-for="(salary,index) in salaries" :value="salary">{{salary}}</option>
@@ -43,7 +43,7 @@
                                 </div>
                                 <div class="field">
                                     <label>Session:</label>
-                                    <select class="ui compact dropdown" v-model="is_per_session" id="is_per_session_el">
+                                    <select class="ui compact dropdown" v-model="sr_is_per_session" id="sr_is_per_session">
                                         <option value="" disabled>No</option>
                                         <option value="0">No</option>
                                         <option value="1">Per Session</option>
@@ -57,38 +57,38 @@
                                 <div class="fields">
                                     <div class="eight wide field">
                                         <label>From:</label>
-                                        <input type="date" v-model="date_from">
+                                        <input type="date" v-model="sr_date_from">
                                     </div>
                                     <div class="eight wide field">
                                         <label>To:</label>
-                                        <input type="date" v-model="date_to">
+                                        <input type="date" v-model="sr_date_to">
                                     </div>
                                 </div>
                                 <div class="fields">
                                     <div class="eight wide field">
                                         <label>Place of Assignment:</label>
-                                        <select class="ui fluid search selection dropdown" v-model="place_of_assignment" id="place_of_assignment_el">
+                                        <select class="ui fluid search selection dropdown" v-model="sr_place_of_assignment" id="sr_place_of_assignment">
                                             <option value="" disabled>Select</option>
                                             <option v-for="(place,index) in place_of_assignments" :key='index' :value="place">{{ place }}</option>
                                         </select>
                                     </div>
                                     <div class="eight wide field">
                                         <label>Branch:</label>
-                                        <select class="ui selection dropdown" v-model="branch" id="branch_el">
+                                        <select class="ui selection dropdown" v-model="sr_branch" id="sr_branch">
                                             <option value="">Select Branch</option>
-                                            <option value="Local">Local</option>
-                                            <option value="National">National</option>
-                                            <option value="Province">Province</option>
+                                            <option value="LOCAL">LOCAL</option>
+                                            <option value="NATIONAL">NATIONAL</option>
+                                            <option value="PROVINCE">PROVINCE</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="field">
                                     <label>Remarks:</label>
-                                    <textarea rows="2" v-model="remarks" placeholder="Enter remarks"></textarea>
+                                    <textarea rows="2" v-model="sr_remarks" placeholder="Enter remarks"></textarea>
                                 </div>
                                 <div class="field">
                                     <label>Memo:</label>
-                                    <textarea rows="4" v-model="memo" placeholder="Enter memo"></textarea>
+                                    <textarea rows="4" v-model="sr_memo" placeholder="Enter memo"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -121,11 +121,12 @@
                 <table class="ui very compact small celled structured striped table" style="font-size:11px" id="srTable" data-id="<?= $_GET['employees_id'] ?>">
                     <thead style="text-align:center">
                         <tr>
+                            <th rowspan="2"></th>
                             <th colspan="2">SERVICE (inclusive dates)</th>
                             <th colspan="3">RECORD of appointment</th>
                             <th colspan="2">OFFICE / ENTITY / DIVISION</th>
                             <th rowspan="2">SEPARTION L/V ABS W/O PAY</th>
-                            <th rowspan="2">OPTIONS</th>
+                            <th rowspan="2"></th>
                         </tr>
                         <tr>
                             <th>FROM</th>
@@ -139,9 +140,12 @@
                     </thead>
                     <tbody>
                         <tr v-if="records.length < 1">
-                            <td colspan="9" style="font-size:20px;text-align:center;color:#5555557a;padding:20px">EMPTY</td>
+                            <td colspan="10" style="font-size:20px;text-align:center;color:#5555557a;padding:20px">EMPTY</td>
                         </tr>
                         <tr v-for="(srDat,index) in records" :key="index">
+                            <td class="center aligned">
+                                <i class="edit icon link" @click="init_edit(index)"></i>
+                            </td>
                             <td class="center aligned">{{format_date(srDat.sr_date_from)}}</td>
                             <td class="center aligned">{{format_date(srDat.sr_date_to)}}</td>
                             <td>{{srDat.sr_designation}}</td>
@@ -151,10 +155,7 @@
                             <td class="center aligned">{{srDat.sr_branch}}</td>
                             <td>{{srDat.sr_remarks}}</td>
                             <td class="center aligned">
-                                <div class="ui mini icon buttons">
-                                    <button class="ui button primary" @click="init_edit(index)"><i class="edit icon"></i></button>
-                                    <button class="ui button" @click="init_remove(index)"><i class="trash icon"></i></button>
-                                </div>
+                                <i class="times icon link" @click="init_delete(index)"></i>
                             </td>
                         </tr>
                     </tbody>
