@@ -333,7 +333,7 @@ function update() {
         </table>
     </div>
 
-    <div class="ui container" style="padding: 5px;">
+    <div class="ui container" style="padding: 5px; width: 1300px;">
 
         <div class="ui segment grid">
             <div class="three wide column">
