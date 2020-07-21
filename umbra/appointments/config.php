@@ -16,7 +16,10 @@ if(isset($_POST['Employees'])){
                 employees";
     $sql = $mysqli->query($sql);
     $dat = [];
+    $throwDat=[];
+    $allEmp = [];
     while ($row = $sql->fetch_assoc()) {
+        $allEmp[] = $row;
         $s = "SELECT * from `plantillas` left join `appointments` on `plantillas`.`incumbent`=`appointments`.`appointment_id` where `appointments`.`employee_id`='$row[employees_id]'";
         $s = $mysqli->query($s);
         echo $mysqli->error;
@@ -24,7 +27,9 @@ if(isset($_POST['Employees'])){
             $dat[] = $row;
         }
     }
-    echo json_encode($dat);
+    $throwDat['Employees'] = $dat;
+    $throwDat['All_Employees'] = $allEmp;
+    echo json_encode($throwDat);
 }elseif(isset($_POST['Plantilla'])){
     $dataId = $_POST['Plantilla'];
     $sendDat = array('status' => '','dat'=>'' );

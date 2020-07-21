@@ -111,7 +111,7 @@
           <label>Committee Chair</label>
           <select class="ui search dropdown" v-model="committee_chair" required>
               <option value="">Search Name</option>
-              <option v-for="(hr,index) in Employees" :key="index" value="hr.employee_id">{{hr.lastName}} {{hr.firstName}}</option>
+              <option v-for="(comChair,index) in All_Employees" :value="comChair.employees_id">{{comChair.lastName}} {{comChair.firstName}}</option>
           </select>
         </div>
       </div>
@@ -134,7 +134,7 @@
           <label>HRMO</label>
           <select class="ui search dropdown" v-model="HRMO" required>
               <option value="">Search Name</option>
-              <option v-for="(hr,index) in Employees" :key="index" value="hr.employee_id">{{hr.lastName}} {{hr.firstName}}</option>
+              <option v-for="(hr,index) in All_Employees" :key="index" :value="hr.employees_id">{{hr.lastName}} {{hr.firstName}}</option>
           </select>
         </div>
         <div class="two fields">

@@ -7,6 +7,7 @@
         el:"#app",
         data:{
             Employees:[],
+            All_Employees:[],
             Plantilla:[],
             employ:"",
             pre_employ:"",
@@ -43,13 +44,15 @@
             casual_promotion:"",
             probationary_period:""
         },
-        methods:{
+        methods:{ 
             getEmployees:function(){
                 var fd = new FormData();
                     fd.append('Employees',true)
                 var xml = new XMLHttpRequest()
                     xml.onload = function(){
-                        app.Employees = JSON.parse(xml.responseText)
+                        res = JSON.parse(xml.responseText)
+                        app.Employees = res.Employees
+                        app.All_Employees = res.All_Employees
                     }
                     xml.open('POST','umbra/appointments/config.php',true)
                     xml.send(fd)
