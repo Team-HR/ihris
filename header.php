@@ -16,7 +16,10 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true && $_SESSION[
 <!--  <meta charset="UTF-8" name="google" value="notranslate" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/> -->
   <meta name="viewport" content="width=device-width, height=device-height , initial-scale=1">
 
-  <script src="node_modules\vue\dist\vue.min.js"></script>
+  <?php 
+  echo '<script src="node_modules\vue\dist\vue'. (basename(dirname(__FILE__))==="ihris"?'.min':'').'.js"></script>';
+  ?>
+  
   <!-- development version, includes helpful console warnings -->
   <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
   <script src="node_modules\moment\min\moment.min.js"></script>
