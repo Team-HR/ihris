@@ -1,4 +1,5 @@
 node_modules
+vendor
 ldn-resources
 _connect.db.php
 vendor
