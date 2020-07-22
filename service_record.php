@@ -3,7 +3,7 @@
             <div class="ui modal" id="addSR">
                 <div class="header">SERVICE RECORD BUILDUP</div>
                 <div class="content">
-                    <div class="ui form">
+                    <form class="ui form" id="add_edit_form">
                         <div class="ui two column grid">
                             <div class="column">
                                 <!-- column 1 -->
@@ -31,7 +31,7 @@
                                 <!-- <div class="fields"> -->
                                 <div :hidden="sr_is_per_session==1" class="field">
                                     <label>For build-up (Annual Rate)*:</label>
-                                    <input type="number" placeholder="000.00" v-model="sr_salary_rate">
+                                    <input id="sr_salary_rate" type="number" placeholder="000.00" v-model="sr_salary_rate">
                                 </div>
                                 <div :hidden="sr_is_per_session==0" class="field">
                                     <label class="ui sub header">Rate on Schedule:</label>
@@ -57,7 +57,7 @@
                                 <div class="fields">
                                     <div class="eight wide field">
                                         <label>From:</label>
-                                        <input type="date" v-model="sr_date_from">
+                                        <input id="sr_date_from" type="date" v-model="sr_date_from">
                                     </div>
                                     <div class="eight wide field">
                                         <label>To:</label>
@@ -84,27 +84,25 @@
                                 </div>
                                 <div class="field">
                                     <label>Remarks:</label>
-                                    <textarea rows="2" v-model="sr_remarks" placeholder="Enter remarks"></textarea>
+                                    <textarea id="sr_remarks" rows="2" v-model="sr_remarks" placeholder="Enter remarks"></textarea>
                                 </div>
                                 <div class="field">
                                     <label>Memo:</label>
-                                    <textarea rows="4" v-model="sr_memo" placeholder="Enter memo"></textarea>
+                                    <textarea id="sr_memo" rows="4" v-model="sr_memo" placeholder="Enter memo"></textarea>
                                 </div>
                             </div>
                         </div>
-
-
-                    </div>
+                        <div class="ui error message"></div>
+                    </form>
                 </div>
                 <div class="actions">
-                    <button class="ui mini button primary" @click="submit_form()"><i class="save icon"></i> Save</button>
+                    <button form="add_edit_form" class="ui mini button primary" @click="submit_form()"><i class="save icon"></i> Save</button>
                     <button class="ui mini button deny red" @click="clear_form()"><i class="times icon"></i> Cancel</button>
                 </div>
             </div>
             <div class="ui segment">
                 <div>
                 </div>
-
                 <div style="float:left">
                     <h2>Service Record</h2>
                 </div>
@@ -112,7 +110,7 @@
                     <button class="ui button tiny icon primary" @click="init_add()" style="width: 100px;">
                         <i class="angle up icon"></i> Build-up
                     </button>
-                    <a class="ui button tiny icon green" :class="{disabled:records.length>0?false:true}" style="width: 100px;" href="service_record_print.php?employee_id=<?=$employees_id?>" target="_blank">
+                    <a class="ui button tiny icon green" :class="{disabled:records.length>0?false:true}" style="width: 100px;" href="service_record_print.php?employee_id=<?= $employees_id ?>" target="_blank">
                         <i class="print icon"></i> Print
                     </a>
                 </div>

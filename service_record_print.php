@@ -246,10 +246,3 @@ $mpdf->defaultfooterline = 0;
 
 $mpdf->WriteHTML($html);
 $mpdf->Output();
-
-function formatDate($date_in)
-{
-    if (!$date_in) return "";
-    $date = date_create($date_in);
-    return date_format($date, "m/d/Y");
-}

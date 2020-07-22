@@ -103,12 +103,10 @@ var sr_app = new Vue({
         },
         init_add() {
             this.id_for_editing = null
-            console.log('id_for_editing:', this.id_for_editing);
             $("#addSR").modal("show")
         },
         init_edit(index) {
             this.id_for_editing = this.records[index].id
-            console.log('id_for_editing:', this.id_for_editing);
             var sr = this.records[index]
             this.sr_type = sr.sr_type
             $("#sr_type").dropdown("set selected", this.sr_type)
@@ -154,7 +152,26 @@ var sr_app = new Vue({
             });
             $("#delete_modal").modal("show");
         },
+
+        validate_form() {
+            $("#add_edit_form").form({
+                fields: {
+                    sr_type: 'empty',
+                    sr_designation: 'empty',
+                    sr_status: 'empty',
+                    sr_date_from: 'empty',
+                    sr_place_of_assignment: 'empty',
+                    sr_branch: 'empty',
+                    sr_remarks: 'empty',
+                    // sr_memo: 'empty',
+                },
+                inline : true,
+    on     : 'blur'
+            });
+        },
+
         submit_form() {
+            this.validate_form()
             var data = {
                 employee_id: this.employee_id,
                 sr_type: this.sr_type,
@@ -170,7 +187,7 @@ var sr_app = new Vue({
                 sr_remarks: this.sr_remarks,
                 sr_memo: this.sr_memo
             }
-            console.log(data);
+
             $.ajax({
                 type: "post",
                 url: "umbra/service_record/config.php",
@@ -195,6 +212,9 @@ var sr_app = new Vue({
         }
     },
     mounted() {
+        $("#add_edit_form").submit(function (e) {
+            e.preventDefault()
+        })
         var queryString = window.location.search;
         var urlParams = new URLSearchParams(queryString);
         var employee_id = urlParams.get('employees_id')
@@ -210,7 +230,6 @@ var sr_app = new Vue({
             showOnFocus: false,
             onShow() {
                 $("#designation_el").dropdown("hide others");
-                // console.log("dropped!");
             }
         });
 
