@@ -133,6 +133,7 @@ var sr_app = new Vue({
             $("#addSR").modal("show")
         },
         init_delete(index) {
+            var that = this
             $("#delete_modal").modal({
                 onApprove: () => {
                     $.ajax({
@@ -144,7 +145,8 @@ var sr_app = new Vue({
                         },
                         dataType: "json",
                         success: (response) => {
-                            this.records.splice(index, 1)
+                            if (response > 0)
+                                this.records.splice(index, 1)
                         }
                     });
                 },
@@ -205,7 +207,6 @@ var sr_app = new Vue({
 
         $("#sr_type").dropdown({
             showOnFocus: false,
-            allowTab: false,
             onShow() {
                 $("#designation_el").dropdown("hide others");
                 // console.log("dropped!");
@@ -216,26 +217,22 @@ var sr_app = new Vue({
             clearable: true,
             allowAdditions: true,
             forceSelection: true,
-            allowTab: false,
             showOnFocus: false,
             hideAdditions: false
         });
 
         $("#sr_status").dropdown({
             showOnFocus: false,
-            allowTab: false,
         });
 
         $("#sr_is_per_session").dropdown({
             showOnFocus: false,
-            allowTab: false,
         });
 
         $("#sr_rate_on_schedule").dropdown({
             clearable: true,
             keepOnScreen: false,
             showOnFocus: false,
-            allowTab: false,
             fullTextSearch: "exact",
             allowAdditions: true
         });
@@ -243,13 +240,11 @@ var sr_app = new Vue({
         $("#sr_place_of_assignment").dropdown({
             clearable: true,
             allowAdditions: true,
-            allowTab: false,
             showOnFocus: false,
         });
 
         $("#sr_branch").dropdown({
             showOnFocus: false,
-            allowTab: false,
         });
 
     },

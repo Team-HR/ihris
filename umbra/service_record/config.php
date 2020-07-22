@@ -50,9 +50,11 @@ if (isset($_POST['get_salaries'])) {
     $id = $_POST['id'];
     $sql = "DELETE FROM `service_records` WHERE `id` = ?";
     $stmt = $mysqli->prepare($sql);
-    $stmt->bind_param('i',$id);
+    $stmt->bind_param('i', $id);
     $stmt->execute();
+    $affected_rows = $stmt->affected_rows;
     $stmt->close();
+    echo json_encode($affected_rows);
 } elseif (isset($_POST['submit_form'])) {
     $data = $_POST["data"];
     $id_for_editing = $_POST["id_for_editing"];
