@@ -1,172 +1,189 @@
     <div id="app_sr">
-        <div class="ui modal" id="addSR">
-            <div class="header">SERVICE RECORD BUILDUP</div>
-            <div class="content">
-                <div class='ui form' @submit.prevent="save_form_data(<?= $_GET['employees_id'] ?>)">
-                    <div class="field">
-                        <label>Service Record Type:</label>
-                        <select class="ui search dropdown" v-model="sr_form" id="sr_form">
-                            <option value="">Type here...</option>
-                            <option style="font-size: 20px;" v-for="(sr,index) in srtype_array" :key="index" :value="sr">{{ sr }}</option>
-                        </select>
-                    </div>
-                    <div class="field">
-                        <label>Designation:</label>
-                        <!-- <input type="text" v-model="designation_form" id="designation_dropdown"></input> -->
-                        <select class="ui search dropdown" v-model="designation_form" id="designation_dropdown">
-                            <option value="">Enter or Select Designation</option>
-                            <option v-for="(position,index) in positions" :key='index' :value="position">{{ position }}</option>
-                        </select>
-                    </div>
-                    <div class="field">
-                        <label>Status</label>
-                        <select class="ui clearable search dropdown" v-model="status_form" id="status_form">
-                            <option value="">Type here...</option>
-                            <option v-for="(stat,index) in status_array" :key="index" :value="stat">{{ stat }}</option>
-                        </select>
-                    </div>
-                    <div class="ui sub header">Salary Rate:</div>
-                    <hr>
-                    <div class="fields">
-                        <div class="six wide field">
-                            <label>For build-up (ANNUAL RATE)*</label>
-                            <input :disabled="is_per_session" type="number" placeholder="000.00" v-model="salaryAnnual">
-                        </div>
-                        <div class="six wide field">
-                            <label>Session</label>
-                            <select class="ui search dropdown" v-model="session_form" id="session_form">
-                                <option value="" disabled>-------</option>
-                                <option value="0">No</option>
-                                <option value="1">Per Session</option>
-                            </select>
-                        </div>
-                        <div class="six wide field">
-                            <label>Rate on Schedule</label>
-                            <select :disabled="!is_per_session" class="ui search dropdown" v-model="salaryPerSchedule">
-                                <option value="">SELECT salary</option>
-                                <option value="0">-------</option>
-                                <option v-for="(sal,index) in salary_array" :value="sal.monthly_salary">{{"Php."+formatNumber(sal.monthly_salary) }}</option>
+        <template>
+            <div class="ui modal" id="addSR">
+                <div class="header">SERVICE RECORD BUILDUP</div>
+                <div class="content">
+                    <div class="ui form">
+                        <div class="ui two column grid">
+                            <div class="column">
+                                <!-- column 1 -->
+                                <div class="field">
+                                    <label>Service Record Type:</label>
+                                    <select style="position:relative; z-index: 100;" class="ui selection compact dropdown" v-model="sr_type" id="sr_type">
+                                        <option value="">Select Type</option>
+                                        <option v-for="(type,index) in record_types" :key="index" :value="type">{{ type }}</option>
+                                    </select>
+                                </div>
+                                <div class="field">
+                                    <label>Designation:</label>
+                                    <select class="ui fluid search dropdown" v-model="sr_designation" id="sr_designation">
+                                        <option value="" disabled>Select</option>
+                                        <option v-for="(position,index) in positions" :key='index' :value="position">{{ position }}</option>
+                                    </select>
+                                </div>
+                                <div class="field">
+                                    <label>Status:</label>
+                                    <select class="ui selection dropdown" v-model="sr_status" id="sr_status">
+                                        <option value="">Select Status</option>
+                                        <option v-for="(stat,index) in statuses" :key="index" :value="stat">{{ stat }}</option>
+                                    </select>
+                                </div>
+                                <!-- <div class="fields"> -->
+                                <div :hidden="sr_is_per_session==1" class="field">
+                                    <label>For build-up (Annual Rate)*:</label>
+                                    <input type="number" placeholder="000.00" v-model="sr_salary_rate">
+                                </div>
+                                <div :hidden="sr_is_per_session==0" class="field">
+                                    <label class="ui sub header">Rate on Schedule:</label>
+                                    <select class="ui fluid selection dropdown" v-model="sr_rate_on_schedule" id="sr_rate_on_schedule">
+                                        <option value="">Select salary</option>
+                                        <option value="0">-------</option>
+                                        <option v-for="(salary,index) in salaries" :value="salary">{{salary}}</option>
+                                    </select>
+                                </div>
+                                <div class="field">
+                                    <label>Session:</label>
+                                    <select class="ui compact dropdown" v-model="sr_is_per_session" id="sr_is_per_session">
+                                        <option value="" disabled>No</option>
+                                        <option value="0">No</option>
+                                        <option value="1">Per Session</option>
+                                    </select>
+                                </div>
+                                <!-- </div> -->
+                            </div>
+                            <div class="column">
+                                <!-- column 2 -->
 
-                            </select>
-                        </div>
-                    </div>
-                    <div class="fields">
-                        <div class="eight wide field">
-                            <label>Date From</label>
-                            <input type="date" v-model="from_form">
-                        </div>
-                        <div class="eight wide field">
-                            <label>Date To</label>
-                            <input type="date" v-model="to_form">
-                        </div>
-                    </div>
-                    <div class="fields">
-                        <div class="seven wide field">
-                            <label> Place of Assignment </label>
-                            <!-- <input type="text" v-model="assign_form"> -->
-
-
-                            <!-- <div class="ui action input"> -->
-                            <select class="ui fluid search selection dropdown" v-model="assign_form" id="place_of_assignment_dropdown">
-                                <option value="" disabled>Select</option>
-                                <option v-for="(position,index) in positions" :key='index' :value="position">{{ position }}</option>
-                            </select>
-                            <!-- <div class=""> -->
-
-                            <!-- </div> -->
-
-                            <!-- </div> -->
-
-
-                        </div>
-                        <div class="one wide field">
-                            <div class="ui icon button"> <i class="icon add"></i>
+                                <div class="fields">
+                                    <div class="eight wide field">
+                                        <label>From:</label>
+                                        <input type="date" v-model="sr_date_from">
+                                    </div>
+                                    <div class="eight wide field">
+                                        <label>To:</label>
+                                        <input type="date" v-model="sr_date_to">
+                                    </div>
+                                </div>
+                                <div class="fields">
+                                    <div class="eight wide field">
+                                        <label>Place of Assignment:</label>
+                                        <select class="ui fluid search selection dropdown" v-model="sr_place_of_assignment" id="sr_place_of_assignment">
+                                            <option value="" disabled>Select</option>
+                                            <option v-for="(place,index) in place_of_assignments" :key='index' :value="place">{{ place }}</option>
+                                        </select>
+                                    </div>
+                                    <div class="eight wide field">
+                                        <label>Branch:</label>
+                                        <select class="ui selection dropdown" v-model="sr_branch" id="sr_branch">
+                                            <option value="">Select Branch</option>
+                                            <option value="LOCAL">LOCAL</option>
+                                            <option value="NATIONAL">NATIONAL</option>
+                                            <option value="PROVINCE">PROVINCE</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label>Remarks:</label>
+                                    <textarea rows="2" v-model="sr_remarks" placeholder="Enter remarks"></textarea>
+                                </div>
+                                <div class="field">
+                                    <label>Memo:</label>
+                                    <textarea rows="4" v-model="sr_memo" placeholder="Enter memo"></textarea>
+                                </div>
                             </div>
                         </div>
-                        <div class="eight wide field">
-                            <label>Branch</label>
-                            <select class="ui search dropdown" v-model="branch_form" id="branch_form">
-                                <option value="">Type here...</option>
-                                <option value="Local">Local</option>
-                                <option value="National">National</option>
-                                <option value="Province">Province</option>
-                            </select>
-                        </div>
+
+
                     </div>
-                    <div class="field">
-                        <label>Remarks</label>
-                        <textarea rows="2" v-model="remarks_form"></textarea>
-                    </div>
-                    <div class="field">
-                        <label>MEMO</label>
-                        <textarea rows="4" v-model="memo_form"></textarea>
-                    </div>
-                    <button class="ui button primary">SAVE</button>
+                </div>
+                <div class="actions">
+                    <button class="ui mini button primary" @click="submit_form()"><i class="save icon"></i> Save</button>
+                    <button class="ui mini button deny red" @click="clear_form()"><i class="times icon"></i> Cancel</button>
                 </div>
             </div>
-        </div>
-        <div class="ui segment">
-            <div>
-            </div>
+            <div class="ui segment">
+                <div>
+                </div>
 
-            <div style="float:left">
-                <h2>Service Record</h2>
-            </div>
-            <div style="float:right">
-                <button class="ui button tiny icon primary" @click="openAddSr()" style="width: 100px;">
-                    <i class="angle up icon"></i> Build-up
-                </button>
-                <button class="ui button tiny icon green" style="width: 100px;">
-                    <i class="print icon"></i> Print
-                </button>
-            </div>
-            <div style="clear:both"></div>
-            <hr>
-            <table class="ui table" style="font-size:11px" border="1px" id="srTable" data-id="<?= $_GET['employees_id'] ?>">
-                <thead style="text-align:center">
-                    <tr>
-                        <th colspan="2">SERVICE (inclusive dates)</th>
-                        <th colspan="3">RECORD of appointment</th>
-                        <th colspan="2">OFFICE / ENTITY / DIVISION</th>
-                        <th rowspan="2">SEPARTION L/V ABS W/O PAY</th>
-                        <th rowspan="2">OPTIONS</th>
-                    </tr>
-                    <tr>
-                        <th>FROM</th>
-                        <th>TO</th>
-                        <th>Designation</th>
-                        <th>Status</th>
-                        <th>Annual Salary</th>
-                        <th>Station / Place of Assignment</th>
-                        <th>Branch</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <template v-if="sr_data.length<1">
+                <div style="float:left">
+                    <h2>Service Record</h2>
+                </div>
+                <div style="float:right">
+                    <button class="ui button tiny icon primary" @click="init_add()" style="width: 100px;">
+                        <i class="angle up icon"></i> Build-up
+                    </button>
+                    <button class="ui button tiny icon green" style="width: 100px;">
+                        <i class="print icon"></i> Print
+                    </button>
+                </div>
+                <div style="clear:both"></div>
+                <hr>
+                <table class="ui very compact small celled structured striped table" style="font-size:11px" id="srTable" data-id="<?= $_GET['employees_id'] ?>">
+                    <thead style="text-align:center">
                         <tr>
-                            <td colspan="9" style="font-size:20px;text-align:center;color:#5555557a;padding:20px">EMPTY</td>
+                            <th rowspan="2"></th>
+                            <th colspan="2">SERVICE (inclusive dates)</th>
+                            <th colspan="3">RECORD of appointment</th>
+                            <th colspan="2">OFFICE / ENTITY / DIVISION</th>
+                            <th rowspan="2">SEPARTION L/V ABS W/O PAY</th>
+                            <th rowspan="2"></th>
                         </tr>
-                    </template>
-                    <template v-else>
-                        <tr v-for="(srDat,index) in sr_data" :key="index">
-                            <td>{{srDat.sr_from}}</td>
-                            <td>{{srDat.sr_to}}</td>
+                        <tr>
+                            <th>FROM</th>
+                            <th>TO</th>
+                            <th>Designation</th>
+                            <th>Status</th>
+                            <th>Annual Salary</th>
+                            <th>Station / Place of Assignment</th>
+                            <th>Branch</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-if="records.length < 1">
+                            <td colspan="10" style="font-size:20px;text-align:center;color:#5555557a;padding:20px">EMPTY</td>
+                        </tr>
+                        <tr v-for="(srDat,index) in records" :key="index">
+                            <td class="center aligned">
+                                <i class="edit icon link" @click="init_edit(index)"></i>
+                            </td>
+                            <td class="center aligned">{{format_date(srDat.sr_date_from)}}</td>
+                            <td class="center aligned">{{format_date(srDat.sr_date_to)}}</td>
                             <td>{{srDat.sr_designation}}</td>
-                            <td>{{srDat.status}}</td>
-                            <td>{{"Php."+formatNumber(srDat.sr_salary_rate)}}</td>
+                            <td>{{srDat.sr_status}}</td>
+                            <td class="center aligned">{{"Php."+srDat.sr_salary_rate}}</td>
                             <td>{{srDat.sr_place_of_assignment}}</td>
-                            <td>{{srDat.sr_branch}}</td>
-                            <td>{{srDat.remarks}}</td>
-                            <td>
-                                <div class="ui buttons">
-                                    <button class="ui tiny button icon green" @click="editor(index)"><i class="edit icon"></i></button>
-                                    <button class="ui tiny button icon" @click="removeSr(srDat.id)"><i class="trash icon"></i></button>
-                                </div>
+                            <td class="center aligned">{{srDat.sr_branch}}</td>
+                            <td>{{srDat.sr_remarks}}</td>
+                            <td class="center aligned">
+                                <i class="times icon link" @click="init_delete(index)"></i>
                             </td>
                         </tr>
-                    </template>
-                </tbody>
-            </table>
-        </div>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- delete modal start -->
+            <div class="ui mini modal" id="delete_modal">
+                <div class="header">
+                    Confirm Delete?
+                </div>
+                <div class="content">
+                    <div class="description">
+                        Are you sure you want to <strong style="color:red">permanently</strong> delete this record?
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="ui mini button primary approve">
+                        <i class="icon check"></i> Yes
+                    </button>
+                    <button class="ui mini button red deny">
+                        <i class="icon times"></i> No
+                    </button>
+                </div>
+            </div>
+
+            <!-- delete modal end -->
+
+        </template>
     </div>
     <script src="umbra/service_record/config.js"></script>

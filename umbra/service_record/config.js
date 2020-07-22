@@ -1,150 +1,83 @@
 
-var sr = new Vue({
+var sr_app = new Vue({
     el: "#app_sr",
-    data: {
-        srtype_array: ['Appointment', 'Build-Up', 'Death', 'End of Casual Emp.', 'End of Term', 'Resignation', 'Retirement', 'Salary Adjustment', 'Step Increment'],
-        status_array: ['Appointed', 'Add-in', 'Casual', 'Co-terminous', 'Contractual/Job Order', 'Elective', 'Permanent', 'Provisionary', 'Substitute', 'Temporary'],
-        salary_array: [],
-        sr_data: [],
-        sr_form: "",
-        designation_form: "",
-        status_form: "",
-        from_form: "",
-        to_form: "",
-        assign_form: "",
-        branch_form: "",
-        remarks_form: "",
-        memo_form: "",
-        salaryPerSchedule: 0,
-        session_form: "",
-        salaryAnnual: "",
-        srEditId: '',
-        positions: [],
-        is_per_session: false
+    data() {
+        return {
+            id_for_editing: null,
+            record_types: ['APPOINTMENT', 'BUILD-UP', 'DEATH', 'END OF CASUAL EMP.', 'END OF TERM', 'RESIGNATION', 'RETIREMENT', 'SALARY ADJUSTMENT', 'STEP INCREMENT'],
+            statuses: ['APPOINTED', 'ADD-IN', 'CASUAL', 'CO-TERMINOUS', 'CONTRACTUAL/JOB ORDER', 'ELECTIVE', 'PERMANENT', 'PROVISIONARY', 'SUBSTITUTE', 'TEMPORARY'],
+            salaries: [],
+            positions: [],
+            place_of_assignments: [],
+            records: [],
+            sr_type: "",
+            sr_designation: "",
+            sr_status: "",
+            sr_salary_rate: "",
+            sr_rate_on_schedule: "",
+            sr_is_per_session: "",
+            sr_date_from: "",
+            sr_date_to: "",
+            sr_place_of_assignment: "",
+            sr_branch: "",
+            sr_remarks: "",
+            sr_memo: "",
+            employee_id: 0
+        }
     },
     methods: {
-        openAddSr: function () {
-            $('#addSR').modal('show');
-            sr.sr_form = ""
-            sr.designation_form = ""
-            sr.status_form = ""
-            sr.salary_form = ""
-            sr.from_form = ""
-            sr.to_form = ""
-            sr.assign_form = ""
-            sr.branch_form = ""
-            sr.remarks_form = ""
-            sr.memo_form = ""
-            sr.salaryPerSchedule = 0;
-            sr.session_form = ""
-            sr.salaryAnnual = "";
-            sr.srEditId = "";
+        init_load() {
+            $.ajax({
+                type: "GET",
+                url: "umbra/service_record/config.php",
+                data: {
+                    init_load: true,
+                    employee_id: this.employee_id
+                },
+                dataType: "json",
+                success: (response) => {
+                    this.records = response
+                },
+                async: false
+            });
+            this.get_positions()
+            this.get_salaries()
+            this.get_place_of_assignments()
         },
-        editor: function (i) {
-            dat = sr.sr_data[i]
-            $('#sr_form').dropdown('set selected', dat.sr_type);
-            sr.designation_form = dat.sr_designation;
-            $('#status_form').dropdown('set selected', dat.status);
-            sr.from_form = dat.sr_from;
-            sr.to_form = dat.sr_to;
-            sr.assign_form = dat.sr_place_of_assignment;
-            $('#branch_form').dropdown('set selected', dat.sr_branch);
-            sr.remarks_form = dat.remarks;
-            sr.memo_form = dat.sr_memo;
-            $('#session_form').dropdown('set selected', dat.is_per_session);
-            sr.salaryAnnual = dat.sr_salary_rate;
-            sr.srEditId = dat.id;
-            $('#addSR').modal('show');
-        },
-        get_designation: function () {
-            var fd = new FormData();
-            fd.append('getSalary', true);
-            var xml = new XMLHttpRequest();
-            xml.onload = function () {
-                sr.salary_array = JSON.parse(this.responseText);
-            };
-            xml.open('POST', 'umbra/service_record/config.php', false);
-            xml.send(fd);
-        },
-        save_form_data: function (dataId) {
-            var salary = 0;
-            var session = 0;
-            if (sr.salaryPerSchedule != 0 && sr.salaryPerSchedule != "") {
-                salary = sr.salaryPerSchedule * 12;
-            } else {
-                salary = sr.salaryAnnual;
-                session = sr.session_form;
-            }
-
-            // $str = " srEditI: " + sr.srEditI +
-            //     " sr_form: " + sr.sr_form +
-            //     " designation_form: " + sr.designation_form +
-            //     " status_form: " + sr.status_form +
-            //     " from_form: " + sr.from_form +
-            //     " to_form: " + sr.to_form +
-            //     " assign_form: " + sr.assign_form +
-            //     " branch_form: " + sr.branch_form +
-            //     " remarks_form: " + sr.remarks_form +
-            //     " memo_form: " + sr.memo_form;
-            // console.log($str);
-
-            var fd = new FormData();
-            fd.append('save_form', dataId);
-            fd.append('editData', sr.srEditId)
-            fd.append('sr_form', sr.sr_form);
-            fd.append('designation_form', sr.designation_form);
-            fd.append('status_form', sr.status_form);
-            fd.append('salary_form', salary);
-            fd.append('session_form', session);
-            fd.append('from_form', sr.from_form);
-            fd.append('to_form', sr.to_form);
-            fd.append('assign_form', sr.assign_form);
-            fd.append('branch_form', sr.branch_form);
-            fd.append('remark_form', sr.remarks_form);
-            fd.append('memo_form', sr.memo_form);
-            var xml = new XMLHttpRequest();
-            xml.onload = function () {
-                var res = JSON.parse(xml.responseText);
-                $('body').toast({ class: res.status, message: res.msg });
-                $('#addSR').modal('hide');
-                sr.sr_data = res.dat;
-            }
-            xml.open('POST', 'umbra/service_record/config.php', true);
-            xml.send(fd);
-        },
-        get_srData: function () {
-            var employee = document.getElementById('srTable').attributes['data-id'].value;
-            var fd = new FormData();
-            fd.append('get_srData', employee);
-            var xml = new XMLHttpRequest();
-            xml.onload = function () {
-                sr.sr_data = JSON.parse(xml.responseText)
-            }
-            xml.open('POST', 'umbra/service_record/config.php', true);
-            xml.send(fd);
-        },
-        formatNumber: function (num) {
-            return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
-        },
-        removeSr: function (dataId) {
-            con = confirm('Are you sure?\nCANNOT BE UNDONE');
-            if (con) {
-                var fd = new FormData();
-                fd.append('remove', dataId);
-                var xml = new XMLHttpRequest();
-                xml.onload = function () {
-                    sr.get_srData();
-                }
-                xml.open('POST', 'umbra/service_record/config.php', true);
-                xml.send(fd);
-            }
-        },
-        getPositions() {
+        get_salaries() {
             $.ajax({
                 type: "post",
                 url: "umbra/service_record/config.php",
                 data: {
-                    getPositions: true
+                    get_salaries: true
+                },
+                dataType: "json",
+                success: (response) => {
+                    this.salaries = response
+                },
+                async: false
+            });
+        },
+        get_place_of_assignments() {
+            $.ajax({
+                type: "GET",
+                url: "umbra/service_record/config.php",
+                data: {
+                    get_place_of_assignments: true
+                },
+                dataType: "json",
+                success: (response) => {
+                    this.place_of_assignments = response
+                },
+                async: false
+            });
+        },
+        get_positions() {
+            $.ajax({
+                type: "GET",
+                url: "umbra/service_record/config.php",
+                data: {
+                    get_positions: true
                 },
                 dataType: "json",
                 success: (response) => {
@@ -152,50 +85,172 @@ var sr = new Vue({
                 },
                 async: false
             });
-        }
-    },
-    watch: {
-        session_form: function(val,oldVal){
-            if(val == ""|| val == 0){
-                this.is_per_session = false
-                this.salaryPerSchedule = "0"
-            } else {
-                this.is_per_session = true
-                this.salaryAnnual = ""
-            }
-        }
-    },
-     mounted() {
-        // $('#sr_form').dropdown({
-        //     showOnFocus: false,
-        // });
-        // $('#status_form').dropdown({
-        //     showOnFocus: false,
-        // });
-        // $('#designation_dropdown').dropdown({
-        //     showOnFocus: false,
-        //     fullTextSearch: "exact",
-        //     clearable: true
-        // });
+        },
+        clear_form() {
+            $('.ui .dropdown').dropdown("clear")
+            this.sr_type = ""
+            this.sr_designation = ""
+            this.sr_status = ""
+            this.sr_salary_rate = ""
+            this.sr_rate_on_schedule = ""
+            this.sr_is_per_session = ""
+            this.sr_date_from = ""
+            this.sr_date_to = ""
+            this.sr_place_of_assignment = ""
+            this.sr_branch = ""
+            this.sr_remarks = ""
+            this.sr_memo = ""
+        },
+        init_add() {
+            this.id_for_editing = null
+            console.log('id_for_editing:', this.id_for_editing);
+            $("#addSR").modal("show")
+        },
+        init_edit(index) {
+            this.id_for_editing = this.records[index].id
+            console.log('id_for_editing:', this.id_for_editing);
+            var sr = this.records[index]
+            this.sr_type = sr.sr_type
+            $("#sr_type").dropdown("set selected", this.sr_type)
+            this.sr_designation = sr.sr_designation
+            $("#sr_designation").dropdown("set selected", this.sr_designation)
+            this.sr_status = sr.sr_status
+            $("#sr_status").dropdown("set selected", this.sr_status)
+            this.sr_salary_rate = sr.sr_salary_rate
+            this.sr_rate_on_schedule = sr.sr_rate_on_schedule
+            $("#sr_rate_on_schedule").dropdown("set selected", this.sr_rate_on_schedule)
+            this.sr_is_per_session = sr.sr_is_per_session
+            $("#sr_is_per_session").dropdown("set selected", this.sr_is_per_session)
+            this.sr_date_from = sr.sr_date_from
+            this.sr_date_to = sr.sr_date_to
+            this.sr_place_of_assignment = sr.sr_place_of_assignment
+            $("#sr_place_of_assignment").dropdown("set selected", this.sr_place_of_assignment)
+            this.sr_branch = sr.sr_branch
+            $("#sr_branch").dropdown("set selected", this.sr_branch)
+            this.sr_remarks = sr.sr_remarks
+            this.sr_memo = sr.sr_memo
 
-        $('#place_of_assignment_dropdown').dropdown({
-            showOnFocus: false,
-            fullTextSearch: "exact",
-            clearable: true
+            $("#addSR").modal("show")
+        },
+        init_delete(index) {
+            $("#delete_modal").modal({
+                onApprove: () => {
+                    $.ajax({
+                        type: "post",
+                        url: "umbra/service_record/config.php",
+                        data: {
+                            init_delete: true,
+                            id: this.records[index].id
+                        },
+                        dataType: "json",
+                        success: (response) => {
+                            this.records.splice(index, 1)
+                        }
+                    });
+                },
+                duration: 0
+            });
+            $("#delete_modal").modal("show");
+        },
+        submit_form() {
+            var data = {
+                employee_id: this.employee_id,
+                sr_type: this.sr_type,
+                sr_designation: this.sr_designation,
+                sr_status: this.sr_status,
+                sr_salary_rate: this.sr_salary_rate,
+                sr_rate_on_schedule: this.sr_rate_on_schedule,
+                sr_is_per_session: this.sr_is_per_session,
+                sr_date_from: this.sr_date_from,
+                sr_date_to: this.sr_date_to,
+                sr_place_of_assignment: this.sr_place_of_assignment,
+                sr_branch: this.sr_branch,
+                sr_remarks: this.sr_remarks,
+                sr_memo: this.sr_memo
+            }
+            console.log(data);
+            $.ajax({
+                type: "post",
+                url: "umbra/service_record/config.php",
+                data: {
+                    submit_form: true,
+                    id_for_editing: this.id_for_editing,
+                    data: data
+                },
+                dataType: "json",
+                success: (response) => {
+                    $("#addSR").modal("hide")
+                    this.clear_form()
+                    this.init_load()
+                },
+                async: false
+            });
+        },
+        format_date(date) {
+            var _date = moment(date).format("MMM DD,YYYY");
+            return _date;
+        }
+    },
+    mounted() {
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        var employee_id = urlParams.get('employees_id')
+        this.employee_id = employee_id;
+        this.init_load()
+
+        $("#addSR").modal({
+            closable: false,
+            duration: 0
         });
-        
-        $('#sr_form').dropdown("set selected", "Build-Up");
-        var isReady = setInterval(() => {
-            if (document.readyState == "complete") {
-                sr.get_designation();
-                sr.get_srData();
-                this.openAddSr()
-                this.getPositions()
-                clearInterval(isReady);
 
+        $("#sr_type").dropdown({
+            showOnFocus: false,
+            allowTab: false,
+            onShow() {
+                $("#designation_el").dropdown("hide others");
+                // console.log("dropped!");
             }
-        }, 500);
-    }
+        });
+
+        $("#sr_designation").dropdown({
+            clearable: true,
+            allowAdditions: true,
+            forceSelection: true,
+            allowTab: false,
+            showOnFocus: false,
+            hideAdditions: false
+        });
+
+        $("#sr_status").dropdown({
+            showOnFocus: false,
+            allowTab: false,
+        });
+
+        $("#sr_is_per_session").dropdown({
+            showOnFocus: false,
+            allowTab: false,
+        });
+
+        $("#sr_rate_on_schedule").dropdown({
+            clearable: true,
+            keepOnScreen: false,
+            showOnFocus: false,
+            allowTab: false,
+            fullTextSearch: "exact",
+            allowAdditions: true
+        });
+
+        $("#sr_place_of_assignment").dropdown({
+            clearable: true,
+            allowAdditions: true,
+            allowTab: false,
+            showOnFocus: false,
+        });
+
+        $("#sr_branch").dropdown({
+            showOnFocus: false,
+            allowTab: false,
+        });
+
+    },
 })
-
-
