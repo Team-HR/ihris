@@ -112,9 +112,9 @@
                     <button class="ui button tiny icon primary" @click="init_add()" style="width: 100px;">
                         <i class="angle up icon"></i> Build-up
                     </button>
-                    <button class="ui button tiny icon green" style="width: 100px;">
+                    <a class="ui button tiny icon green" :class="{disabled:records.length>0?false:true}" style="width: 100px;" href="service_record_print.php?employee_id=<?=$employees_id?>" target="_blank">
                         <i class="print icon"></i> Print
-                    </button>
+                    </a>
                 </div>
                 <div style="clear:both"></div>
                 <hr>

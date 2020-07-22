@@ -189,6 +189,7 @@ var sr_app = new Vue({
             });
         },
         format_date(date) {
+            if (date == "") return "To Present"
             var _date = moment(date).format("MMM DD,YYYY");
             return _date;
         }

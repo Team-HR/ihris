@@ -58,7 +58,7 @@ if (isset($_POST['get_salaries'])) {
 } elseif (isset($_POST['submit_form'])) {
     $data = $_POST["data"];
     $id_for_editing = $_POST["id_for_editing"];
-
+    $data["sr_date_to"] = $data["sr_date_to"]?$data["sr_date_to"]:NULL;
     if (
         empty($data["sr_type"]) ||
         empty($data["sr_designation"]) ||
@@ -67,7 +67,7 @@ if (isset($_POST['get_salaries'])) {
         // sr_rate_on_schedule
         // sr_is_per_session
         empty($data["sr_date_from"]) ||
-        empty($data["sr_date_to"]) ||
+        // empty($data["sr_date_to"]) ||
         empty($data["sr_place_of_assignment"]) ||
         empty($data["sr_branch"])
         // sr_remarks

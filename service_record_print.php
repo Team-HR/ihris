@@ -21,11 +21,11 @@ $department = strtoupper($row["department"]);
 $mpdf->Bookmark('Start of the document');
 
 
-$full_name = "JESSEL MARIE BULABON ALINGCOMOT";
-$id_no = "32094";
-$birthdate = "JANUARY 10, 1983";
-$civil_status = "SINGLE";
-$birth_place = "BAYAWAN, NEGROS ORIENTAL";
+$full_name = "";
+$id_no = "";
+$birthdate = "";
+$civil_status = "";
+$birth_place = "";
 $maiden_name = "";
 
 $hrmo = "VERONICA GRACE P. MIRAFLOR";
@@ -33,26 +33,34 @@ $hrmo_position = "HRMO IV";
 $mayor = "PRYDE HENRY A. TEVES";
 $date_now = date("F d,Y");
 
-
 $service_records = array();
-// ####################TESTDATA######################
-// $data = array(
-//     "sr_date_from" => "sr_date_from",
-//     "sr_date_to" => "sr_date_to",
-//     "sr_designation" => "sr_designation",
-//     "sr_is_per_session" => 0,
-//     "sr_rate_on_schedule" => "sr_rate_on_schedule",
-//     "sr_status" => "sr_status",
-//     "sr_salary_rate" => "sr_salary_rate",
-//     "sr_place_of_assignment" => "sr_place_of_assignment",
-//     "sr_branch" => "sr_branch",
-//     "sr_remarks" => "sr_remarks",
-// );
+$employee_id = $_GET["employee_id"];
+$sql = "SELECT employees.firstName,employees.lastName,employees.middleName,employees.extName,pds_personal.employee_id,pds_personal.birthdate,pds_personal.birthplace,pds_personal.civil_status FROM employees LEFT JOIN pds_personal ON employees.employees_id=pds_personal.employee_id WHERE pds_personal.employee_id=?";
+$stmt = $mysqli->prepare($sql);
+$stmt->bind_param('i', $employee_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$employee = $result->fetch_assoc();
+$full_name = $employee["firstName"] . ($employee["middleName"] != "." && !empty($employee["middleName"]) ? " " . $employee["middleName"] : "") . " " . $employee["lastName"] . ($employee["extName"] ? " " . $employee["extName"] : "");
+$id_no = $employee_id;
+$birthdate = strtoupper(date_format(date_create($employee["birthdate"]),"F d, Y"));
+$civil_status = strtoupper($employee["civil_status"]);
+$birth_place = strtoupper($employee["birthplace"]);
+$maiden_name = "";
+$stmt->close();
 
-// for ($i=0; $i < 100; $i++) { 
-//     $service_records[]=$data;
-// }
-// ####################TESTDATA######################
+$sql = "SELECT * FROM `service_records` WHERE `employee_id` = ? ORDER BY `sr_date_from`,`sr_date_to` ASC";
+$stmt = $mysqli->prepare($sql);
+$stmt->bind_param('i', $employee_id);
+$stmt->execute();
+$result = $stmt->get_result();
+while ($row = $result->fetch_assoc()) {
+    $row["sr_salary_rate"] = number_format($row["sr_salary_rate"], 2, ".", ",")."/day";
+    $row["sr_date_from"] = date_format(date_create($row["sr_date_from"]),"m/d/Y");
+    $row["sr_date_to"] = $row["sr_date_to"]?date_format(date_create($row["sr_date_to"]),"m/d/Y"):"To Present";
+    $service_records[] = $row;
+}
+$stmt->close();
 
 $leave_wo_pays = array();
 $absence_wo_official_leaves = array();
@@ -95,10 +103,11 @@ $html = <<< EOD
 
 <htmlpagefooter name="myFooter2">
     <table width="100%" style="border: none; font-size: 9px; font-weight: bold; font-style: italic;">
+        <tr><td colspan="3" class="u"></td></tr>
         <tr>
-            <td style="border:none;" width="33%"></td>
-            <td style="border:none;" width="33%" align="center">Page {PAGENO} of {nbpg}</td>
-            <td width="33%" style="text-align: right; border:none;">Printed on {DATE F d, Y}</td>
+            <td width="33%">Printed on {DATE F d, Y}</td>
+            <td width="33%"></td>
+            <td width="33%" style="text-align:right;">Page {PAGENO} of {nbpg}</td>
         </tr>
     </table>
 </htmlpagefooter>
