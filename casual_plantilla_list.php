@@ -14,27 +14,13 @@ require_once "header.php";
         <h3><i class="briefcase icon"></i>Casual Plantilla</h3>
     </div>
     <div class="right item">
-        <!-- 
-      <button onclick="addModalFunc()" class="circular blue ui icon button" style="margin-right: 10px;" title="Add New Personnel">
-        <i class="icon plus circle"></i>
-      </button> -->
         <div class="ui right input">
             <button class="ui icon mini green button" onclick="addModalFunc()" style="margin-right: 5px;" title="Add New Department"><i class="icon print"></i> Print</button>
-            <!-- <div class="ui icon fluid input" style="width: 300px;">
-                <input id="pos_search" type="text" placeholder="Search...">
-                <i class="search icon"></i>
-            </div> -->
         </div>
-        <!-- <div class="ui icon fluid input">
-        <input id="pos_search" type="text" placeholder="Search...">
-        <i class="search icon"></i>
-      </div> -->
     </div>
 </div>
 
 <div class="ui container segment" id="app">
-
-
     <template>
         <div class="ui form">
             <div class="ui stackable grid">
@@ -81,6 +67,7 @@ require_once "header.php";
                     <th rowspan="2">Daily Wage</th>
                     <th colspan="2">Period of Employment</th>
                     <th rowspan="2">Nature of Appointment</th>
+                    <th rowspan="2"></th>
                 </tr>
                 <tr class="center aligned">
                     <th>Lastname</th>
@@ -97,14 +84,7 @@ require_once "header.php";
                 </tr>
                 <tr v-for="dat in data">
                     <td class="center aligned">
-                        <div class="ui mini basic icon buttons">
-                            <button class="ui button" @click="edit(dat)">
-                                <i class="icon link edit"></i>
-                            </button>
-                            <button class="ui button" @click="console.log('delete')">
-                                <i class="icon link trash"></i>
-                            </button>
-                        </div>
+                        <i class="icon link edit" @click="edit(dat)"></i>
                     </td>
                     <td>{{ dat.lastName }}</td>
                     <td>{{ dat.firstName }}</td>
@@ -116,6 +96,7 @@ require_once "header.php";
                     <td class="center aligned">{{dat.from_date}}</td>
                     <td class="center aligned">{{dat.to_date}}</td>
                     <td class="center aligned">{{dat.nature}}</td>
+                    <td class="center aligned"><i class="icon times link"></i></td>
                 </tr>
             </tbody>
         </table>
