@@ -1,397 +1,229 @@
-<?php $title = "Appointments"; require_once "header.php"; require_once "_connect.db.php";?>
-
-<div class="ui fluid container" style="min-height: 600px; padding: 5px;">
-    <div class="ui borderless blue inverted mini menu">
-        <div class="left item" style="margin-right: 0px !important;">
-            <button onclick="window.history.back();" class="blue ui icon button"
-                title="Back" style="width: 65px;">
-                <i class="icon chevron left"></i> Back
-            </button>
-
-        </div>
-        <div class="item">
-            <h3 style="color: white;"><i class="icon edit"></i>
-              Appoint Employee
-            </h3>
-        </div>
+<?php
+  if(!isset($_GET['id'])||$_GET['id']==""||$_GET['id']==0){
+     header("location:plantilla.php");
+  }
+ $title = "Appointments"; require_once "header.php"; require_once "_connect.db.php";
+ ?>
+  <div id="app" style="background: white; margin-top:30px; width:95%;;margin-left:40px;padding:20px">
+    <h2 class="ui dividing header" id="headerAppoint">Appointment for Administrative III - clerk 1</h2>  
+    <div class="ui fluid action input" style="padding-bottom:20px" v-if="employ==''">
+      <select class="ui search dropdown fluid" id="empList" v-model="pre_employ">
+        <option value="">Search Employee</option>
+        <option v-for="(emp,index) in Employees" :value="index">{{emp.lastName}} {{emp.firstName}} {{emp.middleName}} {{emp.extName}}</option>
+      </select>
+      <div class="ui button primary" @click="employ=String(pre_employ)">Confirm</div>
     </div>
+    <form class="ui form " :class="waitLoad" id="appointments_form" data-id="<?=$_GET['id']?>" @submit.prevent="saveAppointment()">      
+      <div class="four wide fields" v-if="employ!=''">
+        <div class="field">
+          <label>Employee Information <i class="edit icon green" @click="employ=''"></i></label>
+          <input type="text" v-model="lastName" readonly>
+        </div>    
+        <div class="field">
+          <label>&nbsp;</label>
+          <input type="text" v-model="firstName" readonly>
+        </div>    
+        <div class="field">
+          <label>&nbsp;</label>
+          <input type="text"  v-model="middleName" readonly>
+        </div>   
+        <div class="field"> 
+          <label>&nbsp;</label>
+          <input type="text" readonly v-model='extName'> 
+        </div>    
+      </div>
 
-
-<div id="app" style="background: white; margin-top:30px; width:95%;;margin-left:40px;padding:20px">
-   <div class="ui form">
-    <div style="font-size:15x;box-shadow: -0px 3px gray; height:30px;">PLANTILLA INFORMATION</div><br><br>
-  <!-- appointee -->
-   <!-- start -->
-        <strong>Name of Appointee:</strong>
-          <div class="five fields">
-<br>
-             <div class="field">  
-              <select class="ui search dropdown" v-model.number="employees_id">
-                <option value="">Employee ID</option>
-                <option v-for="Employee in Employees" :value="Employee.employees_id">{{ Employee.employees_id }}</option>
-              </select>
-              </div>
-              <div class="field">
-                <input type="text" placeholder="First Name" v-model="firstName" required>
-              </div>
-              <div class="field">
-                <input type="text"  placeholder="Middle Name" v-model="middleName">
-              </div>
-              <div class="field">
-                <input type="text"  placeholder="Last Name" v-model="lastName" required>
-              </div>
-              <div class="field">
-                <input type="text"  placeholder="Suffix" v-model="extName">
-              </div> 
-        </div>
-
-        <!-- <div class="field">
-              <div class="field">  
-                  <input type="text" placeholder="Employee Address" required>
-               </div>
-         </div> -->
-   <!-- end -->
-      <!-- plantilla -->
-           <!-- start -->
-        <div class="ui grid">
-          <div class="three column row">
-            <div class="five wide column">
-                <div class="ui form">
-                    <div class="field">
-       <br>
-                       <div class=" field"> 
-                          <strong>Position Name:</strong> 
-                          <select class="ui search dropdown" v-model.number="plantilla_id">
-                            <option value="">Postion Name</option>
-                            <option v-for="Plantilla in Plantillas" :value="Plantilla.id">{{ Plantilla.position_title }}</option>
-                          </select>  
-                          <!-- <input type="text" placeholder="Position Name"> -->
-                      </div>
-                      <div class=" field">
-                          <strong>Probationary Period:</strong> 
-                          <input type="text" placeholder="Probationary Period" v-model="probationary_period">
-                      </div>
-                      
-                    <div class="field">
-                          <strong>Position Vacated by:</strong> 
-                          <select class="ui search dropdown" v-model.number="vacated_by">
-                            <option value="">Employee ID</option>
-                            <option v-for="Employee in Employees" :value="Employee.employees_id">{{ Employee.lastName }} {{ Employee.firstName }}</option>
-                          </select>
-                    </div> 
-                    <div class="two fields">
-                        <div class= "field">
-                            <strong>Reason of Vacancy:</strong> 
-                            <select class="ui fluid search dropdown">
-                              <option value="">---</option>
-                              <option value="transfer">Transfer</option>
-                              <option value="promotion">Promotion</option>
-                              <option value="retirement">Retirement</option>
-                               <option value="others">Others</option>    
-                            </select>
-                         </div> 
-                      <div>
-                           <strong>-</strong> 
-                          <input type="text"  placeholder="If others pls specify">
-                      </div> 
-                     </div>
-                  </div>
-                </div>
-            </div>
-         
-            <div class="five wide column">
-              <div class="ui form">
-                  <div class="field">
-            <br>
-                       <div class="field"> 
-                          <strong>Supervisor:</strong> 
-                          <select class="ui search dropdown" v-model.number="supervisor">
-                            <option value="">Supervisor</option>
-                            <option v-for="Employee in Employees" :value="Employee.employees_id">{{ Employee.lastName }} {{ Employee.firstName}}</option>
-                          </select>
-                          <!-- <input type="text" placeholder="Supervisor"> -->
-                      </div>
-                      <div class="field">
-                          <strong>Supervisor's Title:</strong> 
-                          <input type="text" placeholder="Supervisor's Title" v-model="sup_position" readonly>
-                      </div>
-                      <div class="field">
-                          <strong>Next Higher Supervisor Title:</strong> 
-                          <select class="ui search dropdown" v-model.number="nextInRank">
-                            <option value="">Next Higher Supervisor Title</option>
-                            <option v-for="Plantilla in Plantillas" :value="Plantilla.id">{{ Plantilla.position_title }}</option>
-                          </select>
-                      </div>
-                    <div class = "two fields">
-                          <div class="field">
-                              <strong>Department:</strong> 
-                              <input type="text"  placeholder="Department" v-model="department" readonly  >
-                          </div>
-                          <div class="field">
-                              <strong>Department Head:</strong> 
-                              <select class="ui search dropdown" v-model.number="Department_Head">
-                                <option value="">Search Employee</option>
-                                <option v-for="Employee in Employees" :value="Employee.employees_id">{{ Employee.lastName }} {{ Employee.firstName }}</option>
-                              </select>
-                          </div>
-                    </div>
-                </div>
-              </div>
-            </div>
-              
-                <div class="six wide column">
-                     <div class="ui form">
-                        <br>
-                    <div class="two fields">
-                       <div class="field"> 
-                           <strong>Section</strong> 
-                           <input type="text" placeholder="Section" v-model="section">
-                        </div>
-                        <div class="field"> 
-                           <strong>Section Head</strong> 
-                           <select class="ui search dropdown" v-model.number="Section_Head">
-                            <option value="">Search Employee</option>
-                            <option v-for="Employee in Employees" :value="Employee.employees_id">{{ Employee.lastName }} {{ Employee.firstName }}</option>
-                          </select>
-                        </div>
-                    </div>
-                      <div class = "two fields">
-                          <div class=" field">
-                                <strong>Salary Grade:</strong> 
-                                   <input type="text" placeholder="Salary Grade" v-model="sg" readonly>
-                          </div>
-                          <div class="field">
-                                <strong>Salary Rate:</strong> 
-                                   <input type="number" placeholder="Salary Rate" v-model="actual_salary" readonly>
-                          </div>
-                       </div>
-                        <div class="field"> 
-                             <strong>Salary in Words:</strong> 
-                             <input type="text" placeholder="Salary in Words" v-model="actual_salary_in_words" readonly>
-                        </div>
-                       <div class = "three fields">
-                          <div class=" field">
-                                <strong>Other compensation:</strong> 
-                                   <input type="text" placeholder="Other compensation" v-model="other_compensation">
-                          </div>
-                          <div class="field">
-                                <strong>Page No.:</strong> 
-                                   <input type="number" placeholder="Page No." v-model="page_no">
-                          </div>
-                          <div class="field">
-                                <strong>Item No.:</strong> 
-                                   <input type="text" placeholder="Item No." v-model="item_no" readonly> 
-                          </div>
-                       </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+      <h4 class="ui dividing header" style="color:#00000066">Plantilla Information</h4>
+      <div class="four fields">        
+          <div class="field">
+            <label>Item No.</label>
+            <input v-model="Plantilla['item_no']" readonly>
           </div>
-    <br>
-      <div style="font-size:15x;box-shadow: -0px 3px gray; height:30px;">APPOINTMENT INFORMATION</div><br> 
-       <div class="ui grid">
-          <div class="three column row">
-            <div class="five wide column">
-                 <div class="ui form">
-                       <div class="field"> 
-                         <strong>Status of Appointment</strong> 
-                              <select id="status" class="ui fluid search selection dropdown" v-model="status_of_appointment">
-                                <option value="">---</option>
-                                <option value="elective">Elective</option>
-                                <option value="permanent">Permanent</option>
-                                <option value="casual">Casual</option>
-                                <option value="co-term">Co-term</option>
-                                <option value="temporary">Temporary</option>    
-                                <option value="contactual">Contractual</option>    
-                                <option value="substitute">Substitute</option>        
-                              </select>
-                        </div>
-                      <div class = "two fields">
-                          <div class=" field">
-                                <strong>Date of Appointment:</strong> 
-                                   <input type="date" v-model="date_of_appointment">
-                          </div>
-                          <div class="field">
-                                <strong>Date of Assumption:</strong> 
-                                   <input type="date" v-model="date_of_assumption">
-                          </div>
-                       </div>
-                      <div class="field">
-                            <strong>Nature of Appointment:</strong> 
-                               <select id="nature" class="ui fluid search selection dropdown" v-model="nature_of_appointment">
-                                <option value="">---</option>
-                                <option value="original">Original</option>
-                                <option value="promotion">Promotion</option>
-                                <option value="transfer">Transfer</option>
-                                <option value="re-employment">Re-employment</option>
-                                <option value="re-appointment">Re-appointment</option>    
-                                <option value="renewal">Renewal</option>    
-                                <option value="demotion">Demotion</option>        
-                              </select>
-                      </div>
-                      <div class = "two fields">
-                          <div class=" field">
-                                <strong>Appointing Authority:</strong> 
-                                   <input type="text" placeholder="HENRY A. TEVES" v-model="head_of_agency">
-                          </div>
-                          <div class="field">
-                                <strong>Date of Signing:</strong> 
-                                   <input type="date" v-model="date_of_signing">
-                          </div>
-                       </div>
-                    </div>
-            </div>
-         
-            <div class="six wide column">
-              <div class="ui form">
-                  <div class="field">
-                       
-                       <div class = "two fields">
-                          <div class=" field">
-                                <strong>CSC Authorized Official:</strong> 
-                                   <input type="text" placeholder="GINA A CRUCIO" v-model="csc_auth_official">
-                          </div>
-                          <div class="field">
-                                <strong>Date of Signed by CSC:</strong> 
-                                   <input type="date" v-model="date_signed_by_csc">
-                          </div>
-                       </div>
-
-                          <div class=" field">
-                                <strong>CSC MC NO.:</strong> 
-                                   <input type="number" placeholder="CSC MC NO." v-model="csc_mc_no">
-                          </div>
-
-                       <div class = "two fields">
-                          <div class="field">
-                                <strong>Assessment Date:</strong> 
-                                   <input type="date" v-model="assessment_date_from">
-                          </div>
-                           <div class="field">
-                                <strong>To:</strong> 
-                                   <input type="date" v-model="assessment_date_to">
-                          </div>
-                       </div>
-                        <div class = "two fields">
-                          <div class="field">
-                                <strong>Deliberation Date:</strong> 
-                                   <input type="date" v-model="deliberation_date_from">
-                          </div>
-                           <div class="field">
-                                <strong>To:</strong> 
-                                   <input type="date" v-model="deliberation_date_to">
-                          </div>
-                       </div>
-                </div>
-            </div>
+          <div class="field">
+            <label>Position</label>
+            <input v-model="Plantilla['position']" readonly>
           </div>
-                 <div class="five wide column">
-                     <div class="ui form">
-                     <div class="field">
-                       <div class="field"> 
-                         <strong>Committee Chair:</strong> 
-                         <input type="text" placeholder="JEREMIAS C GALLO" v-model="committee_chair">
-                        </div>
-                        <div class="field"> 
-                         <strong>HRMO:</strong> 
-                         <input type="text" placeholder="VERONICA GRACE P MIRAFLOR" v-model="hrmo">
-                        </div>
-                        <div class="field"> 
-                         <strong>Cert. Funds Available:</strong> 
-                         <input type="text" placeholder="CORAZON P LIRAZAN" v-model="cert_fund_available">
-                        </div>
-                      
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <br>
-    <div style="font-size:15x;box-shadow: -0px 3px gray; height:30px;">PUBLICATION & OTHER INFORMATION</div><br> 
-      <div class="ui grid">
-          <div class="three column row">
-            <div class="five wide column">
-                <div class="ui form">
-                    <div class="field">
-                       <div class=" field"> 
-                        <strong>Published At:</strong> 
-                        <input type="text" placeholder="Published At" v-model="published_at">
-
-                      </div>
-                      <div class="two fields">
-                        <div class= "field">
-                        <strong>Probationary Date:</strong> 
-                        <input type="date" v-model="probationary_date_from">
-                         </div> 
-                      <div>
-
-                         <strong>To:</strong> 
-                        <input type="date" v-model="probationary_date_to">
-                      </div> 
-                    </div>
-                 </div>
-                </div>
-            </div>
-         
-            <div class="five wide column">
-              <div class="ui form">
-                    <div class="field">
-                        <strong>Posted In:</strong> 
-                        <input type="text"  placeholder="Posted In" v-model="posted_in">
-                    </div> 
-                    <div class="two fields">
-                        <div class= "field">
-                        <strong>Posted Date:</strong> 
-                        <input type="date" v-model="posted_date">
-                         </div> 
-                      <div>
-
-                         <strong>CSC Release Date:</strong> 
-                        <input type="date" v-model="csc_release_date">
-                      </div> 
-                    </div>
-            </div>
+          <div class="field">
+            <label>Functional</label>  
+            <input v-model="Plantilla['functional']" readonly>
           </div>
-              
-                 <div class="six wide column">
-                   <div class="ui form">
-                     <div class="three fields">
-                       <div class="field">
-                        <strong>Government ID:</strong> 
-                        <input type="text"  placeholder="Government ID" v-model="govID_type"> 
-                        </div> 
-                        <div class= "field">
-                        <strong>ID No.:</strong> 
-                        <input type="number" placeholder="ID No." v-model="govID_no">
-                        </div> 
-                      <div>
-                         <strong>Date Issued:</strong> 
-                        <input type="date" v-model="govID_issued_data">
-                    </div> 
-                  </div>
-
-                  <div class="two fields">
-                        <div class= "field">
-                        <strong>Sworn Date:</strong> 
-                        <input type="date" v-model="sworn_date">
-                        </div> 
-                      <div>
-                         <strong>Cert. Issued Date:</strong> 
-                        <input type="date"  v-model="cert_issued_date">
-                    </div> 
-                  </div>
-                </div>
-              </div>
-            </div> 
-    
-    <div class="actions">
-        <div class="ui mini approve blue button" @click="saveData()"><i class="icon check" ></i> Save</div>
-    </div>
-
-    </div>
-    </div>
-</div>
-</div>
-<script src="appointments/config.js"></script>  
+          <div class="field">
+            <label>Department</label>  
+            <input v-model="Plantilla['department']" readonly>
+          </div>
+      </div>
+      <div class="five fields">
+        <div class="field">
+            <label>Step</label>
+            <input v-model="Plantilla['step']" readonly>
+        </div>
+        <div class="field">
+          <label> Salary Grade</label>
+          <input v-model="Plantilla['salaryGrade']" readonly>
+        </div>
+        <div class="field">
+          <label> Salary Schedule</label>
+          <input v-model="Plantilla['schedule']" readonly>
+        </div>
+        <div class="field">
+          <label>Monthly Salary</label>
+          <input :value="'Php '+formatNumber(parseInt(Plantilla['monthly_salary']))" readonly>
+        </div>
+        <div class="field">
+          <label>Annual Salary</label>
+          <input :value="'Php '+formatNumber(parseInt(Plantilla['monthly_salary']*12))" readonly>
+        </div>
+      </div>
+      <div class="two fields">
+        <div class="field">
+          <label>Vacated by:</label>
+          <input :value="Plantilla['vac_lastName']+' '+Plantilla['vac_firstName']+' '+Plantilla['vac_middleName']+' '+Plantilla['vac_extName']" readonly>
+        </div>
+        <div class="field">
+          <label>Reason of Vacancy</label>
+          <input :value="Plantilla['reason_of_vacancy']" readonly>
+        </div>
+      </div>
+      <h4 class="ui dividing header" style="color:#00000066">Appointment</h4>
+      <div class="four fields">
+        <div class="field">
+          <label>Status of Appointment</label>
+          <select id="status" class="ui fluid search selection dropdown" v-model="status_of_appointment" required>
+            <option value="">---</option>
+            <option value="elective">Elective</option>
+            <option value="permanent">Permanent</option>
+            <option value="casual">Casual</option>
+            <option value="co-term">Co-term</option>
+            <option value="temporary">Temporary</option>    
+            <option value="contactual">Contractual</option>    
+            <option value="substitute">Substitute</option>        
+          </select>
+        </div>
+        <div class="field">
+          <label>CSC Authorized Official:</label>
+          <input type="text" v-model="csc_authorized_official" required>
+        </div>
+        <div class="field">
+          <label>Date of Signed by CSC:</label>
+          <input type="date" v-model="date_signed_by_csc" required>
+        </div>
+        <div class="field">
+          <label>Committee Chair</label>
+          <select class="ui search dropdown" v-model="committee_chair" required>
+              <option value="">Search Name</option>
+              <option v-for="(comChair,index) in All_Employees" :value="comChair.employees_id">{{comChair.lastName}} {{comChair.firstName}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="four fields">
+        <div class="two fields">
+          <div class="field">
+            <label>Date of Appointment</label>
+            <input type="date" v-model="date_of_appointment" required>
+          </div>
+          <div class="field">
+            <label>Date of Assumption</label>
+            <input type="date" v-model="date_of_assumption" required>
+          </div>
+        </div>
+        <div class="field">
+          <label>CSC MC NO.</label>
+          <input type="text" v-model="csc_mc_no" required>
+        </div>
+        <div class="field">
+          <label>HRMO</label>
+          <select class="ui search dropdown" v-model="HRMO" required>
+              <option value="">Search Name</option>
+              <option v-for="(hr,index) in All_Employees" :key="index" :value="hr.employees_id">{{hr.lastName}} {{hr.firstName}}</option>
+          </select>
+        </div>
+        <div class="two fields">
+          <div class="field">
+            <label>Office Assignment</label>
+            <input type="text" v-model="office_assignment" required>
+          </div>
+          <div class="field">
+            <label>Probationary Period</label>
+            <input type="text" v-model="probationary_period" required>
+          </div>
+        </div>
+      </div>
+      <div class="four fields">
+        <div class="field">
+          <label>Nature of appointment</label>
+          <select class="ui search dropdown" v-model="nature_of_appointment" required>
+            <option value="">---</option>
+            <option value="original">Original</option>
+            <option value="promotion">Promotion</option>
+            <option value="transfer">Transfer</option>
+            <option value="re-employment">Re-employment</option>
+            <option value="re-appointment">Re-appointment</option>    
+            <option value="renewal">Renewal</option>    
+            <option value="demotion">Demotion</option>        
+          </select>
+        </div>
+        <div class="field">
+          <label>Date of Signing</label>
+          <input type="date" v-model="date_of_signing" required>
+        </div>
+        <div class="field">
+          <label>Deliberation Date From:</label>
+          <input type="date" v-model="deliberation_date_from" required>
+        </div>
+        <div class="field">
+          <label>To:</label>
+          <input type="date" v-model="deliberation_date_to" required>
+        </div>
+      </div>
+      <h4 class="ui dividing header" style="color:#00000066">Publication & Other Information</h4>
+      <div class="four fields">
+        <div class="field">
+          <label>Published At:</label>
+          <input type="text" v-model="published_at" required>
+        </div>
+        <div class="field">
+          <label>Posted In</label>
+          <input type="text" v-model="posted_in" required>
+        </div>
+          <div class="field">
+            <label>Type of Gov ID</label>
+            <input type="text" v-model="govId_type" required>
+          </div>
+        <div class="two fields">
+          <div class="field">
+            <label>Gov ID No.</label>
+            <input type="text" v-model="govId_no" required>
+          </div>
+          <div class="field">
+            <label>Date Issued:</label>
+            <input type="date" v-model="govId_issued_date" required>
+          </div>
+        </div>
+      </div>
+      <div class="five fields">
+        <div class="field">
+          <label>Posted Date:</label>
+          <input type="date" v-model="posted_date" required>
+        </div>
+        <div class="field">
+          <label>CSC Release Date:</label>
+          <input type="date" v-model="csc_release_date" required>
+        </div>
+        <div class="field">
+          <label>Sworn Date:</label>
+          <input type="date" v-model="sworn_date" required>
+        </div>        
+        <div class="field">
+          <label>Cert. Issued Date:</label>
+          <input type="date" v-model="cert_issued_date" required>
+        </div>
+        <div class="field">
+          <label>Casual Appointment Date:</label>
+          <input type="date" v-model="casual_promotion" required>
+        </div>
+      </div>
+      <input type="submit" class="ui button primary" value="Save">
+    </form>
+  </div>
+  <script src="umbra/appointments/config.js"></script>  
 <?php require_once "footer.php";?>
