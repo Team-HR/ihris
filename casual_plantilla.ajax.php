@@ -14,6 +14,17 @@ if (isset($_POST["getData"])) {
     echo json_encode($data);
 } elseif (isset($_POST["addData"])) {
     $data = $_POST["data"];
+
+    $sql = "SELECT * FROM `casual_plantillas` WHERE `year` = ? AND `period` = ? AND `nature` = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("sss",$data["year"],$data["period"],$data["nature"]);
+    $stmt->execute();
+    $stmt->store_result();
+    $num_rows = $stmt->num_rows;
+    $stmt->close();
+
+    if ($num_rows > 0) return false;
+
     $sql = "INSERT INTO `casual_plantillas` (`year`, `period`, `nature`) VALUES (?,?,?)";
     $stmt = $mysqli->prepare($sql);
     $stmt->bind_param('sss', $data["year"], $data["period"], $data["nature"]);
