@@ -66,7 +66,6 @@
         <i class="dropdown icon"></i>
         <div class="menu">
           <a href="plantilla_report.php" class="item"><i class="icon print"></i> Plantilla Report</a>
-          <a href="casual_plantilla_report.php" class="item"><i class="icon print"></i> Casual Plantilla Report</a>
         </div>
       </div>
 
