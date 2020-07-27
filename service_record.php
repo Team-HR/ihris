@@ -3,7 +3,7 @@
             <div class="ui modal" id="addSR">
                 <div class="header">SERVICE RECORD BUILDUP</div>
                 <div class="content">
-                    <form class="ui form" id="add_edit_form">
+                    <form class="ui form" id="add_edit_form" @submit.prevent="submit_form">
                         <div class="ui two column grid">
                             <div class="column">
                                 <!-- column 1 -->

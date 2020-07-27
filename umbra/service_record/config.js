@@ -113,7 +113,7 @@ var sr_app = new Vue({
             this.id_for_editing = this.records[index].id
             var sr = this.records[index]
 
-            console.log(sr);
+            // console.log(sr);
             this.sr_type = sr.sr_type
 
             $("#sr_type").dropdown("set selected", this.sr_type)
@@ -126,12 +126,12 @@ var sr_app = new Vue({
             // var type = "";
             if (sr.sr_salary_rate) {
                 this.sr_salary_type = "for_buildup";
-            } else if(sr.sr_rate_on_schedule) {
+            } else if (sr.sr_rate_on_schedule) {
                 this.sr_salary_type = "rate_on_schedule";
             }
 
             $("#sr_salary_type").dropdown("set selected", this.sr_salary_type)
-            
+
             // sr_salary_type
             this.sr_salary_rate = sr.sr_salary_rate
             this.sr_rate_on_schedule = sr.sr_rate_on_schedule
@@ -173,15 +173,66 @@ var sr_app = new Vue({
             $("#delete_modal").modal("show");
         },
 
-        // validate_form() {
-
-        // },
-
         submit_form() {
-            // this.validate_form()
             
+            $("#add_edit_form").form({
+                fields: {
+                    sr_type: 'empty',
+                    sr_designation: 'empty',
+                    sr_status: 'empty',
+                    sr_date_from: 'empty',
+                    sr_place_of_assignment: 'empty',
+                    sr_branch: 'empty',
+                    sr_remarks: 'empty',
+                    // sr_memo: 'empty',
+                },
+                inline: true,
+                // on: 'submit',
+                shouldTrim: false,
+                onSuccess: (event, fields) => {
+                    if (this.sr_salary_type === 'for_buildup') {
+                        this.sr_rate_on_schedule = "";
+                    } else {
+                        this.sr_salary_rate = "";
+                    }
 
-            
+                    var data = {
+                        employee_id: this.employee_id,
+                        sr_type: this.sr_type,
+                        sr_designation: this.sr_designation,
+                        sr_status: this.sr_status,
+                        sr_salary_rate: this.sr_salary_rate,
+                        sr_rate_on_schedule: this.sr_rate_on_schedule,
+                        sr_is_per_session: this.sr_is_per_session,
+                        sr_date_from: this.sr_date_from,
+                        sr_date_to: this.sr_date_to,
+                        sr_place_of_assignment: this.sr_place_of_assignment,
+                        sr_branch: this.sr_branch,
+                        sr_remarks: this.sr_remarks,
+                        sr_memo: this.sr_memo
+                    }
+
+                    $.ajax({
+                        type: "post",
+                        url: "umbra/service_record/config.php",
+                        data: {
+                            submit_form: true,
+                            id_for_editing: this.id_for_editing,
+                            data: data
+                        },
+                        dataType: "json",
+                        success: (response) => {
+                            $("#addSR").modal("hide")
+                            this.clear_form()
+                            this.init_load()
+                            // $("#add_edit_form").form("set as clean");
+                        },
+                        async: false
+                    });
+                }
+
+            });
+            $("#add_edit_form").form("validate form");
         },
         format_date(date) {
             if (date == "") return "To Present"
@@ -190,9 +241,9 @@ var sr_app = new Vue({
         }
     },
     mounted() {
-        $("#add_edit_form").submit(function (e) {
-            e.preventDefault()
-        })
+        // $("#add_edit_form").submit(function (e) {
+        //     e.preventDefault()
+        // })
         var queryString = window.location.search;
         var urlParams = new URLSearchParams(queryString);
         var employee_id = urlParams.get('employees_id')
@@ -226,7 +277,7 @@ var sr_app = new Vue({
         $("#sr_is_per_session").dropdown({
             showOnFocus: false,
         });
-        
+
         // $("#sr_salary_type").dropdown();
         $("#sr_salary_type").dropdown("set selected", "for_buildup");
 
@@ -237,7 +288,7 @@ var sr_app = new Vue({
             fullTextSearch: "exact",
             allowAdditions: true
         });
-        
+
         $("#sr_place_of_assignment").dropdown({
             clearable: true,
             allowAdditions: true,
@@ -248,62 +299,7 @@ var sr_app = new Vue({
             showOnFocus: false,
         });
 
-        $("#add_edit_form").form({
-            fields: {
-                sr_type: 'empty',
-                sr_designation: 'empty',
-                sr_status: 'empty',
-                sr_date_from: 'empty',
-                sr_place_of_assignment: 'empty',
-                sr_branch: 'empty',
-                sr_remarks: 'empty',
-                // sr_memo: 'empty',
-            },
-            inline : true,
-            on: 'submit',
-            onSuccess: (event, fields)=> {
-                if (this.sr_salary_type === 'for_buildup') {
-                    this.sr_rate_on_schedule = "";
-                } else {
-                    this.sr_salary_rate = "";
-                }
-    
-                var data = {
-                    employee_id: this.employee_id,
-                    sr_type: this.sr_type,
-                    sr_designation: this.sr_designation,
-                    sr_status: this.sr_status,
-                    sr_salary_rate: this.sr_salary_rate,
-                    sr_rate_on_schedule: this.sr_rate_on_schedule,
-                    sr_is_per_session: this.sr_is_per_session,
-                    sr_date_from: this.sr_date_from,
-                    sr_date_to: this.sr_date_to,
-                    sr_place_of_assignment: this.sr_place_of_assignment,
-                    sr_branch: this.sr_branch,
-                    sr_remarks: this.sr_remarks,
-                    sr_memo: this.sr_memo
-                }
-    
-                $.ajax({
-                    type: "post",
-                    url: "umbra/service_record/config.php",
-                    data: {
-                        submit_form: true,
-                        id_for_editing: this.id_for_editing,
-                        data: data
-                    },
-                    dataType: "json",
-                    success: (response) => {
-                        $("#addSR").modal("hide")
-                        this.clear_form()
-                        this.init_load()
-                        $("#add_edit_form").form("set as clean");
-                    },
-                    async: false
-                });
-            }
 
-        });
 
     },
 })
