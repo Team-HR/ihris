@@ -8,7 +8,10 @@ if (isset($_POST['get_salaries'])) {
     $rslt = $stmt->get_result();
     $data = array();
     while ($row = $rslt->fetch_assoc()) {
-        $data[] = number_format($row["monthly_salary"], 2, ".", ",");
+        $data[] = array(
+            "text" => number_format($row["monthly_salary"], 2, ".", ""),
+            "value" => $row["monthly_salary"],
+        );
     }
     echo json_encode($data);
 } elseif (isset($_GET['get_place_of_assignments'])) {
@@ -32,7 +35,9 @@ if (isset($_POST['get_salaries'])) {
     while ($row = $result->fetch_assoc()) {
         // $id = "sr_".$row["id"];
         // $data[$id] = $row;
-        $row["sr_salary_rate"] = number_format($row["sr_salary_rate"], 2, ".", ",");
+        // $row["sr_salary_rate"] = number_format($row["sr_salary_rate"], 2, ".", ",");
+        // $annual_salary = 
+        $row["annual_salary"] = $row["sr_salary_rate"] || $row["sr_rate_on_schedule"]?(number_format(($row["sr_salary_rate"]?$row["sr_salary_rate"]:$row["sr_rate_on_schedule"])/22, 2, ".", ",")."/day"):"N/I";
         $data[] = $row;
     }
     echo json_encode($data);
