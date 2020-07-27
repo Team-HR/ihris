@@ -116,8 +116,6 @@ plantillas.item_no,
 positiontitles.salaryGrade AS salary_grade,
 plantillas.step,
 plantillas.`schedule`,
-'' AS monthly_salary,-- 	plantillas.actual_salary,
--- ( plantillas.actual_salary / 12 ) AS monthly_salary,
 qualification_standards.education,
 qualification_standards.experience,
 qualification_standards.training,
@@ -151,14 +149,14 @@ while($row = $result->fetch_assoc())
         "training"=>$row["training"],
         "experience"=>$row["experience"],
         "eligibility"=>$row["eligibility"],
-        "competency"=>$row["competency"],
+        "competency"=> "None Required",//$row["competency"],
         "department"=>$row["department"]
     );
 }
 
 function getMonthlySalary($mysqli,$sg,$step,$schedule) {
     $monthly_salary = 0;
-    if(empty($sg) || empty($step) || empty($schedule)) return false;
+    if(empty($sg) || empty($step) || empty($schedule)) return "No SG/STEP/SCHED provided in plantilla";
     $sql = "SELECT id FROM `ihris_dev`.`setup_salary_adjustments` WHERE schedule = ? AND active = '1'";
     $stmt = $mysqli->prepare($sql);
     $stmt->bind_param('i',$schedule);
@@ -176,7 +174,7 @@ function getMonthlySalary($mysqli,$sg,$step,$schedule) {
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();  
     $monthly_salary = $row["monthly_salary"];
-    return $monthly_salary?number_format($monthly_salary,2,'.',','):"NOT FOUND";
+    return $monthly_salary?number_format($monthly_salary,2,'.',','):"No SG/STEP/SCHED matched";
 }
 
 $no = 0;
