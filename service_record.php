@@ -28,18 +28,31 @@
                                         <option v-for="(stat,index) in statuses" :key="index" :value="stat">{{ stat }}</option>
                                     </select>
                                 </div>
-                                <!-- <div class="fields"> -->
-                                <div :hidden="sr_is_per_session==1" class="field">
-                                    <label>For build-up (Annual Rate)*:</label>
-                                    <input id="sr_salary_rate" type="number" placeholder="000.00" v-model="sr_salary_rate">
-                                </div>
-                                <div :hidden="sr_is_per_session==0" class="field">
-                                    <label class="ui sub header">Rate on Schedule:</label>
-                                    <select class="ui fluid selection dropdown" v-model="sr_rate_on_schedule" id="sr_rate_on_schedule">
-                                        <option value="">Select salary</option>
-                                        <option value="0">-------</option>
-                                        <option v-for="(salary,index) in salaries" :value="salary">{{salary}}</option>
-                                    </select>
+                                <div class="fields">
+                                    <div class="field">
+                                        <label>Salary Type:</label>
+                                        <!-- <input id="sr_salary_rate" type="number" placeholder="000.00" v-model="sr_salary_rate"> -->
+                                        <select class="ui selection dropdown" id="sr_salary_type" v-model="sr_salary_type">
+                                            <option value="for_buildup" selected>For Buildup</option>
+                                            <option value="rate_on_schedule">Rate on Schedule</option>
+                                        </select>
+
+                                    </div>
+                                    <div class="field">
+                                        <label>
+                                            <span :hidden="sr_salary_type == 'rate_on_schedule'">For Buildup (Annual Rate):</span>
+                                            <span :hidden="sr_salary_type == 'for_buildup'">Rate on Schedule:</span>
+                                        </label>
+                                        <div :hidden="sr_salary_type == 'rate_on_schedule'">
+                                            <input id="sr_salary_rate" type="number" placeholder="000.00" v-model="sr_salary_rate">
+                                        </div>
+                                        <div :hidden="sr_salary_type == 'for_buildup'">
+                                            <select class="ui fluid search dropdown" v-model="sr_rate_on_schedule" id="sr_rate_on_schedule">
+                                                <option value="">Select salary</option>
+                                                <option v-for="(salary,index) in salaries" :value="salary">{{salary}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="field">
                                     <label>Session:</label>
@@ -49,7 +62,6 @@
                                         <option value="1">Per Session</option>
                                     </select>
                                 </div>
-                                <!-- </div> -->
                             </div>
                             <div class="column">
                                 <!-- column 2 -->
@@ -96,7 +108,8 @@
                     </form>
                 </div>
                 <div class="actions">
-                    <button form="add_edit_form" class="ui mini button primary" @click="submit_form()"><i class="save icon"></i> Save</button>
+                <!-- @click="submit_form()" -->
+                    <button form="add_edit_form" type="submit" class="ui mini button primary"><i class="save icon"></i> Save</button>
                     <button class="ui mini button deny red" @click="clear_form()"><i class="times icon"></i> Cancel</button>
                 </div>
             </div>
