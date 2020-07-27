@@ -2,20 +2,30 @@
 require "vendor/autoload.php";
 require "_connect.db.php";
 
-$mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4-L',
-    'margin_top' => 5,
-	'margin_left' => 3,
-    'margin_right' => 3,
-    'margin_bottom' => 5,
-    'margin_footer' => 1,
-    'default_font' => 'helvetica'
+$mpdf = new \Mpdf\Mpdf([
+  'mode' => 'utf-8', 'format' => 'A4-L',
+  'margin_top' => 5,
+  'margin_left' => 3,
+  'margin_right' => 3,
+  'margin_bottom' => 5,
+  'margin_footer' => 1,
+  'default_font' => 'helvetica'
 ]);
-$department_id = 21;
+$status = $_GET["status"];
+$gender = $_GET["gender"];
+
+$date = formatDate($_GET["date"]);
+$department_id = $_GET["department_id"];
+
 $department = "";
-$sql = "SELECT `department` from `department` WHERE `department_id` = '$department_id'";
-$result = $mysqli->query($sql);
+$sql = "SELECT `department` from `department` WHERE `department_id` = ?";
+$stmt = $mysqli->prepare($sql);
+$stmt->bind_param('i', $department_id);
+$stmt->execute();
+$result = $stmt->get_result();
 $row = $result->fetch_assoc();
 $department = strtoupper($row["department"]);
+
 
 $mpdf->Bookmark('Start of the document');
 $html = <<<EOD
@@ -42,11 +52,13 @@ $html = <<<EOD
     <img src="bayawanLogo.png" width="60">
 </div>
 <div style="text-align:center; width: 100%;">
-    <p>Republic of the Philippines <br>
+    <span>Republic of the Philippines <br>
     Province of Negros Oriental <br>
-    City of Bayawan</p>
+    City of Bayawan</span>
+    <br>
+    <span style="font-size: 10px;">As of $date</span>
 </div>
-<table>
+<table style="margin-top: 20px;">
     <tr>
         <th rowspan="2" style="white-space:nowrap">ITEM NO.</th>
         <th rowspan="2" style="white-space:nowrap">POSITION TITLE</th>
@@ -81,31 +93,40 @@ $html = <<<EOD
     </tr>
     <tbody>
 EOD;
-$sql = "SELECT
-*
-FROM
-`ihris_dev`.`plantillas`
-LEFT JOIN `positiontitles` ON `plantillas`.`position_id` = `positiontitles`.`position_id`
-LEFT JOIN `employees` ON `employees`.`employees_id` = `plantillas`.`incumbent`
-WHERE
-`plantillas`.`department_id` = '2' 
-ORDER BY
-`item_no` ASC";
-$result = $mysqli->query($sql);
+if ($gender === "all") {
+  $sql = "SELECT plantillas.*,positiontitles.position,positiontitles.functional,positiontitles.salaryGrade,positiontitles.category,appointments.*,employees.firstName,employees.middleName,employees.lastName,employees.extName,pds_personal.gender,pds_personal.birthdate FROM `ihris_dev`.`plantillas` LEFT JOIN `positiontitles` ON `plantillas`.`position_id`=`positiontitles`.`position_id` LEFT JOIN `appointments` ON `plantillas`.`incumbent`=`appointments`.`appointment_id` LEFT JOIN `employees` ON `appointments`.`employee_id`=`employees`.`employees_id` LEFT JOIN `pds_personal` ON `employees`.`employees_id`=`pds_personal`.`employee_id` WHERE `plantillas`.`department_id`=? ORDER BY `item_no` ASC";
+  $stmt = $mysqli->prepare($sql);
+  $stmt->bind_param('i', $department_id);
+} else {
+  $gender = $gender[0];
+  $sql = "SELECT plantillas.*,positiontitles.position,positiontitles.functional,positiontitles.salaryGrade,positiontitles.category,appointments.*,employees.firstName,employees.middleName,employees.lastName,employees.extName,pds_personal.gender,pds_personal.birthdate FROM `ihris_dev`.`plantillas` LEFT JOIN `positiontitles` ON `plantillas`.`position_id`=`positiontitles`.`position_id` LEFT JOIN `appointments` ON `plantillas`.`incumbent`=`appointments`.`appointment_id` LEFT JOIN `employees` ON `appointments`.`employee_id`=`employees`.`employees_id` LEFT JOIN `pds_personal` ON `employees`.`employees_id`=`pds_personal`.`employee_id` WHERE `plantillas`.`department_id`=? AND `pds_personal`.`gender` = ? ORDER BY `item_no` ASC";
+  $stmt = $mysqli->prepare($sql);
+  $stmt->bind_param('is', $department_id, $gender);
+}
+$stmt->execute();
+$result = $stmt->get_result();
 while ($row = $result->fetch_assoc()) {
-    $sg = $row["salaryGrade"];
-    $authorized_salary = "";
-    $actual_salary = "";
-    $step = $row["step"];
-    $area_code = "";
-    $area_type = "";
-    $level = "";
-
-    $html .= <<<EOD
+  $sg = $row["salaryGrade"];
+  $step = $row["step"];
+  $sg = $row["salaryGrade"];
+  $schedule = $row["schedule"];
+  $authorized_salary = getMonthlySalary($mysqli, $sg, $step, $schedule);
+  $actual_salary = $authorized_salary;
+  $area_code = "7";
+  $area_type = "C";
+  $level = $row["category"] ? $row["category"][0] : "";
+  $lastName = $row["lastName"];
+  $firstName = $row["firstName"];
+  $middleName = $row["middleName"] == "." ? "" : $row["middleName"];
+  $extName = $row["extName"];
+  $gender = $row["gender"]?$row["gender"][0]:"";
+  $position = $row["position"];
+  $functional = $row["functional"];
+  $html .= <<<EOD
     <tr>
          <td>$row[item_no]</td>
-         <td style="white-space:nowrap">$row[position]</td>
-         <td style="white-space:nowrap">$row[functional]</td>
+         <td style="white-space:nowrap">$position</td>
+         <td style="white-space:nowrap">$functional</td>
          <td style="text-align:center">$sg</td>
          <td style="text-align:center">$authorized_salary</td>
          <td style="text-align:center">$actual_salary</td>
@@ -115,51 +136,61 @@ while ($row = $result->fetch_assoc()) {
          <td style="text-align:center">$level</td>
     EOD;
 
-if ($row["abolish"] == "1") {
+  if ($row["abolish"] == "1") {
     $html .= <<<EOD
         <td colspan="10" style="white-space:nowrap; text-align:center;"><i>(TO BE ABOLISHED)</i></td>
     EOD;
-}
-elseif (empty($row["incumbent"])) {
+  } elseif (empty($row["incumbent"])) {
     $html .= <<<EOD
         <td colspan="10" style="white-space:nowrap; text-align:center;"><i>(VACANT)</i></td>
     EOD;
-}
-else {
+  } else {
 
-    $date_of_birth = "";// formatDate($row["date_of_birth"]);
-    $date_of_orig_appointment = "";// formatDate($row["date_of_orig_appointment"]);
-    $date_of_last_promotion = "";// formatDate($row["date_of_last_promotion"]);
-    $status = "";//$row["status"];
-    $eligibility = "";//$row["eligibility"];
+    $date_of_birth = formatDateSlashes($row["birthdate"]); // formatDate($row["date_of_birth"]);
+    $date_of_orig_appointment = ""; // formatDate($row["date_of_orig_appointment"]);
+    $date_of_last_promotion = ""; // formatDate($row["date_of_last_promotion"]);
+    $status = $row["status_of_appointment"]?strtoupper($row["status_of_appointment"]):"";
+    $eligibility = get_eligiblity($mysqli,$row["employee_id"]);
     $html .= <<<EOD
-        <td style="white-space:nowrap">$row[lastName]</td>
-        <td style="white-space:nowrap">$row[firstName]</td>
-        <td style="white-space:nowrap">$row[middleName]</td>
-        <td style="white-space:nowrap">$row[extName]</td>
-        <td style="text-align:center;">$row[gender]</td>
+        <td style="white-space:nowrap">$lastName</td>
+        <td style="white-space:nowrap">$firstName</td>
+        <td style="white-space:nowrap">$middleName</td>
+        <td style="white-space:nowrap">$extName</td>
+        <td style="text-align:center;">$gender</td>
         <td style="text-align:center;">$date_of_birth</td>
         <td style="text-align:center;">$date_of_orig_appointment</td>
         <td style="text-align:center;">$date_of_last_promotion</td>
         <td style="text-align:center;">$status</td>
         <td style="white-space:nowrap;">$eligibility</td>
     EOD;
-}
-    
+  }
 
-    $html .= <<<EOD
+
+  $html .= <<<EOD
      </tr>
     EOD;
-    
 }
 
+$num_items = $result->num_rows;
+
+if ($num_items === 0) {
+  $html .= <<<EOD
+  <tr>
+    <td colspan="20" align="center">******************* EMPTY *******************</td>
+  </tr>
+  EOD;
+  $num_items = "O";
+}
+
+
+$stmt->close();
 
 $html .= <<<EOD
     </tbody>
 </table>
 <div style="page-break-inside: avoid;">
 <div style="font-size: 10px; margin-top: 5px;">
-    <strong>Total Number of Position Items: <span style="display: inline; width: 100px; border-bottom: 1px solid black;">79</span></strong>
+    <strong>Total Number of Position Items: <span style="display: inline; width: 100px; border-bottom: 1px solid black;">$num_items</span></strong>
     <p width="500" style="margin-top: 5px;">I certify to the correctness of the entries and that above Position Items are duly approved and authorized by
     the agency and in compliance to existing rules and regulations. I further certify that employees whose names
     appears above are the incumbents of the position.</p>
@@ -171,9 +202,9 @@ $html .= <<<EOD
 </tr>
 <tr>
     <td style="text-align:center;border: none; font-weight: bold;">VERONICA GRACE P. MIRAFLOR</td>
-    <td style="text-align:center;border: none;">JUNE 30, 2020</td>
+    <td style="text-align:center;border: none;">$date</td>
     <td style="text-align:center;border: none; font-weight: bold;">PRYDE HENRY A. TEVES</td>
-    <td style="text-align:center;border: none;">JUNE 30, 2020</td>
+    <td style="text-align:center;border: none;">$date</td>
 </tr>
 <tr>
     <td style="text-align:center; border: none;">HRMO IV</td>
@@ -193,8 +224,64 @@ $mpdf->defaultfooterline = 0;
 $mpdf->WriteHTML($html);
 $mpdf->Output();
 
-function formatDate($date_in){
-    if (!$date_in) return "";
-    $date=date_create($date_in);
-    return date_format($date,"m/d/Y");
+function formatDateSlashes($date_in)
+{
+  if (!$date_in) return date('F d, Y');
+  $date = date_create($date_in);
+  return date_format($date, "m/d/Y");
 }
+
+function formatDate($date_in)
+{
+  if (!$date_in) return date('F d, Y');
+  $date = date_create($date_in);
+  return date_format($date, "F d, Y");
+}
+
+
+function getMonthlySalary($mysqli, $sg, $step, $schedule)
+{
+  $monthly_salary = 0;
+  if (empty($sg) || empty($step) || empty($schedule)) return false;
+  $sql = "SELECT id FROM `ihris_dev`.`setup_salary_adjustments` WHERE schedule = ? AND active = '1'";
+  $stmt = $mysqli->prepare($sql);
+  $stmt->bind_param('i', $schedule);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  $row = $result->fetch_assoc();
+  $parent_id = 0;
+  $parent_id = $row["id"];
+  $stmt->close();
+  if (empty($parent_id)) return false;
+  $sql = "SELECT monthly_salary FROM `ihris_dev`.`setup_salary_adjustments_setup` WHERE parent_id = ? AND salary_grade = ? AND step_no = ?";
+  $stmt = $mysqli->prepare($sql);
+  $stmt->bind_param('iii', $parent_id, $sg, $step);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  $row = $result->fetch_assoc();
+  $monthly_salary = $row["monthly_salary"];
+  // return $monthly_salary?number_format(($monthly_salary*12),2,'.',','):"---";
+  return $monthly_salary ? ($monthly_salary * 12) : "---";
+}
+function get_eligiblity($mysqli,$employee_id){
+  $sql = "SELECT `pds_eligibilities`.`elig_title` AS `eligibility` FROM `ihris_dev`.`pds_eligibilities` WHERE `employee_id` = ? LIMIT 1";
+  $stmt = $mysqli->prepare($sql);
+  $stmt->bind_param('i',$employee_id);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  $row = $result->fetch_assoc();
+  $eligibility = $row["eligibility"];
+  $stmt->close();
+  return $eligibility?$eligibility:"";
+}
+
+// function get_employment_status($mysqli,$employee_id){
+//   $sql = "SELECT `appointments`.`status_of_appointment` FROM `appointments` WHERE `employee_id` = ?";
+//   $stmt = $mysqli->prepare($sql);
+//   $stmt->bind_param('i',$employee_id);
+//   $stmt->execute();
+//   $result = $stmt->get_result();
+//   $row = $result->fetch_assoc();
+
+
+// }
