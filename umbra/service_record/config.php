@@ -8,7 +8,10 @@ if (isset($_POST['get_salaries'])) {
     $rslt = $stmt->get_result();
     $data = array();
     while ($row = $rslt->fetch_assoc()) {
-        $data[] = number_format($row["monthly_salary"], 2, ".", ",");
+        $data[] = array(
+            "text" => number_format($row["monthly_salary"], 2, ".", ""),
+            "value" => $row["monthly_salary"],
+        );
     }
     echo json_encode($data);
 } elseif (isset($_GET['get_place_of_assignments'])) {
@@ -33,6 +36,8 @@ if (isset($_POST['get_salaries'])) {
         // $id = "sr_".$row["id"];
         // $data[$id] = $row;
         // $row["sr_salary_rate"] = number_format($row["sr_salary_rate"], 2, ".", ",");
+        // $annual_salary = 
+        $row["annual_salary"] = $row["sr_salary_rate"] || $row["sr_rate_on_schedule"]?(number_format(($row["sr_salary_rate"]?$row["sr_salary_rate"]:$row["sr_rate_on_schedule"])/22, 2, ".", ",")."/day"):"N/I";
         $data[] = $row;
     }
     echo json_encode($data);
@@ -81,12 +86,12 @@ if (isset($_POST['get_salaries'])) {
     if (empty($id_for_editing)) {
         $sql = "INSERT INTO `service_records` (`employee_id`, `sr_type`, `sr_designation`, `sr_salary_rate`, `sr_is_per_session`, `sr_rate_on_schedule`, `sr_date_from`, `sr_date_to`, `sr_place_of_assignment`, `sr_branch`, `sr_memo`, `sr_status`, `sr_remarks`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
         $stmt = $mysqli->prepare($sql);
-        $stmt->bind_param("isssissssssss", $data["employee_id"], $data["sr_type"], $data["sr_designation"], $data["sr_salary_rate"], $data["sr_is_per_session"], $data["sr_rate_on_schedule"], $data["sr_date_from"], $data["sr_date_to"], $data["sr_place_of_assignment"], $data["sr_branch"], $data["sr_memo"], $data["sr_status"], $data["sr_remarks"]);
+        $stmt->bind_param("issdidsssssss", $data["employee_id"], $data["sr_type"], $data["sr_designation"], $data["sr_salary_rate"], $data["sr_is_per_session"], $data["sr_rate_on_schedule"], $data["sr_date_from"], $data["sr_date_to"], $data["sr_place_of_assignment"], $data["sr_branch"], $data["sr_memo"], $data["sr_status"], $data["sr_remarks"]);
     } else {
         $sql = "UPDATE `service_records` SET `employee_id`= ?,`sr_type`= ?,`sr_designation`= ?,`sr_salary_rate`= ?,`sr_is_per_session`= ?,`sr_rate_on_schedule`= ?,`sr_date_from`= ?,`sr_date_to`= ?,`sr_place_of_assignment`= ?,`sr_branch`= ?,`sr_memo`= ?,`sr_status`= ?,`sr_remarks`= ? WHERE 
         `id`=?";
         $stmt = $mysqli->prepare($sql);
-        $stmt->bind_param("isssissssssssi", $data["employee_id"], $data["sr_type"], $data["sr_designation"], $data["sr_salary_rate"], $data["sr_is_per_session"], $data["sr_rate_on_schedule"], $data["sr_date_from"], $data["sr_date_to"], $data["sr_place_of_assignment"], $data["sr_branch"], $data["sr_memo"], $data["sr_status"], $data["sr_remarks"], $id_for_editing);
+        $stmt->bind_param("issdidsssssssi", $data["employee_id"], $data["sr_type"], $data["sr_designation"], $data["sr_salary_rate"], $data["sr_is_per_session"], $data["sr_rate_on_schedule"], $data["sr_date_from"], $data["sr_date_to"], $data["sr_place_of_assignment"], $data["sr_branch"], $data["sr_memo"], $data["sr_status"], $data["sr_remarks"], $id_for_editing);
     }
 
     $stmt->execute();

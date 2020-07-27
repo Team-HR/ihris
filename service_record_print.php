@@ -55,7 +55,9 @@ $stmt->bind_param('i', $employee_id);
 $stmt->execute();
 $result = $stmt->get_result();
 while ($row = $result->fetch_assoc()) {
-    $row["sr_salary_rate"] = number_format($row["sr_salary_rate"], 2, ".", ",")."/day";
+    // $row["sr_salary_rate"] = number_format($row["sr_salary_rate"], 2, ".", ",")."/day";
+
+    $salary = $row["sr_salary_rate"] || $row["sr_rate_on_schedule"]?(number_format(($row["sr_salary_rate"]?$row["sr_salary_rate"]:$row["sr_rate_on_schedule"])/22, 2, ".", ",")."/day"):"N/I";
     $row["sr_date_from"] = date_format(date_create($row["sr_date_from"]),"m/d/Y");
     $row["sr_date_to"] = $row["sr_date_to"]?date_format(date_create($row["sr_date_to"]),"m/d/Y"):"To Present";
     $service_records[] = $row;
@@ -172,7 +174,9 @@ EOD;
 
 foreach ($service_records as $record) {
 
-    $record["sr_is_per_session"] === 1 ? $record["sr_salary_rate"] = $record["sr_rate_on_schedule"] : "";
+    // $record["sr_is_per_session"] === 1 ? $record["sr_salary_rate"] = $record["sr_rate_on_schedule"] : "";
+
+    
 
     $html .= <<< EOD
     <tr>
@@ -180,7 +184,7 @@ foreach ($service_records as $record) {
         <td>$record[sr_date_to]</td>
         <td>$record[sr_designation]</td>
         <td>$record[sr_status]</td>
-        <td>$record[sr_salary_rate]</td>
+        <td>$salary</td>
         <td>$record[sr_place_of_assignment]</td>
         <td>$record[sr_branch]</td>
         <td>$record[sr_remarks]</td>

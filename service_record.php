@@ -40,16 +40,16 @@
                                     </div>
                                     <div class="field">
                                         <label>
-                                            <span :hidden="sr_salary_type == 'rate_on_schedule'">For Buildup (Annual Rate):</span>
+                                            <span :hidden="sr_salary_type == 'rate_on_schedule'">For Buildup (Monthly Rate):</span>
                                             <span :hidden="sr_salary_type == 'for_buildup'">Rate on Schedule:</span>
                                         </label>
                                         <div :hidden="sr_salary_type == 'rate_on_schedule'">
-                                            <input id="sr_salary_rate" type="number" placeholder="000.00" v-model="sr_salary_rate">
+                                            <input id="sr_salary_rate" type="number" placeholder="000.00" v-model="sr_salary_rate" step="0.01">
                                         </div>
                                         <div :hidden="sr_salary_type == 'for_buildup'">
                                             <select class="ui fluid search dropdown" v-model="sr_rate_on_schedule" id="sr_rate_on_schedule">
                                                 <option value="">Select salary</option>
-                                                <option v-for="(salary,index) in salaries" :value="salary">{{salary}}</option>
+                                                <option v-for="(salary,index) in salaries" :value="salary.value">{{salary.text}}</option>
                                             </select>
                                         </div>
                                     </div>
@@ -144,7 +144,7 @@
                             <th>TO</th>
                             <th>Designation</th>
                             <th>Status</th>
-                            <th>Annual Salary</th>
+                            <th>Salary</th>
                             <th>Station / Place of Assignment</th>
                             <th>Branch</th>
                         </tr>
@@ -161,7 +161,7 @@
                             <td class="center aligned">{{format_date(srDat.sr_date_to)}}</td>
                             <td>{{srDat.sr_designation}}</td>
                             <td>{{srDat.sr_status}}</td>
-                            <td class="center aligned">{{"Php."+srDat.sr_salary_rate}}</td>
+                            <td class="center aligned">{{srDat.annual_salary}}</td>
                             <td>{{srDat.sr_place_of_assignment}}</td>
                             <td class="center aligned">{{srDat.sr_branch}}</td>
                             <td>{{srDat.sr_remarks}}</td>
