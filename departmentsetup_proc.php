@@ -28,6 +28,7 @@ elseif (isset($_POST["load"])){
   <thead>
     <tr>
       <th></th>	
+	  <th></th>
       <th>Department</th>
       <th></th>
     </tr>
@@ -44,7 +45,10 @@ while ($row = $result->fetch_assoc()) {
 ?>
 	<tr>
 		<td><?php  echo "( ".$counter." )"?></td>
-		<td><?php echo $department;?></td>
+		<td>
+				<a href="offices.php?dat=<?=$department_id?>&dep=<?=$department?>"><i class="sitemap icon primary"></i></a>
+		</td>
+		<td> <?php echo $department;?></td>
 		<td class="right aligned">
 			<i class="edit outline icon" title="Edit" style="cursor: pointer;" onclick="editDept('<?php echo $department_id."','".addslashes($department);?>')"></i>
 			<i class="trash alternate outline icon" title="Delete" style="cursor: pointer;" onclick="deleteRow('<?php echo $department_id; ?>')"></i>
