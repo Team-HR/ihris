@@ -15,9 +15,8 @@ FROM
 	LEFT JOIN `employees` ON `plantillas`.`incumbent` = `employees`.`employees_id` 
 	LEFT JOIN `publications` ON `plantillas`.`id` = `publications`.`plantilla_id`
 WHERE
-	`incumbent` = '' 
-	OR `incumbent` IS NULL 
-	AND `abolish` IS NULL
+	`incumbent` IN ('',NULL)
+	AND `abolish` IN ('',NULL,'No')
 ORDER BY
 	`positiontitles`.`position` ASC";
 

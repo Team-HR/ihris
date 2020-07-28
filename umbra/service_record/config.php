@@ -8,7 +8,10 @@ if (isset($_POST['get_salaries'])) {
     $rslt = $stmt->get_result();
     $data = array();
     while ($row = $rslt->fetch_assoc()) {
-        $data[] = number_format($row["monthly_salary"], 2, ".", ",");
+        $data[] = array(
+            "text" => number_format($row["monthly_salary"], 2, ".", ""),
+            "value" => $row["monthly_salary"],
+        );
     }
     echo json_encode($data);
 } elseif (isset($_GET['get_place_of_assignments'])) {
@@ -32,7 +35,9 @@ if (isset($_POST['get_salaries'])) {
     while ($row = $result->fetch_assoc()) {
         // $id = "sr_".$row["id"];
         // $data[$id] = $row;
-        $row["sr_salary_rate"] = number_format($row["sr_salary_rate"], 2, ".", ",");
+        // $row["sr_salary_rate"] = number_format($row["sr_salary_rate"], 2, ".", ",");
+        // $annual_salary = 
+        $row["annual_salary"] = $row["sr_salary_rate"] || $row["sr_rate_on_schedule"]?(number_format(($row["sr_salary_rate"]?$row["sr_salary_rate"]:$row["sr_rate_on_schedule"])/22, 2, ".", ",")."/day"):"N/I";
         $data[] = $row;
     }
     echo json_encode($data);
@@ -50,13 +55,15 @@ if (isset($_POST['get_salaries'])) {
     $id = $_POST['id'];
     $sql = "DELETE FROM `service_records` WHERE `id` = ?";
     $stmt = $mysqli->prepare($sql);
-    $stmt->bind_param('i',$id);
+    $stmt->bind_param('i', $id);
     $stmt->execute();
+    $affected_rows = $stmt->affected_rows;
     $stmt->close();
+    echo json_encode($affected_rows);
 } elseif (isset($_POST['submit_form'])) {
     $data = $_POST["data"];
     $id_for_editing = $_POST["id_for_editing"];
-
+    $data["sr_date_to"] = $data["sr_date_to"]?$data["sr_date_to"]:NULL;
     if (
         empty($data["sr_type"]) ||
         empty($data["sr_designation"]) ||
@@ -65,7 +72,7 @@ if (isset($_POST['get_salaries'])) {
         // sr_rate_on_schedule
         // sr_is_per_session
         empty($data["sr_date_from"]) ||
-        empty($data["sr_date_to"]) ||
+        // empty($data["sr_date_to"]) ||
         empty($data["sr_place_of_assignment"]) ||
         empty($data["sr_branch"])
         // sr_remarks
