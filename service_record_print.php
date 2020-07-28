@@ -203,7 +203,7 @@ $html .= <<< EOD
         <td colspan="8">No Leave Without Pay</td>
     </tr>
     <tr>
-        <td colspan="8" class="grey center">Absence Without Official Leave</td>
+        <th colspan="8" class="grey center">Absence Without Official Leave</th>
     </tr>
     <tr>
         <td colspan="8">No Absence Without Official Leave</td>
