@@ -113,7 +113,12 @@ $sql5="SELECT
 
 	$incumbent = $sql5['firstName']." ".$sql5['middleName']." ".$sql5['lastName']." ".$sql5['extName'];
 		if (!$row['incumbent']) {
-			$incumbent = "<a href='appointments.php?id=$id' class='ui mini positive button' title='Appoint Employee'>Appoint</a>";
+			$incumbent= "
+						<div class='ui buttons'>
+							<a onclick='oldIncumbent.showModalOldIncumbent(\"$id\")' class='ui mini primary button' title='Appoint Employee'>Old</a>
+							<a href='appointments.php?id=$id' class='ui mini positive button' title='Appoint Employee'>New</a>
+						</div>
+						";
 		}
 	$level = $row["level"];
 	$category = $row["category"];

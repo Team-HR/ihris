@@ -191,6 +191,39 @@
 </div>
 <!-- end alerts -->
 
+<!-- ======================= -->
+<!-- ======================= -->
+<!-- ======================= -->
+<!-- ======================= -->
+<!-- ======================= -->
+  <div id="oldIncumbent">
+    <div class="ui modal tiny" id="oldIncumbentModal">
+      <div class="header">Insert Incumbent</div>
+      <div class="content">
+        <form class="ui form" @submit.prevent="saveIncumbent()">
+            <div class="field">
+              <label>Incumbent</label>
+              <select class="ui search dropdown" v-model="selectedEmp">
+                <option value="">Select Employee</option>
+                <option v-for="(emp,index) in Employees" :key="index" :value="emp.employees_id">{{ emp.lastName }} {{ emp.firstName }} {{ emp.middleName }} {{ emp.extName }}</option>
+              </select>
+            </div>
+            <input type="submit" value="Save" class="ui button primary">
+            <!-- <button class="ui button primary">Save</button> -->
+        </form>
+      </div>
+    </div>
+  </div>
+  <script src="umbra/plantillaOld/config.js"></script>
+<!-- ======================= -->
+<!-- ======================= -->
+<!-- ======================= -->
+<!-- ======================= -->
+<!-- ======================= -->
+<!-- ======================= -->
+<!-- ======================= -->
+
+
 <!-- delete pos start -->
 <div id="deleteModal" class="ui mini modal">
     <i class="close icon"></i>
@@ -508,6 +541,8 @@
     </div>
   </div>
 </div>
+
+
 <?php 
 	require_once "footer.php";
 ?>
