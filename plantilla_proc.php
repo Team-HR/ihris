@@ -120,7 +120,9 @@ $sql5="SELECT
 	$sg = $row["salaryGrade"];
 	$department = $row["department"];
 	
-
+	$vacated_by = $sql4['firstName']." ".$sql4['middleName']." ".$sql4['lastName']." ".$sql4['extName'];
+		if (!$row['vacated_by']){
+			$vacated_by = "<i style='color:grey'>N/A</i>";				
 		}
 
 
@@ -204,18 +206,29 @@ $sql5="SELECT
 											 WHERE `id` = '$id' ";
 		$mysqli->query($sql);
 		echo $mysqli->error;
+	}
 
 
 
+	/*elseif (isset($_POST["vacatePos"])) {
+		$id = $_POST["id"];
+		$incumbent = $_POST["incumbent"];
+		$vacated_by = $_POST["incumbent"];
+		$reason_of_vacancy = $_POST["reason_of_vacancy"];
+		$other = $_POST["other"];
+		$endService = $_POST["endService"];
 
-
-
-
-
+		$sql = "UPDATE `plantillas` SET     `vacated_by` = '$incumbent', 
+											`incumbent` = ''	
+									WHERE `id` = '$id'
 				";
 
 
-
+		$sql2 = "UPDATE `appointments`	SET `last_day_of_service` ='$endService',
+											`reason_of_vacancy` = '$reason_of_vacancy $other'
+											
+										WHERE `appointment_id` = '$appointment_id'
+										";
 
 		$mysqli->query($sql);
 		$mysqli->query($sql2);
