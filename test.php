@@ -1,23 +1,15 @@
 <?php
-
 require "_connect.db.php";
-
-$sql = "SELECT * FROM employees";
-$result = $mysqli->query($sql);
-
-while($row = $result->fetch_assoc())
-{
-    $employee_id = $row["employees_id"];
-    $position_id = $row["position_id"];
-    echo $employee_id."<br>";
-    echo $position_id."<br>";
-    appointEmployee($mysqli,$employee_id,$position_id);
-}
-
-function appointEmployee($mysqli,$employee_id,$position_id){
-    if ($position_id) 
-    {
-        $sql = "UPDATE plantillas SET incumbent = '$employee_id' WHERE position_id = '$position_id'";
-        $mysqli->query($sql);
-    }
-}
+$data = array(
+    "year" => 2020,
+    "period" => 1,
+    "nature" => "Reemployment"
+);
+$sql = "SELECT * FROM `casual_plantillas` WHERE `year` = ? AND `period` = ? AND `nature` = ?";
+$stmt = $mysqli->prepare($sql);
+$stmt->bind_param("sss",$data["year"],$data["period"],$data["nature"]);
+$stmt->execute();
+$stmt->store_result();
+echo $num_rows = $stmt->num_rows;
+$stmt->close();
+// echo "<pre>".print_r($data,true)."</pre>";

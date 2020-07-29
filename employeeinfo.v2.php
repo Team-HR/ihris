@@ -333,7 +333,7 @@ function update() {
         </table>
     </div>
 
-    <div class="ui container" style="padding: 5px;">
+    <div class="ui container" style="padding: 5px; width: 1300px;">
 
         <div class="ui segment grid">
             <div class="three wide column">
@@ -341,10 +341,10 @@ function update() {
                     <a class="item" data-tab="appointments">
                         Appointment
                     </a>
-                    <a class="item active" data-tab="pds">
+                    <a class="item" data-tab="pds">
                         PDS
                     </a>
-                    <a class="item" data-tab="service_records">
+                    <a class="item active" data-tab="service_records">
                         Service Records
                     </a>
                     <a class="item" data-tab="leave_records">
@@ -381,7 +381,7 @@ function update() {
                         </table>
                     </div>
                 </div>
-                <div class="ui tab active" data-tab="pds">
+                <div class="ui tab" data-tab="pds">
                     <div class="ui pointing secondary blue menu fluid" id="pds">
                         <a class="item active" data-tab="personal">Personal</a>
                         <a class="item" data-tab="family">Family</a>
@@ -417,7 +417,9 @@ function update() {
                         <?php require 'pds_other_information.php'?>
                     </div>
                 </div>
-                <div class="ui tab" data-tab="service_records"></div>
+                <div class="ui tab active" data-tab="service_records">
+                    <?php require_once "service_record.php"; ?>
+                </div>
                 <div class="ui tab" data-tab="leave_records"></div>
                 </>
             </div>
@@ -502,11 +504,7 @@ function update() {
 		 	$reflector = 0;
 		 	$theorist = 0;
 		 	$pragmatist = 0;
-			
-
-
 		 } else {
-
 		 	$row = $result->fetch_assoc();
 		 	$activist = $row['activist'];
 		 	$reflector = $row['reflector'];

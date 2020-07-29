@@ -1,6 +1,9 @@
 <?php
-
 require "vendor/autoload.php";
+
+$date_of_publication = $_GET["date_of_publication"];
+$date_of_deadline = $_GET["date_of_deadline"];
+
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Style;
@@ -55,7 +58,7 @@ $spreadsheet->getActiveSheet()->getStyle('I'.($aRow+11).':K'.($aRow+11))->getFon
 $spreadsheet->getActiveSheet()->mergeCells('I'.($aRow+12).':K'.($aRow+12))->setCellValue('I'.($aRow+12),'HRMO IV')->getStyle('I'.($aRow+12).':K'.($aRow+12))->getAlignment()->setHorizontal('center');
 $spreadsheet->getActiveSheet()->getStyle('I'.($aRow+12).':K'.($aRow+12))->getBorders()->getTop()->setBorderStyle('thin');
 $spreadsheet->getActiveSheet()->setCellValue('I'.($aRow+14), 'Date:')->getStyle('I'.($aRow+14))->getAlignment()->setHorizontal('right');
-$spreadsheet->getActiveSheet()->mergeCells('J'.($aRow+14).':K'.($aRow+14))->setCellValue('J'.($aRow+14), date('F d, yy'));
+$spreadsheet->getActiveSheet()->mergeCells('J'.($aRow+14).':K'.($aRow+14))->setCellValue('J'.($aRow+14), date("F d, Y", strtotime($date_of_publication)));
 $spreadsheet->getActiveSheet()->getStyle('J'.($aRow+14).':K'.($aRow+14))->getFont()->setBold(true);
 $spreadsheet->getActiveSheet()->getStyle('J'.($aRow+14).':K'.($aRow+14))->getBorders()->getBottom()->setBorderStyle('thin');
 
@@ -106,14 +109,13 @@ $spreadsheet->getActiveSheet()->getStyle('K'.($aRow+16).':K'.($aRow+17))->getFon
 $data = array();
 
 require "_connect.db.php";
-$sql = "SELECT
--- *
+$sql = "SELECT-- *
 positiontitles.position,
 positiontitles.functional,
 plantillas.item_no,
-plantillas.sg,
--- 	plantillas.actual_salary,
-( plantillas.actual_salary / 12 ) AS monthly_salary,
+positiontitles.salaryGrade AS salary_grade,
+plantillas.step,
+plantillas.`schedule`,
 qualification_standards.education,
 qualification_standards.experience,
 qualification_standards.training,
@@ -127,7 +129,9 @@ FROM
 	LEFT JOIN qualification_standards ON qualification_standards.position_id = positiontitles.position_id
 	LEFT JOIN department ON plantillas.department_id = department.department_id 
 WHERE
-	plantillas.incumbent IS NULL 
+	`plantillas`.`id` IN ( SELECT `publications`.`plantilla_id` FROM publications ) 
+	AND plantillas.incumbent IN ('',NULL)
+	AND plantillas.abolish IN ('',NULL,'No')
 ORDER BY
 	positiontitles.position ASC";
 
@@ -139,15 +143,38 @@ while($row = $result->fetch_assoc())
     $data[] = array(
         "position_title"=>$row["position"],
         "item_no"=>$row["item_no"],
-        "sg"=>$row["sg"],
-        "monthly_salary"=>$row["monthly_salary"],
+        "sg"=>$row["salary_grade"],
+        "monthly_salary"=>getMonthlySalary($mysqli,$row["salary_grade"],$row["step"],$row["schedule"]),
         "education"=>$row["education"],
         "training"=>$row["training"],
         "experience"=>$row["experience"],
         "eligibility"=>$row["eligibility"],
-        "competency"=>$row["competency"],
+        "competency"=> "None Required",//$row["competency"],
         "department"=>$row["department"]
     );
+}
+
+function getMonthlySalary($mysqli,$sg,$step,$schedule) {
+    $monthly_salary = 0;
+    if(empty($sg) || empty($step) || empty($schedule)) return "No SG/STEP/SCHED provided in plantilla";
+    $sql = "SELECT id FROM `ihris_dev`.`setup_salary_adjustments` WHERE schedule = ? AND active = '1'";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param('i',$schedule);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $parent_id = 0;
+    $parent_id = $row["id"];
+    $stmt->close();
+    if (empty($parent_id)) return false;
+    $sql = "SELECT monthly_salary FROM `ihris_dev`.`setup_salary_adjustments_setup` WHERE parent_id = ? AND salary_grade = ? AND step_no = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param('iii',$parent_id,$sg,$step);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();  
+    $monthly_salary = $row["monthly_salary"];
+    return $monthly_salary?number_format($monthly_salary,2,'.',','):"No SG/STEP/SCHED matched";
 }
 
 $no = 0;
@@ -182,7 +209,7 @@ $text = $richText->createTextRun("Interested and qualified applicants should sig
 $text->getFont()->setSize(11);
 $spreadsheet->getActiveSheet()->setCellValue('A'.($aRow+2), $richText);
 
-$spreadsheet->getActiveSheet()->setCellValue('B'.($aRow+3), date('F d, yy'))->getStyle('B'.($aRow+3))->getAlignment()->setHorizontal('center')->setVertical('center')->setWrapText(true);
+$spreadsheet->getActiveSheet()->setCellValue('B'.($aRow+3), date("F d, Y", strtotime($date_of_deadline)))->getStyle('B'.($aRow+3))->getAlignment()->setHorizontal('center')->setVertical('center')->setWrapText(true);
 $spreadsheet->getActiveSheet()->getStyle('B'.($aRow+3))->getBorders()->getBottom()->setBorderStyle('thin');
 $spreadsheet->getActiveSheet()->getStyle('B'.($aRow+3))->getFont()->setSize(12)->setBold(true);
 $spreadsheet->getActiveSheet()->getStyle('B'.($aRow+3))->getFill()
@@ -277,7 +304,7 @@ $spreadsheet->setActiveSheetIndex(0);
 $spreadsheet->getActiveSheet()->setTitle('Sheet1');
 // Redirect output to a client’s web browser (Xlsx)
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment;filename="Publication'.date('F_d_yy').'.xlsx"');
+header('Content-Disposition: attachment;filename="Publication_'.date("F-d-Y", strtotime($date_of_publication)).'.xlsx"');
 header('Cache-Control: max-age=0');
 // If you're serving to IE 9, then the following may be needed
 header('Cache-Control: max-age=1');

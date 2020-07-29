@@ -46,20 +46,6 @@
     </tr>
   </thead>
   <tbody>
-
-<!-- 
-position_title
-item_no
-sg
-monthly_salary
-education
-training
-experience
-eligibility
-competency
-department 
--->
-
 <template>
 
 <tr v-for="(post,i) in data">

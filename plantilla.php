@@ -494,8 +494,9 @@
       </button> -->
     <div class="ui right input">
       <button class="ui icon mini green button" onclick="addModalFunc()" style="margin-right: 5px;" title="Add Detail"><i class="icon plus"></i>Add</button>
-      <div class="ui icon fluid input" style="width: 300px;" >
-        <input id="data_search" type="text" placeholder="Search..." > 
+       <a class="ui icon mini green button" href="plantilla_vacantpos.php" style="margin-right: 5px;" title="View Vacant Positions">View Vacant Positions</a>
+      <div class="ui icon fluid input" style="width: 300px;">
+        <input id="data_search" type="text" placeholder="Search...">
         <i class="search icon"></i>
       </div>
     </div>
