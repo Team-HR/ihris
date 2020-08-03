@@ -146,7 +146,7 @@ while ($row = $result->fetch_assoc()) {
     EOD;
   } else {
 
-    $date_of_birth = formatDateSlashes($row["birthdate"]); // formatDate($row["date_of_birth"]);
+    $date_of_birth = formatDateSlashes($row["birthdate"]);
     $date_of_orig_appointment = ""; // formatDate($row["date_of_orig_appointment"]);
     $date_of_last_promotion = ""; // formatDate($row["date_of_last_promotion"]);
     $status = $row["status_of_appointment"]?strtoupper($row["status_of_appointment"]):"";
@@ -226,7 +226,8 @@ $mpdf->Output();
 
 function formatDateSlashes($date_in)
 {
-  if (!$date_in) return date('F d, Y');
+  if (!$date_in) return "";
+  // if (!$date_in) return date("m/d/Y");
   $date = date_create($date_in);
   return date_format($date, "m/d/Y");
 }
@@ -274,14 +275,3 @@ function get_eligiblity($mysqli,$employee_id){
   $stmt->close();
   return $eligibility?$eligibility:"";
 }
-
-// function get_employment_status($mysqli,$employee_id){
-//   $sql = "SELECT `appointments`.`status_of_appointment` FROM `appointments` WHERE `employee_id` = ?";
-//   $stmt = $mysqli->prepare($sql);
-//   $stmt->bind_param('i',$employee_id);
-//   $stmt->execute();
-//   $result = $stmt->get_result();
-//   $row = $result->fetch_assoc();
-
-
-// }
