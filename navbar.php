@@ -53,7 +53,9 @@
         <i class="dropdown icon"></i>
         <div class="menu">
           <!-- <div class="header">Categories</div> -->
+          <a href="plantilla.php" class="item"><i class="icon money check alternate"></i> Permanent Plantilla</a>
           <a href="casual_plantilla.php" class="item"><i class="icon money check alternate"></i> Casual Plantilla</a>
+          
           <a href="departmentsetup.php" class="item"><i class="icon building"></i> Departments</a>
           <a href="positionsetup.php" class="item"><i class="icon briefcase"></i> Positions</a>
           <a href="salary_adjustment.php" class="item"><i class="icon money check alternate"></i> Salary Schedule</a>
