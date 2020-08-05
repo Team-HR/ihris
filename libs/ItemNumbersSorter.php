@@ -5,7 +5,7 @@ class ItemNumbersSorter
 
     public function __construct($arr)
     {
-
+        if (!$arr) return false;
         foreach ($arr as $value) {
             $id = $this->getParent($value)[0];
             if (strpos($value, "-") !== false) {
@@ -33,11 +33,10 @@ class ItemNumbersSorter
                     $data[$value] = $value;
                 }
             }
-            ksort($data,SORT_NATURAL);
         }
-        // ksort($data);
-        $items = array();
+        ksort($data,SORT_NATURAL);
 
+        $items = array();
         foreach ($data as $value) {
             if (is_array($value)) {
                 foreach ($value as $item) {
