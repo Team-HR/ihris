@@ -348,50 +348,67 @@ $(document).ready(function() {
     color: #4075a9;
   }
 </style>
-    <table class="ui very compact small celled table" style="font-size: 12px;">
-      <tr>
-        <td class="actives">DEPARTMENT</td>
-        <td ><?=$department?></td>
-        <td class="actives">STEP NO</td>
-        <td><?=$step?></td>
-        <td class="actives">ORIGINAL APPOINTMENT</td>
-        <td><?=$date_of_appointment?></td>
-      </tr>
-      <tr>
-        <td class="actives">OFFICE ASSIGNMENT</td>
-        <td><?=$office_assignment?></td>
-        <td class="actives">PAGE NO</td>
-        <td><></td>
-        <td class="actives">LAST DATE OF PROMOTION</td>
-        <td><?=$last_day_of_service?></td>
-      </tr>
-      <tr>
-        <td class="actives">INCUMBENT EMPLOYEE</td>
-        <td><?=$incumbent?></td>
-        <td class="actives">LEVEL / CATEGORY</td>
-        <td><?=$category?> / <?=$level?></td>
-        <td class="actives">VACATED BY</td>
-        <td><?=$vacated_by?></td>
-      </tr>
-      <tr>
-        <td class="actives">REASON OF VACANCY</td>
-        <td><?=$reason_of_vacancy?></td>
-        <td class="actives">SUPERVISOR</td>
-        <td><?=$supervisor?></td>
-        <td class="actives">ABOLISH</td>
-        <td><?=$abolish?></td>
-      </tr>
-    </table>
+   
   </div>
-<br><br>
+<br>
 
 <div class="ui container">
 
     <div class="ui top attached tabular menu" id="tabs">
-      <a class="item active" data-tab="statement">STATEMENT OF DUTIES</a>
+      <a class="item active" data-tab="details">PLANTILLA DETAILS</a>
+      <a class="item" data-tab="statement">STATEMENT OF DUTIES</a>
       <a class="item" data-tab="qualification">QUALIFICATION STANDARDS</a>
     </div>
-    <div class="ui bottom attached segment tab active" data-tab="statement">
+    <div class="ui bottom attached segment tab active" data-tab="details">
+           <table class="ui very compact small celled table" style="font-size: 12px;">
+                <tr>
+                  <td class="actives">DEPARTMENT</td>
+                  <td ><?=$department?></td>
+                </tr>
+                <tr>  
+                  <td class="actives">STEP NO</td>
+                  <td><?=$step?></td>
+                </tr>
+                  <td class="actives">ORIGINAL APPOINTMENT</td>
+                  <td><?=$date_of_appointment?></td>
+                <tr>
+                  <td class="actives">OFFICE ASSIGNMENT</td>
+                  <td><?=$office_assignment?></td>
+                </tr>
+                <tr>
+                  <td class="actives">PAGE NO</td>
+                  <td><></td>
+                </tr>
+                <tr>
+                  <td class="actives">LAST DATE OF PROMOTION</td>
+                  <td><?=$last_day_of_service?></td>
+                </tr>
+                <tr>
+                  <td class="actives">INCUMBENT EMPLOYEE</td>
+                  <td><?=$incumbent?></td>
+                <tr>
+                  <td class="actives">LEVEL / CATEGORY</td>
+                  <td><?=$category?> / <?=$level?></td>
+                </tr>
+                 <tr>
+                  <td class="actives">VACATED BY</td>
+                  <td><?=$vacated_by?></td>
+                </tr>
+                 <tr>
+                  <td class="actives">REASON OF VACANCY</td>
+                  <td><?=$reason_of_vacancy?></td>
+                </tr> 
+                <tr>
+                  <td class="actives">SUPERVISOR</td>
+                  <td><?=$supervisor?></td>
+                </tr>
+                <tr>
+                  <td class="actives">ABOLISH</td>
+                  <td><?=$abolish?></td>
+                </tr>
+          </table>
+    </div>
+    <div class="ui bottom attached segment tab" data-tab="statement">
       <div id="tableContent">
          <div class="ui form">
              <table class="ui very compact small celled table" style="font-size: 12px;text-align:center" id="duties_table" >

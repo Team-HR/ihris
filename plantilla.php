@@ -300,7 +300,7 @@
 
 
 <!----add data---->
-<div class="ui container">
+<div class="ui container" >
 <div id="addModal" class="ui mini modal">
   <div class="header">
    Plantilla Detail
@@ -473,10 +473,11 @@
     </div>
   </div>
 </div>
+</div>
 <!-- end of editing
 
 <!----load table data---->
-<div class="ui segment" :class="loader">
+<div class="ui segment" :class="loader" id="app">
   <div class="ui container">
   <div class="ui borderless blue inverted mini menu">
     <div class="left item" style="margin-right: 0px !important;">
@@ -494,7 +495,7 @@
       </button> -->
     <div class="ui right input">
       <button class="ui icon mini green button" onclick="addModalFunc()" style="margin-right: 5px;" title="Add Detail"><i class="icon plus"></i>Add</button>
-       <a class="ui icon mini green button" href="plantilla_vacantpos.php" style="margin-right: 5px;" title="View Vacant Positions">View Vacant Positions</a>
+       <a class="ui icon mini green button" href="plantilla_vacantpos.php" style="margin-right: 5px;" title="View Vacant Positions"><i class="icon search"></i> View Vacant Positions</a>
       <div class="ui icon fluid input" style="width: 300px;">
         <input id="data_search" type="text" placeholder="Search...">
         <i class="search icon"></i>
@@ -503,7 +504,7 @@
     </div>
   </div>
 <div class="ui container" style="min-height: 6190px;">
-<table id="plantilla_table" class="ui teal selectable very compact small striped table">
+<table id="plantilla_table" class="ui celled table">
   <thead>
     <tr style="text-align: center;">
       <th rowspan="2"></th>
@@ -525,6 +526,10 @@
         <th>Category</th>
         <th>Position</th>
       </tr>
+
+<!--       <tr v-if="plantillas.length == 0">
+            <td colspan="10" class="center aligned" style="color:gray">No data available.</td>
+      </tr> -->
   </thead>
         <tbody id="tableContent">
               <tr id="loading_el">
