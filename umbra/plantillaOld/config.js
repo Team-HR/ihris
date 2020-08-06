@@ -4,6 +4,10 @@ var oldIncumbent = new Vue({
         Employees:[],
         selectedEmp:"",
         plantilla_id:"",
+        nature_of_appointment:"",
+        date_appointment:"",
+        date_last_promotion:"",
+        casual_promotion:""
     },methods:{
         showModalOldIncumbent:function(i){
             $('#oldIncumbentModal').modal('show');
@@ -13,6 +17,10 @@ var oldIncumbent = new Vue({
             var fd = new FormData()
                 fd.append('saveIncumbent',oldIncumbent.selectedEmp)
                 fd.append('Oldplantilla',oldIncumbent.plantilla_id)
+                fd.append('nature_of_appointment',oldIncumbent.nature_of_appointment)
+                fd.append('date_appointment',oldIncumbent.date_appointment)
+                fd.append('date_last_promotion',oldIncumbent.date_last_promotion)
+                fd.append('casual_promotion',oldIncumbent.casual_promotion)                
             var xml = new XMLHttpRequest()
                 xml.onload = function(){
                     if(xml.responseText){
@@ -33,7 +41,7 @@ var oldIncumbent = new Vue({
                 }
                 xml.open('POST','umbra/plantillaOld/config.php',false);
                 xml.send(fd)
-        }
+        }, 
     },mounted:function(){
         var i = setInterval(() => {
             if(document.readyState == 'complete'){
