@@ -144,6 +144,7 @@ if(isset($_POST['Employees'])){
         $cert_issued_date = $_POST['cert_issued_date'];
         $casual_promotion = $_POST['casual_promotion'];
         $probationary_period = $_POST['probationary_period'];
+        $date_of_last_promotion = $_POST['date_of_last_promotion'];
         $sql = "INSERT INTO `appointments` (
                             `appointment_id`,
                             `employee_id`,
@@ -171,7 +172,8 @@ if(isset($_POST['Employees'])){
                             `sworn_date`,
                             `cert_issued_date`,
                             `casual_promotion`,
-                            `probationary_period`
+                            `probationary_period`,
+                            `date_of_last_promotion`
                         ) VALUES (
                             NULL,
                             '$employees_id',
@@ -199,7 +201,8 @@ if(isset($_POST['Employees'])){
                             '$sworn_date',
                             '$cert_issued_date',
                             '$casual_promotion',
-                            '$probationary_period'
+                            '$probationary_period',
+                            '$date_of_last_promotion'
                         )";
         $sql = $mysqli->query($sql);
         echo $mysqli->error;

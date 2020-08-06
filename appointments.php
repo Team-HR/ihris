@@ -175,6 +175,10 @@
           <input type="date" v-model="deliberation_date_to" required>
         </div>
       </div>
+      <div class="field four wide">
+        <label>Date of Last Promotion</label>
+        <input type="date" v-model="date_of_last_promotion">
+      </div>
       <h4 class="ui dividing header" style="color:#00000066">Publication & Other Information</h4>
       <div class="four fields">
         <div class="field">
