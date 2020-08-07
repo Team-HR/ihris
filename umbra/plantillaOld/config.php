@@ -11,7 +11,13 @@
     }elseif(isset($_POST['saveIncumbent'])){
         $saveIncumbent = $_POST["saveIncumbent"];
         $Oldplantilla = $_POST["Oldplantilla"];
-        $sql = "INSERT INTO `appointments` (`appointment_id`, `employee_id`, `plantilla_id`) VALUES (NULL, '$saveIncumbent', '$Oldplantilla')";
+        $nature_of_appointment = $_POST["nature_of_appointment"];
+        $date_appointment = $_POST["date_appointment"];
+        $date_last_promotion = $_POST["date_last_promotion"];
+        $casual_promotion = $_POST["casual_promotion"];
+        $sql = "INSERT INTO `appointments` 
+        (`appointment_id`, `employee_id`, `plantilla_id`,`nature_of_appointment`,`date_of_appointment`,`date_of_last_promotion`,`casual_promotion`) 
+                VALUES (NULL, '$saveIncumbent', '$Oldplantilla','$nature_of_appointment','$date_appointment','$date_last_promotion','$casual_promotion')";
         $sql = $mysqli->query($sql);
         if(!$sql){
             echo "Error: ".$mysqli->error;

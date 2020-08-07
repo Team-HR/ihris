@@ -208,6 +208,31 @@
                 <option v-for="(emp,index) in Employees" :key="index" :value="emp.employees_id">{{ emp.lastName }} {{ emp.firstName }} {{ emp.middleName }} {{ emp.extName }}</option>
               </select>
             </div>
+            <div class="field">
+              <label>Nature Of Appointment</label>
+              <select class="ui search dropdown" v-model="nature_of_appointment">
+                <option value="">Select Type</option>
+                <option value="original">Original</option>
+                <option value="promotion">Promotion</option>
+                <option value="transfer">Transfer</option>
+                <option value="re-employment">Re-employment</option>
+                <option value="re-appointment">Re-appointment</option>
+                <option value="renewal">Renewal</option>
+                <option value="demotion">Demotion</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Date of Appointment</label>
+              <input type="date" v-model="date_appointment">
+            </div>
+            <div class="field">
+              <label>Date of Last Promotion</label>
+              <input type="date" v-model="date_last_promotion">
+            </div>
+            <div class="field">
+              <label>Data of Casual Promotion</label>
+              <input type="date" v-model="casual_promotion">
+            </div>
             <input type="submit" value="Save" class="ui button primary">
             <!-- <button class="ui button primary">Save</button> -->
         </form>
@@ -473,9 +498,9 @@
     </div>
   </div>
 </div>
-<!-- end of editing
+<!-- end of editing -->
 
-<!----load table data---->
+ <!-- --load table data-- --> 
 <div class="ui segment" :class="loader">
   <div class="ui container">
   <div class="ui borderless blue inverted mini menu">
