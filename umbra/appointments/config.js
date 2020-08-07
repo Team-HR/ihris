@@ -42,7 +42,8 @@
             sworn_date:"",
             cert_issued_date:"",
             casual_promotion:"",
-            probationary_period:""
+            probationary_period:"",
+            date_of_last_promotion:""
         },
         methods:{ 
             getEmployees:function(){
@@ -124,6 +125,7 @@
                         fd.append("cert_issued_date",app.cert_issued_date)
                         fd.append("casual_promotion",app.casual_promotion)
                         fd.append("probationary_period",app.probationary_period)
+                        fd.append("date_of_last_promotion",app.date_of_last_promotion)
                     var xml = new XMLHttpRequest();
                         xml.onload = function(){
                             app.waitLoad="loading";
