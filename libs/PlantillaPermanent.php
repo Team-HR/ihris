@@ -17,15 +17,47 @@ class PlantillaPermanent
         return $this->dat;
     }
 
+
+
     public function getDateOrigAppointment($employees_id)
     {
         $mysqli = $this->db;
-        // $sql = "SELECT * FROM `ihri`";
+        $sql = "SELECT `date_of_appointment` FROM `appointments` WHERE `employee_id`=? AND `nature_of_appointment`='original' ORDER BY `date_of_appointment` ASC LIMIT 1";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("i", $employees_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $data = $result->fetch_assoc();
+        $date = $data["date_of_appointment"];
+        $stmt->close();
+        return $date?date("m/d/Y", strtotime($date)):"";
     }
 
     public function getDateLastPromoted($employees_id)
     {
         $mysqli = $this->db;
+        $sql = "SELECT `date_of_appointment` FROM `appointments` WHERE `employee_id`=? AND `nature_of_appointment`='promotion' ORDER BY `date_of_appointment` DESC LIMIT 1";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("i", $employees_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $data = $result->fetch_assoc();
+        $date = $data["date_of_appointment"];
+        $stmt->close();
+        return $date?date("m/d/Y", strtotime($date)):"";
+    }
+
+    public function getCurrentEmploymentStatus($employees_id){
+        $mysqli = $this->db;
+        $sql = "SELECT `status_of_appointment` FROM `appointments` WHERE `employee_id`=? ORDER BY `date_of_appointment` DESC LIMIT 1";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("i", $employees_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $data = $result->fetch_assoc();
+        $status = $data["status_of_appointment"];
+        $stmt->close();
+        return $status?strtoupper($status):"";
     }
 
     public function getData($plantilla_id)

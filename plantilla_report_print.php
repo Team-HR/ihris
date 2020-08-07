@@ -105,7 +105,10 @@ if ($gender === "all") {
 }
 $stmt->execute();
 $result = $stmt->get_result();
+require_once $_SERVER["CONTEXT_DOCUMENT_ROOT"] . '/libs/PlantillaPermanent.php';
+$plantilla = new PlantillaPermanent();
 while ($row = $result->fetch_assoc()) {
+  $employee_id = $row["employee_id"];
   $sg = $row["salaryGrade"];
   $step = $row["step"];
   $sg = $row["salaryGrade"];
@@ -119,7 +122,7 @@ while ($row = $result->fetch_assoc()) {
   $firstName = $row["firstName"];
   $middleName = $row["middleName"] == "." ? "" : $row["middleName"];
   $extName = $row["extName"];
-  $gender = $row["gender"]?$row["gender"][0]:"";
+  $gender = $row["gender"] ? $row["gender"][0] : "";
   $position = $row["position"];
   $functional = $row["functional"];
   $html .= <<<EOD
@@ -147,10 +150,11 @@ while ($row = $result->fetch_assoc()) {
   } else {
 
     $date_of_birth = formatDateSlashes($row["birthdate"]);
-    $date_of_orig_appointment = ""; // formatDate($row["date_of_orig_appointment"]);
-    $date_of_last_promotion = ""; // formatDate($row["date_of_last_promotion"]);
-    $status = $row["status_of_appointment"]?strtoupper($row["status_of_appointment"]):"";
-    $eligibility = get_eligiblity($mysqli,$row["employee_id"]);
+    $date_of_orig_appointment = $plantilla->getDateOrigAppointment($employee_id); // formatDate($row["date_of_orig_appointment"]);
+    $date_of_last_promotion = $plantilla->getDateLastPromoted($employee_id); // formatDate($row["date_of_last_promotion"]);
+    // $status = $row["status_of_appointment"] ? strtoupper($row["status_of_appointment"]) : "";
+    $status = strtoupper($status);
+    $eligibility = get_eligiblity($mysqli, $row["employee_id"]);
     $html .= <<<EOD
         <td style="white-space:nowrap">$lastName</td>
         <td style="white-space:nowrap">$firstName</td>
@@ -264,14 +268,15 @@ function getMonthlySalary($mysqli, $sg, $step, $schedule)
   // return $monthly_salary?number_format(($monthly_salary*12),2,'.',','):"---";
   return $monthly_salary ? ($monthly_salary * 12) : "---";
 }
-function get_eligiblity($mysqli,$employee_id){
+function get_eligiblity($mysqli, $employee_id)
+{
   $sql = "SELECT `pds_eligibilities`.`elig_title` AS `eligibility` FROM `pds_eligibilities` WHERE `employee_id` = ? LIMIT 1";
   $stmt = $mysqli->prepare($sql);
-  $stmt->bind_param('i',$employee_id);
+  $stmt->bind_param('i', $employee_id);
   $stmt->execute();
   $result = $stmt->get_result();
   $row = $result->fetch_assoc();
   $eligibility = $row["eligibility"];
   $stmt->close();
-  return $eligibility?$eligibility:"";
+  return $eligibility ? $eligibility : "";
 }
