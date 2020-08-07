@@ -5,7 +5,7 @@ require_once '../../_connect.db.php';
 // $echo = getPlantillas($mysqli);
 // print("<pre>".print_r($echo,true)."</pre>");
 
-if(isset($_POST['Employees'])){
+if (isset($_POST['Employees'])) {
     $sql = "SELECT
                 employees.employees_id, 
                 employees.firstName, 
@@ -16,7 +16,7 @@ if(isset($_POST['Employees'])){
                 employees";
     $sql = $mysqli->query($sql);
     $dat = [];
-    $throwDat=[];
+    $throwDat = [];
     $allEmp = [];
     while ($row = $sql->fetch_assoc()) {
         $allEmp[] = $row;
@@ -30,9 +30,9 @@ if(isset($_POST['Employees'])){
     $throwDat['Employees'] = $dat;
     $throwDat['All_Employees'] = $allEmp;
     echo json_encode($throwDat);
-}elseif(isset($_POST['Plantilla'])){
+} elseif (isset($_POST['Plantilla'])) {
     $dataId = $_POST['Plantilla'];
-    $sendDat = array('status' => '','dat'=>'' );
+    $sendDat = array('status' => '', 'dat' => '');
     $sql = "SELECT
                 plantillas.id as plantilla_id, 
                 plantillas.item_no, 
@@ -70,13 +70,13 @@ if(isset($_POST['Employees'])){
                 plantillas.id = '$dataId'";
     $sql = $mysqli->query($sql);
     $plan = $sql->fetch_assoc();
-    if($sql->num_rows== 0||$plan['incumbent']!="" ){
+    if ($sql->num_rows == 0 || $plan['incumbent'] != "") {
         $sendDat['status'] = false;
-    }else{
+    } else {
         $dat = [];
         foreach ($plan as $key => $a) {
-            $dat[$key] =  $a; 
-        }    
+            $dat[$key] =  $a;
+        }
         $salary_sql = "SELECT
                         setup_salary_adjustments_setup.monthly_salary
                     FROM
@@ -90,62 +90,59 @@ if(isset($_POST['Employees'])){
                         setup_salary_adjustments_setup.step_no = $plan[step] AND
                         setup_salary_adjustments_setup.salary_grade = $plan[salaryGrade] AND
                         setup_salary_adjustments.active = 1";
-    $salary_sql = $mysqli->query($salary_sql);
-    
-    if($dat['vac_firstName']==""){
-        $dat['vac_firstName']=" ";
-    }
-    if($dat['vac_middleName']=="") {
-        $dat['vac_middleName'] = " ";
-    }
-    if($dat['vac_lastName']=="") {
-        $dat['vac_lastName'] = " ";
-    }
-    if($dat['vac_extName']=="") {
-        $dat['vac_extName'] = " ";
-    }
-    if ($dat['reason_of_vacancy']=="") {
-        $dat['reason_of_vacancy']= " ";
-    }
-    echo $mysqli->error;
-    $salary_sql = $salary_sql->fetch_assoc();
-    $dat['monthly_salary'] = $salary_sql['monthly_salary'];
-    $sendDat['status'] = true;
-    $sendDat['dat'] = $dat;
+        $salary_sql = $mysqli->query($salary_sql);
+
+        if ($dat['vac_firstName'] == "") {
+            $dat['vac_firstName'] = " ";
+        }
+        if ($dat['vac_middleName'] == "") {
+            $dat['vac_middleName'] = " ";
+        }
+        if ($dat['vac_lastName'] == "") {
+            $dat['vac_lastName'] = " ";
+        }
+        if ($dat['vac_extName'] == "") {
+            $dat['vac_extName'] = " ";
+        }
+        if ($dat['reason_of_vacancy'] == "") {
+            $dat['reason_of_vacancy'] = " ";
+        }
+        echo $mysqli->error;
+        $salary_sql = $salary_sql->fetch_assoc();
+        $dat['monthly_salary'] = $salary_sql['monthly_salary'];
+        $sendDat['status'] = true;
+        $sendDat['dat'] = $dat;
     }
     echo json_encode($sendDat);
-    
-
-
-}elseif (isset($_POST['saveAppointment'])) {
-        $employees_id = $_POST['employees_id'];
-        $plantilla_id = $_POST['plantilla_id'];
-        $status_of_appointment = $_POST['status_of_appointment'];
-        $csc_authorized_official = $_POST['csc_authorized_official'];
-        $date_signed_by_csc = $_POST['date_signed_by_csc'];
-        $committee_chair = $_POST['committee_chair'];
-        $date_of_appointment = $_POST['date_of_appointment'];
-        $date_of_assumption = $_POST['date_of_assumption'];
-        $csc_mc_no = $_POST['csc_mc_no'];
-        $HRMO = $_POST['HRMO'];
-        $office_assignment = $_POST['office_assignment'];
-        $nature_of_appointment = $_POST['nature_of_appointment'];
-        $date_of_signing = $_POST['date_of_signing'];
-        $deliberation_date_from = $_POST['deliberation_date_from'];
-        $deliberation_date_to = $_POST['deliberation_date_to'];
-        $published_at = $_POST['published_at'];
-        $posted_in = $_POST['posted_in'];
-        $govId_type = $_POST['govId_type'];
-        $govId_no = $_POST['govId_no'];
-        $govId_issued_date = $_POST['govId_issued_date'];
-        $posted_date = $_POST['posted_date'];
-        $csc_release_date = $_POST['csc_release_date'];
-        $sworn_date = $_POST['sworn_date'];
-        $cert_issued_date = $_POST['cert_issued_date'];
-        $casual_promotion = $_POST['casual_promotion'];
-        $probationary_period = $_POST['probationary_period'];
-        $date_of_last_promotion = $_POST['date_of_last_promotion'];
-        $sql = "INSERT INTO `appointments` (
+} elseif (isset($_POST['saveAppointment'])) {
+    $employees_id = $_POST['employees_id'];
+    $plantilla_id = $_POST['plantilla_id'];
+    $status_of_appointment = $_POST['status_of_appointment'];
+    $csc_authorized_official = $_POST['csc_authorized_official'];
+    $date_signed_by_csc = $_POST['date_signed_by_csc'];
+    $committee_chair = $_POST['committee_chair'];
+    $date_of_appointment = $_POST['date_of_appointment'];
+    $date_of_assumption = $_POST['date_of_assumption'];
+    $csc_mc_no = $_POST['csc_mc_no'];
+    $HRMO = $_POST['HRMO'];
+    $office_assignment = $_POST['office_assignment'];
+    $nature_of_appointment = $_POST['nature_of_appointment'];
+    $date_of_signing = $_POST['date_of_signing'];
+    $deliberation_date_from = $_POST['deliberation_date_from'];
+    $deliberation_date_to = $_POST['deliberation_date_to'];
+    $published_at = $_POST['published_at'];
+    $posted_in = $_POST['posted_in'];
+    $govId_type = $_POST['govId_type'];
+    $govId_no = $_POST['govId_no'];
+    $govId_issued_date = $_POST['govId_issued_date'];
+    $posted_date = $_POST['posted_date'];
+    $csc_release_date = $_POST['csc_release_date'];
+    $sworn_date = $_POST['sworn_date'];
+    $cert_issued_date = $_POST['cert_issued_date'];
+    $casual_promotion = $_POST['casual_promotion'];
+    $probationary_period = $_POST['probationary_period'];
+    $date_of_last_promotion = $_POST['date_of_last_promotion'];
+    $sql = "INSERT INTO `appointments` (
                             `appointment_id`,
                             `employee_id`,
                             `plantilla_id`,
@@ -204,22 +201,51 @@ if(isset($_POST['Employees'])){
                             '$probationary_period',
                             '$date_of_last_promotion'
                         )";
-        $sql = $mysqli->query($sql);
-        echo $mysqli->error;
-        $lastInsertId = $mysqli->insert_id;
-        $sqlPlantilla = "UPDATE `plantillas` SET `incumbent`='$lastInsertId' where `id`='$plantilla_id'";
-        $sql1 = $mysqli->query($sqlPlantilla);
-        $d = [];
-        if(!$sql||!$sql1){
-            $d['status'] = false;
-            $d['color'] = 'error';
-            $d['msg'] = "An Error Occur";
-        }else{
-            $d['status'] = true;
-            $d['color'] = 'success';
-            $d['msg'] = "Successfull!!<br>Redirecting";
-        }
-        echo json_encode($d);
+    $sql = $mysqli->query($sql);
+    echo $mysqli->error;
+    $lastInsertId = $mysqli->insert_id;
+    $sqlPlantilla = "UPDATE `plantillas` SET `incumbent`='$lastInsertId' where `id`='$plantilla_id'";
+    $sql1 = $mysqli->query($sqlPlantilla);
+    $d = [];
+    if (!$sql || !$sql1) {
+        $d['status'] = false;
+        $d['color'] = 'error';
+        $d['msg'] = "An Error Occur";
+    } else {
+        $d['status'] = true;
+        $d['color'] = 'success';
+        $d['msg'] = "Successfull!!<br>Redirecting";
+        ############## Service Record Auto Start ######################
+        service_record_update($employees_id, $plantilla_id, $status_of_appointment, $date_of_appointment,$nature_of_appointment);
+        ############## Service Record Auto End ########################
+    }
+    echo json_encode($d);
 }
 
+############## Service Record Auto Start ######################
+function service_record_update($employees_id, $plantilla_id, $status_of_appointment, $date_of_appointment,$nature_of_appointment)
+{
+    require_once $_SERVER["CONTEXT_DOCUMENT_ROOT"]."/libs/ServiceRecord.php";
+    require_once $_SERVER["CONTEXT_DOCUMENT_ROOT"]."/libs/PlantillaPermanent.php";
 
+    $data = array(
+        "employee_id" => $employees_id,
+        "sr_branch" => "LOCAL",
+        "sr_date_from" => $date_of_appointment,
+        "sr_date_to" => NULL, // INC LACKS AUTO sr_date_to closure once buildup triggers
+        "sr_designation" => (new PlantillaPermanent())->getData($plantilla_id)["position"],
+        "sr_is_per_session" => "0",
+        "sr_place_of_assignment" => "LGU BAYAWAN",
+        "sr_rate_on_schedule" => (new PlantillaPermanent())->getData($plantilla_id)["monthly_salary"],
+        "sr_remarks" => ucfirst($nature_of_appointment), // INC LACKS CHECKER IF ORGINAL OR PROMOTION OR etc
+        "sr_status" => strtoupper($status_of_appointment),
+        "sr_type" => "BUILD-UP",
+    );
+
+    // echo json_encode($data);
+    // return false;
+    $service_rec = new ServiceRecord();
+    $service_rec->sensePlantilla($data);
+    // echo json_encode($service_rec->sensePlantilla($old));
+}
+############## Service Record Auto End ########################
