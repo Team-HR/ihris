@@ -60,7 +60,7 @@ $sql2 = "SELECT * FROM  `setup_salary_adjustments` WHERE `schedule` = '$row[sche
 	$sql2 = $mysqli->query($sql2);
 	$sql2 = $sql2 ->fetch_assoc();
 
-$sql3 = "SELECT * FROM  `setup_salary_adjustments_setup` WHERE `parent_id` = '$sql2[id]' AND `salary_grade`='$row[salaryGrade]' AND `step_no`='$row[level]' ";
+$sql3 = "SELECT * FROM  `setup_salary_adjustments_setup` WHERE `parent_id` = '$sql2[id]' AND `salary_grade`='$row[salaryGrade]' AND `step_no`='$row[step]' ";
 	$sql3 = $mysqli->query($sql3);
 	$sql3 = $sql3 ->fetch_assoc();
 	
@@ -159,7 +159,7 @@ $sql5="SELECT
 		<td><?=$vacated_by?></td>
 		<td class=" align">  
 		
-		<button class="ui mini negative button" id="bt_vacate" title="Vacate Position" onclick="vacateRow('<?=$plantilla_id?>','<?=$row["incumbent"]?>','<?=$row["position"]?>')"
+		<button class="ui mini negative button"  id="bt_vacate" title="Vacate Position" onclick="vacateRow('<?=$plantilla_id?>','<?=$row["incumbent"]?>','<?=$row["position"]?>')"
 			></i>Vacate</button> 
 		</td>
 	</tr><?php
