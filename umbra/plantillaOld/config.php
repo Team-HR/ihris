@@ -32,6 +32,7 @@ if (isset($_POST['getEmployee'])) {
         ############## Service Record Auto Start ######################
         else
         service_record_update($saveIncumbent,$Oldplantilla,$nature_of_appointment,$date_appointment,$date_last_promotion);
+
         ############## Service Record Auto End ########################
     }
 }
@@ -47,14 +48,14 @@ function service_record_update($saveIncumbent,$Oldplantilla,$nature_of_appointme
         "employee_id" => $saveIncumbent,
         "sr_branch" => "LOCAL",
         "sr_date_from" => $date_appointment,
-        "sr_date_to" => $date_appointment, //"--INC--",
+        "sr_date_to" => NULL, //"--INC--",
         "sr_designation" => (new PlantillaPermanent())->getData($Oldplantilla)["position"],
         "sr_is_per_session" => "0",
         "sr_place_of_assignment" => "LGU BAYAWAN",
         "sr_rate_on_schedule" => (new PlantillaPermanent())->getData($Oldplantilla)["monthly_salary"],
-        "sr_remarks" => "Original",
+        "sr_remarks" => "---",
         "sr_status" => "PERMANENT",
-        "sr_type" => "APPOINTMENT",
+        "sr_type" => "BUILD-UP",
     );
 
 
@@ -74,8 +75,8 @@ function service_record_update($saveIncumbent,$Oldplantilla,$nature_of_appointme
     // echo json_encode(count($old)." : ".count($oldLastPromotion));
     // return false;
     $service_rec = new ServiceRecord();
-    $service_rec->sensePlantilla($old);
     $service_rec->sensePlantilla($oldLastPromotion);
+    $service_rec->sensePlantilla($old);
     // echo json_encode($service_rec->sensePlantilla($old));
 }
 ############## Service Record Auto End ########################

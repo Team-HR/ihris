@@ -14,23 +14,48 @@ class ServiceRecord
         if (empty($arr)) return false;
         $data = $arr;
         if (
-            empty($data["sr_date_from"]) ||
-            empty($data["sr_date_to"])
+            empty($data["sr_date_from"])
         ) return false;
 
         array_walk($data, function (&$item1) {
             $item1 = strtoupper($item1);
         });
 
+        if ($this->hasRecs($data["employee_id"])) {
+            $this->toDateClosure($data["employee_id"], $data["sr_date_from"]);
+        }
+
         $sql = "INSERT INTO `service_records` (`employee_id`,`sr_branch`,`sr_date_from`,`sr_date_to`,`sr_designation`,`sr_is_per_session`,`sr_place_of_assignment`,`sr_rate_on_schedule`,`sr_remarks`,`sr_status`,`sr_type`) VALUES (? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,?)";
         $stmt = $mysqli->prepare($sql);
-        $stmt->bind_param("issssssssss",$data["employee_id"],$data["sr_branch"],$data["sr_date_from"],$data["sr_date_to"],$data["sr_designation"],$data["sr_is_per_session"],$data["sr_place_of_assignment"],$data["sr_rate_on_schedule"],$data["sr_remarks"],$data["sr_status"],$data["sr_type"]);
+        $stmt->bind_param("issssssssss", $data["employee_id"], $data["sr_branch"], $data["sr_date_from"], $data["sr_date_to"], $data["sr_designation"], $data["sr_is_per_session"], $data["sr_place_of_assignment"], $data["sr_rate_on_schedule"], $data["sr_remarks"], $data["sr_status"], $data["sr_type"]);
         $stmt->execute();
         $affected_rows = $stmt->affected_rows;
         $stmt->close();
         return $affected_rows;
     }
 
+    private function hasRecs($employee_id)
+    {
+        $mysqli = $this->db;
+        $sql = "SELECT `id` FROM `ihris_dev`.`service_records` WHERE `employee_id` = ?";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("i", $employee_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $num_rows = $result->num_rows;
+        $stmt->close();
+        return $num_rows > 0 ? true : false;
+    }
+
+    private function toDateClosure($employee_id, $date_of_appointment)
+    {
+        $mysqli = $this->db;
+        $sql = "UPDATE `ihris_dev`.`service_records` SET `sr_date_to` = ? WHERE `sr_date_to` IN (NULL,'') AND `employee_id` = ?";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("si", $date_of_appointment, $employee_id);
+        $stmt->execute();
+        $stmt->close();
+    }
 
     public function getDailyRate($sg, $step, $schedule)
     {
