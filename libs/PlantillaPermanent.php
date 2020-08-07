@@ -1,36 +1,51 @@
 <?php
 class PlantillaPermanent
-{   
+{
     private $db;
     private $dat = array();
     public $monthly_salary;
-    function __construct(){
-        require $_SERVER["CONTEXT_DOCUMENT_ROOT"].'/_connect.db.php';
+    function __construct()
+    {
+        require $_SERVER["CONTEXT_DOCUMENT_ROOT"] . '/_connect.db.php';
         $this->db = $mysqli;
     }
 
-    public function store($arr = array()){
+    public function store($arr = array())
+    {
         if (empty($arr)) return false;
         $this->dat = $arr;
         return $this->dat;
     }
 
-    public function getData($plantilla_id){
-        if(!$plantilla_id) return false;
-        $sql = "SELECT * FROM `ihris_dev`.`plantillas` WHERE `id` = ?";
+    public function getDateOrigAppointment($employees_id)
+    {
+        $mysqli = $this->db;
+        // $sql = "SELECT * FROM `ihri`";
+    }
+
+    public function getDateLastPromoted($employees_id)
+    {
+        $mysqli = $this->db;
+    }
+
+    public function getData($plantilla_id)
+    {
+        if (!$plantilla_id) return false;
+        $sql = "SELECT * FROM `plantillas` WHERE `id` = ?";
         $stmt = $this->db->prepare($sql);
-        $stmt->bind_param('i',$plantilla_id);
+        $stmt->bind_param('i', $plantilla_id);
         $stmt->execute();
         $result = $stmt->get_result();
         $data = $result->fetch_assoc();
-        $data["monthly_salary"] = $this->getMonthlySalary($data["position_id"],$data["step"],$data["schedule"]);
+        $data["monthly_salary"] = $this->getMonthlySalary($data["position_id"], $data["step"], $data["schedule"]);
         $stmt->close();
         $data = $data + $this->positionData($data["position_id"]);
         $data = $data + $this->departmentData($data["department_id"]);
         return $data;
     }
 
-    public function departmentData($department_id){
+    public function departmentData($department_id)
+    {
         require_once 'Department.php';
         $department = new Department();
         $data = $department->getData($department_id);
@@ -38,7 +53,8 @@ class PlantillaPermanent
     }
 
 
-    public function positionData($position_id){
+    public function positionData($position_id)
+    {
         require_once 'Position.php';
         $position = new Position();
         $data = $position->getData($position_id);
@@ -54,7 +70,7 @@ class PlantillaPermanent
         $sg = $position->getSalaryGrade($position_id);
         $monthly_salary = 0;
         if (empty($sg)) return false;
-        $sql = "SELECT id FROM `ihris_dev`.`setup_salary_adjustments` WHERE schedule = ? AND active = '1'";
+        $sql = "SELECT id FROM `setup_salary_adjustments` WHERE schedule = ? AND active = '1'";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param('i', $schedule);
         $stmt->execute();
@@ -64,7 +80,7 @@ class PlantillaPermanent
         $parent_id = $row["id"];
         $stmt->close();
         if (empty($parent_id)) return false;
-        $sql = "SELECT monthly_salary FROM `ihris_dev`.`setup_salary_adjustments_setup` WHERE parent_id = ? AND salary_grade = ? AND step_no = ?";
+        $sql = "SELECT monthly_salary FROM `setup_salary_adjustments_setup` WHERE parent_id = ? AND salary_grade = ? AND step_no = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param('iii', $parent_id, $sg, $step);
         $stmt->execute();
@@ -74,7 +90,4 @@ class PlantillaPermanent
         $stmt->close();
         return $monthly_salary;
     }
-    
-
-    
 }

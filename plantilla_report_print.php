@@ -94,12 +94,12 @@ $html = <<<EOD
     <tbody>
 EOD;
 if ($gender === "all") {
-  $sql = "SELECT plantillas.*,positiontitles.position,positiontitles.functional,positiontitles.salaryGrade,positiontitles.category,appointments.*,employees.firstName,employees.middleName,employees.lastName,employees.extName,pds_personal.gender,pds_personal.birthdate FROM `ihris_dev`.`plantillas` LEFT JOIN `positiontitles` ON `plantillas`.`position_id`=`positiontitles`.`position_id` LEFT JOIN `appointments` ON `plantillas`.`incumbent`=`appointments`.`appointment_id` LEFT JOIN `employees` ON `appointments`.`employee_id`=`employees`.`employees_id` LEFT JOIN `pds_personal` ON `employees`.`employees_id`=`pds_personal`.`employee_id` WHERE `plantillas`.`department_id`=? ORDER BY `item_no` ASC";
+  $sql = "SELECT plantillas.*,positiontitles.position,positiontitles.functional,positiontitles.salaryGrade,positiontitles.category,appointments.*,employees.firstName,employees.middleName,employees.lastName,employees.extName,pds_personal.gender,pds_personal.birthdate FROM `plantillas` LEFT JOIN `positiontitles` ON `plantillas`.`position_id`=`positiontitles`.`position_id` LEFT JOIN `appointments` ON `plantillas`.`incumbent`=`appointments`.`appointment_id` LEFT JOIN `employees` ON `appointments`.`employee_id`=`employees`.`employees_id` LEFT JOIN `pds_personal` ON `employees`.`employees_id`=`pds_personal`.`employee_id` WHERE `plantillas`.`department_id`=? ORDER BY `item_no` ASC";
   $stmt = $mysqli->prepare($sql);
   $stmt->bind_param('i', $department_id);
 } else {
   $gender = $gender[0];
-  $sql = "SELECT plantillas.*,positiontitles.position,positiontitles.functional,positiontitles.salaryGrade,positiontitles.category,appointments.*,employees.firstName,employees.middleName,employees.lastName,employees.extName,pds_personal.gender,pds_personal.birthdate FROM `ihris_dev`.`plantillas` LEFT JOIN `positiontitles` ON `plantillas`.`position_id`=`positiontitles`.`position_id` LEFT JOIN `appointments` ON `plantillas`.`incumbent`=`appointments`.`appointment_id` LEFT JOIN `employees` ON `appointments`.`employee_id`=`employees`.`employees_id` LEFT JOIN `pds_personal` ON `employees`.`employees_id`=`pds_personal`.`employee_id` WHERE `plantillas`.`department_id`=? AND `pds_personal`.`gender` = ? ORDER BY `item_no` ASC";
+  $sql = "SELECT plantillas.*,positiontitles.position,positiontitles.functional,positiontitles.salaryGrade,positiontitles.category,appointments.*,employees.firstName,employees.middleName,employees.lastName,employees.extName,pds_personal.gender,pds_personal.birthdate FROM `plantillas` LEFT JOIN `positiontitles` ON `plantillas`.`position_id`=`positiontitles`.`position_id` LEFT JOIN `appointments` ON `plantillas`.`incumbent`=`appointments`.`appointment_id` LEFT JOIN `employees` ON `appointments`.`employee_id`=`employees`.`employees_id` LEFT JOIN `pds_personal` ON `employees`.`employees_id`=`pds_personal`.`employee_id` WHERE `plantillas`.`department_id`=? AND `pds_personal`.`gender` = ? ORDER BY `item_no` ASC";
   $stmt = $mysqli->prepare($sql);
   $stmt->bind_param('is', $department_id, $gender);
 }
@@ -244,7 +244,7 @@ function getMonthlySalary($mysqli, $sg, $step, $schedule)
 {
   $monthly_salary = 0;
   if (empty($sg) || empty($step) || empty($schedule)) return false;
-  $sql = "SELECT id FROM `ihris_dev`.`setup_salary_adjustments` WHERE schedule = ? AND active = '1'";
+  $sql = "SELECT id FROM `setup_salary_adjustments` WHERE schedule = ? AND active = '1'";
   $stmt = $mysqli->prepare($sql);
   $stmt->bind_param('i', $schedule);
   $stmt->execute();
@@ -254,7 +254,7 @@ function getMonthlySalary($mysqli, $sg, $step, $schedule)
   $parent_id = $row["id"];
   $stmt->close();
   if (empty($parent_id)) return false;
-  $sql = "SELECT monthly_salary FROM `ihris_dev`.`setup_salary_adjustments_setup` WHERE parent_id = ? AND salary_grade = ? AND step_no = ?";
+  $sql = "SELECT monthly_salary FROM `setup_salary_adjustments_setup` WHERE parent_id = ? AND salary_grade = ? AND step_no = ?";
   $stmt = $mysqli->prepare($sql);
   $stmt->bind_param('iii', $parent_id, $sg, $step);
   $stmt->execute();
@@ -265,7 +265,7 @@ function getMonthlySalary($mysqli, $sg, $step, $schedule)
   return $monthly_salary ? ($monthly_salary * 12) : "---";
 }
 function get_eligiblity($mysqli,$employee_id){
-  $sql = "SELECT `pds_eligibilities`.`elig_title` AS `eligibility` FROM `ihris_dev`.`pds_eligibilities` WHERE `employee_id` = ? LIMIT 1";
+  $sql = "SELECT `pds_eligibilities`.`elig_title` AS `eligibility` FROM `pds_eligibilities` WHERE `employee_id` = ? LIMIT 1";
   $stmt = $mysqli->prepare($sql);
   $stmt->bind_param('i',$employee_id);
   $stmt->execute();

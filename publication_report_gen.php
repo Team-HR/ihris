@@ -157,7 +157,7 @@ while($row = $result->fetch_assoc())
 function getMonthlySalary($mysqli,$sg,$step,$schedule) {
     $monthly_salary = 0;
     if(empty($sg) || empty($step) || empty($schedule)) return "No SG/STEP/SCHED provided in plantilla";
-    $sql = "SELECT id FROM `ihris_dev`.`setup_salary_adjustments` WHERE schedule = ? AND active = '1'";
+    $sql = "SELECT id FROM `setup_salary_adjustments` WHERE schedule = ? AND active = '1'";
     $stmt = $mysqli->prepare($sql);
     $stmt->bind_param('i',$schedule);
     $stmt->execute();
@@ -167,7 +167,7 @@ function getMonthlySalary($mysqli,$sg,$step,$schedule) {
     $parent_id = $row["id"];
     $stmt->close();
     if (empty($parent_id)) return false;
-    $sql = "SELECT monthly_salary FROM `ihris_dev`.`setup_salary_adjustments_setup` WHERE parent_id = ? AND salary_grade = ? AND step_no = ?";
+    $sql = "SELECT monthly_salary FROM `setup_salary_adjustments_setup` WHERE parent_id = ? AND salary_grade = ? AND step_no = ?";
     $stmt = $mysqli->prepare($sql);
     $stmt->bind_param('iii',$parent_id,$sg,$step);
     $stmt->execute();

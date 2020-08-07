@@ -18,7 +18,7 @@ class Position
     }
 
     public function getData($id){
-        $sql = "SELECT * FROM `ihris_dev`.`positiontitles` WHERE `position_id` = ?";
+        $sql = "SELECT * FROM `positiontitles` WHERE `position_id` = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param('i',$id);
         $stmt->execute();
@@ -31,7 +31,7 @@ class Position
 
     public function getSalaryGrade($id){
         if(!$id) return false;
-        $sql = "SELECT `salaryGrade` FROM `ihris_dev`.`positiontitles` WHERE `position_id` = ?";
+        $sql = "SELECT `salaryGrade` FROM `positiontitles` WHERE `position_id` = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param('i',$id);
         $stmt->execute();

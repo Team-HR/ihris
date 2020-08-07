@@ -37,7 +37,7 @@ class ServiceRecord
     private function hasRecs($employee_id)
     {
         $mysqli = $this->db;
-        $sql = "SELECT `id` FROM `ihris_dev`.`service_records` WHERE `employee_id` = ?";
+        $sql = "SELECT `id` FROM `service_records` WHERE `employee_id` = ?";
         $stmt = $mysqli->prepare($sql);
         $stmt->bind_param("i", $employee_id);
         $stmt->execute();
@@ -50,7 +50,7 @@ class ServiceRecord
     private function toDateClosure($employee_id, $date_of_appointment)
     {
         $mysqli = $this->db;
-        $sql = "UPDATE `ihris_dev`.`service_records` SET `sr_date_to` = ? WHERE `sr_date_to` IN (NULL,'') AND `employee_id` = ?";
+        $sql = "UPDATE `service_records` SET `sr_date_to` = ? WHERE `sr_date_to` IN (NULL,'') AND `employee_id` = ?";
         $stmt = $mysqli->prepare($sql);
         $stmt->bind_param("si", $date_of_appointment, $employee_id);
         $stmt->execute();
@@ -65,7 +65,7 @@ class ServiceRecord
 
         $monthly_salary = 0;
         if (empty($sg) || empty($step) || empty($schedule)) return false;
-        $sql = "SELECT id FROM `ihris_dev`.`setup_salary_adjustments` WHERE schedule = ? AND active = '1'";
+        $sql = "SELECT id FROM `setup_salary_adjustments` WHERE schedule = ? AND active = '1'";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param('i', $schedule);
         $stmt->execute();
@@ -75,7 +75,7 @@ class ServiceRecord
         $parent_id = $row["id"];
         $stmt->close();
         if (empty($parent_id)) return false;
-        $sql = "SELECT monthly_salary FROM `ihris_dev`.`setup_salary_adjustments_setup` WHERE parent_id = ? AND salary_grade = ? AND step_no = ?";
+        $sql = "SELECT monthly_salary FROM `setup_salary_adjustments_setup` WHERE parent_id = ? AND salary_grade = ? AND step_no = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param('iii', $parent_id, $sg, $step);
         $stmt->execute();

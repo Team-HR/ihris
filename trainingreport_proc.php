@@ -52,7 +52,7 @@ $sql = "SELECT
 	MONTH(date_conducted) AS month,
 	YEAR(date_conducted) AS year
 FROM
-    `ihris_dev`.`spms_feedbacking`
+    `spms_feedbacking`
 WHERE
     date_conducted <> '0000-00-00' OR
     date_conducted <> NULL
@@ -621,7 +621,7 @@ function createTrainings($mysqli,$employees_id,$year){
 	} 
 
 
-	$sql3 = "SELECT * FROM `ihris_dev`.`spms_feedbacking` 
+	$sql3 = "SELECT * FROM `spms_feedbacking` 
 	WHERE $filterByYear3 `feedbacking_emp` = '$employees_id' AND `date_conducted` <> '0000-00-00'";
 	$result2 = $mysqli->query($sql3);
 	while ($row2 = $result2->fetch_assoc()) {
@@ -699,7 +699,7 @@ function get_num($mysqli,$id,$stat,$gen,$year,$bool){
 	UNION
 	SELECT * FROM `employees` WHERE $filterByDept employmentStatus = '$stat' AND gender = '$gen' AND `status` = 'ACTIVE' AND employees_id IN (SELECT `employees_id` FROM `requestandcomslist` WHERE `controlNumber` IN (SELECT `controlNumber` FROM `requestandcoms` WHERE `isMeeting` != 'yes' $filterByYear2))
     UNION
-    SELECT * FROM `employees` WHERE $filterByDept employmentStatus = '$stat' AND gender = '$gen' AND `status` = 'ACTIVE' AND employees_id IN (SELECT feedbacking_emp AS employees_id FROM `ihris_dev`.`spms_feedbacking` WHERE $filterByYear3 date_conducted <> '0000-00-00' OR date_conducted <> NULL)
+    SELECT * FROM `employees` WHERE $filterByDept employmentStatus = '$stat' AND gender = '$gen' AND `status` = 'ACTIVE' AND employees_id IN (SELECT feedbacking_emp AS employees_id FROM `spms_feedbacking` WHERE $filterByYear3 date_conducted <> '0000-00-00' OR date_conducted <> NULL)
     ";
     
     $in = 0;
