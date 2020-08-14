@@ -251,7 +251,8 @@ $sql5="SELECT
 		$endService = $_POST["endService"];
 
 		$sql1 = "UPDATE `plantillas` SET     `vacated_by` = '$incumbent', 
-										     `incumbent` = ''	
+										    --  `incumbent` = '' --Mao ni ang nakaingon 
+											 `incumbent` = NULL 
 
 									WHERE `id` = '$plantilla_id'
 									";
