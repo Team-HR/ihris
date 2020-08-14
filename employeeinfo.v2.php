@@ -224,7 +224,7 @@ if (isset($_GET["spms"])) {
             </div>
             <div class="fields">
                 <div class="sixteen wide field">
-                    <label>Department:</label>
+                    <label>Assigned Office:</label>
                     <select id="departmentModal">
                         <?php $resultDepts = $mysqli->query("SELECT * FROM `department` ORDER BY `department` ASC");
                         while ($resultsDeptsArray = mysqli_fetch_array($resultDepts)) {
@@ -306,7 +306,7 @@ if (isset($_GET["spms"])) {
             <tr>
                 <td class="actives">ID:</td>
                 <td id="employees_idView"></td>
-                <td class="actives">DEPARTMENT:</td>
+                <td class="actives">ASSIGNED OFFICE:</td>
                 <td id="departmentView"></td>
                 <td class="actives">LEVEL:</td>
                 <td id="levelView"></td>
