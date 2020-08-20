@@ -1,7 +1,20 @@
 <?php
 // Initialize the session
-session_start();
 
+session_start();
+// SET $_SERVER["DOCUMENT_ROOT"] START
+$dirs = explode(DIRECTORY_SEPARATOR, __DIR__);
+$file = "_connect.db.php";
+$file_location = "";
+foreach ($dirs as $key => $dir) {
+    if (file_exists($file_location . $file)) {
+         $file = $file_location.$file;
+        break;
+    }
+    $file_location .= $dir . DIRECTORY_SEPARATOR;
+}
+$_SERVER["DOCUMENT_ROOT"] = $file_location;
+// SET $_SERVER["DOCUMENT_ROOT"] END
 // Check if the user is logged in, if not then redirect him to login page
 if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true && $_SESSION["type"] !== "admin"){
   header("location: login.php");

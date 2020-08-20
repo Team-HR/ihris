@@ -216,17 +216,17 @@ if (isset($_POST['Employees'])) {
         $d['color'] = 'success';
         $d['msg'] = "Successfull!!<br>Redirecting";
         ############## Service Record Auto Start ######################
-        service_record_update($employees_id, $plantilla_id, $status_of_appointment, $date_of_appointment,$nature_of_appointment);
+        service_record_update($employees_id, $plantilla_id, $status_of_appointment, $date_of_appointment, $nature_of_appointment);
         ############## Service Record Auto End ########################
     }
     echo json_encode($d);
 }
 
 ############## Service Record Auto Start ######################
-function service_record_update($employees_id, $plantilla_id, $status_of_appointment, $date_of_appointment,$nature_of_appointment)
+function service_record_update($employees_id, $plantilla_id, $status_of_appointment, $date_of_appointment, $nature_of_appointment)
 {
-    require_once $_SERVER["CONTEXT_DOCUMENT_ROOT"]."/libs/ServiceRecord.php";
-    require_once $_SERVER["CONTEXT_DOCUMENT_ROOT"]."/libs/PlantillaPermanent.php";
+    require "../../libs/ServiceRecord.php";
+    require "../../libs/PlantillaPermanent.php";
 
     $data = array(
         "employee_id" => $employees_id,

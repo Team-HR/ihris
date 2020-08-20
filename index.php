@@ -61,7 +61,7 @@ require 'header.php';
 								<div class="content">
 									<div class="ui animated list">
 										<a class="item" href="plantilla.php">Plantilla (Permanent)</a>
-										<a class="item" href="plantilla_vacantpos.php">Create Publications</a>
+										<a class="item" href="plantilla_vacantpos.php">Publications</a>
 										<a class="item" href="comparativeData.php">Comparative Data</a>
 										<a class="item" href="indTurnAroundTime.php">Individual Turn Around Time</a>
 										<a class="item" href="">System of Ranking Position</a>

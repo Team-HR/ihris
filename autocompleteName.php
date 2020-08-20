@@ -1,5 +1,5 @@
 <?php
-    include_once '_connect.db.php';
+    require_once '_connect.db.php';
 
 	    $sql="SELECT * FROM `employees`";
 	    $result1 = $mysqli->query($sql);

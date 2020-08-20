@@ -1,14 +1,11 @@
 <?php
-// require 'libs/Database.php';
+require_once 'Model.php';
 
-class Department
+class Department extends Model
 {
-	private $mysqli;
-
 	function __construct()
 	{
-		require $_SERVER["CONTEXT_DOCUMENT_ROOT"] . '/_connect.db.php';
-		$this->mysqli = $mysqli;
+		parent::__construct();
 	}
 
 	public function getData($id)
@@ -25,7 +22,6 @@ class Department
 	}
 	public function getDepartment($id)
 	{
-		// require '_connect.db.php';
 		$mysqli = $this->mysqli;
 		$department = "";
 		$sql = "SELECT `department` FROM `department` WHERE `department_id` = ?";
@@ -39,7 +35,6 @@ class Department
 		$stmt->fetch();
 
 		$stmt->close();
-		// $mysqli->close();
 
 		return $department;
 	}

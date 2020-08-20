@@ -1,26 +1,27 @@
 <?php
-class Position
+require_once "Model.php";
+
+class Position extends Model
 {
-    private $db;
     private $dat = array();
     function __construct()
     {
-        require $_SERVER["CONTEXT_DOCUMENT_ROOT"] . '/_connect.db.php';
-        $this->db = $mysqli;
+        parent::__construct();
     }
 
     public function store($arr = array())
     {
-        // incomplete
         if (empty($arr)) return false;
         $this->dat = $arr;
         return $this->dat;
     }
 
-    public function getData($id){
+    public function getData($id)
+    {
+        $mysqli = $this->mysqli;
         $sql = "SELECT * FROM `positiontitles` WHERE `position_id` = ?";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bind_param('i',$id);
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param('i', $id);
         $stmt->execute();
         $result = $stmt->get_result();
         $data = $result->fetch_assoc();
@@ -29,18 +30,18 @@ class Position
         return $data;
     }
 
-    public function getSalaryGrade($id){
-        if(!$id) return false;
+    public function getSalaryGrade($id)
+    {
+        if (!$id) return false;
+        $mysqli = $this->mysqli;
         $sql = "SELECT `salaryGrade` FROM `positiontitles` WHERE `position_id` = ?";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bind_param('i',$id);
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param('i', $id);
         $stmt->execute();
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
         $salary_grade = $row["salaryGrade"];
         $stmt->close();
-        return $salary_grade?$salary_grade:"";
+        return $salary_grade ? $salary_grade : "";
     }
-
-
 }

@@ -230,5 +230,6 @@ require_once "header.php";
             </div>
         </div>
     </div>
+</div>
     <script src="umbra/qualification_standards/config.js"></script>
     <?php require_once "footer.php"; ?>

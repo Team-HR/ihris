@@ -1,5 +1,5 @@
 <?php
-include_once '_connect.db.php';
+require_once '_connect.db.php';
 
 $sql = "SELECT `applicant_id`,`num_years_in_gov` FROM `rsp_applicants`";
 

@@ -1,22 +1,23 @@
 <?php
-
-class Competency
+require_once "Model.php";
+class Competency extends Model
 {
 	private $competencies = array();
 	private $competenciesMale = array();
 	private $competenciesFemale = array();
-	private $mysqli;
+	// private $mysqli;
 
 	function __construct(){
 
-		require '_connect.db.php';
-		require 'libs/NameFormatter.php';
-		$this->mysqli = $mysqli;
+		// require '_connect.db.php';
+		parent::__construct();
+		
+		// $this->mysqli = $mysqli;
 
 		$this->competencies = $this->queryData("");
 		$this->competenciesMale = $this->queryData("AND `employees`.`gender` = 'MALE'");
 		$this->competenciesFemale = $this->queryData("AND `employees`.`gender` = 'FEMALE'");
-
+		// echo "test";
 	}
 
 

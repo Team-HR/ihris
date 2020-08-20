@@ -44,7 +44,7 @@ p{
       $('.ui.sticky').sticky({
         context: '#contextSurvey'
       });
-      var req = <?php include_once 'autocompleteName.php'; ?>;
+      var req = <?php require_once 'autocompleteName.php'; ?>;
       $(inputName).autocomplete({ 
         source: req,
         select: function(event,ui){

@@ -105,7 +105,7 @@ if ($gender === "all") {
 }
 $stmt->execute();
 $result = $stmt->get_result();
-require_once $_SERVER["CONTEXT_DOCUMENT_ROOT"] . '/libs/PlantillaPermanent.php';
+require_once 'libs/PlantillaPermanent.php';
 $plantilla = new PlantillaPermanent();
 while ($row = $result->fetch_assoc()) {
   $employee_id = $row["employee_id"];

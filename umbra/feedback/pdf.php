@@ -1,5 +1,5 @@
 <?php
-    include_once "../../_connect.db.php";
+    require_once "../../_connect.db.php";
     $yr = $_GET['feedBackYR'];
     $emp = $_GET['reference'];
     $sql = "SELECT * from `spms_feedbacking` 

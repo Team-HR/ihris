@@ -1,16 +1,16 @@
 <?php
-class ServiceRecord
+require_once "Model.php";
+
+class ServiceRecord extends Model
 {
-    private $db;
     function __construct()
     {
-        require $_SERVER["CONTEXT_DOCUMENT_ROOT"] . '/_connect.db.php';
-        $this->db = $mysqli;
+        parent::__construct();
     }
 
     public function sensePlantilla($arr = array())
     {
-        $mysqli = $this->db;
+        $mysqli = $this->mysqli;
         if (empty($arr)) return false;
         $data = $arr;
         if (
@@ -36,7 +36,7 @@ class ServiceRecord
 
     private function hasRecs($employee_id)
     {
-        $mysqli = $this->db;
+        $mysqli = $this->mysqli;
         $sql = "SELECT `id` FROM `service_records` WHERE `employee_id` = ?";
         $stmt = $mysqli->prepare($sql);
         $stmt->bind_param("i", $employee_id);
@@ -49,7 +49,7 @@ class ServiceRecord
 
     private function toDateClosure($employee_id, $date_of_appointment)
     {
-        $mysqli = $this->db;
+        $mysqli = $this->mysqli;
         $sql = "UPDATE `service_records` SET `sr_date_to` = ? WHERE `sr_date_to` IN (NULL,'') AND `employee_id` = ?";
         $stmt = $mysqli->prepare($sql);
         $stmt->bind_param("si", $date_of_appointment, $employee_id);
@@ -57,33 +57,34 @@ class ServiceRecord
         $stmt->close();
     }
 
-    public function getDailyRate($sg, $step, $schedule)
-    {
-        require './Position.php';
-        $position = new Position();
-        $salary_grade = $position->getSalaryGrade($position_id);
+    // public function getDailyRate($sg, $step, $schedule)
+    // {
+    //     require './Position.php';
+    //     $position = new Position();
+    //     $salary_grade = $position->getSalaryGrade($position_id);
 
-        $monthly_salary = 0;
-        if (empty($sg) || empty($step) || empty($schedule)) return false;
-        $sql = "SELECT id FROM `setup_salary_adjustments` WHERE schedule = ? AND active = '1'";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bind_param('i', $schedule);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
-        $parent_id = 0;
-        $parent_id = $row["id"];
-        $stmt->close();
-        if (empty($parent_id)) return false;
-        $sql = "SELECT monthly_salary FROM `setup_salary_adjustments_setup` WHERE parent_id = ? AND salary_grade = ? AND step_no = ?";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bind_param('iii', $parent_id, $sg, $step);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
-        $monthly_salary = $row["monthly_salary"];
-        $stmt->close();
-        // return $monthly_salary?number_format(($monthly_salary*12),2,'.',','):"---";
-        return $monthly_salary ? ($monthly_salary / 30) : "---";
-    }
+    //     $monthly_salary = 0;
+    //     if (empty($sg) || empty($step) || empty($schedule)) return false;
+    //     $mysqli = $this->mysqli;
+    //     $sql = "SELECT id FROM `setup_salary_adjustments` WHERE schedule = ? AND active = '1'";
+    //     $stmt = $mysqli->prepare($sql);
+    //     $stmt->bind_param('i', $schedule);
+    //     $stmt->execute();
+    //     $result = $stmt->get_result();
+    //     $row = $result->fetch_assoc();
+    //     $parent_id = 0;
+    //     $parent_id = $row["id"];
+    //     $stmt->close();
+    //     if (empty($parent_id)) return false;
+    //     $sql = "SELECT monthly_salary FROM `setup_salary_adjustments_setup` WHERE parent_id = ? AND salary_grade = ? AND step_no = ?";
+    //     $stmt = $mysqli->prepare($sql);
+    //     $stmt->bind_param('iii', $parent_id, $sg, $step);
+    //     $stmt->execute();
+    //     $result = $stmt->get_result();
+    //     $row = $result->fetch_assoc();
+    //     $monthly_salary = $row["monthly_salary"];
+    //     $stmt->close();
+    //     // return $monthly_salary?number_format(($monthly_salary*12),2,'.',','):"---";
+    //     return $monthly_salary ? ($monthly_salary / 30) : "---";
+    // }
 }

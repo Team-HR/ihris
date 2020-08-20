@@ -31,7 +31,7 @@ if (isset($_POST['getEmployee'])) {
         }
         ############## Service Record Auto Start ######################
         else
-        service_record_update($saveIncumbent,$Oldplantilla,$nature_of_appointment,$date_appointment,$date_last_promotion);
+            service_record_update($saveIncumbent, $Oldplantilla, $nature_of_appointment, $date_appointment, $date_last_promotion);
 
         ############## Service Record Auto End ########################
     }
@@ -39,10 +39,10 @@ if (isset($_POST['getEmployee'])) {
 
 
 ############## Service Record Auto Start ######################
-function service_record_update($saveIncumbent,$Oldplantilla,$nature_of_appointment,$date_appointment,$date_last_promotion)
+function service_record_update($saveIncumbent, $Oldplantilla, $nature_of_appointment, $date_appointment, $date_last_promotion)
 {
-    require_once $_SERVER["CONTEXT_DOCUMENT_ROOT"]."/libs/ServiceRecord.php";
-    require_once $_SERVER["CONTEXT_DOCUMENT_ROOT"]."/libs/PlantillaPermanent.php";
+    require "../../libs/ServiceRecord.php";
+    require "../../libs/PlantillaPermanent.php";
 
     $old = array(
         "employee_id" => $saveIncumbent,

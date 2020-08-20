@@ -1,5 +1,4 @@
 <?php
-
 class NameFormatter
 {
 	private $firstName;
