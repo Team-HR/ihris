@@ -39,12 +39,13 @@
         <div class="menu">
           <!-- <div class="header">Categories</div> -->
           <a href="plantilla.php" class="item"><i class="icon file alternate"></i> Permanent Plantilla</a>
-          <a href="casual_plantilla.php" class="item"><i class="icon file alternate"></i> Casual Plantilla</a>
+          <!-- TODO -->
+          <!-- <a href="casual_plantilla.php" class="item"><i class="icon file alternate"></i> Casual Plantilla</a> -->
           
           <a href="departmentsetup.php" class="item"><i class="icon building"></i> Departments</a>
           <a href="positionsetup.php" class="item"><i class="icon briefcase"></i> Positions</a>
           <a href="salary_adjustment.php" class="item"><i class="icon money check alternate"></i> Salary Schedule</a>
-          <a href="qualification_standards.php" class="item"><i class="icon money check alternate"></i> Qualification Standards</a>
+          <a href="qualification_standards.php" class="item"><i class="icon graduation cap"></i> Qualification Standards</a>
         </div>
       </div>
 
@@ -54,6 +55,7 @@
         <i class="dropdown icon"></i>
         <div class="menu">
           <a href="plantilla_report.php" class="item"><i class="icon print"></i> Plantilla Report</a>
+          <a href="plantilla_vacantpos.php" class="item"><i class="icon print"></i> Publications Report</a>
         </div>
       </div>
       <div class="right menu">
