@@ -1,11 +1,11 @@
 <?php
 $dataId  = $_GET["employees_id"];
-$sql = "SELECT * FROM `prrlist` LEFT JOIN `prr` on `prrList`.`prr_id` = `prr`.`prr_id` where `prrList`.`employees_id`='$dataId' ORDER BY `prr`.`year` DESC";
+$sql = "SELECT * FROM `prrlist` LEFT JOIN `prr` on `prrlist`.`prr_id` = `prr`.`prr_id` where `prrlist`.`employees_id`='$dataId' ORDER BY `prr`.`year` DESC";
 $sql = $mysqli->query($sql);
 echo $mysqli->error;
 $view = "";
-while($row = $sql->fetch_assoc()){
-  $view .="
+while ($row = $sql->fetch_assoc()) {
+  $view .= "
   <tr>
   <td>$row[year]</td>
   <td>$row[period]</td>
@@ -27,6 +27,6 @@ while($row = $sql->fetch_assoc()){
     </tr>
   </thead>
   <tbody>
-    <?=$view?>
+    <?= $view ?>
   </tbody>
 </table>
