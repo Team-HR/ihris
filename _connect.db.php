@@ -1,10 +1,10 @@
 <?php
 date_default_timezone_set("Asia/Manila");
 
-$host = "localhost";
-$user = "admin";
-$password = "your-preferred-password";
-$database = "ihris";
+$host = "192.168.14.22";
+$user = "pftomulto";
+$password = "Duosone123";
+$database = "ihris_test";
 $connect = mysqli_connect($host, $user, $password, $database);
 
 

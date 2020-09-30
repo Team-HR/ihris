@@ -124,6 +124,7 @@ if (isset($_POST['Employees'])) {
     $date_of_appointment = $_POST['date_of_appointment'];
     $date_of_assumption = $_POST['date_of_assumption'];
     $csc_mc_no = $_POST['csc_mc_no'];
+    $series_no = $_POST['series_no'];
     $HRMO = $_POST['HRMO'];
     $office_assignment = $_POST['office_assignment'];
     $nature_of_appointment = $_POST['nature_of_appointment'];
@@ -135,7 +136,8 @@ if (isset($_POST['Employees'])) {
     $govId_type = $_POST['govId_type'];
     $govId_no = $_POST['govId_no'];
     $govId_issued_date = $_POST['govId_issued_date'];
-    $posted_date = $_POST['posted_date'];
+    $posted_date_from = $_POST['posted_date_from'];
+    $posted_date_to = $_POST['posted_date_to'];
     $csc_release_date = $_POST['csc_release_date'];
     $sworn_date = $_POST['sworn_date'];
     $cert_issued_date = $_POST['cert_issued_date'];
@@ -153,6 +155,7 @@ if (isset($_POST['Employees'])) {
                             `date_of_appointment`,
                             `date_of_assumption`,
                             `csc_mc_no`,
+                            `series_no`,
                             `HRMO`,
                             `office_assignment`,
                             `nature_of_appointment`,
@@ -164,7 +167,8 @@ if (isset($_POST['Employees'])) {
                             `govId_type`,
                             `govId_no`,
                             `govId_issued_date`,
-                            `posted_date`,
+                            `posted_date_from`,
+                            `posted_date_to`,
                             `csc_release_date`,
                             `sworn_date`,
                             `cert_issued_date`,
@@ -182,6 +186,7 @@ if (isset($_POST['Employees'])) {
                             '$date_of_appointment',
                             '$date_of_assumption',
                             '$csc_mc_no',
+                            '$series_no',
                             '$HRMO',
                             '$office_assignment',
                             '$nature_of_appointment',
@@ -193,7 +198,8 @@ if (isset($_POST['Employees'])) {
                             '$govId_type',
                             '$govId_no',
                             '$govId_issued_date',
-                            '$posted_date',
+                            '$posted_date_from',
+                            '$posted_date_to',
                             '$csc_release_date',
                             '$sworn_date',
                             '$cert_issued_date',

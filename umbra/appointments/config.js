@@ -9,35 +9,31 @@
             Employees:[],
             All_Employees:[],
             Plantilla:[],
-            employ:"",
-            pre_employ:"",
             employees_id:0,
-            firstName:"",
-            middleName:"",
-            lastName:"",
-            extName:"",
             waitLoad:"loading",
             employees_id:"",
             plantilla_id:"",
             status_of_appointment:"",
-            csc_authorized_official:"",
+            csc_authorized_official:"Gina Crucio",
             date_signed_by_csc:"",
-            committee_chair:"",
+            committee_chair:42214,
             date_of_appointment:"",
             date_of_assumption:"",
             csc_mc_no:"",
-            HRMO:"",
+            series_no:'',
+            HRMO:21805,
             office_assignment:"",
             nature_of_appointment:"",
             date_of_signing:"",
             deliberation_date_from:"",
             deliberation_date_to:"",
-            published_at:"",
-            posted_in:"",
+            published_at:"CSC Job Portal ",
+            posted_in:"BVP",
             govId_type:"",
             govId_no:"",
             govId_issued_date:"",
-            posted_date:"",
+            posted_date_from:"",
+            posted_date_to:"",
             csc_release_date:"",
             sworn_date:"",
             cert_issued_date:"",
@@ -108,6 +104,7 @@
                         fd.append("date_of_appointment",app.date_of_appointment)
                         fd.append("date_of_assumption",app.date_of_assumption)
                         fd.append("csc_mc_no",app.csc_mc_no)
+                        fd.append("series_no",app.series_no)
                         fd.append("HRMO",app.HRMO)
                         fd.append("office_assignment",app.office_assignment)
                         fd.append("nature_of_appointment",app.nature_of_appointment)
@@ -119,7 +116,8 @@
                         fd.append("govId_type",app.govId_type)
                         fd.append("govId_no",app.govId_no)
                         fd.append("govId_issued_date",app.govId_issued_date)
-                        fd.append("posted_date",app.posted_date)
+                        fd.append("posted_date_from",app.posted_date_from)
+                        fd.append("posted_date_to",app.posted_date_to)
                         fd.append("csc_release_date",app.csc_release_date)
                         fd.append("sworn_date",app.sworn_date)
                         fd.append("cert_issued_date",app.cert_issued_date)
@@ -147,19 +145,6 @@
                         xml.send(fd);
                 }
             }
-        },watch:{
-            employ:function(){
-                if(app.employ==""){
-                    app.employees_id="";
-                }else{
-                    d = app.Employees[app.employ];
-                    app.employees_id = d.employees_id;
-                    app.firstName = d.firstName;
-                    app.middleName = d.middleName;
-                    app.lastName = d.lastName;
-                    app.extName = d.extName;
-                }
-            },
         },
         mounted:function(){
             var interval = setInterval(() => {

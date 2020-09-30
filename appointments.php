@@ -5,34 +5,16 @@
  $title = "Appointments"; require_once "header.php"; require_once "_connect.db.php";
  ?>
   <div id="app" style="background: white; margin-top:30px; width:95%;;margin-left:40px;padding:20px">
-    <h2 class="ui dividing header" id="headerAppoint">Appointment for Administrative III - clerk 1</h2>  
-    <div class="ui fluid action input" style="padding-bottom:20px" v-if="employ==''">
-      <select class="ui search dropdown fluid" id="empList" v-model="pre_employ">
-        <option value="">Search Employee</option>
-        <option v-for="(emp,index) in Employees" :value="index">{{emp.lastName}} {{emp.firstName}} {{emp.middleName}} {{emp.extName}}</option>
-      </select>
-      <div class="ui button primary" @click="employ=String(pre_employ)">Confirm</div>
-    </div>
+    <h2 class="ui dividing header" id="headerAppoint">Appointment for {{Plantilla['position']}} - {{Plantilla['item_no']}}</h2>  
+    
     <form class="ui form " :class="waitLoad" id="appointments_form" data-id="<?=$_GET['id']?>" @submit.prevent="saveAppointment()">      
-      <div class="four wide fields" v-if="employ!=''">
-        <div class="field">
-          <label>Employee Information <i class="edit icon green" @click="employ=''"></i></label>
-          <input type="text" v-model="lastName" readonly>
-        </div>    
-        <div class="field">
-          <label>&nbsp;</label>
-          <input type="text" v-model="firstName" readonly>
-        </div>    
-        <div class="field">
-          <label>&nbsp;</label>
-          <input type="text"  v-model="middleName" readonly>
-        </div>   
-        <div class="field"> 
-          <label>&nbsp;</label>
-          <input type="text" readonly v-model='extName'> 
-        </div>    
+      <div class="field">
+        <label>Employee</label>
+        <select class="ui search dropdown fluid" id="empList" v-model="employees_id" required> 
+          <option value="">Search Employee</option>
+          <option v-for="(emp,index) in Employees" :value="emp.employees_id">{{emp.lastName}} {{emp.firstName}} {{emp.middleName}} {{emp.extName}}</option>
+        </select>
       </div>
-
       <h4 class="ui dividing header" style="color:#00000066">Plantilla Information</h4>
       <div class="four fields">        
           <div class="field">
@@ -88,7 +70,7 @@
       <div class="four fields">
         <div class="field">
           <label>Status of Appointment</label>
-          <select id="status" class="ui fluid search selection dropdown" v-model="status_of_appointment" required>
+          <select id="status" class="ui fluid search selection dropdown" v-model="status_of_appointment">
             <option value="">---</option>
             <option value="elective">Elective</option>
             <option value="permanent">Permanent</option>
@@ -101,15 +83,15 @@
         </div>
         <div class="field">
           <label>CSC Authorized Official:</label>
-          <input type="text" v-model="csc_authorized_official" required>
+          <input type="text" v-model="csc_authorized_official">
         </div>
         <div class="field">
           <label>Date of Signed by CSC:</label>
-          <input type="date" v-model="date_signed_by_csc" required>
+          <input type="date" v-model="date_signed_by_csc">
         </div>
         <div class="field">
           <label>Committee Chair</label>
-          <select class="ui search dropdown" v-model="committee_chair" required>
+          <select class="ui search dropdown" v-model="committee_chair">
               <option value="">Search Name</option>
               <option v-for="(comChair,index) in All_Employees" :value="comChair.employees_id">{{comChair.lastName}} {{comChair.firstName}}</option>
           </select>
@@ -119,20 +101,26 @@
         <div class="two fields">
           <div class="field">
             <label>Date of Appointment</label>
-            <input type="date" v-model="date_of_appointment" required>
+            <input type="date" v-model="date_of_appointment">
           </div>
           <div class="field">
             <label>Date of Assumption</label>
-            <input type="date" v-model="date_of_assumption" required>
+            <input type="date" v-model="date_of_assumption">
+          </div>
+        </div>
+        <div class="two fields">
+          <div class="field">
+            <label>CSC MC NO.</label>
+            <input type="text" v-model="csc_mc_no">
+          </div>
+          <div class="field">
+            <label>Series No.</label>
+            <input type="text" v-model.number="series_no">
           </div>
         </div>
         <div class="field">
-          <label>CSC MC NO.</label>
-          <input type="text" v-model="csc_mc_no" required>
-        </div>
-        <div class="field">
           <label>HRMO</label>
-          <select class="ui search dropdown" v-model="HRMO" required>
+          <select class="ui search dropdown" v-model="HRMO">
               <option value="">Search Name</option>
               <option v-for="(hr,index) in All_Employees" :key="index" :value="hr.employees_id">{{hr.lastName}} {{hr.firstName}}</option>
           </select>
@@ -140,18 +128,18 @@
         <div class="two fields">
           <div class="field">
             <label>Office Assignment</label>
-            <input type="text" v-model="office_assignment" required>
+            <input type="text" v-model="office_assignment">
           </div>
           <div class="field">
             <label>Probationary Period</label>
-            <input type="text" v-model="probationary_period" required>
+            <input type="text" v-model="probationary_period">
           </div>
         </div>
       </div>
       <div class="four fields">
         <div class="field">
           <label>Nature of appointment</label>
-          <select class="ui search dropdown" v-model="nature_of_appointment" required>
+          <select class="ui search dropdown" v-model="nature_of_appointment">
             <option value="">---</option>
             <option value="original">Original</option>
             <option value="promotion">Promotion</option>
@@ -164,15 +152,15 @@
         </div>
         <div class="field">
           <label>Date of Signing</label>
-          <input type="date" v-model="date_of_signing" required>
+          <input type="date" v-model="date_of_signing">
         </div>
         <div class="field">
           <label>Deliberation Date From:</label>
-          <input type="date" v-model="deliberation_date_from" required>
+          <input type="date" v-model="deliberation_date_from">
         </div>
         <div class="field">
           <label>To:</label>
-          <input type="date" v-model="deliberation_date_to" required>
+          <input type="date" v-model="deliberation_date_to">
         </div>
       </div>
       <div class="field four wide">
@@ -183,47 +171,51 @@
       <div class="four fields">
         <div class="field">
           <label>Published At:</label>
-          <input type="text" v-model="published_at" required>
+          <input type="text" v-model="published_at">
         </div>
         <div class="field">
           <label>Posted In</label>
-          <input type="text" v-model="posted_in" required>
+          <input type="text" v-model="posted_in">
         </div>
           <div class="field">
             <label>Type of Gov ID</label>
-            <input type="text" v-model="govId_type" required>
+            <input type="text" v-model="govId_type">
           </div>
         <div class="two fields">
           <div class="field">
             <label>Gov ID No.</label>
-            <input type="text" v-model="govId_no" required>
+            <input type="text" v-model="govId_no">
           </div>
           <div class="field">
             <label>Date Issued:</label>
-            <input type="date" v-model="govId_issued_date" required>
+            <input type="date" v-model="govId_issued_date">
           </div>
         </div>
       </div>
       <div class="five fields">
+      <div class="field">
+          <label>Posted Date From:</label>
+          <input type="date" v-model="posted_date_from">
+        </div>
         <div class="field">
-          <label>Posted Date:</label>
-          <input type="date" v-model="posted_date" required>
+          <label>Posted Date To:</label>
+          <input type="date" v-model="posted_date_to">
         </div>
         <div class="field">
           <label>CSC Release Date:</label>
-          <input type="date" v-model="csc_release_date" required>
+          <input type="date" v-model="csc_release_date">
         </div>
         <div class="field">
           <label>Sworn Date:</label>
-          <input type="date" v-model="sworn_date" required>
+          <input type="date" v-model="sworn_date">
         </div>        
         <div class="field">
           <label>Cert. Issued Date:</label>
-          <input type="date" v-model="cert_issued_date" required>
+          <input type="date" v-model="cert_issued_date">
         </div>
         <div class="field">
           <label>Casual Appointment Date:</label>
-          <input type="date" v-model="casual_promotion" required>
+          <input type="date" v-model="casual_promotion">
         </div>
       </div>
       <input type="submit" class="ui button primary" value="Save">

@@ -34,8 +34,8 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true && $_SESSION[
   ?>
   
   <!-- development version, includes helpful console warnings -->
-  <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
-  <script src="node_modules\moment\min\moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <!-- <script src="node_modules\moment\min\moment.min.js"></script> -->
 
   <!-- <script src="jquery/jquery-3.3.1.min.js"></script> -->
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
