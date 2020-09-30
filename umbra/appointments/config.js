@@ -53,7 +53,7 @@
                     }
                     xml.open('POST','umbra/appointments/config.php',true)
                     xml.send(fd)
-            }, 
+            },
             get_plantilla:function(){
                 dataId = document.getElementById('appointments_form').attributes['data-id'].value;
                 app.plantilla_id = dataId;
@@ -66,6 +66,7 @@
                             app.Plantilla = res.dat;
                             app.waitLoad = "";
                         }else{
+                            console.log(res.status);
                             $('body').toast({
                                 position: 'top center',
                                 class: 'warning',

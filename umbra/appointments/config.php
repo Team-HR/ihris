@@ -70,7 +70,7 @@ if (isset($_POST['Employees'])) {
                 plantillas.id = '$dataId'";
     $sql = $mysqli->query($sql);
     $plan = $sql->fetch_assoc();
-    if ($sql->num_rows == 0 || $plan['incumbent'] != "") {
+    if ($sql->num_rows == 0 || $plan['incumbent'] != "0") {
         $sendDat['status'] = false;
     } else {
         $dat = [];
