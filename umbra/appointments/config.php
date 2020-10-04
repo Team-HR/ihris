@@ -144,6 +144,35 @@ if (isset($_POST['Employees'])) {
     $casual_promotion = $_POST['casual_promotion'];
     $probationary_period = $_POST['probationary_period'];
     $date_of_last_promotion = $_POST['date_of_last_promotion'];
+    ############## mysqli_real_escape fix start ######################
+    $status_of_appointment = $mysqli->real_escape_string($status_of_appointment);
+    $csc_authorized_official = $mysqli->real_escape_string($csc_authorized_official);
+    $date_signed_by_csc = $mysqli->real_escape_string($date_signed_by_csc);
+    $committee_chair = $mysqli->real_escape_string($committee_chair);
+    $date_of_appointment = $mysqli->real_escape_string($date_of_appointment);
+    $date_of_assumption = $mysqli->real_escape_string($date_of_assumption);
+    $csc_mc_no = $mysqli->real_escape_string($csc_mc_no);
+    $series_no = $mysqli->real_escape_string($series_no);
+    $HRMO = $mysqli->real_escape_string($HRMO);
+    $office_assignment = $mysqli->real_escape_string($office_assignment);
+    $nature_of_appointment = $mysqli->real_escape_string($nature_of_appointment);
+    $date_of_signing = $mysqli->real_escape_string($date_of_signing);
+    $deliberation_date_from = $mysqli->real_escape_string($deliberation_date_from);
+    $deliberation_date_to = $mysqli->real_escape_string($deliberation_date_to);
+    $published_at = $mysqli->real_escape_string($published_at);
+    $posted_in = $mysqli->real_escape_string($posted_in);
+    $govId_type = $mysqli->real_escape_string($govId_type);
+    $govId_no = $mysqli->real_escape_string($govId_no);
+    $govId_issued_date = $mysqli->real_escape_string($govId_issued_date);
+    $posted_date_from = $mysqli->real_escape_string($posted_date_from);
+    $posted_date_to = $mysqli->real_escape_string($posted_date_to);
+    $csc_release_date = $mysqli->real_escape_string($csc_release_date);
+    $sworn_date = $mysqli->real_escape_string($sworn_date);
+    $cert_issued_date = $mysqli->real_escape_string($cert_issued_date);
+    $casual_promotion = $mysqli->real_escape_string($casual_promotion);
+    $probationary_period = $mysqli->real_escape_string($probationary_period);
+    $date_of_last_promotion = $mysqli->real_escape_string($date_of_last_promotion);
+    ############## mysqli_real_escape fix end ######################
     $sql = "INSERT INTO `appointments` (
                             `appointment_id`,
                             `employee_id`,

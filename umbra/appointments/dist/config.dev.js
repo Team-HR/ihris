@@ -1,3 +1,9 @@
+"use strict";
+
+var _data;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 $(document).ready(function () {
   $(".dropdown").dropdown({
     fullTextSearch: true
@@ -5,65 +11,38 @@ $(document).ready(function () {
 });
 var app = new Vue({
   el: "#app",
-  data: {
+  data: (_data = {
     Employees: [],
     All_Employees: [],
     Plantilla: [],
     employees_id: 0,
-    waitLoad: "loading",
-    employees_id: "",
-    plantilla_id: "",
-    status_of_appointment: "",
-    csc_authorized_official: "Gina Crucio",
-    date_signed_by_csc: "",
-    committee_chair: 42214,
-    date_of_appointment: "",
-    date_of_assumption: "",
-    csc_mc_no: "",
-    series_no: "",
-    HRMO: 21805,
-    office_assignment: "",
-    nature_of_appointment: "",
-    date_of_signing: "",
-    deliberation_date_from: "",
-    deliberation_date_to: "",
-    published_at: "CSC Job Portal ",
-    posted_in: "BVP",
-    govId_type: "",
-    govId_no: "",
-    govId_issued_date: "",
-    posted_date_from: "",
-    posted_date_to: "",
-    csc_release_date: "",
-    sworn_date: "",
-    cert_issued_date: "",
-    casual_promotion: "",
-    probationary_period: "",
-    date_of_last_promotion: ""
-  },
+    waitLoad: "loading"
+  }, _defineProperty(_data, "employees_id", ""), _defineProperty(_data, "plantilla_id", ""), _defineProperty(_data, "status_of_appointment", ""), _defineProperty(_data, "csc_authorized_official", "Gina Crucio"), _defineProperty(_data, "date_signed_by_csc", ""), _defineProperty(_data, "committee_chair", 42214), _defineProperty(_data, "date_of_appointment", ""), _defineProperty(_data, "date_of_assumption", ""), _defineProperty(_data, "csc_mc_no", ""), _defineProperty(_data, "series_no", ""), _defineProperty(_data, "HRMO", 21805), _defineProperty(_data, "office_assignment", ""), _defineProperty(_data, "nature_of_appointment", ""), _defineProperty(_data, "date_of_signing", ""), _defineProperty(_data, "deliberation_date_from", ""), _defineProperty(_data, "deliberation_date_to", ""), _defineProperty(_data, "published_at", "CSC Job Portal "), _defineProperty(_data, "posted_in", "BVP"), _defineProperty(_data, "govId_type", ""), _defineProperty(_data, "govId_no", ""), _defineProperty(_data, "govId_issued_date", ""), _defineProperty(_data, "posted_date_from", ""), _defineProperty(_data, "posted_date_to", ""), _defineProperty(_data, "csc_release_date", ""), _defineProperty(_data, "sworn_date", ""), _defineProperty(_data, "cert_issued_date", ""), _defineProperty(_data, "casual_promotion", ""), _defineProperty(_data, "probationary_period", ""), _defineProperty(_data, "date_of_last_promotion", ""), _data),
   methods: {
-    getEmployees: function () {
+    getEmployees: function getEmployees() {
       var fd = new FormData();
       fd.append("Employees", true);
       var xml = new XMLHttpRequest();
+
       xml.onload = function () {
         res = JSON.parse(xml.responseText);
         app.Employees = res.Employees;
         app.All_Employees = res.All_Employees;
       };
+
       xml.open("POST", "umbra/appointments/config.php", true);
       xml.send(fd);
     },
-    get_plantilla: function () {
-      dataId = document.getElementById("appointments_form").attributes[
-        "data-id"
-      ].value;
+    get_plantilla: function get_plantilla() {
+      dataId = document.getElementById("appointments_form").attributes["data-id"].value;
       app.plantilla_id = dataId;
       var fd = new FormData();
       fd.append("Plantilla", dataId);
       var xml = new XMLHttpRequest();
+
       xml.onload = function () {
         res = JSON.parse(xml.responseText);
+
         if (res.status) {
           app.Plantilla = res.dat;
           app.waitLoad = "";
@@ -71,27 +50,27 @@ var app = new Vue({
           console.log(res.status);
           $("body").toast({
             position: "top center",
-            class: "warning",
+            "class": "warning",
             title: "Opps!! Can't Overwrite",
-            message:
-              "There is an Existing Data pls Vacate<br>Please wait redirecting"
+            message: "There is an Existing Data pls Vacate<br>Please wait redirecting"
           });
-          setTimeout(() => {
+          setTimeout(function () {
             window.location.href = "plantilla.php";
           }, 3000);
         }
       };
+
       xml.open("POST", "umbra/appointments/config.php", true);
       xml.send(fd);
     },
-    formatNumber: function (num) {
+    formatNumber: function formatNumber(num) {
       return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
     },
-    saveAppointment: function () {
+    saveAppointment: function saveAppointment() {
       if (!app.employees_id) {
         $("body").toast({
           position: "top center",
-          class: "error",
+          "class": "error",
           title: "No Employee Selected",
           message: "Please Select an Employee and Confirm"
         });
@@ -129,29 +108,32 @@ var app = new Vue({
         fd.append("probationary_period", app.probationary_period);
         fd.append("date_of_last_promotion", app.date_of_last_promotion);
         var xml = new XMLHttpRequest();
+
         xml.onload = function () {
           app.waitLoad = "loading";
           res = JSON.parse(xml.responseText);
           $("body").toast({
             position: "top center",
-            class: res.color,
+            "class": res.color,
             message: res.msg
           });
+
           if (res.status) {
-            setTimeout(() => {
+            setTimeout(function () {
               window.location.href = "plantilla.php";
             }, 3000);
           } else {
             app.waitLoad = "";
           }
         };
+
         xml.open("POST", "umbra/appointments/config.php");
         xml.send(fd);
       }
     }
   },
-  mounted: function () {
-    var interval = setInterval(() => {
+  mounted: function mounted() {
+    var interval = setInterval(function () {
       if (document.readyState == "complete") {
         app.getEmployees();
         app.get_plantilla();
