@@ -326,7 +326,6 @@ require_once "header.php";
     </div>
   </div>
 </div>
-
 <!-- vacate modal end -->
 
 
@@ -397,12 +396,10 @@ require_once "header.php";
           <label>Abolish ?:</label>
           <select class="ui search dropdown" id="addAbolish">
             <option value="">---</option>
+            <option value="No" selected>No</option>
             <option value="Yes">Yes</option>
-            <option value="No">No</option>
           </select>
         </div>
-
-
       </div>
     </div>
 
@@ -487,8 +484,8 @@ require_once "header.php";
         <label>Abolish ?:</label>
         <select class="ui search dropdown" id="editAbolish">
           <option value="">---</option>
+          <option value="No" selected>No</option>
           <option value="Yes">Yes</option>
-          <option value="No">No</option>
         </select>
       </div>
 

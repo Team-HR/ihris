@@ -172,7 +172,7 @@ if (isset($_POST["load"])) {
 			$abolish = $_POST["abolish"];
 			$sql = "INSERT INTO `plantillas` (`id`, `item_no`,  `department_id`,  `position_id`, `step`, `schedule`, `incumbent`,  `vacated_by`,  `abolish`)
 
-					VALUES (NULL, '$item_no', '$department', '$position', '$step', '$schedule', NUll,NULL, '$abolish')";
+					VALUES (NULL, '$item_no', '$department', '$position', '$step', '$schedule', 0,NULL, '$abolish')";
 			$mysqli->query($sql);
 		}
 
@@ -205,35 +205,7 @@ if (isset($_POST["load"])) {
 											 WHERE `id` = '$id' ";
 			$mysqli->query($sql);
 			echo $mysqli->error;
-		}
-
-
-
-		/*elseif (isset($_POST["vacatePos"])) {
-		$id = $_POST["id"];
-		$incumbent = $_POST["incumbent"];
-		$vacated_by = $_POST["incumbent"];
-		$reason_of_vacancy = $_POST["reason_of_vacancy"];
-		$other = $_POST["other"];
-		$endService = $_POST["endService"];
-
-		$sql = "UPDATE `plantillas` SET     `vacated_by` = '$incumbent', 
-											`incumbent` = ''	
-									WHERE `id` = '$id'
-				";
-
-
-		$sql2 = "UPDATE `appointments`	SET `last_day_of_service` ='$endService',
-											`reason_of_vacancy` = '$reason_of_vacancy $other'
-											
-										WHERE `appointment_id` = '$appointment_id'
-										";
-
-		$mysqli->query($sql);
-		$mysqli->query($sql2);
-	
-
-	}*/ elseif (isset($_POST["vacatePos"])) {
+		} elseif (isset($_POST["vacatePos"])) {
 			$plantilla_id = $_POST['plantilla_id'];
 			$incumbent = $_POST["incumbent"];
 			$vacated_by = $_POST["incumbent"];
