@@ -1,7 +1,10 @@
 <?php
+
+require "_connect.db.php";
+require "./libs/NameFormatter.php";
 require "vendor/autoload.php";
 
-$date = date('f d, Y');
+$date =date('F d, Y');
 $date_of_deadline = $_GET["date_of_deadline"];
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -25,9 +28,6 @@ $spreadsheet->getActiveSheet()->getSheetView()->setZoomScale(115);
 ========================
 */
 $data = array();
-
-require "_connect.db.php";
-require "./libs/NameFormatter.php";
 
 $filters = "";
 $sql = construct_sql($filters);
@@ -89,7 +89,7 @@ $spreadsheet->setActiveSheetIndex(0);
 $spreadsheet->getActiveSheet()->setTitle('Sheet1');
 // Redirect output to a client’s web browser (Xlsx)
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment;filename="Employee_list' . date("F-d-Y", strtotime($date)) . '.xlsx"');
+header('Content-Disposition: attachment;filename="Employee_list as of ' . date("F d, Y", strtotime($date)) . '.xlsx"');
 header('Cache-Control: max-age=0');
 // If you're serving to IE 9, then the following may be needed
 header('Cache-Control: max-age=1');
