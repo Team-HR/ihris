@@ -187,21 +187,20 @@ if (isset($_POST["load"])) {
 		} elseif (isset($_POST["editPlantilla"])) {
 			$id = $_POST["id"];
 			$position = $_POST["position"];
-			$incumbent = $_POST["incumbent"];
+			// $incumbent = $_POST["incumbent"];
 			$department = $_POST["department"];
 			$step = $_POST["step"];
 			$schedule = $_POST["schedule"];
 			$item_no = $_POST["item_no"];
 			$abolish = $_POST["abolish"];
-
 			$sql = "UPDATE `plantillas` SET `position_id` = '$position', 
-											 `incumbent` = '$incumbent',
+											--  `incumbent` = '$incumbent',
 											 `department_id` = '$department', 		
 											 `step` = '$step',
 											 `schedule` = '$schedule', 
 											 `item_no` = '$item_no',	
 											 `abolish` = '$abolish'
-											
+
 											 WHERE `id` = '$id' ";
 			$mysqli->query($sql);
 			echo $mysqli->error;
