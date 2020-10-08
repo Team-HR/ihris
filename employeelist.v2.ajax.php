@@ -17,25 +17,24 @@ if (isset($_POST["load"])) {
 
 		$firstName	=	$row["firstName"];
 		$lastName	=	$row["lastName"];
-		
+
 		if ($row["middleName"] == ".") {
 			$middleName = "";
 		} else {
 			$middleName	= $row["middleName"];
-			$middleName = $middleName[0].".";
+			$middleName = $middleName[0] . ".";
 		}
 
 		$extName	=	strtoupper($row["extName"]);
-		$exts = array('JR','SR');
+		$exts = array('JR', 'SR');
 
-		if (in_array(substr($extName,0,2), $exts)) {
-			$extName = " ".mb_convert_case($extName,MB_CASE_TITLE, "UTF-8");
-
+		if (in_array(substr($extName, 0, 2), $exts)) {
+			$extName = " " . mb_convert_case($extName, MB_CASE_UPPER, "UTF-8");
 		} else {
-			$extName = " ".$extName;
+			$extName = " " . $extName;
 		}
 
-		$fullname =  mb_convert_case("$lastName, $firstName $middleName",MB_CASE_TITLE, "UTF-8").$extName;//$lastName.", ".$firstName." ".$middleName." ".$extName;
+		$fullname =  mb_convert_case("$lastName, $firstName $middleName", MB_CASE_UPPER, "UTF-8") . $extName; //$lastName.", ".$firstName." ".$middleName." ".$extName;
 
 
 		$gender = $row["gender"];
@@ -54,46 +53,44 @@ if (isset($_POST["load"])) {
 		if (!$position) {
 			$position = "<i style='color:grey'>N/A</i>";
 		}
-		$employmentStatus = mb_convert_case($row["employmentStatus"], MB_CASE_TITLE);
+		$employmentStatus = mb_convert_case($row["employmentStatus"], MB_CASE_UPPER);
 		if (!$employmentStatus) {
 			$employmentStatus = "<i style='color:grey'>N/A</i>";
 		}
-		$natureOfAssignment = mb_convert_case($row["natureOfAssignment"], MB_CASE_TITLE);
+		$natureOfAssignment = mb_convert_case($row["natureOfAssignment"], MB_CASE_UPPER);
 		if (!$natureOfAssignment) {
 			$natureOfAssignment = "<i style='color:grey'>N/A</i>";
 		}
-		?>
+?>
 
 		<tr>
 			<?php
 			if ($status == "ACTIVE") {
-				?>
-				<td style="color: green;"><i class="link large eye icon" title="Active" onclick="editStat(<?php echo $employees_id;?>)"></i></td>
-				<?php
+			?>
+				<td style="color: green;"><i class="link large eye icon" title="Active" onclick="editStat(<?php echo $employees_id; ?>)"></i></td>
+			<?php
 			} elseif ($status == "INACTIVE") {
-				?>
-				<td style="color: red;"><i class="link large eye slash icon" title="Inactive" style="cursor: pointer;" onclick="editStat(<?php echo $employees_id;?>)"></i></td>
-				<?php
+			?>
+				<td style="color: red;"><i class="link large eye slash icon" title="Inactive" style="cursor: pointer;" onclick="editStat(<?php echo $employees_id; ?>)"></i></td>
+			<?php
 			} else {
-				?>
-				<td style="color: grey;"><i class="link large eye slash icon" title="Inactive" style="cursor: pointer;" onclick="editStat(<?php echo $employees_id;?>)"></i></td>
-				<?php 
+			?>
+				<td style="color: grey;"><i class="link large eye slash icon" title="Inactive" style="cursor: pointer;" onclick="editStat(<?php echo $employees_id; ?>)"></i></td>
+			<?php
 			}
 			?>
-			<td><a href="employeeinfo.v2.php?employees_id=<?php echo $employees_id;?>" title="View Profile"><i class="blue large address book icon"></i> View Profile  </a></td>
-			<td id="<?=$employees_id	?>"><?php echo str_pad($employees_id,5,0,STR_PAD_LEFT);?></td>
-			<td><?=$fullname;?></td>
-			<td><?php echo $gender;?></td>
-			<td><?php echo $department;?></td>
-			<td><?php echo $position;?></td>
-			<td><?php echo $employmentStatus;?></td>
-			<td><?php echo $natureOfAssignment;?></td>
+			<td><a href="employeeinfo.v2.php?employees_id=<?php echo $employees_id; ?>" title="View Profile"><i class="blue large address book icon"></i> View Profile </a></td>
+			<td id="<?= $employees_id	?>"><?php echo str_pad($employees_id, 5, 0, STR_PAD_LEFT); ?></td>
+			<td><?= $fullname; ?></td>
+			<td><?php echo $gender; ?></td>
+			<td><?php echo $department; ?></td>
+			<td><?php echo $position; ?></td>
+			<td><?php echo $employmentStatus; ?></td>
+			<td><?php echo $natureOfAssignment; ?></td>
 		</tr>
-		<?php
+<?php
 	}
-}
-
-elseif (isset($_POST["get_editStat"])) {
+} elseif (isset($_POST["get_editStat"])) {
 	$employees_id = $_POST["employees_id"];
 	$sql = "SELECT `status`,`dateActivated`,`dateInactivated`,`dateIPCR` FROM `employees` WHERE `employees_id` = '$employees_id'";
 	$result = $mysqli->query($sql);
@@ -103,27 +100,13 @@ elseif (isset($_POST["get_editStat"])) {
 
 	if ($status === "ACTIVE") {
 		$date = $row["dateActivated"];
-	} elseif ($status === "INACTIVE"){
+	} elseif ($status === "INACTIVE") {
 		$date = $row["dateInactivated"];
 	}
-		// echo json_encode($status);
+	// echo json_encode($status);
 	$json = array('status' => $status, 'date' => $date, 'dateIPCR' => $dateIPCR);
 	echo json_encode($json);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-elseif (isset($_POST["editStat"])) {
+} elseif (isset($_POST["editStat"])) {
 	$employees_id = $_POST["employees_id"];
 	$status = $_POST["status"];
 	$dateStat = $_POST["dateStat"];
@@ -139,21 +122,7 @@ elseif (isset($_POST["editStat"])) {
 
 	$sql = "UPDATE `employees` SET `status` = '$status' $activation, `dateIPCR` = '$dateStartIPCR' WHERE `employees`.`employees_id` = '$employees_id'";
 	$mysqli->query($sql);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-elseif (isset($_POST["addPersonnel"])) {
+} elseif (isset($_POST["addPersonnel"])) {
 	$firstName = addslashes($_POST["firstNameModal"]);
 	$middleName = addslashes($_POST["middleNameModal"]);
 	$lastName = addslashes($_POST["lastNameModal"]);
@@ -173,7 +142,7 @@ elseif (isset($_POST["addPersonnel"])) {
 		$sql_statusDate0 = "";
 		$sql_statusDate1 = "";
 	}
-		// $sql_statusDate
+	// $sql_statusDate
 
 	$employmentStatus = $_POST["employmentStatusModal"];
 	$natureOfAssignment = $_POST["natureOfAssignmentModal"];
@@ -182,29 +151,28 @@ elseif (isset($_POST["addPersonnel"])) {
 
 	$sql = "INSERT INTO `employees` (`firstName`, `lastName`, `middleName`, `extName`, `gender`, `status`, `employmentStatus`, `department_id`, `position_id`, `natureOfAssignment`,`dateIPCR` $sql_statusDate0) VALUES ('$firstName', '$lastName', '$middleName', '$extName', '$gender', '$status', '$employmentStatus', '$department_id', '$position_id', '$natureOfAssignment', '$dateIPCR' $sql_statusDate1)";
 	$mysqli->query($sql);
-		// echo json_encode($sql);
-}
-
-elseif (isset($_POST["getNumOfStatus"])) {
-		// get number of active/inactive start
+	// echo json_encode($sql);
+} elseif (isset($_POST["getNumOfStatus"])) {
+	// get number of active/inactive start
 	$filters = $_POST["filters"];
 	$sql = construct_sql($filters);
 	$result = $mysqli->query($sql);
 	$total = $result->num_rows;
 
-	$json = array('total'=>$total);
+	$json = array('total' => $total);
 	echo json_encode($json);
 }
-	// var array = jQuery.parseJSON(data);
+// var array = jQuery.parseJSON(data);
 
-function filter_val($arr){
-	if (count($arr)>0) {
+function filter_val($arr)
+{
+	if (count($arr) > 0) {
 		$str = "";
-		$i=0;
+		$i = 0;
 		foreach ($arr as $value) {
 			$str .= "'$value'";
 			$i++;
-			if (count($arr)!== $i) {
+			if (count($arr) !== $i) {
 				$str .= ",";
 			}
 		}
@@ -215,7 +183,8 @@ function filter_val($arr){
 }
 
 
-function construct_sql ($filters){
+function construct_sql($filters)
+{
 
 	$status_arr = array();
 	$gender_arr = array();
@@ -241,23 +210,23 @@ function construct_sql ($filters){
 			} elseif ($index === "dept_id") {
 				array_push($dept_arr, $el);
 			}
-		}	
+		}
 
 		$sql_arr = array();
 		if ($status_arr) {
-			array_push($sql_arr, "employees.status IN(".filter_val($status_arr).")");
-		} 
+			array_push($sql_arr, "employees.status IN(" . filter_val($status_arr) . ")");
+		}
 		if ($gender_arr) {
-			array_push($sql_arr, "employees.gender IN(".filter_val($gender_arr).")");
-		} 
+			array_push($sql_arr, "employees.gender IN(" . filter_val($gender_arr) . ")");
+		}
 		if ($type_arr) {
-			array_push($sql_arr, "employees.employmentStatus IN(".filter_val($type_arr).")");
-		} 
+			array_push($sql_arr, "employees.employmentStatus IN(" . filter_val($type_arr) . ")");
+		}
 		if ($nature_arr) {
-			array_push($sql_arr, "employees.natureOfAssignment IN(".filter_val($nature_arr).")");
-		} 
+			array_push($sql_arr, "employees.natureOfAssignment IN(" . filter_val($nature_arr) . ")");
+		}
 		if ($dept_arr) {
-			array_push($sql_arr, "employees.department_id IN(".filter_val($dept_arr).")");
+			array_push($sql_arr, "employees.department_id IN(" . filter_val($dept_arr) . ")");
 		}
 
 		$i = 0;
@@ -265,7 +234,7 @@ function construct_sql ($filters){
 		foreach ($sql_arr as $value) {
 			$i++;
 			$filters_sql .= $value;
-			if (count($sql_arr)!== $i) {
+			if (count($sql_arr) !== $i) {
 				$filters_sql .= " AND ";
 			}
 		}
@@ -280,4 +249,3 @@ function construct_sql ($filters){
 }
 
 ?>
-
