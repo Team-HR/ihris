@@ -18,7 +18,8 @@ class ItemNumbersSorter
                         ksort($data[$id][$subest_id]);
                     }
                 } else {
-                    $data[$id][$sub_id] = $value;
+                    // $data[$id][$sub_id] = $value;
+                    $data[$id][$sub_id][] = $value;
                 }
                 ksort($data[$id], SORT_NUMERIC);
             } else {
