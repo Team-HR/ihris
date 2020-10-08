@@ -19,7 +19,9 @@ class PlantillaPermanent extends Model
     public function getDateOrigAppointment($employees_id)
     {
         $mysqli = $this->mysqli;
-        $sql = "SELECT `date_of_appointment` FROM `appointments` WHERE `employee_id`=? AND `nature_of_appointment`='original' ORDER BY `date_of_appointment` ASC LIMIT 1";
+        $sql = "SELECT `date_of_appointment` FROM `appointments` WHERE `employee_id`=? 
+        -- AND `nature_of_appointment`='original' 
+        ORDER BY `date_of_appointment` ASC LIMIT 1";
         $stmt = $mysqli->prepare($sql);
         $stmt->bind_param("i", $employees_id);
         $stmt->execute();
@@ -33,13 +35,13 @@ class PlantillaPermanent extends Model
     public function getDateLastPromoted($employees_id)
     {
         $mysqli = $this->mysqli;
-        $sql = "SELECT `date_of_appointment` FROM `appointments` WHERE `employee_id`=? AND `nature_of_appointment`='promotion' ORDER BY `date_of_appointment` DESC LIMIT 1";
+        $sql = "SELECT `date_of_last_promotion` FROM `appointments` WHERE `employee_id`=? AND `nature_of_appointment`='promotion' ORDER BY `date_of_last_promotion` DESC LIMIT 1";
         $stmt = $mysqli->prepare($sql);
         $stmt->bind_param("i", $employees_id);
         $stmt->execute();
         $result = $stmt->get_result();
         $data = $result->fetch_assoc();
-        $date = $data["date_of_appointment"];
+        $date = $data["date_of_last_promotion"];
         $stmt->close();
         return $date ? date("m/d/Y", strtotime($date)) : "";
     }
