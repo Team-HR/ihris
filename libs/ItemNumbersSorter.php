@@ -34,7 +34,7 @@ class ItemNumbersSorter
                 }
             }
         }
-        ksort($data,SORT_NATURAL);
+        ksort($data, SORT_NATURAL);
 
         $items = array();
         foreach ($data as $value) {
@@ -51,7 +51,7 @@ class ItemNumbersSorter
                 $items[] = $value;
             }
         }
-        
+
         $this->arr = $items;
     }
 

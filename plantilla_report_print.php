@@ -107,7 +107,32 @@ $stmt->execute();
 $result = $stmt->get_result();
 require_once 'libs/PlantillaPermanent.php';
 $plantilla = new PlantillaPermanent();
+
+$data = array();
 while ($row = $result->fetch_assoc()) {
+  $data[] = $row;
+}
+
+// 
+$item_nos = array_column($data, 'item_no');
+$sorted_item_nos = new ItemNumbersSorter($item_nos);
+echo "<pre>" . print_r($sorted_item_nos->arr, true) . "</pre>";
+
+
+$sorted_data = array();
+foreach ($sorted_item_nos->arr as $item_no) {
+  echo $item_no . "<br/>";
+  foreach ($data as $item) {
+    if ($item_no === $item['item_no']) {
+      $sorted_data[] = $item;
+      break;
+    }
+  }
+}
+// 
+
+
+foreach ($sorted_data as $row) {
   $employee_id = $row["employee_id"];
   $sg = $row["salaryGrade"];
   $step = $row["step"];
