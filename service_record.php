@@ -34,13 +34,13 @@
                                         <!-- <input id="sr_salary_rate" type="number" placeholder="000.00" v-model="sr_salary_rate"> -->
                                         <select class="ui selection dropdown" id="sr_salary_type" v-model="sr_salary_type">
                                             <option value="for_buildup" selected>For Buildup</option>
-                                            <option value="rate_on_schedule">Rate on Schedule</option>
+                                            <option value="rate_on_schedule" v-if="sr_status!=='CASUAL'">Rate on Schedule</option>
                                         </select>
 
                                     </div>
                                     <div class="field">
                                         <label>
-                                            <span :hidden="sr_salary_type == 'rate_on_schedule'">For Buildup (Monthly Rate):</span>
+                                            <span :hidden="sr_salary_type == 'rate_on_schedule'">For Buildup {{sr_status==='CASUAL'?'(Daily Rate)':'(Monthly Rate)'}}:</span>
                                             <span :hidden="sr_salary_type == 'for_buildup'">Rate on Schedule:</span>
                                         </label>
                                         <div :hidden="sr_salary_type == 'rate_on_schedule'">
@@ -108,7 +108,7 @@
                     </form>
                 </div>
                 <div class="actions">
-                <!-- @click="submit_form()" -->
+                    <!-- @click="submit_form()" -->
                     <button form="add_edit_form" type="submit" class="ui mini button primary"><i class="save icon"></i> Save</button>
                     <button class="ui mini button deny red" @click="clear_form()"><i class="times icon"></i> Cancel</button>
                 </div>
