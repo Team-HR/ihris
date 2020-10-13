@@ -185,12 +185,23 @@ $(document).ready(function() {
           casualPromotion:$('#casualPromotion').val(),
           date_of_last_promotion:$('#lastPromotion').val()
         }, function(data, textStatus, xhr) {
-            // window.location.reload();
+            window.location.reload();
         });
       },
     }).modal('show');
       }
- 
+      
+    function fullScrnEmp(id){
+      document.getElementById("iframEmp").src = "employeeinfo.v2.php?employees_id="+id;
+      // $("#iframEmp")[0].attributes.src = "google.com";
+      $("#fullScrnEmp").modal({
+        onApprove: function() {
+          window.location.reload();
+        }
+      }).modal('show');
+      }
+
+
   /*function addRow(){
     $.post("plantilla_detail.php",{
       addDuties:true,
@@ -258,6 +269,18 @@ $(document).ready(function() {
   
 </script>
 <!-- alerts start -->
+
+
+<div class="ui overlay fullscreen modal" id="fullScrnEmp">
+  <div class="header">Employee Information</div>
+      <iframe class="content" id="iframEmp" src="" frameborder="0" ></iframe>
+  <div class="actions">
+    <div class="ui approve button">DONE</div>
+  </div>  
+</div>
+
+
+
 <div id="saveMsg" class="" style="top: 15px; display: none; position: fixed; z-index: 10; width: 100%; left: 0; text-align: center;">
    <div class="ui center green inverted aligned segment" style="width: 100px; margin-left: auto; margin-right: auto;">
     Added
@@ -398,14 +421,15 @@ $(document).ready(function() {
   </div>
 <br>
 
-<div class="ui container">
 
+<div class="ui container">
     <div class="ui top attached tabular menu" id="tabs">
       <a class="item active" data-tab="details">PLANTILLA DETAILS</a>
       <a class="item" data-tab="statement">STATEMENT OF DUTIES</a>
       <a class="item" data-tab="qualification">QUALIFICATION STANDARDS</a>
     </div>
     <div class="ui bottom attached segment tab active" data-tab="details">
+    
            <table class="ui very compact small celled table" style="font-size: 12px;">
                 <tr>
                   <td class="actives">ITEM_NO</td>
@@ -444,9 +468,12 @@ $(document).ready(function() {
                 <tr>
                   <td class="actives">INCUMBENT EMPLOYEE</td>
                   <td><?=$incumbent?>
-                  <a href="employeeinfo.v2.php?employees_id=<?=$row['employees_id']?>" class="ui icon" target="_blank">
+                  <a href="#" onclick="fullScrnEmp(<?=$row['employees_id']?>)">
                       <i class="edit icon"></i>
                   </a>
+                  <!-- <a href="employeeinfo.v2.php?employees_id=<?=$row['employees_id']?>" class="ui icon" target="_blank">
+                      <i class="edit icon"></i>
+                  </a> -->
 
                   </td>
                 <tr>
