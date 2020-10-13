@@ -134,14 +134,14 @@ if (isset($_POST["load"])) {
 ?>
 		<tr id="<?php echo $id . "row"; ?>" style="text-align:center">
 			<td><a href="plantilla_detail.php?id=<?php echo $id; ?>" title="View Plantilla Details"><i class=" open folder book icon"></a></i>
-				<i class="blue edit outline icon" title="Edit" style="cursor: pointer;" onclick="editRow('<?= $id ?>',
+				<!-- <i class="blue edit outline icon" title="Edit" style="cursor: pointer;" onclick="editRow('<?= $id ?>',
 																							'<?= $row["post_id"] ?>',
 																							'<?= $row["incumbent"] ?>',
 																							'<?= $row["dept_id"] ?>',
 																							'<?= $row["step"] ?>',
 																							'<?= $row["sched"] ?>',
 																							'<?= $row["item_no"] ?>',
-																							'<?= $row["abolish"] ?>') "></i>
+																							'<?= $row["abolish"] ?>') "></i> -->
 				<i class="blue trash alternate outline icon" style="cursor: pointer;" onclick="deleteRow('<?php echo $id; ?>')" style="margin-right: 5px;" title="Delete"></i>
 
 			</td>
@@ -187,23 +187,36 @@ if (isset($_POST["load"])) {
 		} elseif (isset($_POST["editPlantilla"])) {
 			$id = $_POST["id"];
 			$position = $_POST["position"];
-			// $incumbent = $_POST["incumbent"];
+			$incumbent = $_POST["incumbent"];
 			$department = $_POST["department"];
 			$step = $_POST["step"];
 			$schedule = $_POST["schedule"];
 			$item_no = $_POST["item_no"];
 			$abolish = $_POST["abolish"];
+			$incumbent = $_POST['incumbent'];
+			$last_day_of_service = $_POST['last_day_of_service'];
+			$originalAppointmentDate = $_POST['originalAppointmentDate'];
+			$casualPromotion = $_POST['casualPromotion'];
 			$sql = "UPDATE `plantillas` SET `position_id` = '$position', 
-											--  `incumbent` = '$incumbent',
 											 `department_id` = '$department', 		
 											 `step` = '$step',
 											 `schedule` = '$schedule', 
 											 `item_no` = '$item_no',	
 											 `abolish` = '$abolish'
-
 											 WHERE `id` = '$id' ";
 			$mysqli->query($sql);
-			echo $mysqli->error;
+			if($mysqli->error){
+				die($mysqli->error);
+			}
+
+			$sql2 = "UPDATE `appointments` SET `date_of_appointment` = '$originalAppointmentDate',
+												`casual_promotion` = '$casualPromotion',
+												`date_of_last_promotion` = '$last_day_of_service'
+												where `appointment_id`='$incumbent'";
+			$mysqli->query($sql2);
+			if($mysqli->error){
+				die($mysqli->error);
+			}
 		} elseif (isset($_POST["vacatePos"])) {
 			$plantilla_id = $_POST['plantilla_id'];
 			$incumbent = $_POST["incumbent"];
@@ -218,12 +231,9 @@ if (isset($_POST["load"])) {
 
 			$endService = $_POST["endService"];
 
-			$sql1 = "UPDATE `plantillas` SET     `vacated_by` = '$incumbent', 
-										    --  `incumbent` = '' --Mao ni ang nakaingon 
-											 `incumbent` = NULL 
-
-									WHERE `id` = '$plantilla_id'
-									";
+			$sql1 = "UPDATE `plantillas` SET `vacated_by` = '$incumbent', 
+									`incumbent` = 0 
+									WHERE `id` = '$plantilla_id'";
 
 
 

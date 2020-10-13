@@ -2,18 +2,26 @@
 $title = "Plantilla Details"; 
 require_once "header.php";
 $id = $_GET["id"];
-
   
-$sql = "SELECT *,`plantillas`.`position_id` AS `post_id` ,`plantillas`.`department_id` AS `dept_id`
-                     FROM `plantillas` LEFT JOIN `department` ON `plantillas`.`department_id` = `department`.`department_id`  
-                     LEFT JOIN `positiontitles` ON `plantillas`.`position_id` = `positiontitles`.`position_id` 
-                     LEFT JOIN `employees` ON `plantillas`.`incumbent`= `employees`.`employees_id`
-                     LEFT JOIN appointments ON `plantillas`.`id` = `appointments`.`plantilla_id`
-                     LEFT JOIN statement_of_duties ON plantillas.position_id = statement_of_duties.position_id 
-                     WHERE `id` = '$id'";  
+// $sql = "SELECT *,`plantillas`.`position_id` AS `post_id` ,`plantillas`.`department_id` AS `dept_id`,`appointments`.`casual_promotion` AS `casualPromotion`
+//                      FROM `plantillas` 
+//                      LEFT JOIN `department` ON `plantillas`.`department_id` = `department`.`department_id`  
+//                      LEFT JOIN `positiontitles` ON `plantillas`.`position_id` = `positiontitles`.`position_id` 
+//                      LEFT JOIN `employees` ON `plantillas`.`incumbent`= `employees`.`employees_id`
+//                      LEFT JOIN appointments ON `plantillas`.`id` = `appointments`.`plantilla_id`
+//                      LEFT JOIN statement_of_duties ON plantillas.position_id = statement_of_duties.position_id 
+//                      WHERE `id` = '$id'";  
+  $sql = "SELECT *,`plantillas`.`position_id` AS `post_id` ,`plantillas`.`department_id` AS `dept_id`,`appointments`.`casual_promotion` AS `casualPromotion`
+                       FROM `plantillas` 
+                       LEFT JOIN `department` ON `plantillas`.`department_id` = `department`.`department_id`  
+                       LEFT JOIN `positiontitles` ON `plantillas`.`position_id` = `positiontitles`.`position_id` 
+                       LEFT JOIN `appointments` ON `plantillas`.`incumbent` = `appointments`.`appointment_id`
+                       LEFT JOIN `employees` ON `appointments`.`employee_id`= `employees`.`employees_id`
+                       WHERE `plantillas`.`id` = '$id'";
+
 
     $result = $mysqli->query($sql);
-    while ($row = $result->fetch_assoc()) {
+    $row = $result->fetch_assoc();
 
     $sql2 = "SELECT appointments.appointment_id, 
       employees.employees_id, 
@@ -26,6 +34,7 @@ $sql = "SELECT *,`plantillas`.`position_id` AS `post_id` ,`plantillas`.`departme
     FROM plantillas LEFT JOIN appointments ON plantillas.vacated_by = appointments.appointment_id LEFT JOIN employees ON appointments.employee_id = employees.employees_id
     WHERE
       plantillas.id = '$row[id]'";
+
       $sql2 = $mysqli->query($sql2);
       $sql2 = $sql2 ->fetch_assoc();
 
@@ -77,9 +86,11 @@ $sql = "SELECT *,`plantillas`.`position_id` AS `post_id` ,`plantillas`.`departme
      $position= addslashes($row["position"]);
      $functional= addslashes($row["functional"]);
      $department= $row["department"];
+     $department_id = $row["department_id"];
      $office_assignment= $row["office_assignment"];
      $date_of_appointment= $row["date_of_appointment"];
-     $last_day_of_service= $row["last_day_of_service"];
+     $casual_promotion = $row["casualPromotion"];
+     $date_of_last_promotion= $row["date_of_last_promotion"];
      $step= $row["step"];
      $abolish= $row["abolish"];
      $no= $row["no"];
@@ -105,7 +116,6 @@ $sql = "SELECT *,`plantillas`.`position_id` AS `post_id` ,`plantillas`.`departme
         $vacated_by = "<i style='color:grey'>N/A</i>";        
      }
      
-  }
 
     if (isset($_POST["addDuties"])) {
 
@@ -146,9 +156,40 @@ $sql = "SELECT *,`plantillas`.`position_id` AS `post_id` ,`plantillas`.`departme
 
 $(document).ready(function() {  
         $("#tabs .item").tab();
-
-  });
-
+      });
+      
+  function editDetailsModal(){
+    $("#editPosition").dropdown('set selected', <?=$row['post_id']?>);
+    $("#editDept").dropdown('set selected', <?=$row["dept_id"]?>);
+    $("#editStep").val(<?=$row['step']?>);
+    $("#editSchedule").dropdown('set selected', <?=$row['schedule']?>);
+    $("#editItem").val('<?=$item_no?>');
+    $("#editAbolish").dropdown('set selected', '<?=$abolish?>');
+    $("#originalAppointmentDate").val('<?=$date_of_appointment?>');
+    $("#casualPromotion").val('<?=$casual_promotion?>');
+    $("#lastPromotion").val('<?=$date_of_last_promotion?>');
+      $('#editDetailsModal').modal({
+      onApprove: function() {
+        // alert($("#editDeptInput").val());
+        $.post('plantilla_proc.php', {
+          editPlantilla: true,
+          id: <?=$_GET['id']?>,
+          incumbent:<?=$row['incumbent']?>,
+          position: $("#editPosition").val(),
+          department: $("#editDept").val(),
+          schedule: $("#editSchedule").val(),
+          step: $("#editStep").val(),
+          item_no: $("#editItem").val(),
+          abolish: $("#editAbolish").val(),
+          originalAppointmentDate:$('#originalAppointmentDate').val(),
+          casualPromotion:$('#casualPromotion').val(),
+          date_of_last_promotion:$('#lastPromotion').val()
+        }, function(data, textStatus, xhr) {
+            // window.location.reload();
+        });
+      },
+    }).modal('show');
+      }
  
   /*function addRow(){
     $.post("plantilla_detail.php",{
@@ -245,7 +286,6 @@ $(document).ready(function() {
 </div>
 <!-- delete pos end -->
 
-<!-- 
 <!----add data---->
 <div class="ui container">
   <div id="addModal" class="ui mini modal">
@@ -334,7 +374,13 @@ $(document).ready(function() {
         </div>
 
         <div class="item">
-          <h4 style="color: white;"><?php echo $position?> (<?=$functional?>)</h4>
+          <h4 style="color: white;">
+            <?php
+             echo $position;
+             if($functional){
+                echo "($functional)";
+            }
+            ?></h4>
         </div>
         <!--- <h3><i class=" icon"></i> Department Setup</h3>---->
       </div>     
@@ -362,6 +408,18 @@ $(document).ready(function() {
     <div class="ui bottom attached segment tab active" data-tab="details">
            <table class="ui very compact small celled table" style="font-size: 12px;">
                 <tr>
+                  <td class="actives">ITEM_NO</td>
+                  <td><?=$item_no?></td>
+                </tr>
+                <tr>
+                  <td class="actives">POSITION TITLE</td>
+                  <td><?=$position?></td>
+                </tr>
+                <tr>
+                  <td class="actives">FUNCTION</td>
+                  <td><?=$functional?></td>
+                </tr>
+                <tr>
                   <td class="actives">DEPARTMENT</td>
                   <td ><?=$department?></td>
                 </tr>
@@ -377,15 +435,20 @@ $(document).ready(function() {
                 </tr>
                 <tr>
                   <td class="actives">PAGE NO</td>
-                  <td><></td>
+                  <td></td>
                 </tr>
                 <tr>
                   <td class="actives">LAST DATE OF PROMOTION</td>
-                  <td><?=$last_day_of_service?></td>
+                  <td><?=$date_of_last_promotion?></td>
                 </tr>
                 <tr>
                   <td class="actives">INCUMBENT EMPLOYEE</td>
-                  <td><?=$incumbent?></td>
+                  <td><?=$incumbent?>
+                  <a href="employeeinfo.v2.php?employees_id=<?=$row['employees_id']?>" class="ui icon" target="_blank">
+                      <i class="edit icon"></i>
+                  </a>
+
+                  </td>
                 <tr>
                   <td class="actives">LEVEL / CATEGORY</td>
                   <td><?=$category?> / <?=$level?></td>
@@ -407,6 +470,137 @@ $(document).ready(function() {
                   <td><?=$abolish?></td>
                 </tr>
           </table>
+        <!-- ********************************************************** -->
+        <!-- ********************************************************** -->
+        <!-- ********************************************************** -->
+        <!-- **EDIT***EDIT***EDIT**EDIT******EDIT******EDIT************ -->
+        <!-- ********************************************************** -->
+        <!-- ********************************************************** -->
+        <!-- ********************************************************** -->
+          
+        <div id="editDetailsModal" class="ui mini modal">
+          <div class="header">
+            Edit Plantilla Detail
+          </div>
+          <div class="content">
+            <div class="ui form">
+              <div class="field">
+                <label>Department:</label>
+                <select class="ui search dropdown" id="editDept">
+                  <option value="">Select Department</option>
+                  <?php
+                  $result = $mysqli->query("SELECT * FROM `department`");
+                  while ($dep = $result->fetch_assoc()) {
+                    $department_id = $dep["department_id"];
+                    $department = $dep["department"];
+                    print "<option value=\"{$department_id}\">{$department}</option>";
+                  }
+                  ?>
+                </select>
+              </div>
+              <div class="field">
+                <label>Position:</label>
+                <select class="ui search dropdown" id="editPosition">
+                  <option value="">Select Position</option>
+                  <?php
+                  $result = $mysqli->query("SELECT * FROM `positiontitles`");
+                  while ($posLoop = $result->fetch_assoc()) {
+                    $position_id = $posLoop["position_id"];
+                    $position = $posLoop["position"];
+                    $functional = "";
+                    if($posLoop["functional"]){
+                      $functional = "(".$posLoop["functional"].")";
+                    }
+                    print "<option value=\"{$position_id}\">{$position} {$functional}</option>";
+                  }
+                  ?>
+                </select>
+              </div>
+
+              <div class="two fields">
+
+                <div class="field">
+                  <label>Step No.</label>
+                  <input id="editStep" type="number" placeholder="Step No" autofocus>
+                </div>
+
+
+                <div class="field">
+                  <label>Item No:</label>
+                  <input id="editItem">
+                </div>
+
+              </div>
+
+
+              <div class="field">
+                <label>Salary Shedule</label>
+                <select id="editSchedule" class="ui search dropdown">
+                  <option value="">---</option>
+                  <option value="1">1st Class</option>
+                  <option value="2">2nd Class</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>Abolish ?:</label>
+                <select class="ui search dropdown" id="editAbolish">
+                  <option value="">---</option>
+                  <option value="No" selected>No</option>
+                  <option value="Yes">Yes</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>Original Appointment Date</label>
+                <input type="date" id="originalAppointmentDate">
+              </div>
+
+              <div class="field">
+                <label>Casual Promotion</label>
+                <input type="date" id="casualPromotion">
+              </div>
+
+              <div class="field">
+                <label>Date of Last Promotion</label>
+                <input type="date" id="lastPromotion">
+              </div>
+
+            </div>
+          </div>
+          <div class="actions">
+            <div class="ui deny button mini">
+              Cancel
+            </div>
+            <div class="ui blue right labeled icon approve button mini">
+              Update
+              <i class="checkmark icon"></i>
+            </div>
+          </div>
+        </div>
+
+
+
+        <center>
+              <button class="ui vertical animated positive button" onclick="editDetailsModal()">
+                <div class="hidden content">
+                  <i class="pencil icon"></i>
+                </div>
+                <div class="visible content">
+                  Edit
+                </div>
+              </button>
+        </center>
+
+      <!-- ********************************************************** -->
+      <!-- ********************************************************** -->
+      <!-- ********************************************************** -->
+      <!-- **EDIT***EDIT***EDIT**EDIT******EDIT******EDIT************ -->
+      <!-- ********************************************************** -->
+      <!-- ********************************************************** -->
+      <!-- ********************************************************** -->
+
+
     </div>
     <div class="ui bottom attached segment tab" data-tab="statement">
       <div id="tableContent">

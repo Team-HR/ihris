@@ -377,7 +377,7 @@ require_once "header.php";
 
           <div class="field">
             <label>Item No:</label>
-            <input id="addItem" type="text" placeholder="Item No">
+            <input id="addItem" type="text" placeholder="Item No" autofocus>
           </div>
 
         </div>
