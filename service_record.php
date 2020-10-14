@@ -34,17 +34,17 @@
                                         <!-- <input id="sr_salary_rate" type="number" placeholder="000.00" v-model="sr_salary_rate"> -->
                                         <select class="ui selection dropdown" id="sr_salary_type" v-model="sr_salary_type">
                                             <option value="for_buildup" selected>For Buildup</option>
-                                            <option value="rate_on_schedule">Rate on Schedule</option>
+                                            <option value="rate_on_schedule" v-if="sr_status!=='CASUAL'">Rate on Schedule</option>
                                         </select>
 
                                     </div>
                                     <div class="field">
                                         <label>
-                                            <span :hidden="sr_salary_type == 'rate_on_schedule'">For Buildup (Monthly Rate):</span>
-                                            <span :hidden="sr_salary_type == 'for_buildup'">Rate on Schedule:</span>
+                                            <span :hidden="sr_salary_type == 'rate_on_schedule'">For Buildup {{sr_status==='CASUAL'?'(Daily Rate)':'(Annual Rate)'}}:</span>
+                                            <span :hidden="sr_salary_type == 'for_buildup'">Rate on Schedule (Annual Rate): </span>
                                         </label>
                                         <div :hidden="sr_salary_type == 'rate_on_schedule'">
-                                            <input id="sr_salary_rate" type="number" placeholder="000.00" v-model="sr_salary_rate" step="0.01">
+                                            <input id="sr_salary_rate" type="number" placeholder="Php. ---" v-model="sr_salary_rate" step="0.01">
                                         </div>
                                         <div :hidden="sr_salary_type == 'for_buildup'">
                                             <select class="ui fluid search dropdown" v-model="sr_rate_on_schedule" id="sr_rate_on_schedule">
@@ -108,7 +108,7 @@
                     </form>
                 </div>
                 <div class="actions">
-                <!-- @click="submit_form()" -->
+                    <!-- @click="submit_form()" -->
                     <button form="add_edit_form" type="submit" class="ui mini button primary"><i class="save icon"></i> Save</button>
                     <button class="ui mini button deny red" @click="clear_form()"><i class="times icon"></i> Cancel</button>
                 </div>
@@ -136,7 +136,7 @@
                             <th colspan="2">SERVICE (inclusive dates)</th>
                             <th colspan="3">RECORD of appointment</th>
                             <th colspan="2">OFFICE / ENTITY / DIVISION</th>
-                            <th rowspan="2">SEPARTION L/V ABS W/O PAY</th>
+                            <th rowspan="2">SEPARTION L/V <br/>ABS W/O PAY</th>
                             <th rowspan="2"></th>
                         </tr>
                         <tr>

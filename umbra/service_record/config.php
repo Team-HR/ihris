@@ -8,9 +8,10 @@ if (isset($_POST['get_salaries'])) {
     $rslt = $stmt->get_result();
     $data = array();
     while ($row = $rslt->fetch_assoc()) {
+        $yearly_salary = $row["monthly_salary"] * 12;
         $data[] = array(
-            "text" => number_format($row["monthly_salary"], 2, ".", ""),
-            "value" => $row["monthly_salary"],
+            "text" => number_format($yearly_salary, 2, ".", ","),
+            "value" => $yearly_salary,
         );
     }
     echo json_encode($data);
@@ -37,18 +38,48 @@ if (isset($_POST['get_salaries'])) {
         // $data[$id] = $row;
         // $row["sr_salary_rate"] = number_format($row["sr_salary_rate"], 2, ".", ",");
         // $annual_salary = 
-        $row["annual_salary"] = $row["sr_salary_rate"] || $row["sr_rate_on_schedule"]?(number_format(($row["sr_salary_rate"]?$row["sr_salary_rate"]:$row["sr_rate_on_schedule"])/22, 2, ".", ",")."/day"):"N/I";
+
+        $sr_salary_rate = $row["sr_salary_rate"];
+        $sr_rate_on_schedule = $row["sr_rate_on_schedule"];
+
+
+        // if casual
+        if ($row["sr_status"] === 'CASUAL') {
+            $row["annual_salary"] = "";
+            if ($row["sr_salary_rate"]) {
+                $row["annual_salary"] = format_salary($row["sr_salary_rate"]) . " /DAY";
+            } elseif ($row["sr_rate_on_schedule"]) {
+                $row["annual_salary"] = format_salary($row["sr_rate_on_schedule"]) . " /DAY";
+            } else {
+                $row["annual_salary"] = "N/I";
+            }
+        } else {
+            // if permanent
+            $row["annual_salary"] = "";
+            if ($row["sr_salary_rate"]) {
+                $row["annual_salary"] = format_salary($row["sr_salary_rate"]) . " /ANNUAL";
+            } elseif ($row["sr_rate_on_schedule"]) {
+                $row["annual_salary"] = format_salary($row["sr_rate_on_schedule"]) . " /ANNUAL";
+            } else {
+                $row["annual_salary"] = "N/I";
+            }
+        }
+
+        // $row["annual_salary"] = $row["sr_salary_rate"] || $row["sr_rate_on_schedule"] ? (number_format(($row["sr_salary_rate"] ? ($row["sr_status"] === 'CASUAL' ? ($row["sr_salary_rate"] / 22) . "/day" : $row["sr_salary_rate"] . "/month") : $row["sr_rate_on_schedule"]), 2, ".", ",") . "/month") : "N/I";
+        // $r
         $data[] = $row;
     }
     echo json_encode($data);
 } elseif (isset($_GET["get_positions"])) {
-    $sql = "SELECT DISTINCT position FROM positiontitles ORDER BY position ASC";
+    $sql = "SELECT position, functional FROM positiontitles ORDER BY position ASC";
     $stmt = $mysqli->prepare($sql);
     $stmt->execute();
     $result = $stmt->get_result();
     $data = array();
     while ($row = $result->fetch_assoc()) {
-        $data[] = $row["position"];
+        $position = $row["position"];
+        $function = $row["functional"];
+        $data[] = $position . ($function ? " " . $function : "");
     }
     echo json_encode($data);
 } elseif (isset($_POST['init_delete'])) {
@@ -63,7 +94,7 @@ if (isset($_POST['get_salaries'])) {
 } elseif (isset($_POST['submit_form'])) {
     $data = $_POST["data"];
     $id_for_editing = $_POST["id_for_editing"];
-    $data["sr_date_to"] = $data["sr_date_to"]?$data["sr_date_to"]:NULL;
+    $data["sr_date_to"] = $data["sr_date_to"] ? $data["sr_date_to"] : NULL;
     if (
         empty($data["sr_type"]) ||
         empty($data["sr_designation"]) ||
@@ -98,4 +129,9 @@ if (isset($_POST['get_salaries'])) {
     $stmt->close();
 
     echo json_encode("success");
+}
+
+function format_salary($yearly_salary){
+    if (!$yearly_salary) return "";
+    return number_format($yearly_salary, 2, ".", ",");
 }
