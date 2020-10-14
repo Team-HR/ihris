@@ -40,11 +40,11 @@
                                     </div>
                                     <div class="field">
                                         <label>
-                                            <span :hidden="sr_salary_type == 'rate_on_schedule'">For Buildup {{sr_status==='CASUAL'?'(Daily Rate)':'(Monthly Rate)'}}:</span>
-                                            <span :hidden="sr_salary_type == 'for_buildup'">Rate on Schedule:</span>
+                                            <span :hidden="sr_salary_type == 'rate_on_schedule'">For Buildup {{sr_status==='CASUAL'?'(Daily Rate)':'(Annual Rate)'}}:</span>
+                                            <span :hidden="sr_salary_type == 'for_buildup'">Rate on Schedule (Annual Rate): </span>
                                         </label>
                                         <div :hidden="sr_salary_type == 'rate_on_schedule'">
-                                            <input id="sr_salary_rate" type="number" placeholder="000.00" v-model="sr_salary_rate" step="0.01">
+                                            <input id="sr_salary_rate" type="number" placeholder="Php. ---" v-model="sr_salary_rate" step="0.01">
                                         </div>
                                         <div :hidden="sr_salary_type == 'for_buildup'">
                                             <select class="ui fluid search dropdown" v-model="sr_rate_on_schedule" id="sr_rate_on_schedule">
@@ -136,7 +136,7 @@
                             <th colspan="2">SERVICE (inclusive dates)</th>
                             <th colspan="3">RECORD of appointment</th>
                             <th colspan="2">OFFICE / ENTITY / DIVISION</th>
-                            <th rowspan="2">SEPARTION L/V ABS W/O PAY</th>
+                            <th rowspan="2">SEPARTION L/V <br/>ABS W/O PAY</th>
                             <th rowspan="2"></th>
                         </tr>
                         <tr>

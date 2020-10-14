@@ -56,8 +56,15 @@ $stmt->execute();
 $result = $stmt->get_result();
 while ($row = $result->fetch_assoc()) {
     // $row["sr_salary_rate"] = number_format($row["sr_salary_rate"], 2, ".", ",")."/day";
+    
+    $row["salary"] = "₱";
 
-    $row["salary"] = $row["sr_salary_rate"] || $row["sr_rate_on_schedule"]?(number_format(($row["sr_salary_rate"]?$row["sr_salary_rate"]:$row["sr_rate_on_schedule"])/22, 2, ".", ",")."/day"):"N/I";
+    if ($row["sr_status"] === 'CASUAL') {
+        $row["salary"] .= $row["sr_salary_rate"] || $row["sr_rate_on_schedule"]?(number_format(($row["sr_salary_rate"]?$row["sr_salary_rate"]:$row["sr_rate_on_schedule"]), 2, ".", ",")."/DAY"):"N/I";   
+    } else {
+        $row["salary"] .= $row["sr_salary_rate"] || $row["sr_rate_on_schedule"]?(number_format(($row["sr_salary_rate"]?$row["sr_salary_rate"]:$row["sr_rate_on_schedule"]), 2, ".", ",")."/YEAR"):"N/I";    
+    }
+    
     // $salary = $row["sr_rate_on_schedule"];
     $row["sr_date_from"] = date_format(date_create($row["sr_date_from"]),"m/d/Y");
     $row["sr_date_to"] = $row["sr_date_to"]?date_format(date_create($row["sr_date_to"]),"m/d/Y"):"To Present";
@@ -160,7 +167,7 @@ is supported by appointment and other papers actually issued by this Office and 
         <th colspan="2">SERVICE<br>(inclusive dates)</th>
         <th colspan="3">RECORD OF APPOINTMENT</th>
         <th colspan="2">OFFICE / ENTITY / DIVISION</th>
-        <th rowspan="2" width="25%">SEPARATION L/V ABS W/O PAY</th>
+        <th rowspan="2" width="25%">SEPARATION L/V <br/> ABS W/O PAY</th>
     </tr>
     <tr class="grey">
         <th>From</th>
