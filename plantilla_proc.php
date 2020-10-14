@@ -194,7 +194,7 @@ if (isset($_POST["load"])) {
 			$item_no = $_POST["item_no"];
 			$abolish = $_POST["abolish"];
 			$incumbent = $_POST['incumbent'];
-			$last_day_of_service = $_POST['last_day_of_service'];
+			$date_of_last_promotion = $_POST['date_of_last_promotion'];
 			$originalAppointmentDate = $_POST['originalAppointmentDate'];
 			$casualPromotion = $_POST['casualPromotion'];
 			$sql = "UPDATE `plantillas` SET `position_id` = '$position', 
@@ -211,7 +211,7 @@ if (isset($_POST["load"])) {
 
 			$sql2 = "UPDATE `appointments` SET `date_of_appointment` = '$originalAppointmentDate',
 												`casual_promotion` = '$casualPromotion',
-												`date_of_last_promotion` = '$last_day_of_service'
+												`date_of_last_promotion` = '$date_of_last_promotion'
 												where `appointment_id`='$incumbent'";
 			$mysqli->query($sql2);
 			if($mysqli->error){
