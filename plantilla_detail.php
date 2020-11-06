@@ -268,8 +268,15 @@ $(document).ready(function() {
   }
   
 </script>
-<!-- alerts start -->
 
+<style type="text/css">
+  .actives{
+    background-color: #f2f2f2;
+    color: #4075a9;
+  }
+</style>
+   
+<div id="duties_app">
 
 <div class="ui overlay fullscreen modal" id="fullScrnEmp">
   <div class="header">Employee Information</div>
@@ -278,116 +285,6 @@ $(document).ready(function() {
     <div class="ui approve button">DONE</div>
   </div>  
 </div>
-
-
-
-<div id="saveMsg" class="" style="top: 15px; display: none; position: fixed; z-index: 10; width: 100%; left: 0; text-align: center;">
-   <div class="ui center green inverted aligned segment" style="width: 100px; margin-left: auto; margin-right: auto;">
-    Added
-    </div>
-</div>
-<!-- end alerts -->
-
-<!-- delete pos start -->
-<div id="deleteModal" class="ui mini modal">
-    <i class="close icon"></i>
-    <div class="header">
-      Delete Statement of Duties
-    </div>
-    <div class="content">
-      <p>Are you sure you want to delete this details?</p>
-    </div>
-    <div class="actions">
-        <div class="ui deny button mini">
-          No
-        </div>
-        <div class="ui blue right labeled icon approve button mini">
-          Yes
-          <i class="checkmark icon"></i>
-        </div>
-    </div>
-</div>
-<!-- delete pos end -->
-
-<!----add data---->
-<div class="ui container">
-  <div id="addModal" class="ui mini modal">
-    <div class="header">
-    Add Statement of Duties
-    </div>
-
-      <div class="content">
-          <div class="ui form">   
-               <input  id="addPos">
-              <div class="two fields">
-                  <div class="field">
-
-                     <label>No.</label>
-                      <input  id="addNo" type="number">
-                  </div>
-                   <div class="field">
-                        <label>Percentile:</label>
-                          <input  id="addPercentile" >
-                    </div>   
-              </div>  
-            <div class="ui corner labeled input">
-                <textarea style="width:320px" id="addWorkStatement"></textarea>
-            </div>
-          </div>
-      </div>
-
-    <div class="actions">
-      <div class="ui deny button mini">
-        Cancel
-      </div>
-      <div class="ui blue right labeled icon approve button mini">
-        Add
-        <i class="checkmark icon"></i>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- end of adding ---->
-<!----edit data---->
-<div class="ui container">
-  <div id="editModal" class="ui mini modal">
-    <div class="header">
-     Edit Statement of Duties
-    </div>
-
-      <div class="content">
-          <div class="ui form">   
-              <div class="two fields">
-                  <div class="field">
-
-                     <label>No.</label>
-                      <input  id="editNo" type="number">
-                  </div>
-                   <div class="field">
-                        <label>Percentile:</label>
-                          <input  id="editPercentile" >
-                    </div>   
-              </div>  
-            <div class="ui corner labeled input">
-                <textarea style="width:320px" id="editWorkstatement"></textarea>
-            </div>
-          </div>
-      </div>
-
-    <div class="actions">
-      <div class="ui deny button mini">
-        Cancel
-      </div>
-      <div class="ui blue right labeled icon approve button mini">
-        Update
-        <i class="checkmark icon"></i>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- end of editing ---->
-
-
 <div class="ui container">
     <div class="ui borderless blue inverted mini menu">
         <div class="left item" style="margin-right: 0px !important;">
@@ -409,23 +306,13 @@ $(document).ready(function() {
       </div>     
 </div>
 
-<div class="ui container">
-
-<style type="text/css">
-  .actives{
-    background-color: #f2f2f2;
-    color: #4075a9;
-  }
-</style>
-   
-  </div>
 <br>
 
 
 <div class="ui container">
     <div class="ui top attached tabular menu" id="tabs">
       <a class="item active" data-tab="details">PLANTILLA DETAILS</a>
-      <a class="item" data-tab="statement">STATEMENT OF DUTIES</a>
+      <a class="item" data-tab="statement" @click="positionId=<?=$row['post_id']?>">STATEMENT OF DUTIES</a>
       <a class="item" data-tab="qualification">QUALIFICATION STANDARDS</a>
     </div>
     <div class="ui bottom attached segment tab active" data-tab="details">
@@ -630,32 +517,37 @@ $(document).ready(function() {
 
     </div>
     <div class="ui bottom attached segment tab" data-tab="statement">
-      <div id="tableContent">
-         <div class="ui form">
-             <table class="ui very compact small celled table" style="font-size: 12px;text-align:center" id="duties_table" >
-               <tbody>         
-                    <tr> 
-                        <td><b>No<b></td>
-                        <td><b>Percentage</b></td>
-                        <td><b>Duties</b></td>
-                        <td><b>Options</b></td>
-                       <tr id="<?php echo $id."row";?>">
-                           <td><?=$no?>.)</td>
-                           <td><?=$percentile?>%</td>
-                           <td><?=$workstatement?></td>
-                           <td class="align">  
-                              <center><button class=" ui positive mini button" onclick="editRow('<?=$statement_id?>',
-                                                        '<?=$no?>',
-                                                        '<?=$percentile?>',
-                                                        '<?=$workstatement?>')
-                                                        "><i class=" edit outline icon" title="Edit" style="cursor: pointer;"></i>Edit</button> 
-                              <button class="ui negative mini button"  onclick="deleteRow('<?php echo $statement_id; ?>')"> <i class="trash alternate outline icon" style="cursor: pointer;"  style="margin-right: 5px;" title="Delete"></i>Delete</button>
-                          </td>
-                      </tr>
+                  <!-- ang php js og uban pa na files na related sa statement 
+                        of duties ani na page is location inside 
+                        umbra/statementOfDutiesPlanttilla
+                  -->
+                  <!-- sorry sa libog kay libog na ni daan :P :P -->
+                  <!-- by:Umbra -->
+              <table class="ui celled table">
+                <thead>
+                  <tr>
+                    <th>No.</th>
+                    <th>Work Statement</th>
+                    <th>Percent</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template v-if="Duties.length">
+                    <tr v-for="(work,index) in Duties" :key="index">
+                      <td>{{work.no}}</td>
+                      <td>{{work.workstatement}}</td>
+                      <td>{{work.percentile}} %</td>
+                    </tr>
+                  </template>
+                  <template v-else>
+                    <tr>
+                      <td colspan="3"> 
+                          <h1 style="text-align:center">No Records</h1>
+                      </td>
+                    </tr>
+                    </template>
                 </tbody>
               </table>
-        </div>
-      </div>
     </div>
     <div class="ui bottom attached segment tab" data-tab="qualification">
       <div id="sectionsContainer">
@@ -694,7 +586,9 @@ $(document).ready(function() {
     <div>
   </div>
 </div>
-
+</div>
+</div>
 <?php 
  require_once "footer.php";
 ?>
+<script src="umbra/statementOfDutiesPlanttilla/plantilla_detail.js"></script>

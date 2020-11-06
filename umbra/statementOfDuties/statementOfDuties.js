@@ -173,6 +173,14 @@ app = new Vue({
                 }
             }
 
+        },
+        percent:()=>{
+            x = 100 - app.totalPercent;
+            if(x){
+                if(app.percent>x){
+                    app.percent = x;
+                }
+            }
         }
     }
 });
