@@ -67,7 +67,8 @@ require_once "header.php";
                 <div id="dutiesChildDiv" style="width:100%;">
                     <h1>
                         {{header}} <br>
-                        <button class="ui icon mini green button" @click="dutiesModal()">
+
+                        <button v-if="totalPercent<100" class="ui icon mini green button" @click="dutiesModal()">
                             <i class="icon add"></i>Add
                         </button>
                     </h1>
