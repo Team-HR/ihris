@@ -38,7 +38,7 @@ require_once 'header.php';
 			</div>
 			<div class="right item" style="width: 500px;">
 				<div class="ui icon input">
-					<input id="employee_search" type="text" placeholder="Search Employee...">
+					<input v-model="search_employee" type="text" placeholder="Search Employee..." @keyup="search()">
 					<i class="search icon"></i>
 				</div>
 			</div>
@@ -63,14 +63,15 @@ require_once 'header.php';
 				</td>
 			</tr> -->
 				<template v-for="(employee,i) in employees">
-					<tr :key="employee.emp_id">
+					<tr class="datr" :key="employee.emp_id">
 						<td>{{employee.emp_id}}</td>
-						<td class="ui center aligned" style="white-space: nowrap;"> <button class="ui green mini button" @click="edit(i)"><i class="ui edit icon"></i> Edit</button> </td>
+						<td class="ui center aligned" style="white-space: nowrap; width: 10px;"> <button class="ui green mini button" @click="edit(i)"><i class="ui edit icon"></i> Edit</button> </td>
 						<td>{{employee.fullName}}</td>
 						<td>
 							<ol>
 								<li v-for="(award,index) in employee.recs" :key="index">{{award}}</li>
 							</ol>
+							<span v-if="employee.recs != null" class="ui grey text"></span>
 						</td>
 						<td>{{employee.position}}</td>
 						<td>{{employee.department}}</td>
@@ -89,10 +90,17 @@ require_once 'header.php';
 			return {
 				employees: [],
 				edited_employee: {},
-				edited_entries: []
+				edited_entries: [],
+				search_employee: ""
 			}
 		},
 		methods: {
+			search() {
+				var value = this.search_employee.toLowerCase();
+				$("#employees_table .datr").filter(function() {
+					$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+				});
+			},
 			addEntry() {
 				this.edited_entries.push("");
 			},
@@ -126,15 +134,15 @@ require_once 'header.php';
 						// console.log(this.edited_entries);
 						// console.log(employee.emp_id);
 
-						const filtered = this.edited_entries.filter(function (el) {
+						const filtered = this.edited_entries.filter(function(el) {
 							// return el != "";
-							if (el != ""|| el.trim() != "") {
+							if (el != "" || el.trim() != "") {
 								return el;
 							}
 						});
 
 
-						
+
 						$.post('personnelrecognition_proc.php', {
 							updateEntry: true,
 							employees_id: employee.emp_id,
