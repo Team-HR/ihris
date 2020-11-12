@@ -5,7 +5,7 @@ require 'libs/NameFormatter.php';
 
 if (isset($_POST['get_data'])) {
     // $sql = "SELECT `employees`.`employees_id` AS `emp_id`,`firstName`,`lastName`,`middleName`,`extName`,`department`,`position`,`recognition` FROM `employees` LEFT JOIN `department` ON `employees`.`department_id` = `department`.`department_id` LEFT JOIN `positiontitles` ON `employees`.`position_id` = `positiontitles`.`position_id` LEFT JOIN `rnr_recognitions` ON `employees`.`employees_id` = `rnr_recognitions`.`employees_id` ORDER BY `lastName` ASC";
-    $sql = "SELECT `employees`.`employees_id` AS `emp_id`,`firstName`,`lastName`,`middleName`,`extName`,`department`,`position`,`recognition` FROM `employees` LEFT JOIN `department` ON `employees`.`department_id` = `department`.`department_id` LEFT JOIN `positiontitles` ON `employees`.`position_id` = `positiontitles`.`position_id` LEFT JOIN `rnr_recognitions` ON `employees`.`employees_id` = `rnr_recognitions`.`employees_id` ORDER BY `lastName` ASC LIMIT 50";
+    $sql = "SELECT `employees`.`employees_id` AS `emp_id`,`firstName`,`lastName`,`middleName`,`extName`,`department`,`position`,`recognition` FROM `employees` LEFT JOIN `department` ON `employees`.`department_id` = `department`.`department_id` LEFT JOIN `positiontitles` ON `employees`.`position_id` = `positiontitles`.`position_id` LEFT JOIN `rnr_recognitions` ON `employees`.`employees_id` = `rnr_recognitions`.`employees_id` ORDER BY `lastName`";
     $result = $mysqli->query($sql);
     $data = [];
 
