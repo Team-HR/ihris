@@ -341,13 +341,13 @@ if (isset($_GET["spms"])) {
                     <a class="item" data-tab="pds">
                         PDS
                     </a>
-                    <a class="item active" data-tab="service_records">
+                    <a class="item" data-tab="service_records">
                         Service Records
                     </a>
                     <a class="item" data-tab="leave_records">
                         Leave Records
                     </a>
-                    <a class="item" data-tab="hr_cores">
+                    <a class="item active" data-tab="hr_cores">
                         HR CORES
                     </a>
                 </div>
@@ -417,7 +417,7 @@ if (isset($_GET["spms"])) {
                         <?php require 'pds_other_information.php' ?>
                     </div>
                 </div>
-                <div class="ui tab active" data-tab="service_records">
+                <div class="ui tab" data-tab="service_records">
                     <?php require_once "service_record.php"; ?>
                 </div>
                 <div class="ui tab" data-tab="leave_records">
@@ -443,7 +443,7 @@ if (isset($_GET["spms"])) {
                     </div>
 
                 </div>
-                <div class="ui tab" data-tab="hr_cores">
+                <div class="ui tab active" data-tab="hr_cores">
 
 
                     <!-- <div class="ui container segment" style="min-height: 500px;"> -->
