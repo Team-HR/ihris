@@ -118,6 +118,7 @@
     <!--   add modal End   -->
     <div class="ui medium header">Leave Admin Dashboard</div>
     <button class="ui positive button" id="addButton" onclick="showAddModal()">Add New</button>
+    <template v-if="Logs.length">
     <table class="ui celled table gwd-table-16du">
       <thead>
         <tr>
@@ -125,6 +126,7 @@
             <th>Name of applicant</th>
             <th>Date received</th>
             <th>Date Applied</th>
+            <th>Type of Leave</th>
             <th>Total Days</th>
             <th>Status</th>
             <th>Remarks</th>
@@ -132,9 +134,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr v-for="(log,index) in Logs" :key="index">
           <td>Elyse</td>
           <td>24</td>
+          <td>Designer</td>
           <td>Designer</td>
           <td>Designer</td>
           <td>Designer</td>
@@ -151,6 +154,7 @@
         </tr>
       </tbody>
     </table>
+    </template>
   </div>
   <script>
     $(document).ready(function() {
