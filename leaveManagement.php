@@ -60,7 +60,7 @@
                 <select class="ui fluid search dropdown" v-model="leaveType">
                     <option value="">Type</option>
                     <option value="VL">Vacation Leave</option>
-                    <option value="FL">Force Leave</option>
+                    <option value="FL">Forced Leave</option>
                     <option value="SL">Sick Leave</option>
                     <option value="SP">Special Leave</option>
                 </select>
@@ -72,12 +72,13 @@
                 <label>Type of Special Leave:</label>
                 <select class="ui fluid search dropdown" v-model="sp_type">
                     <option value="Filial Leave">Filial Leave</option>
+                    <option value="SP">Domestic Emergency Leave</option>
                     <option value="VL">Maternity Leave</option>
                     <option value="FL">Rehabilitation Leave</option>
                     <option value="SL">Solo Parent Leave</option>
-                    <option value="SP">Domestic Leave</option>
                     <option value="SP">Paternity Leave</option>
                     <option value="SP">Magna Carta Leave</option>
+                    <option value="SP">Anti-VAWCY Leave</option>
                     <option value="SP">Study Leave</option>
                 </select>
           </div>
@@ -123,32 +124,35 @@
       <thead>
         <tr>
             <th>Control Number</th>
-            <th>Name of applicant</th>
-            <th>Date received</th>
+            <th>Date Received</th>
+            <th>Name of Applicant</th>
             <th>Date Applied</th>
             <th>Type of Leave</th>
             <th>Total Days</th>
-            <th>Status</th>
             <th>Remarks</th>
+            <th>Status</th>
             <th>Options</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(log,index) in Logs" :key="index">
-          <td>Elyse</td>
-          <td>24</td>
-          <td>Designer</td>
-          <td>Designer</td>
-          <td>Designer</td>
-          <td>Designer</td>
-          <td>Designer</td>
-          <td>Designer</td>
+          <td>{{ log.controlNumber }}</td>
+          <td>{{ log.dateReceived }}</td>
+          <td>{{ log.firstName}} {{ log.lastName}}</td>
+          <td>{{ log.dateApplied }}</td>
+          <td>{{ log.leaveType }}</td>
+          <td>{{ log.totalDays }}</td>
+          <td>{{ log.remarks }}</td>
+          <td>{{ log.status }}</td>
           <td>
             <button class="circular ui icon button green">
               <i class="icon check"></i>
             </button>
             <button class="circular ui icon button red">
               <i class="icon close"></i>
+            </button>
+            <button class="circular ui icon button blue">
+              <i class="icon edit"></i>
             </button>
           </td>
         </tr>

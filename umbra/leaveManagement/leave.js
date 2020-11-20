@@ -66,8 +66,9 @@ var lm_app = new Vue({
             fd.append('totalDays',this.selectedDate.length)
             xml.onload =function(){
                 console.log(xml.responseText);
+                this_app.getLog()
             }
-            xml.open('POST','umbra/leaveManagement/config.php',false)
+            xml.open('POST','umbra/leaveManagement/config.php',true)
             xml.send(fd) 
         },
         getLog:function(){
