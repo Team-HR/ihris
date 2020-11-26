@@ -48,7 +48,7 @@
             <div class="two fields">
               <div class="field">
                 <label>Name:</label>
-                <select class="ui fluid search dropdown" v-model="emp_id">
+                <select class="ui fluid search dropdown" id="emp_id" v-model="emp_id">
                     <option value="">Employee</option>
                     <template>
                       <option v-for="(employee,index) in Employees" :value="employee.employees_id">{{employee.lastName}}, {{employee.firstName}}</option>
@@ -57,7 +57,7 @@
               </div>
               <div class="field">
                 <label>Type of leave:</label>
-                <select class="ui fluid search dropdown" v-model="leaveType">
+                <select class="ui fluid search dropdown" id="leaveType" v-model="leaveType">
                     <option value="">Type</option>
                     <option value="VL">Vacation Leave</option>
                     <option value="FL">Forced Leave</option>
@@ -70,7 +70,7 @@
           <template  v-if="leaveType=='SP'">
             <div class="field">
                 <label>Type of Special Leave:</label>
-                <select class="ui fluid search dropdown" v-model="sp_type">
+                <select class="ui fluid search dropdown" id="sp_type" v-model="sp_type">
                     <option value="Filial Leave">Filial Leave</option>
                     <option value="SP">Domestic Emergency Leave</option>
                     <option value="VL">Maternity Leave</option>
@@ -112,105 +112,11 @@
         </div>
       </div>
       <div class="actions">
-        <div class="ui approve button positive" @click="saveLeave()">Save</div>
+        <button class="ui approve button positive" id="saveLogs"  @click="saveLeave()">Save</button>
         <div class="ui button cancel negative">Close</div>
       </div>
     </div>
 <!--   add modal End   -->
-
-<!--    edit model    -->
- <div class="ui modal small" id="editModal">
-      <div class="header">
-        <h3 class="ui header">Edit Leave Record</h3>
-      </div>
-      <div class="content">
-        <div class="ui form">
-          <div class="field">
-            <div class="two fields">
-              <div class="field">
-                <label>Control #:</label>
-                <input type="text" name="" readonly value="HRMO-LEAVE<?=DATE('Y')?>-*****">
-              </div>
-              <div class="field">
-                <label>Date Received:</label>
-                <input type="date" name=""> 
-              </div>
-            </div>
-          </div>
-          
-          <div class="field">
-            <div class="two fields">
-              <div class="field">
-                <label>Name:</label>
-                <select class="ui fluid search dropdown" >
-                    <option value="">Employee</option>
-                    <template>
-                      <option v-for="(employee,index) in Employees" :value="employee.employees_id">{{employee.lastName}}, {{employee.firstName}}</option>
-                    </template>
-                </select>
-              </div>
-              <div class="field">
-                <label>Type of leave:</label>
-                <select class="ui fluid search dropdown" >
-                    <option value="">Type</option>
-                    <option value="VL">Vacation Leave</option>
-                    <option value="FL">Forced Leave</option>
-                    <option value="SL">Sick Leave</option>
-                    <option value="SP">Special Leave</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <template  v-if="leaveType=='SP'">
-            <div class="field">
-                <label>Type of Special Leave:</label>
-                <select class="ui fluid search dropdown" >
-                    <option value="Filial Leave">Filial Leave</option>
-                    <option value="SP">Domestic Emergency Leave</option>
-                    <option value="VL">Maternity Leave</option>
-                    <option value="FL">Rehabilitation Leave</option>
-                    <option value="SL">Solo Parent Leave</option>
-                    <option value="SP">Paternity Leave</option>
-                    <option value="SP">Magna Carta Leave</option>
-                    <option value="SP">Anti-VAWCY Leave</option>
-                    <option value="SP">Study Leave</option>
-                </select>
-          </div>
-          </template>
-          <div class="field">
-            <label>Applied Date:</label>
-            <form class="two fields" @submit.prevent="cal()">
-              <div class="field">
-                <input type="date" name="" id="calen" required>
-              </div>
-              <div class="field">
-                <input type="submit" class="ui button primary" value="ADD">
-              </div>
-            </form>
-          </div>
-          <div class="ui link list">
-            <a class="item" v-for="(d,index) in selectedDate" :key="index">
-              <span class="left floated like">
-                  {{d}}
-              </span>
-              <span class="right floated">
-                <i class="close icon" @click="slice_date(index)"></i>
-              </span>          
-            </a>
-          </div>
-          <br>
-          <div class="field">
-            <label>Remarks:</label>
-            <textarea width="100%" v-model="remarks"></textarea>
-          </div>
-        </div>
-      </div>
-      <div class="actions">
-        <div class="ui approve button positive" @click="saveLeave()">Save</div>
-        <div class="ui button cancel negative">Close</div>
-      </div>
-    </div>
-<!--   edit modal End   -->
 
 <!--    open model    -->
  <div class="ui small modal" id="approveModal">
@@ -292,7 +198,7 @@
             <button class="circular ui icon button red">
               <i class="icon close"></i>
             </button>
-            <button class="circular ui icon button blue" id="editButton" onclick="showEditModal()">
+            <button class="circular ui icon button blue" id="editButton" @click="getEdit(index)">
               <i class="icon edit"></i>
             </button>
           </td>
@@ -308,9 +214,6 @@
 
     function showAddModal() {
       $("#addModal").modal('show');
-    }
-    function showEditModal() {
-      $("#editModal").modal('show');
     }
     function approveModal() {
       $("#approveModal").modal('show');

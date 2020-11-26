@@ -8,7 +8,8 @@ var lm_app = new Vue({
         date_received:"",
         emp_id:"",
         sp_type:"",
-        remarks:""
+        remarks:"",
+        log_editId:"",
     },
     methods: {
         cal:function(){
@@ -49,7 +50,10 @@ var lm_app = new Vue({
             xml.open('POST','umbra/leaveManagement/config.php',false)
             xml.send(fd)            
         },
-        saveLeave:function(){
+        saveLeave:function(e){
+            var buttonEvent = event;
+            buttonEvent.target.disabled = true;
+            // $("#saveLogs").addClass("disabled")
             if(this.leaveType!="SP"){
                 this.sp_type =""
             }
@@ -64,12 +68,35 @@ var lm_app = new Vue({
             fd.append('remarks',this.remarks)
             fd.append('saveLeave',true)
             fd.append('totalDays',this.selectedDate.length)
+            fd.append('log_editId',this.log_editId)
             xml.onload =function(){
-                console.log(xml.responseText);
-                this_app.getLog()
+              $("#addModal").modal('hide');
+                this_app.emp_id = "";
+                this_app.selectedDate="";
+                this_app.leaveType = "";
+                this_app.date_received="";
+                this_app.sp_type="";
+                this_app.remarks="";
+                this_app.log_editId = "";
+              this_app.getLog()
+                setTimeout(() => {
+                    buttonEvent.target.disabled = "";
+                },1000);
             }
             xml.open('POST','umbra/leaveManagement/config.php',true)
             xml.send(fd) 
+        },
+        getEdit:function(index){
+            this_app = this;
+            log = this_app.Logs[index];
+            $('#emp_id').dropdown('set selected', log['employees_id']);
+            $('#sp_type').dropdown('set selected', log['sp_type']);
+            $('#leaveType').dropdown('set selected', log['leaveType']);
+            this_app.selectedDate= log["dateApplied"].split(",");
+            this_app.date_received= log['dateReceived'];
+            this_app.remarks= log['remarks'];
+            this_app.log_editId = log['log_id'];
+            $("#addModal").modal('show');
         },
         getLog:function(){
             var this_app = this
