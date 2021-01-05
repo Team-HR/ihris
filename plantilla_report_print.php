@@ -236,7 +236,7 @@ $html .= <<<EOD
     <td style="text-align:center;border: none;">$date</td>
 </tr>
 <tr>
-    <td style="text-align:center; border: none;">HRMO IV</td>
+    <td style="text-align:center; border: none;">CGDH-I</td>
     <td style="text-align:center; border: none;">Date</td>
     <td style="text-align:center; border: none;">CITY MAYOR</td>
     <td style="text-align:center; border: none;">Date</td>
