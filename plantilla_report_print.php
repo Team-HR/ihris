@@ -251,7 +251,15 @@ $mpdf->defaultfooterline = 0;
 $mpdf->defaultfooterline = 0;
 
 $mpdf->WriteHTML($html);
-$mpdf->Output();
+// $mpdf->Output();
+$department = $department?$department:"NODEPTSELECTED";
+$status = $status=="permanent"?"PERMANENT":$status;
+$gender = $gender=="all"||$gender==""?"M&F":$gender;
+$mpdf->Output("PLANTILLA $department-$status-$gender as of $date.pdf", 'I');
+
+
+
+
 
 function formatDateSlashes($date_in)
 {
