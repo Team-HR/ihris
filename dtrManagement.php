@@ -5,8 +5,8 @@
 <div id="dtr_app">
 
 
-    <div class="ui segment"   style="margin:auto;max-width:35%;min-width:500px;">
-        <div class="ui segment" style="position:fixed;right:0px;width:250px">
+    <div class="ui segment"   style="margin:auto;max-width:35%;min-width:600px;">
+        <div class="ui segment" style="position:fixed;right:0px;width:250px;z-index:10">
             <table>
                 <tr>
                     <th style="text-align: right">Total mins Tardy:</th>
@@ -94,12 +94,13 @@
                 <table class="ui celled table" id="example1"> 
                     <thead>
                         <tr>
-                            <th colspan="6">Period</th>
+                            <th colspan="7">Period</th>
                         </tr>
                         <tr>
                             <th rowspan="2">Date</th>
                             <th colspan="2">AM</th>
                             <th colspan="2">PM</th>
+                            <th rowspan="2">Remarks</th>
                             <th rowspan="2">Options</th>
                         </tr>
                         <tr>
@@ -112,15 +113,11 @@
                     <tbody>
                         <tr v-for="(day,index) in dtr" :key="index"> 
                             <td>{{day.date.split('-')[2]}}</td>
-                            <template v-if="day.other==''">
-                                <td>{{day.amTardy}}</td>
-                                <td>{{day.amUnderTime}}</td>
-                                <td>{{day.pmTardy}}</td>
-                                <td>{{day.pmUnderTime}}</td>
-                            </template >
-                            <template v-else>
-                                <td colspan="4" style="text-align:center;font-weight: bold;color:red">{{day.other}}</td>
-                            </template>
+                            <td>{{day.amTardy}}</td>
+                            <td>{{day.amUnderTime}}</td>
+                            <td>{{day.pmTardy}}</td>
+                            <td>{{day.pmUnderTime}}</td>
+                            <td style="text-align:center;font-weight: bold;color:red">{{day.other}}</td>
                             <td>
 
                                 <button class="ui icon tiny button green" @click="openModal(index)">

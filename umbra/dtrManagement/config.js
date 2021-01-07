@@ -83,13 +83,7 @@ var dtr_app = new Vue({
             this.pmTardy = dat.pmTardy
             this.amUnder = dat.amUnderTime
             this.pmUnder = dat.pmUnderTime
-            if(dat.other=="ABSENT"){
-                this.absent = true
-            }
-            else if(dat.other == "DAY-OFF"){
-                this.dayoff = true
-            }
-
+            this.others = dat.other
 
 
             $("#modalEdit").modal('show');

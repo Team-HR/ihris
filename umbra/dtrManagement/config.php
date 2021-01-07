@@ -54,12 +54,12 @@
         $pmTardy = $_POST["pmTardy"];
         $pmUnder = $_POST["pmUnder"];
         $editId = $_POST["editId"];
-        if($others){
-            $amTardy = "";
-            $amUnder = "";
-            $pmTardy = "";
-            $pmUnder = "";
-        }
+        // if($others){
+        //     $amTardy = "";
+        //     $amUnder = "";
+        //     $pmTardy = "";
+        //     $pmUnder = "";
+        // }
         $other = $_POST["other"];
         if($editId!=""){
             $sql = "UPDATE `dtrManagement` SET 
