@@ -46,6 +46,7 @@
           <a href="positionsetup.php" class="item"><i class="icon briefcase"></i> Positions</a>
           <a href="salary_adjustment.php" class="item"><i class="icon money check alternate"></i> Salary Schedule</a>
           <a href="qualification_standards.php" class="item"><i class="icon graduation cap"></i> Qualification Standards</a>
+          <a href="signatories.php" class="item"><i class="icon pen fancy"></i> Signatories</a>
         </div>
       </div>
 
