@@ -4,20 +4,18 @@ require "libs/NameFormatter.php";
 
 if (isset($_POST["add_new_role"])) {
     $role = $_POST["role"];
-    $sql = "INSERT INTO `signatories` (`id`, `role`, `employee_id`, `name`, `position`, `date_assigned`, `date_unassigned`) VALUES (NULL, '$role', NULL, NULL, NULL, current_timestamp(), NULL)";
+    $sql = "INSERT INTO `signatory_roles` (`role`) VALUES ('$role')";
     $mysqli->query($sql);
     echo json_encode("success");
 } 
 
 elseif (isset($_POST["update_assignment"])) {
     $data = $_POST["data"];
-
     $is_internal = $data["is_internal"];
-
     $employee_id = $data["employee_id"];
     $name = $data["name"];
     $position = $data["position"];
-    
+
     if($is_internal == 1){
         $name = NULL;    
         $position = NULL;
@@ -26,18 +24,21 @@ elseif (isset($_POST["update_assignment"])) {
     }
 
     $id = $data["id"];
+    $role = $data["role"];
 
-    $sql = "UPDATE `signatories` SET `is_internal`= '$is_internal',`employee_id`='$employee_id',`name`='$name',`position`='$position' WHERE `id` = '$id'";
+    $sql = "INSERT INTO `signatory_saves` (`signatory_role_id`, `is_internal`, `employee_id`, `name`, `position`) VALUES ('$id', '$is_internal', '$employee_id', '$name', '$position')";
+    $mysqli->query($sql);
+    $signatory_save_id = $mysqli->insert_id;
 
+    $sql = "UPDATE `signatory_roles` SET `signatory_save_id` = '$signatory_save_id' WHERE `id` = '$id'";
     $mysqli->query($sql);
 
-
-    echo json_encode($sql);
+    echo json_encode($signatory_save_id);
 }
 
 elseif (isset($_POST["get_roles"])) {
     $data = array();
-    $sql = "SELECT * FROM signatories";
+    $sql = "SELECT signatory_roles.*,is_internal,employee_id,name,position,date_assigned,date_unassigned FROM signatory_roles LEFT JOIN signatory_saves ON signatory_roles.signatory_save_id = signatory_saves.id";
     $result = $mysqli->query($sql);
     while ($row = $result->fetch_assoc()) {
         if ($row["employee_id"]) {
@@ -50,6 +51,10 @@ elseif (isset($_POST["get_roles"])) {
             $return = $mysqli->query("SELECT * FROM `positiontitles` WHERE `position_id`='$employee[position_id]'");
             $employee = $return->fetch_assoc();
             $row["position"] = $employee["position"];
+        }
+
+        if ($row["is_internal"]=== NULL) {
+            $row["is_internal"] = 1;
         }
         array_push($data, $row);
     }
