@@ -172,7 +172,7 @@ require_once "header.php";
                 signatory: {
                     id: 0,
                     role: "",
-                    is_internal: 0,
+                    is_internal: 1,
                     employee_id: 0,
                     name: "",
                     position: "",
@@ -198,7 +198,7 @@ require_once "header.php";
                         role: this.role_new
                     },
                     (data, textStatus, jqXHR) => {
-                        console.log("submitted");
+                        // console.log("submitted");
                         this.role_new = ""
                         this.get_roles()
                     }
@@ -206,6 +206,7 @@ require_once "header.php";
             },
 
             edit_mode(edit_item) {
+                // console.log(edit_item);
                 this.signatory = Object.assign({}, edit_item)
                 // console.log(edit_item);
                 $("#employees_dropdown").dropdown("set selected", edit_item.employee_id);
@@ -226,12 +227,14 @@ require_once "header.php";
             },
 
             edit_role_assignment_form_submit() {
+                // console.log(this.signatory);
                 $.post("signatories_proc.php", {
                         update_assignment: true,
                         data: this.signatory    
                     },
                     (data, textStatus, jqXHR) => {
                         // console.log(data);
+                        $("#employees_dropdown").dropdown("clear");
                         this.get_roles()
                     },
                     "json"
