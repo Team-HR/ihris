@@ -174,9 +174,10 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true && $_SESSION[
             usrdata: usrdata
           }, function(data, textStatus, xhr) {
             /*optional stuff to do after success */
-            if (data === "0") {
+            if (data == "0") {
               // $("#regModal").modal("hide");
               $("#registerSuccess").modal({
+                closable: false,
                 allowMultiple: false,
                 onDeny: function() {
                   location.reload();
@@ -190,7 +191,8 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true && $_SESSION[
               $("input[name='password']").val("");
               $("input[name='password_verify']").val("");
               console.log(data);
-            } else if (data === "1") {
+              // location.reload();
+            } else if (data == "1") {
               console.log(data);
               $("#registerForm").form("add errors", ["Username is already taken! Please re-enter a different one."]);
               $("#registerForm").form("add prompt", "userName", ["Username is already taken! Please re-enter a different one."]);
@@ -258,7 +260,7 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true && $_SESSION[
       <p>Please wait for HRMO's approval.</p>
     </div>
     <div class="actions">
-      <button class="ui tiny basic button deny">Ok</button>
+      <button type="button" class="ui tiny basic button deny">Ok</button>
     </div>
   </div>
 
@@ -283,9 +285,9 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true && $_SESSION[
         </div>
         <!-- </div> -->
         <button id="submitBtn" type="submit" class="ui submit basic button blue" data-content="Login to an existing account" data-position="bottom left"><i class="icon sign-in"></i> Login</button>
-        <button id="regBtn" type="" class="ui submit basic button green" data-content="Request for an account" data-position="bottom left"><i class="icon pencil alternate"></i> Register</button>
+        <!-- <button id="regBtn" type="button" class="ui submit basic button green" data-content="Request for an account" data-position="bottom left"><i class="icon pencil alternate"></i> Register</button> -->
         <div style="margin-top: 15px; text-align: right;">
-          <a id="frgtBtn" style="color: grey; cursor: pointer;" data-title="Account Recovery" data-content="Please ask the HRMO admin for account recovery." data-position="bottom left">Forgot your account?</a>
+          <!-- <a id="frgtBtn" style="color: grey; cursor: pointer;" data-title="Account Recovery" data-content="Please ask the HRMO admin for account recovery." data-position="bottom left">Forgot your account?</a> -->
         </div>
 
         <div id="usrAndPassMissing" class="ui error message">
