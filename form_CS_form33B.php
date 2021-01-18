@@ -27,10 +27,136 @@
 // Include the main TCPDF library (search for installation path).
 require_once('TCPDF-master/tcpdf.php');
 require_once('_connect.db.php');
+require "libs/NameFormatter.php";
+require "libs/NumberToWords.php";
 
+$appointment_id = $_GET["appointment_id"];
+
+$sql = "SELECT * FROM `appointments` 
+LEFT JOIN `employees` ON `appointments`.`employee_id` = `employees`.`employees_id` 
+LEFT JOIN `plantillas` ON `appointments`.`plantilla_id` = `plantillas`.`id`
+LEFT JOIN `department` ON `plantillas`.`department_id` = `department`.`department_id`
+LEFT JOIN `positiontitles` ON `plantillas`.`position_id` = `positiontitles`.`position_id`
+WHERE `appointments`.`appointment_id` = '$appointment_id'";
+$result = $mysqli->query($sql);
+
+$appointment = $result->fetch_assoc();
+$salary_sql = "SELECT
+                        setup_salary_adjustments_setup.monthly_salary
+                    FROM
+                        setup_salary_adjustments_setup
+                        LEFT JOIN
+                        setup_salary_adjustments
+                        ON 
+                            setup_salary_adjustments_setup.parent_id = setup_salary_adjustments.id
+                    WHERE
+                        setup_salary_adjustments.`schedule` = $appointment[schedule] AND
+                        setup_salary_adjustments_setup.step_no = $appointment[step] AND
+                        setup_salary_adjustments_setup.salary_grade = $appointment[salaryGrade] AND
+                        setup_salary_adjustments.active = 1";
+
+$res = $mysqli->query($salary_sql);
+$salary_data = $res->fetch_assoc();
+$appointment["monthly_salary"] = $salary_data["monthly_salary"];
+$monthly_salary = $appointment["monthly_salary"];
+$name_formatter = new NameFormatter($appointment["firstName"], $appointment["lastName"], $appointment["middleName"], $appointment["extName"]);
+$full_name = $name_formatter->getFullNameStandardTitle();
+$appointment_id = $appointment["appointment_id"];
+$employee_id = $appointment["employee_id"];
+$plantilla_id = $appointment["plantilla_id"];
+$reason_of_vacancy = $appointment["reason_of_vacancy"];
+$office_assignment = $appointment["office_assignment"];
+$probationary_period = $appointment["probationary_period"];
+$status_of_appointment = $appointment["status_of_appointment"];
+$date_of_appointment = $appointment["date_of_appointment"];
+$date_of_assumption = $appointment["date_of_assumption"];
+$nature_of_appointment = $appointment["nature_of_appointment"];
+$nature_of_appointment = mb_convert_case($nature_of_appointment, MB_CASE_TITLE, "UTF-8");
+$appointing_authority = $appointment["appointing_authority"];
+$date_of_signing = $appointment["date_of_signing"];
+$csc_authorized_official = $appointment["csc_authorized_official"];
+$csc_mc_no = $appointment["csc_mc_no"];
+$series_no = $appointment["series_no"];
+$assesment_date_from = $appointment["assesment_date_from"];
+$assesment_date_to = $appointment["assesment_date_to"];
+$deliberation_date_from = $appointment["deliberation_date_from"];
+$deliberation_date_to = $appointment["deliberation_date_to"];
+$date_signed_by_csc = $appointment["date_signed_by_csc"];
+$committee_chair = $appointment["committee_chair"];
+$HRMO = $appointment["HRMO"];
+$cert_fund_available = $appointment["cert_fund_available"];
+$published_at = $appointment["published_at"];
+$posted_in = $appointment["posted_in"];
+$posted_date_from = $appointment["posted_date_from"];
+$posted_date_to = $appointment["posted_date_to"];
+$csc_release_date = $appointment["csc_release_date"];
+$govId_type = $appointment["govId_type"];
+$govId_no = $appointment["govId_no"];
+$govId_issued_date = $appointment["govId_issued_date"];
+$sworn_date = $appointment["sworn_date"];
+$cert_issued_date = $appointment["cert_issued_date"];
+$last_day_of_service = $appointment["last_day_of_service"];
+$supervisor = $appointment["supervisor"];
+$casual_promotion = $appointment["casual_promotion"];
+$predecessor = $appointment["predecessor"];
+$date_of_last_promotion = $appointment["date_of_last_promotion"];
+$employees_id = $appointment["employees_id"];
+$firstName = $appointment["firstName"];
+$lastName = $appointment["lastName"];
+$middleName = $appointment["middleName"];
+$extName = $appointment["extName"];
+$gender = $appointment["gender"];
+$status = $appointment["status"];
+$employmentStatus = $appointment["employmentStatus"];
+$department_id = $appointment["department_id"];
+$position_id = $appointment["position_id"];
+$natureOfAssignment = $appointment["natureOfAssignment"];
+$dateActivated = $appointment["dateActivated"];
+$dateInactivated = $appointment["dateInactivated"];
+$dateIPCR = $appointment["dateIPCR"];
+$id = $appointment["id"];
+$item_no = $appointment["item_no"];
+$department_id = $appointment["department_id"];
+$position_id = $appointment["position_id"];
+$step = $appointment["step"];
+$schedule = $appointment["schedule"];
+$incumbent = $appointment["incumbent"];
+
+// get name of incumbent start
+
+$sql = "SELECT "
+
+// get name of incumbent end
+
+
+$vacated_by = $appointment["vacated_by"];
+$abolish = $appointment["abolish"];
+$department_id = $appointment["department_id"];
+$department = $appointment["department"];
+$position_id = $appointment["position_id"];
+$position = $appointment["position"];
+$functional = $appointment["functional"];
+$level = $appointment["level"];
+$category = $appointment["category"];
+$salaryGrade = $appointment["salaryGrade"];
+
+$numberToWords = new NumberToWords();
+// $monthly_salary = 1231211;
+$monthly_salary_in_words =$numberToWords->convert_number_to_words($monthly_salary);
+$monthly_salary_formatted = number_format($monthly_salary,2,'.',',');
+// $monthly_salary_in_words = "TYES";
+
+// /////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
 // create new PDF document
-$width=215.9;
-$height=330.2;
+
+
+
+
+/**
+$width = 215.9;
+$height = 330.2;
 $pageLayout = array($width, $height); //  or array($height, $width) 
 // $pdf = new TCPDF('p', 'pt', $pageLayout, true, 'UTF-8', false);
 // $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -38,20 +164,20 @@ $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, $pageLayout, true, 'UTF-8', fal
 
 
 // set some language-dependent strings (optional)
-if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
-  require_once(dirname(__FILE__).'/lang/eng.php');
+if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
+  require_once(dirname(__FILE__) . '/lang/eng.php');
   $pdf->setLanguageArray($l);
 }
 
 // ---------------------------------------------------------
-$where ="";
-$file_title ="";
+$where = "";
+$file_title = "";
 
 
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
 $pdf->SetAuthor('FranzDev');
-$pdf->SetTitle($file_title.'CS FORM NO. 33-B');
+$pdf->SetTitle($file_title . 'CS FORM NO. 33-B');
 
 // $pdf->SetSubject('TCPDF Tutorial');
 // $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
@@ -60,8 +186,8 @@ $pdf->SetTitle($file_title.'CS FORM NO. 33-B');
 // $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 048', PDF_HEADER_STRING);
 
 // set header and footer fonts
-$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+$pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+$pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 
 // set default monospaced font
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
@@ -91,7 +217,7 @@ $pdf->SetFont('helvetica', '', 8);
 $dateOfUse = date('F d, Y');
 // -----------------------------------------------------------------------------
 
-
+ */
 $tbl = <<<EOD
 
   <table cellspacing="0" cellpadding="2" >
@@ -116,15 +242,15 @@ $tbl = <<<EOD
     
 
             <p style="font-size:15px; text-align: justify; text-indent:15px"> 
-                                         Ms. <b><u>Emmerose O. Galabay</u></b>
+                                         Mr./Ms./Mrs. <b><u>$full_name</u></b>
             </p>   
 
             <p style="font-size:15px; text-align: justify; text-indent:30px; line-height:3"> 
-                                      You are hereby appointed as <b><u>Revenue Collection Clerk II</u></b> <u><b>(SG 7, step 1)</u></b> under <b><u>Permanent</u></b> status at the <b><u>City Treasurer's Office, LGU Bayawan City</u></b> with a comepensation rate of <b><u>Fifteen Thousand Six Hundred Thirty Five</u></b> <b><u>(P 15,635.00)</u></b> pesos per month.
+                                      You are hereby appointed as <b><u>$position</u></b> <u><b>(SG $salaryGrade, Step $step)</u></b> under <b><u>$employmentStatus</u></b> status at the <b><u> $department, LGU Bayawan City</u></b> with a comepensation rate of <b><u>$monthly_salary_in_words</u></b> <b><u>(P $monthly_salary_formatted)</u></b> pesos per month.
             </p>
 
             <p style="font-size:15px; text-align: justify; text-indent:30px; line-height:3" class="small"> 
-                                       The nature of this appointment is <b><u>Promotion</u></b> vice <b><u>Maria Jainie T. Narito</u></b> , who <b><u>Retired</u></b> with Plantilla Item No. <b><u>CTO-18</u></b> Page ____.</p>
+                                       The nature of this appointment is <b><u>$nature_of_appointment</u></b> vice <b><u>$incumbent</u></b> , who <b><u>Retired</u></b> with Plantilla Item No. <b><u>CTO-18</u></b> Page ____.</p>
 
                       <p style="font-size:14px; text-align: justify; text-indent:30px" class="small"> 
                         <b> This appointmet shall take effect on the date of signiing by the appointing officer/authority.</b>
@@ -346,34 +472,35 @@ $tbl = <<<EOD
   </div>
 </div>
 
-
-
-
-
 EOD;
 
+
+echo $tbl;
+/**
 $pdf->writeHTML($tbl, true, false, false, false, '');
 
 // $pdf->writeHTML($tbl, true, false, false, false, '');
 // -----------------------------------------------------------------------------
 
 //Close and output PDF document
-$pdf->Output($file_title.'Certificate Form No. 33.pdf', 'I');
+$pdf->Output($file_title . 'Certificate Form No. 33.pdf', 'I');
 
 //============================================================+
 // END OF FILE
 //============================================================+
-function lister($arr){
-  $item ="";
+
+ */
+
+function lister($arr)
+{
+  $item = "";
   if (isset($arr)) {
     foreach ($arr as $key => $value) {
-      $item .= " *".$value;
+      $item .= " *" . $value;
     }
   } else {
-    $item ="*None Required";
+    $item = "*None Required";
   }
-  
-  return $item;
 
+  return $item;
 }
-   

@@ -335,7 +335,7 @@ if (isset($_GET["spms"])) {
         <div class="ui segment grid">
             <div class="three wide column">
                 <div id="pim-menu" class="ui vertical pointing menu fluid">
-                    <a class="item" data-tab="appointments">
+                    <a class="item active" data-tab="appointments">
                         Appointment
                     </a>
                     <a class="item" data-tab="pds">
@@ -347,36 +347,49 @@ if (isset($_GET["spms"])) {
                     <a class="item" data-tab="leave_records">
                         Leave Records
                     </a>
-                    <a class="item active" data-tab="hr_cores">
+                    <a class="item" data-tab="hr_cores">
                         HR CORES
                     </a>
                 </div>
             </div>
             <div class="thirteen wide stretched column">
-                <div class="ui tab" data-tab="appointments">
+
+                <div class="ui tab active" data-tab="appointments" id="appointment-app">
                     <div class="ui pointing secondary blue menu fluid" id="pds">
                         <a class="item active" data-tab="appointment_history">Appointment History</a>
                     </div>
                     <div class="ui tab segment active" data-tab="appointment_history">
-                        <a href="appointments.php" class="mini teal ui button right floated"><i class="icon edit"></i> Edit</a>
-                        <br>
+                        <!-- <a href="appointments.php" class="mini teal ui button right floated"><i class="icon edit"></i> Edit</a> 
+                        <br> -->
                         <table class="ui very small compact structured celled table">
                             <thead>
                                 <tr>
                                     <th>Office</th>
                                     <th>Position</th>
                                     <th>Date of Appointment</th>
+                                    <th>Nature of Appointment</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr> -->
-                                <tr class="center aligned">
-                                    <td colspan="3" style="color: lightgrey"> -- Not Appointed --</td>
-                                </tr>
+                                <template v-for="(appointment,key) in appointments">
+                                    <tr class="center aligned" :key="key">
+                                        <td>{{appointment.department}}</td>
+                                        <td>{{appointment.position}}</td>
+                                        <td>{{appointment.date_of_appointment}}</td>
+                                        <td>{{appointment.nature_of_appointment}}</td>
+                                        <td>
+                                        <a :href="'form_CS_form33B.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon button">
+                                            <i class="icon print"></i> Print
+                                        </a>
+                                        </td>
+                                    </tr>
+                                </template>
+                                <template>
+                                    <tr v-if="!appointments.length" class="center aligned">
+                                        <td colspan="5" style="color: grey"> -- Not Appointed --</td>
+                                    </tr>
+                                </template>
                             </tbody>
                         </table>
                     </div>
@@ -438,12 +451,12 @@ if (isset($_GET["spms"])) {
                         <div style="clear:both"></div>
                         <hr>
                         <table class="ui very compact small celled structured striped table" style="font-size:11px">
-                        
+
                         </table>
                     </div>
 
                 </div>
-                <div class="ui tab active" data-tab="hr_cores">
+                <div class="ui tab" data-tab="hr_cores">
 
 
                     <!-- <div class="ui container segment" style="min-height: 500px;"> -->
@@ -607,6 +620,7 @@ if (isset($_GET["spms"])) {
 
     <!-- scripts -->
     <script src="pds/config.js"></script>
+    <script src="appointments/config.js"></script>
 
     <!-- styles -->
     <style>
