@@ -58,6 +58,20 @@
           <a href="plantilla_vacantpos.php" class="item"><i class="icon print"></i> Publications Report</a>
         </div>
       </div>
+      <div id="Leave_dropdown" class="ui pointing dropdown link item">
+        <i class="icon print"></i>
+        <span class="text">Attendance/Leave Management</span>
+        <i class="dropdown icon"></i>
+        <div class="menu">
+              <h4 class="ui header">Attendance Monitoring</h4>
+                <a href="dtrManagement.php" class="item">Dtr Monitoring</a>
+                <a href="dtrSummary.php" class="item">Dtr Summary</a>
+          <!-- 
+          <a href="plantilla_report.php" class="item"><i class="icon print"></i>Attendance Monitoring</a>
+          <a href="plantilla_vacantpos.php" class="item"><i class="icon print"></i></a> -->
+        </div>
+      </div>
+
       <div class="right menu">
         <a title="Lead Deliver Nurture" href="ldn-resources" class="item" style="padding: 7px;">
           <img src="assets/ico/ldn.jpg" style="border-radius: 360px; width: 25px; height: 25px; margin-right: 5px;" title="Lead Deliver Nurture">
@@ -75,5 +89,9 @@
         $('#reports_dropdown').dropdown({
           action: 'hide'
         });
+        $('#Leave_dropdown').dropdown({
+          action: 'hide'
+        });
+
       });
     </script>
