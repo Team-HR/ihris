@@ -363,9 +363,10 @@ if (isset($_GET["spms"])) {
                         <br> -->
                         <table class="ui very small compact structured celled table">
                             <thead>
-                                <tr>
+                                <tr class="center aligned">
                                     <th>Office</th>
                                     <th>Position</th>
+                                    <th>Function</th>
                                     <th>Date of Appointment</th>
                                     <th>Nature of Appointment</th>
                                     <th></th>
@@ -376,18 +377,19 @@ if (isset($_GET["spms"])) {
                                     <tr class="center aligned" :key="key">
                                         <td>{{appointment.department}}</td>
                                         <td>{{appointment.position}}</td>
+                                        <td>{{appointment.functional}}</td>
                                         <td>{{appointment.date_of_appointment}}</td>
                                         <td>{{appointment.nature_of_appointment}}</td>
                                         <td>
                                         <a :href="'form_CS_form33B.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon button">
-                                            <i class="icon print"></i> Print
+                                            <i class="icon print"></i>
                                         </a>
                                         </td>
                                     </tr>
                                 </template>
                                 <template>
                                     <tr v-if="!appointments.length" class="center aligned">
-                                        <td colspan="5" style="color: grey"> -- Not Appointed --</td>
+                                        <td colspan="6" style="color: grey"> -- Not Appointed --</td>
                                     </tr>
                                 </template>
                             </tbody>
@@ -602,22 +604,7 @@ if (isset($_GET["spms"])) {
                 </div>
             </div>
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
     </div>
-
-
     <!-- scripts -->
     <script src="pds/config.js"></script>
     <script src="appointments/config.js"></script>

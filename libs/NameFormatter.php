@@ -92,7 +92,7 @@ class NameFormatter
 			$extName = " " . $extName;
 		}
 
-		$fullname =  mb_convert_case("$firstName$middleName$lastName", MB_CASE_TITLE, "UTF-8") . $extName;
+		$fullname =  mb_convert_case("$firstName $middleName $lastName", MB_CASE_TITLE, "UTF-8") . $extName;
 
 		return $fullname;
 	}

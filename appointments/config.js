@@ -14,7 +14,7 @@ new Vue({
             },
                 (data, textStatus, jqXHR) => {
                     this.appointments = Object.assign([],data)
-                    console.log(data);
+                    // console.log(data);
                 },
                 "json"
             );

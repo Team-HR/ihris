@@ -64,31 +64,39 @@ $full_name = $name_formatter->getFullNameStandardTitle();
 $appointment_id = $appointment["appointment_id"];
 $employee_id = $appointment["employee_id"];
 $plantilla_id = $appointment["plantilla_id"];
-$reason_of_vacancy = $appointment["reason_of_vacancy"];
+$reason_of_vacancy = $appointment["reason_of_vacancy"] ? $appointment["reason_of_vacancy"] : blank();
 $office_assignment = $appointment["office_assignment"];
 $probationary_period = $appointment["probationary_period"];
 $status_of_appointment = $appointment["status_of_appointment"];
 $date_of_appointment = $appointment["date_of_appointment"];
 $date_of_assumption = $appointment["date_of_assumption"];
 $nature_of_appointment = $appointment["nature_of_appointment"];
-$nature_of_appointment = mb_convert_case($nature_of_appointment, MB_CASE_TITLE, "UTF-8");
+$nature_of_appointment = formatToTitleCase($nature_of_appointment);
 $appointing_authority = $appointment["appointing_authority"];
 $date_of_signing = $appointment["date_of_signing"];
+$date_of_signing = $date_of_signing !== '0000-00-00' ? dateToString($date_of_signing) : blank();
 $csc_authorized_official = $appointment["csc_authorized_official"];
 $csc_mc_no = $appointment["csc_mc_no"];
+$csc_mc_no = $csc_mc_no ? $csc_mc_no : blank();
 $series_no = $appointment["series_no"];
+$series_no = $series_no ? $series_no : blank();
 $assesment_date_from = $appointment["assesment_date_from"];
 $assesment_date_to = $appointment["assesment_date_to"];
 $deliberation_date_from = $appointment["deliberation_date_from"];
+$deliberation_date_from = $deliberation_date_from !== '0000-00-00' ? dateToString($deliberation_date_from) : blank();
 $deliberation_date_to = $appointment["deliberation_date_to"];
 $date_signed_by_csc = $appointment["date_signed_by_csc"];
 $committee_chair = $appointment["committee_chair"];
 $HRMO = $appointment["HRMO"];
 $cert_fund_available = $appointment["cert_fund_available"];
 $published_at = $appointment["published_at"];
+$published_at = $published_at ? dateToString($published_at) : blank();
 $posted_in = $appointment["posted_in"];
+$posted_in = $posted_in ? $posted_in : "BVP and 3 conspicuous places";
 $posted_date_from = $appointment["posted_date_from"];
+$posted_date_from = $posted_date_from !== '0000-00-00' ? dateToString($posted_date_from) : blank();
 $posted_date_to = $appointment["posted_date_to"];
+$posted_date_to = $posted_date_to !== '0000-00-00' ? dateToString($posted_date_to) : blank();
 $csc_release_date = $appointment["csc_release_date"];
 $govId_type = $appointment["govId_type"];
 $govId_no = $appointment["govId_no"];
@@ -108,6 +116,7 @@ $extName = $appointment["extName"];
 $gender = $appointment["gender"];
 $status = $appointment["status"];
 $employmentStatus = $appointment["employmentStatus"];
+$employmentStatus = formatToTitleCase($employmentStatus);
 $department_id = $appointment["department_id"];
 $position_id = $appointment["position_id"];
 $natureOfAssignment = $appointment["natureOfAssignment"];
@@ -121,20 +130,27 @@ $position_id = $appointment["position_id"];
 $step = $appointment["step"];
 $schedule = $appointment["schedule"];
 $incumbent = $appointment["incumbent"];
-
-// get name of incumbent start
-
-$sql = "SELECT "
-
-// get name of incumbent end
-
-
 $vacated_by = $appointment["vacated_by"];
+
+//######################## get name of incumbent start
+if ($vacated_by) {
+  $sql_vacator = "SELECT `firstName`, `lastName`, `middleName`, `extName` FROM `employees` WHERE `employees_id` = '$vacated_by'";
+  $res_vacator = $mysqli->query($sql_vacator);
+  $vacator = $res_vacator->fetch_assoc();
+  $name_formatter = new NameFormatter($vacator["firstName"], $vacator["lastName"], $vacator["middleName"], $vacator["extName"]);
+  $vacated_by = $name_formatter->getFullNameStandardTitle();
+} else {
+  $vacated_by = blank();
+}
+//######################## get name of incumbent end
+
 $abolish = $appointment["abolish"];
 $department_id = $appointment["department_id"];
 $department = $appointment["department"];
+$department = formatToTitleCase($department);
 $position_id = $appointment["position_id"];
 $position = $appointment["position"];
+$position = formatToTitleCase($position);
 $functional = $appointment["functional"];
 $level = $appointment["level"];
 $category = $appointment["category"];
@@ -142,8 +158,8 @@ $salaryGrade = $appointment["salaryGrade"];
 
 $numberToWords = new NumberToWords();
 // $monthly_salary = 1231211;
-$monthly_salary_in_words =$numberToWords->convert_number_to_words($monthly_salary);
-$monthly_salary_formatted = number_format($monthly_salary,2,'.',',');
+$monthly_salary_in_words = $numberToWords->convert_number_to_words($monthly_salary);
+$monthly_salary_formatted = number_format($monthly_salary, 2, '.', ',');
 // $monthly_salary_in_words = "TYES";
 
 // /////////////////////////////////////////////////////////////////////////////
@@ -154,7 +170,7 @@ $monthly_salary_formatted = number_format($monthly_salary,2,'.',',');
 
 
 
-/**
+
 $width = 215.9;
 $height = 330.2;
 $pageLayout = array($width, $height); //  or array($height, $width) 
@@ -217,7 +233,7 @@ $pdf->SetFont('helvetica', '', 8);
 $dateOfUse = date('F d, Y');
 // -----------------------------------------------------------------------------
 
- */
+
 $tbl = <<<EOD
 
   <table cellspacing="0" cellpadding="2" >
@@ -250,7 +266,7 @@ $tbl = <<<EOD
             </p>
 
             <p style="font-size:15px; text-align: justify; text-indent:30px; line-height:3" class="small"> 
-                                       The nature of this appointment is <b><u>$nature_of_appointment</u></b> vice <b><u>$incumbent</u></b> , who <b><u>Retired</u></b> with Plantilla Item No. <b><u>CTO-18</u></b> Page ____.</p>
+                                       The nature of this appointment is <b><u>$nature_of_appointment</u></b> vice <b><u>$vacated_by</u></b> , who <b><u>$reason_of_vacancy</u></b> with Plantilla Item No. <b><u>$item_no</u></b> Page ____.</p>
 
                       <p style="font-size:14px; text-align: justify; text-indent:30px" class="small"> 
                         <b> This appointmet shall take effect on the date of signiing by the appointing officer/authority.</b>
@@ -282,7 +298,7 @@ $tbl = <<<EOD
                           <br><br><br>
                           <b  style="font-size:15px";align="center"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          <u>MAY 28, 2020</u>
+                          <u>$date_of_signing</u>
                           &nbsp;&nbsp;&nbsp;&nbsp;<br> 
                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                           <cite>Date of Signing</cite></b>
@@ -319,11 +335,12 @@ $tbl = <<<EOD
 
              <tr>
                 <td width="100%" style="font-size:15px; line-height:1.5" align="justify">
-                      This is to certify that all requirements ans supporting papers pursuant to CSC MC.No.<u><b>14</b></u>, series of <u><b>2018</b></u> 
+                      This is to certify that all requirements ans supporting papers pursuant to CSC MC.No.<u><b>$csc_mc_no</b></u>, series of <u><b>$series_no</b></u> 
                      have been complied with, reviewed and found to be in order.
                      <br>  <br>
-                     The position was published at <u><b>CSC Job Portal</b></u>  on <u><b>February 6, 2020</b></u> to <u><b>February 21, 2020</b></u> and posted
-                       in <u><b>BVP and 3 conspicuous places</b></u> from <u><b>February 6, 2020</b></u> to <u><b>February 21, 2020</b></u> in consonance with <u><b>RA No. 7041</b></u>. The assessment by the <b>Human Resource Merit Promotion and Selection Board(HRMPSB) started on</b> <u><b>February 22-24,2020</b></u>
+                     The position was published at <u><b>$published_at</b></u>  on <u><b>$posted_date_from</b></u> to <u><b>$posted_date_to</b></u> and posted
+                       in <u><b>$posted_in</b></u> from <u><b>$posted_date_from</b></u> to <u><b>$posted_date_to</b></u> in consonance with <u><b>RA No. 7041</b></u>. The assessment by the <b>Human Resource Merit Promotion and Selection Board(HRMPSB) started on</b> <u><b>$posted_date_from - 
+                       $posted_date_to</b></u>.
                 </td>
             </tr>
             <br>
@@ -346,7 +363,7 @@ $tbl = <<<EOD
 
              <tr>
                 <td width="100%" style="font-size:15px; line-height:1.5" align="justify">
-                    This is to certify that the appointee has been screened and found qualified by the majority of the <b>Human Resource Merit Promotion and Selection Board(HRMPSB) started on</b> during the deliberation held on <u><b>March 24, 2020</b></u> 
+                    This is to certify that the appointee has been screened and found qualified by the majority of the <b>Human Resource Merit Promotion and Selection Board(HRMPSB) started on</b> during the deliberation held on <u><b>$deliberation_date_from</b></u>.
                 </td>
             </tr>
             <br>
@@ -464,7 +481,7 @@ $tbl = <<<EOD
                  <b>Acknowledgement</b><br><brs>
                     <i> Received original photocopy of appointment on ___________</i><br>
                     <br>
-                    <b><u>EMMEROSE O. GALABAY</u></b><br>
+                    <b><u>$full_name</u></b><br>
                     Appointee
                 </td>
             </tr>
@@ -475,8 +492,8 @@ $tbl = <<<EOD
 EOD;
 
 
-echo $tbl;
-/**
+// echo $tbl;
+
 $pdf->writeHTML($tbl, true, false, false, false, '');
 
 // $pdf->writeHTML($tbl, true, false, false, false, '');
@@ -489,7 +506,7 @@ $pdf->Output($file_title . 'Certificate Form No. 33.pdf', 'I');
 // END OF FILE
 //============================================================+
 
- */
+
 
 function lister($arr)
 {
@@ -503,4 +520,22 @@ function lister($arr)
   }
 
   return $item;
+}
+
+function dateToString($date)
+{
+  if (!$date) return false;
+  $date = date_create($date);
+  return date_format($date, 'F d,Y');
+}
+
+function formatToTitleCase($str)
+{
+  if (!$str) return false;
+  return mb_convert_case($str, MB_CASE_TITLE, "UTF-8");
+}
+
+function blank()
+{
+  return "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 }

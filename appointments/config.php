@@ -30,6 +30,8 @@ while ($row = $result->fetch_assoc()) {
         $res = $mysqli->query($salary_sql);
         $salary_data = $res->fetch_assoc();
         $row["monthly_salary"] = $salary_data["monthly_salary"];
+        $row["date_of_appointment"] = dateToString($row["date_of_appointment"]);
+        $row["nature_of_appointment"] = formatToTitleCase($row["nature_of_appointment"]);
     }
     $data[] = $row;
 }
@@ -57,4 +59,17 @@ while ($row = $result->fetch_assoc()) {
     // }
 
     echo json_encode($data);
+}
+
+function dateToString($date)
+{
+  if (!$date) return false;
+  $date = date_create($date);
+  return date_format($date, 'F d,Y');
+}
+
+function formatToTitleCase($str)
+{
+  if (!$str) return false;
+  return mb_convert_case($str, MB_CASE_TITLE, "UTF-8");
 }
