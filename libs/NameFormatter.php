@@ -26,7 +26,12 @@ class NameFormatter
 			$middleName = "";
 		} else {
 			$middleName	= $this->middleName;
-			$middleName = $this->middleName[0] . ".";
+			// $middleName = $this->middleName[0].".";
+			if (strlen($middleName)>0) {
+				$middleName = " ".$this->middleName[0].". ";
+			} else $middleName = " ".$this->middleName.". ";
+
+
 		}
 
 		$extName	=	strtoupper($this->extName);
@@ -53,7 +58,9 @@ class NameFormatter
 			$middleName = "";
 		} else {
 			$middleName	= $this->middleName;
-			$middleName = " " . $this->middleName[0] . ". ";
+			if (strlen($middleName)>0) {
+				$middleName = " ".$this->middleName[0].". ";
+			} else $middleName = " ".$this->middleName.". ";
 		}
 
 		$extName	=	strtoupper($this->extName);
