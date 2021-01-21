@@ -65,7 +65,7 @@
             $sql = "UPDATE `dtrManagement` SET 
                     `dtr_date` = '$dtr_date', `amTardy` = '$amTardy', `amUnder` = '$amUnder', `emp_id` = '$emp_id', `pmTardy` = '$pmTardy', `pmUnder` = '$pmUnder', `other` = '$others' WHERE 
                     `dtrManagement`.`dtr_id` = $editId";
-        }else{
+        }else{  
             $sql="INSERT INTO `dtrManagement` (`dtr_id`, `dtr_date`, `amTardy`, `amUnder`, `emp_id`, `pmTardy`, `pmUnder`, `other`) 
                   VALUES (NULL, '$dtr_date', '$amTardy', '$amUnder', '$emp_id', '$pmTardy', '$pmUnder', '$others')";            
         }
@@ -77,6 +77,9 @@
         $totalMinUnderTime= $_POST['totalMinUnderTime'];
         $period= $_POST['period'];
         $emp_id= $_POST['emp_id'];
+        $halfDaysTardy = $_POST['halfDaysTardy'];
+        $halfDaysUndertime = $_POST['halfDaysUndertime'];
+        $remarksDtr = $_POST['remarksDtr'];
         $check = "SELECT * FROM `dtrSummary` where `month`='$period' AND `employee_id`='$emp_id'";
         $check = $mysqli->query($check);
         $count = $check->num_rows;
@@ -85,11 +88,14 @@
             $sql = "UPDATE `dtrSummary` SET 
                             `totalMinsTardy` = '$totalMinsTardy', 
                             `totalTardy` = '$totalTimesTardy', 
-                            `totalMinsUndertime` = '$totalMinUnderTime'
+                            `totalMinsUndertime` = '$totalMinUnderTime',
+                            `halfDaysTardy` = '$halfDaysTardy',
+                            `halfDaysUndertime` = '$halfDaysUndertime',
+                            `remarks` = '$remarksDtr'
                     WHERE `dtrSummary`.`dtrSummary_id` ='$datID[dtrSummary_id]'";
         }else{
-            $sql = "INSERT INTO `dtrSummary` (`dtrSummary_id`, `employee_id`, `month`, `totalMinsTardy`, `totalTardy`, `totalMinsUndertime`, `letterOfNotice`) 
-                                VALUES (NULL, '$emp_id', '$period', '$totalMinsTardy', '$totalTimesTardy', '$totalMinUnderTime', '0')";
+            $sql = "INSERT INTO `dtrSummary` (`dtrSummary_id`, `employee_id`, `month`, `totalMinsTardy`, `totalTardy`, `totalMinsUndertime`, `letterOfNotice`,`halfDaysTardy`,`halfDaysUndertime`,`remarks`) 
+                                VALUES (NULL, '$emp_id', '$period', '$totalMinsTardy', '$totalTimesTardy', '$totalMinUnderTime', '0','$halfDaysTardy','$halfDaysUndertime','$remarksDtr')";
         }
         $sql = $mysqli->query($sql);
         echo $mysqli->error;
