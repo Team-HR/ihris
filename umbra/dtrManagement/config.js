@@ -16,13 +16,18 @@ var dtr_app = new Vue({
             totalMinsTardy: 0,
             totalTimesTardy:0,
             totalMinUnderTime:0,
-
+            halfDaysTardy:[],
+            halfDaysUndertime:[],
+            remarksDtr:[]
     },methods: {
         countLogs:function(){
             dtr = this.dtr;
             minsTardy = 0;
             totalTardy = 0;
             minsUnderTime = 0;
+            halfTardy = [];
+            halfUnder = [];
+            remarks = [];
             if(dtr.length>=1){
                 dtr.forEach(row => {
                     if(row['amTardy']){
@@ -39,11 +44,23 @@ var dtr_app = new Vue({
                     if(row['pmUnderTime']){
                         minsUnderTime +=parseInt(row['pmUnderTime'])
                     }
+                    if(parseInt(row['amTardy'])==240){
+                        halfTardy.push(row['date'].split('-')[2]);
+                    }
+                    if(parseInt(row['pmUnderTime'])==240){
+                        halfUnder.push(row['date'].split('-')[2]);
+                    }if(row['other']){
+                        d = row['date'].split('-')[2]+"-"+row['other']
+                        remarks.push(d);
+                    }
                 });
             }
             this.totalMinsTardy = minsTardy;
             this.totalTimesTardy = totalTardy;
             this.totalMinUnderTime = minsUnderTime;
+            this.halfDaysTardy = halfTardy;
+            this.halfDaysUndertime = halfUnder;
+            this.remarksDtr = remarks;
         },
         addDTR:function(){
             this_dtr = this
@@ -142,6 +159,9 @@ var dtr_app = new Vue({
                 fd.append('totalMinsTardy',this.totalMinsTardy);
                 fd.append('totalTimesTardy',this.totalTimesTardy);
                 fd.append('totalMinUnderTime',this.totalMinUnderTime);
+                fd.append('halfDaysTardy',this.halfDaysTardy);
+                fd.append('halfDaysUndertime',this.halfDaysUndertime);
+                fd.append('remarksDtr',this.remarksDtr);
                 fd.append('period',this.period);
                 fd.append('emp_id',this.emp_id);   
                 fd.append('submitReport',true); 
