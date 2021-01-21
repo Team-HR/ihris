@@ -132,6 +132,43 @@ $schedule = $appointment["schedule"];
 $incumbent = $appointment["incumbent"];
 $vacated_by = $appointment["vacated_by"];
 
+
+//######################## get name of signatories start
+
+// city mayor
+if ($appointing_authority) {
+  $sql = "SELECT * FROM `signatory_saves` WHERE `id`='$appointing_authority'";
+  $res = $mysqli->query($sql);
+  if ($row = $res->fetch_assoc()) {
+    $city_mayor = $row["name"];
+  } else 
+  $city_mayor = blank();
+} 
+
+// hrmo
+if ($HRMO) {
+  $sql = "SELECT * FROM `signatory_saves` WHERE `id`='$HRMO'";
+  $res = $mysqli->query($sql);
+  if ($row = $res->fetch_assoc()) {
+    $hrmo_personnel = $row["name"];
+  $hrmo_position = $row["position"];
+  } else {
+    $hrmo_personnel = blank();
+    $hrmo_position = blank();
+  }
+  
+}
+// committee chairperson
+if ($committee_chair) {
+  $sql = "SELECT * FROM `signatory_saves` WHERE `id`='$committee_chair'";
+  $res = $mysqli->query($sql);
+  if ($row = $res->fetch_assoc()) {
+    $hrmpsb_chair = $row["name"];
+  } else $hrmpsb_chair = blank();
+  
+}
+//######################## get name of signatories end
+
 //######################## get name of incumbent start
 if ($vacated_by) {
   $sql_vacator = "SELECT `firstName`, `lastName`, `middleName`, `extName` FROM `employees` WHERE `employees_id` = '$vacated_by'";
@@ -290,7 +327,7 @@ $tbl = <<<EOD
                       <td width="50%">
                         <b  style="font-size:15px";align="center">
                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          <u>PYRDE HENRY A. TEVES</u>
+                          <u>$city_mayor</u>
                           &nbsp;&nbsp;&nbsp;&nbsp;<br> 
                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                           <cite>City Mayor</cite></b>
@@ -348,9 +385,9 @@ $tbl = <<<EOD
                 <td width="45%" style="font-size:18px" align="center"></td>
                 <td width="55%">
                             <b  style="font-size:15px">
-                            &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>VERONICA GRACE P. MIRAFLOR</u>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                            &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>$hrmo_personnel</u>&nbsp;&nbsp;&nbsp;&nbsp;<br>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<cite>HRMO IV</cite>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<cite>$hrmo_position</cite>
                 </b></td>
             </tr>
        </table>
@@ -371,7 +408,7 @@ $tbl = <<<EOD
                 <td width="45%" style="font-size:18px" align="center"></td>
                 <td width="55%">
                             <b  style="font-size:15px">
-                            &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>ENGR. JERMEMIAS C. GALLO</u>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                            &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>$hrmpsb_chair</u>&nbsp;&nbsp;&nbsp;&nbsp;<br>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<cite>Chairperson, HRMPSB</cite>
                 </b></td>
             </tr>
@@ -479,7 +516,7 @@ $tbl = <<<EOD
                 </td>
                 <td width="59%" align="center" style="font-size: 12px" > 
                  <b>Acknowledgement</b><br><brs>
-                    <i> Received original photocopy of appointment on ___________</i><br>
+                    <i> Received original photocopy of appointment on <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></i><br>
                     <br>
                     <b><u>$full_name</u></b><br>
                     Appointee
