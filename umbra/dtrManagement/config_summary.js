@@ -8,7 +8,12 @@ var dtrSummary = new Vue({
         selectedDepartment:[],
         tardyLetter:false,
         filterTardy:[],
-        filterDepartment:[]
+        filterDepartment:[],
+        // modal dats
+            selected_data:""
+
+
+
     },
     methods:{
         getDepartment:function(){
@@ -93,9 +98,15 @@ var dtrSummary = new Vue({
         },
         showOptionModal:function(i){
             $('#optionModal').modal('show');
-            console.log(i);
+
         },
         tardyHistory:function(){
+        },
+        showEquiv:function(num){
+            var c = 0.002083333;
+            var sum = c*parseInt(num);
+                sum = parseFloat(sum).toFixed(3);
+            return sum;
         }
     },
     mounted:function(){
