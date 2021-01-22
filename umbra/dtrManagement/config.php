@@ -20,7 +20,7 @@
             $sql = "SELECT * from dtrManagement where `emp_id`='$emp_id' and `dtr_date`='$d'";
             $sql = $mysqli->query($sql);
             $result = $sql->fetch_assoc();
-            if(count($result)){
+            if($result){
                 $a = [
                     "id"=>$result['dtr_id'],
                     "date"=>$result['dtr_date'],

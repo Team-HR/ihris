@@ -7,12 +7,25 @@
     <div class="ui small modal" id="optionModal">
         <div class="header"></div>
         <div class="content">
-            <h3>Name:_____________</h3>
-            <div class="ui link list">
-                <a class="item">About</a>
-                <a class="item">Jobs</a>
-                <a class="item">Team</a>
-            </div>
+            <h3>Name: <u>{{selected_data.lastName}} {{selected_data.firstName}} {{selected_data.middleName}}</u></h3>
+            <h3>Current Month Tardiness: <u>{{selected_data.month}}</u></h3>
+            <table class="ui celled table">
+                <thead>
+                    <tr>
+                        <th colspan="2">TARDINESS History</th>
+                    </tr>
+                    <tr>
+                        <th>Month</th>
+                        <th>Number of times</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(hist,index) in tardayHist">
+                        <td>{{hist.month}}</td>
+                        <td>{{hist.totalTardy}}</td>
+                    </tr>
+                </tbody>
+            </table>
             <center>
                 <button class="ui secondary basic button">Secondary</button>
                 <button class="ui primary basic button">Primary</button>
@@ -164,7 +177,7 @@
                         <td>{{ar.halfDaysUndertime}}</td>
                         <td>{{showEquiv(ar.totalMinsUndertime)}}</td>
                         <td>{{ar.remarks}}</td>
-                        <td><button class="ui button primary" @click="showOptionModal(index)">Open Modal</button></td>
+                        <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(index)">Open Modal</button></td>
                     </tr>
                 </tbody>
             </table>
