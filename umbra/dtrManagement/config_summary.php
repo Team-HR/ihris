@@ -12,7 +12,7 @@ if(isset($_POST['getDepartment'])){
     echo json_encode($a);
 }elseif(isset($_POST['dateNeeded'])){
     $period = $_POST['period'];
-    $type = $_POST['type'];
+    // $type = $_POST['type'];
     // if(strtoupper($type)=="TARDY"){
         $sql ="SELECT * from `dtrSummary` 
                 left join `employees` on `dtrSummary`.`employee_id`=`employees`.`employees_id`
