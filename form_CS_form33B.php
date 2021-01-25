@@ -357,7 +357,7 @@ $tbl = <<<HTML
     </table>
        pesos per month.
   </div>
-  <div style="margin: 10px; text-align: justify; text-indent:40px; line-height:3;">
+  <div style="margin: 10px; text-align: justify; text-indent:40px; line-height:0;">
   <table width="100%" style="margin-left: 2px;">
     <tr>
       <td style="white-space: nowrap; padding-left: 30px;" align="right">The nature of this appointment is </td>
