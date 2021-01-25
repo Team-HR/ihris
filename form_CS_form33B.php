@@ -26,6 +26,7 @@
 
 // Include the main TCPDF library (search for installation path).
 require_once('TCPDF-master/tcpdf.php');
+require "vendor/autoload.php";
 require_once('_connect.db.php');
 require "libs/NameFormatter.php";
 require "libs/NumberToWords.php";
@@ -61,6 +62,7 @@ $appointment["monthly_salary"] = $salary_data["monthly_salary"];
 $monthly_salary = $appointment["monthly_salary"];
 $name_formatter = new NameFormatter($appointment["firstName"], $appointment["lastName"], $appointment["middleName"], $appointment["extName"]);
 $full_name = $name_formatter->getFullNameStandardTitle();
+$full_name_upper = $name_formatter->getFullNameStandardUpper();
 $appointment_id = $appointment["appointment_id"];
 $employee_id = $appointment["employee_id"];
 $plantilla_id = $appointment["plantilla_id"];
@@ -74,7 +76,7 @@ $nature_of_appointment = $appointment["nature_of_appointment"];
 $nature_of_appointment = formatToTitleCase($nature_of_appointment);
 $appointing_authority = $appointment["appointing_authority"];
 $date_of_signing = $appointment["date_of_signing"];
-$date_of_signing = $date_of_signing !== '0000-00-00' ? dateToString($date_of_signing) : blank();
+$date_of_signing = $date_of_signing !== '0000-00-00' ? dateToString($date_of_signing) : blank().blank().blank();
 $csc_authorized_official = $appointment["csc_authorized_official"];
 $csc_mc_no = $appointment["csc_mc_no"];
 $csc_mc_no = $csc_mc_no ? $csc_mc_no : blank();
@@ -131,6 +133,25 @@ $step = $appointment["step"];
 $schedule = $appointment["schedule"];
 $incumbent = $appointment["incumbent"];
 $vacated_by = $appointment["vacated_by"];
+//######################## get personal pds start
+$civil_status = null;
+$sql  = "SELECT * FROM `pds_personal` WHERE `employee_id` = '$employee_id'";
+$res = $mysqli->query($sql);
+if ($apointee = $res->fetch_assoc()) {
+  $gender = $apointee["gender"] ? $apointee["gender"] : $gender;
+  $civil_status = $apointee["civil_status"];
+}
+
+$honorific = "Mr./Ms./Mrs.";
+if ($gender == "MALE") {
+  $honorific = "Mr.";
+} elseif ($gender == "FEMALE" && $civil_status != "MARRIED") {
+  $honorific = "Ms.";
+} elseif ($gender == "FEMALE" && $civil_status == "MARRIED") {
+  $honorific = "Mrs.";
+}
+//######################## get personal pds end
+
 
 
 //######################## get name of signatories start
@@ -141,9 +162,9 @@ if ($appointing_authority) {
   $res = $mysqli->query($sql);
   if ($row = $res->fetch_assoc()) {
     $city_mayor = $row["name"];
-  } else 
-  $city_mayor = blank();
-} 
+  } else
+    $city_mayor = blank();
+}
 
 // hrmo
 if ($HRMO) {
@@ -151,12 +172,11 @@ if ($HRMO) {
   $res = $mysqli->query($sql);
   if ($row = $res->fetch_assoc()) {
     $hrmo_personnel = $row["name"];
-  $hrmo_position = $row["position"];
+    $hrmo_position = $row["position"];
   } else {
     $hrmo_personnel = blank();
     $hrmo_position = blank();
   }
-  
 }
 // committee chairperson
 if ($committee_chair) {
@@ -165,7 +185,6 @@ if ($committee_chair) {
   if ($row = $res->fetch_assoc()) {
     $hrmpsb_chair = $row["name"];
   } else $hrmpsb_chair = blank();
-  
 }
 //######################## get name of signatories end
 
@@ -187,6 +206,8 @@ $department = $appointment["department"];
 $department = formatToTitleCase($department);
 $position_id = $appointment["position_id"];
 $position = $appointment["position"];
+$functional = $appointment["functional"];
+$position_and_function = $position." ($functional)";
 $position = formatToTitleCase($position);
 $functional = $appointment["functional"];
 $level = $appointment["level"];
@@ -197,7 +218,11 @@ $numberToWords = new NumberToWords();
 // $monthly_salary = 1231211;
 $monthly_salary_in_words = $numberToWords->convert_number_to_words($monthly_salary);
 $monthly_salary_formatted = number_format($monthly_salary, 2, '.', ',');
-// $monthly_salary_in_words = "TYES";
+
+
+$csc_resolution_no = 1201478;
+$csc_resolution_date_accredited = dateToString('2012-09-26');
+$page_no = blank();
 
 // /////////////////////////////////////////////////////////////////////////////
 // /////////////////////////////////////////////////////////////////////////////
@@ -205,7 +230,7 @@ $monthly_salary_formatted = number_format($monthly_salary, 2, '.', ',');
 // create new PDF document
 
 
-
+/* 
 
 
 $width = 215.9;
@@ -269,269 +294,387 @@ $pdf->AddPage();
 $pdf->SetFont('helvetica', '', 8);
 $dateOfUse = date('F d, Y');
 // -----------------------------------------------------------------------------
+ */
+
+$tbl = <<<HTML
+<br><br>
+<table cellspacing="0" cellpadding="2" border="1" align="right" style="margin-bottom: 5px;">
+  <tr>
+    <td border="1" align="center"><i><b>For Accredited/Deregulated Agencies</b></i>
+  </tr>
+</table>
+<div style="border:20px solid gray; margin-bottom:2000px;">
+  <table cellspacing="0" cellpadding="10" width="100%">
+    <tr>
+      <td width="60%" align="left"><b style="font-size:15px;font-family:Arial">CS Form No.33 - B</b> <br> <i style="font-family:Arial">Revised 2018</i></td>
+      <td width="40%" align="center"><i>(Stamp of Date of Receipt)</i></td>
+    </tr>
+  </table>
+  <p align="center" style="font-size:16px;"><b style="font-size:16px;"> Republic of the Philippines</b><br>
+    Province of Negros Oriental<br>
+    City of Bayawan
+  </p><br><br>
 
 
-$tbl = <<<EOD
-
-  <table cellspacing="0" cellpadding="2" >
-        <tr>
-            <td width="70%" colspan="2"></td>
-            <td width="30%" border="1" align="center"><i><b>For Accredited/Deregulated Agencies</b></i></td>
-        </tr>
-   </table>
-    <br><br>
-
-  <div style="border:20px solid gray;"> 
-    <table cellspacing="0" cellpadding="10" >
-        <tr>
-            <td width="60%"><b style="font-size:15px;font-family:Arial">CS Form No.33 - B</b> <br>  <i style="font-family:Arial">Revised 2018</i></td>
-            <td width="40%" align="center"><i>(Stamp of Date of Receipt)</i></td>
-        </tr>
+  <p style="font-size:15px; text-align: justify; text-indent:15px">
+    $honorific <b><u>$full_name</u></b>
+  </p>
+  <div style="margin: 10px; font-size:15px; text-align: justify; text-indent:40px; line-height:3;">
+    <table width="100%">
+      <tr>
+        <td style="white-space: nowrap; padding-left: 50px;">You are hereby appointed as</td>
+        <td style="border-bottom: 1px solid black; white-space: nowrap;" align="center"><b>$position_and_function</b></td>
+        <td style="border-bottom: 1px solid black; white-space: nowrap;" align="center"><b>(SG $salaryGrade, Step $step)</b></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td align="center">(Position Title)</td>
+        <td></td> 
+      </tr>
     </table>
-       <p align="center"  style="font-size:16px;"><b style="font-size:16px;"> REPUBLIC OF THE PHILIPPINES</b><br>
-                                          Province of Negros Oriental<br>
-                                          City of Bayawan
-            </p><br><br>
     
-
-            <p style="font-size:15px; text-align: justify; text-indent:15px"> 
-                                         Mr./Ms./Mrs. <b><u>$full_name</u></b>
-            </p>   
-
-            <p style="font-size:15px; text-align: justify; text-indent:30px; line-height:3"> 
-                                      You are hereby appointed as <b><u>$position</u></b> <u><b>(SG $salaryGrade, Step $step)</u></b> under <b><u>$employmentStatus</u></b> status at the <b><u> $department, LGU Bayawan City</u></b> with a comepensation rate of <b><u>$monthly_salary_in_words</u></b> <b><u>(P $monthly_salary_formatted)</u></b> pesos per month.
-            </p>
-
-            <p style="font-size:15px; text-align: justify; text-indent:30px; line-height:3" class="small"> 
-                                       The nature of this appointment is <b><u>$nature_of_appointment</u></b> vice <b><u>$vacated_by</u></b> , who <b><u>$reason_of_vacancy</u></b> with Plantilla Item No. <b><u>$item_no</u></b> Page ____.</p>
-
-                      <p style="font-size:14px; text-align: justify; text-indent:30px" class="small"> 
-                        <b> This appointmet shall take effect on the date of signiing by the appointing officer/authority.</b>
-                     </p>
-      
-<br>                
-                     
-                  <p></p>
-                  <table><tr>
-                      <td width="60%"></td>
-                      <td width="50%">
-                      <b  style="font-size:16px">
-                      &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Very truly yours,&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                      </b></td>
-                      </tr>
-
-                      <br><br><br>
-
-                      <tr>
-                      <td width="50%"></td>
-                      <td width="50%">
-                        <b  style="font-size:15px";align="center">
-                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          <u>$city_mayor</u>
-                          &nbsp;&nbsp;&nbsp;&nbsp;<br> 
-                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          <cite>City Mayor</cite></b>
-
-                          <br><br><br>
-                          <b  style="font-size:15px";align="center"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          <u>$date_of_signing</u>
-                          &nbsp;&nbsp;&nbsp;&nbsp;<br> 
-                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          <cite>Date of Signing</cite></b>
-                      </td>
-                      </tr>
-                  </table>
-
-                    <br><br><br>
-                     <p style="font-size:12px; text-align: justify;"> 
-                        <b> Accredited/Deregulated Pursuant to <br>
-                          CSC Resolution NO.1201478<br>
-                          <u>September 26, 2012</u>
-                        </b>
-                     </p>
-
-                     <table><tr>
-                        <td width="80%" > 
-                           <img src="csc logo.png" style="width:150px; margin-left:20px">
-                        </td>
-                        <td width="20%" > 
-                          <br><br><br><br><br><br><br><br><br><br><br><br>
-                          <i>(Stamp of Date of Release)</i>
-                        </td>
-                      </tr>
-                  </table>
-</div>
- <br><br><br><br>
-
-<div style="border:20px solid gray;"> 
-      <table cellspacing="0" cellpadding="10" >
-            <tr>
-                <td width="100%" style="font-size:18px" align="center"><b>Certification</b></td>
-            </tr>
-
-             <tr>
-                <td width="100%" style="font-size:15px; line-height:1.5" align="justify">
-                      This is to certify that all requirements ans supporting papers pursuant to CSC MC.No.<u><b>$csc_mc_no</b></u>, series of <u><b>$series_no</b></u> 
-                     have been complied with, reviewed and found to be in order.
-                     <br>  <br>
-                     The position was published at <u><b>$published_at</b></u>  on <u><b>$posted_date_from</b></u> to <u><b>$posted_date_to</b></u> and posted
-                       in <u><b>$posted_in</b></u> from <u><b>$posted_date_from</b></u> to <u><b>$posted_date_to</b></u> in consonance with <u><b>RA No. 7041</b></u>. The assessment by the <b>Human Resource Merit Promotion and Selection Board(HRMPSB) started on</b> <u><b>$posted_date_from - 
-                       $posted_date_to</b></u>.
-                </td>
-            </tr>
-            <br>
-            <tr>
-                <td width="45%" style="font-size:18px" align="center"></td>
-                <td width="55%">
-                            <b  style="font-size:15px">
-                            &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>$hrmo_personnel</u>&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<cite>$hrmo_position</cite>
-                </b></td>
-            </tr>
-       </table>
-</div>
-<div style="border:20px solid gray;"> 
-      <table cellspacing="0" cellpadding="10" >
-            <tr>
-                <td width="100%" style="font-size:18px" align="center"><b>Certification</b></td>
-            </tr>
-
-             <tr>
-                <td width="100%" style="font-size:15px; line-height:1.5" align="justify">
-                    This is to certify that the appointee has been screened and found qualified by the majority of the <b>Human Resource Merit Promotion and Selection Board(HRMPSB) started on</b> during the deliberation held on <u><b>$deliberation_date_from</b></u>.
-                </td>
-            </tr>
-            <br>
-            <tr>
-                <td width="45%" style="font-size:18px" align="center"></td>
-                <td width="55%">
-                            <b  style="font-size:15px">
-                            &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>$hrmpsb_chair</u>&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<cite>Chairperson, HRMPSB</cite>
-                </b></td>
-            </tr>
-       </table>
-</div>
- <br><br><br>
-  <table cellspacing="0" >
-            <tr>
-                <td width="100%" style="font-size:15px" align="center"><b>CSC/HRMO Notation</b></td>
-            </tr>
-       </table>
- <div style="border:20px solid gray;">
- <br>
-      <table cellspacing="0" cellpadding="10" background="gray" border="1" style="font-size:13px">
-            <tr>
-                <td width="80%" align="center"> ACTION ON APPOINTMENTS
-                </td>
-                <td width="19%" align="center"> Recorded by
-                </td>
-            </tr>
-            <tr>
-                <td width="80%">Validate per RAI for the month of _________________________________
-                </td>
-                <td width="19%" align="center"> 
-                </td>
-            </tr>
-            <tr>
-                <td width="80%">Invalidate per CSCRO/FO letter dated_________________________________
-                </td>
-                <td width="19%" align="center"> 
-                </td>
-            </tr>
-              <tr>
-                <td width="30%">Appeal
-                </td>
-                 <td width="30%" align="center">DATE FILED
-                </td>
-                 <td width="20%" align="center">STATUS
-                </td>
-                <td width="19%"> 
-                </td>
-            </tr>
-             <tr>
-                <td width="30%">CSCRO/CSC-Commission
-                </td>
-                 <td width="30%" align="center">
-                </td>
-                 <td width="20%" align="center">
-                </td>
-                <td width="19%"> 
-                </td>
-            </tr>
-             <tr>
-                <td width="30%">Petition for Review
-                </td>
-                 <td width="30%" align="center">
-                </td>
-                 <td width="20%" align="center">
-                </td>
-                <td width="19%"> 
-                </td>
-            </tr>
-             <tr>
-                <td width="30%">CSC-Commission
-                </td>
-                 <td width="30%" align="center">
-                </td>
-                 <td width="20%" align="center">
-                </td>
-                <td width="19%"> 
-                </td>
-            </tr>
-             <tr>
-                <td width="30%">Court of Appeals
-                </td>
-                 <td width="30%" align="center">
-                </td>
-                 <td width="20%" align="center">
-                </td>
-                <td width="19%"> 
-                </td>
-            </tr>
-             <tr>
-                <td width="30%">Supreme Court
-                </td>
-                 <td width="30%" align="center">
-                </td>
-                 <td width="20%" align="center">
-                </td>
-                <td width="19%"> 
-                </td>
-            </tr>
-
-       </table>
+    <table width="100%">
+      <tr>
+        <td>under</td>
+        <td style="border-bottom: 1px solid black;" align="center"><b>$employmentStatus</b></td>
+        <td style="white-space: nowrap;">status at the</td>
+        <td style="border-bottom: 1px solid black;" align="center"><b>$department, LGU Bayawan City</b></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td align="center">(Permanent, Temporary, etc.)</td>
+        <td></td>
+        <td align="center">(Office/Department/Unit)</td>
+      </tr>
+    </table>
+    
+    <table width="100%">
+      <tr>
+        <td style="white-space: nowrap;">with a comepensation rate of</td>
+        <td style="white-space: nowrap; border-bottom: 1px solid black;" align="center"><b>$monthly_salary_in_words</b></td>
+        <td style="white-space: nowrap; border-bottom: 1px solid black;" align="center"><b>(P $monthly_salary_formatted)</b></td>
+      </tr>
+    </table>
+       pesos per month.
   </div>
- <br><br><br>
-  <div style="border:20px solid gray;">
- <br>
-      <table cellspacing="0" background="gray" border="1" style="font-size:13px">
-            <tr>
-                <td width="40%" style="font-size: 10px" > 
-                    Origin Copy - for the Appointee<br>
-                    Origin Copy - for the Civil Service Commission<br>
-                    Origin Copy - for the Agency<br>
-                </td>
-                <td width="59%" align="center" style="font-size: 12px" > 
-                 <b>Acknowledgement</b><br><brs>
-                    <i> Received original photocopy of appointment on <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></i><br>
-                    <br>
-                    <b><u>$full_name</u></b><br>
-                    Appointee
-                </td>
-            </tr>
-       </table>
-  </div>
+  <div style="margin: 10px; text-align: justify; text-indent:40px; line-height:3;">
+  <table width="100%" style="margin-left: 2px;">
+    <tr>
+      <td style="white-space: nowrap; padding-left: 30px;" align="right">The nature of this appointment is </td>
+      <td style="border-bottom: 1px solid black;" align="center">
+        <b>$nature_of_appointment</b>
+      </td>
+      <td align="center">
+        vice 
+      </td>
+      <td style="border-bottom: 1px solid black; width: 200px;" align="center">
+        <b>$vacated_by</b>
+      </td>
+      <td>
+        ,
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td align="center">
+        (Original, Promotion, etc.)
+      </td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </table>
+
+
+<table width="100%">
+  <tr>
+    <td>who</td>
+    <td style="border-bottom: 1px solid black; white-space: nowrap;" align="center"><b>$reason_of_vacancy</b></td>
+    <td style="white-space: nowrap;" align="center">with Plantilla Item No.</td>
+    <td style="border-bottom: 1px solid black; white-space: nowrap;" align="center"><b>$item_no</b></td>
+    <td align="center">Page</td>
+    <td style="border-bottom: 1px solid black; white-space: nowrap;" align="center"><b>$page_no</b></td>
+    <td>.</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td>(Transferred, Retired, etc.)</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
+
+  <p>
+    <b>This appointmet shall take effect on the date of signiing by the appointing officer/authority.</b>
+  </p>
+
+  <p style="font-family: serif; font-size:14px; text-align: justify; text-indent:20px">
+    <i>* Appointee shall undergo probationary period of six (6) months from the date of asumption to duty.</i>
+  </p>
 </div>
 
-EOD;
+  <p></p>
+  <table align="right" width="100%" style="margin-left: 30px;">
+    <tr>
+      <td></td>
+      <td width="30%">
+        <b style="font-size:16px">
+          Very truly yours,
+        </b>
+      </td>
+    </tr>
+    <br><br><br>
+    <tr>
+      <td></td>
+      <td align="center" style="font-size:15px">
+        <b><u>$city_mayor</u></b>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td align="center" style="font-size:15px">
+        <b><cite>City Mayor</cite></b>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2"><br><br></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td align="center" style="font-size:15px; vertical-align:top;">
+        <u>$date_of_signing</u>
+      </td>
+    </tr>
+
+    <tr>
+      <td style="text-align: left;">
+        <p style="margin-left: 10px; font-size:12px; text-align: justify;">
+        &nbsp;&nbsp;&nbsp;
+          <b>
+            Accredited/Deregulated Pursuant to <br> CSC Resolution NO. <u>$csc_resolution_no</u>, dated<br>
+            <u>$csc_resolution_date_accredited</u>
+          </b>
+        </p>
+      </td>
+      <td align="center" style="font-size:15px; vertical-align:top;">
+        <b><cite>Date of Signing</cite></b>
+      </td>
+    </tr>
+  </table>
+
+  <br><br>
+  <table width="100%">
+    <tr>
+      <td width="50%">
+        <img src="csc logo.png" style="width:150px; margin-left:20px">
+      </td>
+      <td width="50%" align="right">
+      </td>
+    </tr>
+  </table>
+</div>
+
+<pagebreak/>
+<br>
+<div width="100%" align="right">
+  <i>(Stamp of Date of Release)</i>
+</div>
+
+<div style="border:20px solid gray; border-bottom: 0px none;">
+  <table cellspacing="0" cellpadding="10">
+    <tr>
+      <td width="100%" style="font-size:18px" align="center"><b>Certification</b></td>
+    </tr>
+
+    <tr>
+      <td width="100%" style="font-size:15px; line-height:1.5" align="justify">
+        This is to certify that all requirements ans supporting papers pursuant to CSC MC.No.<u><b>$csc_mc_no</b></u>, series of <u><b>$series_no</b></u>
+        have been complied with, reviewed and found to be in order.
+        <br> <br>
+        The position was published at <u><b>$published_at</b></u> on <u><b>$posted_date_from</b></u> to <u><b>$posted_date_to</b></u> and posted
+        in <u><b>$posted_in</b></u> from <u><b>$posted_date_from</b></u> to <u><b>$posted_date_to</b></u> in consonance with <u><b>RA No. 7041</b></u>. The assessment by the <b>Human Resource Merit Promotion and Selection Board(HRMPSB) started on</b> <u><b>$posted_date_from</b></u> -
+            <u><b>$posted_date_to</b></u>.
+      </td>
+    </tr>
+    <br>
+  </table>
+  <table align="right">
+    <tr>
+      <td width="45%" style="font-size:18px" align="center"></td>
+      <td width="55%" align="center" style="font-size:15px;">
+        <u><b>$hrmo_personnel</b></u>
+      </td>
+    </tr>
+    <tr>
+      <td width="45%" style="font-size:18px" align="center"></td>
+      <td width="55%" height="1" align="center" style="font-size:15px">
+        <cite><b>$hrmo_position</b></cite>
+      </td>
+    </tr>
+  </table>
+</div>
+<div style="border:20px solid gray;">
+  <table cellspacing="0" cellpadding="10">
+    <tr>
+      <td width="100%" style="font-size:18px" align="center"><b>Certification</b></td>
+    </tr>
+    <tr>
+      <td width="100%" style="font-size:15px; line-height:1.5" align="justify">
+        This is to certify that the appointee has been screened and found qualified by the majority of the <b>Human Resource Merit Promotion and Selection Board(HRMPSB) started on</b> during the deliberation held on <u><b>$deliberation_date_from</b></u>.
+      </td>
+    </tr>
+    <br>
+  </table>
+  <table align="right">
+    <tr>
+      <td width="45%" style="font-size:18px" align="center"></td>
+      <td width="55%" style="font-size:15px" align="center">
+        <u><b>$hrmpsb_chair</b></u>
+      </td>
+    </tr>
+    <tr>
+      <td width="45%" style="font-size:18px" align="center"></td>
+      <td width="55%" style="font-size:15px" align="center">
+        <cite><b>Chairperson, HRMPSB</b></cite>
+      </td>
+    </tr>
 
 
-// echo $tbl;
+  </table>
+</div>
+<br><br><br>
+<table cellspacing="5" width="100%" style="background: gray;">
+  <tr>
+    <td width="100%" style="font-size:15px; vertical-align:bottom;" align="center"><b>CSC/HRMO Notation</b></td>
+  </tr>
+</table>
+<div style="border:20px solid gray; border-top: 0px none;">
+  <table cellspacing="0" cellpadding="10" background="gray" border="1" style="font-size:13px; width: 100%;">
+    <tr>
+      <td colspan="3" width="80%" align="center"> ACTION ON APPOINTMENTS
+      </td>
+      <td width="19%" align="center"> Recorded by
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3" width="80%">Validate per RAI for the month of ______________________________________________________________
+      </td>
+      <td width="19%" align="center">
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3" width="80%">Invalidate per CSCRO/FO letter dated __________________________________________________________
+      </td>
+      <td width="20%" align="center">
+      </td>
+    </tr>
+    <tr>
+      <td width="30%">Appeal
+      </td>
+      <td width="30%" align="center">DATE FILED
+      </td>
+      <td width="20%" align="center">STATUS
+      </td>
+      <td width="19%">
+      </td>
+    </tr>
+    <tr>
+      <td width="30%">CSCRO/CSC-Commission
+      </td>
+      <td width="30%" align="center">
+      </td>
+      <td width="20%" align="center">
+      </td>
+      <td width="19%">
+      </td>
+    </tr>
+    <tr>
+      <td width="30%">Petition for Review
+      </td>
+      <td width="30%" align="center">
+      </td>
+      <td width="20%" align="center">
+      </td>
+      <td width="19%">
+      </td>
+    </tr>
+    <tr>
+      <td width="30%">CSC-Commission
+      </td>
+      <td width="30%" align="center">
+      </td>
+      <td width="20%" align="center">
+      </td>
+      <td width="19%">
+      </td>
+    </tr>
+    <tr>
+      <td width="30%">Court of Appeals
+      </td>
+      <td width="30%" align="center">
+      </td>
+      <td width="20%" align="center">
+      </td>
+      <td width="19%">
+      </td>
+    </tr>
+    <tr>
+      <td width="30%">Supreme Court
+      </td>
+      <td width="30%" align="center">
+      </td>
+      <td width="20%" align="center">
+      </td>
+      <td width="19%">
+      </td>
+    </tr>
 
-$pdf->writeHTML($tbl, true, false, false, false, '');
+  </table>
+</div>
+<br><br><br>
+<div style="border:20px solid gray;">
+  <br>
+  <table cellspacing="0" cellpadding="5" background="gray" border="1" style="font-size:13px; width: 100%;">
+    <tr>
+      <td width="40%" style="font-size: 10px">
+        Origin Copy - for the Appointee<br>
+        Origin Copy - for the Civil Service Commission<br>
+        Origin Copy - for the Agency<br>
+      </td>
+      <td width="59%" align="center" style="font-size: 12px">
+        <b>Acknowledgement</b><br>
+        <brs>
+          <i> Received original photocopy of appointment on <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></i><br>
+          <br>
+          <b><u>$full_name_upper</u></b><br>
+          Appointee
+      </td>
+    </tr>
+  </table>
+</div>
+HTML;
+
+// #####
+$mpdf = new \Mpdf\Mpdf([
+  'mode' => 'utf-8',
+  'format' => 'FOLIO-P',
+  'margin_top' => 5,
+  'margin_left' => 3,
+  'margin_right' => 3,
+  'margin_bottom' => 5,
+  'margin_footer' => 1,
+  'default_font' => 'Times'
+]);
+$mpdf->WriteHTML($tbl);
+$mpdf->Output("appointment.pdf", 'I');
+// #####
+
+
+
+/* $pdf->writeHTML($tbl, true, false, false, false, '');
 
 // $pdf->writeHTML($tbl, true, false, false, false, '');
 // -----------------------------------------------------------------------------
@@ -542,7 +685,7 @@ $pdf->Output($file_title . 'Certificate Form No. 33.pdf', 'I');
 //============================================================+
 // END OF FILE
 //============================================================+
-
+ */
 
 
 function lister($arr)
