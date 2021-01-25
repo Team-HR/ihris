@@ -17,7 +17,14 @@ elseif (isset($_POST["update_assignment"])) {
     $position = $data["position"];
 
     if($is_internal == 1){
-        $name = NULL;    
+        $sql = "SELECT `firstName`, `lastName`, `middleName`, `extName` FROM `employees` WHERE `employees_id` = '$employee_id'";
+        $res = $mysqli->query($sql);
+        if ($emp = $res->fetch_assoc()) {
+            $name_formatter = new NameFormatter($emp["firstName"], $emp["lastName"], $emp["middleName"], $emp["extName"]);
+            $name = $name_formatter->getFullNameStandardUpper();
+        } else {
+            $name = NULL;
+        }
         $position = NULL;
     } elseif ($is_internal == 0) {
         $employee_id = NULL;
@@ -25,6 +32,10 @@ elseif (isset($_POST["update_assignment"])) {
 
     $id = $data["id"];
     $role = $data["role"];
+
+    // $output = array();
+    // $output["name"] = $name;
+    // $output["position"] = $position;
 
     $sql = "INSERT INTO `signatory_saves` (`signatory_role_id`, `is_internal`, `employee_id`, `name`, `position`) VALUES ('$id', '$is_internal', '$employee_id', '$name', '$position')";
     $mysqli->query($sql);
@@ -72,8 +83,10 @@ elseif (isset($_POST["get_roles"])) {
         $datum["name"] = $name_formatter->getFullNameStandardUpper();
         // get position
         $return = $mysqli->query("SELECT * FROM `positiontitles` WHERE `position_id`='$employee[position_id]'");
-        $employee = $return->fetch_assoc();
-        $datum["position"] = $employee["position"];
+        if ($employee = $return->fetch_assoc()) {
+            $datum["position"] = $employee["position"];
+        } else $datum["position"] = "";
+        
         array_push($data, $datum);
     }
     echo json_encode($data);
