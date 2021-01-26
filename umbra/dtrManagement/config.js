@@ -18,7 +18,9 @@ var dtr_app = new Vue({
             totalMinUnderTime:0,
             halfDaysTardy:[],
             halfDaysUndertime:[],
-            remarksDtr:[]
+            remarksDtr:[],
+        //no dtr  
+            nodtrHist:[]
     },methods: {
         countLogs:function(){
             dtr = this.dtr;
@@ -61,6 +63,21 @@ var dtr_app = new Vue({
             this.halfDaysTardy = halfTardy;
             this.halfDaysUndertime = halfUnder;
             this.remarksDtr = remarks;
+        },
+        openDtrLogs:function(){
+            var this_dtr = this;
+            var fd = new FormData();
+                fd.append('nodtr',true);
+                fd.append('period',this.period);
+                fd.append('employee_id',this.emp_id)
+            var xml = new XMLHttpRequest()
+                xml.onload = function(){
+                    this_dtr.nodtrHist = xml.responseText;
+                }
+                xml.open('POST','umbra/dtrManagement/config.php',false)
+                xml.send(fd)
+
+            $('#nodtr').modal('show');
         },
         addDTR:function(){
             this_dtr = this
