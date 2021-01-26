@@ -33,7 +33,7 @@ require 'header.php';
 								<div class="content">
 									<div class="ui animated list">
 										<a class="item" href="personnelrecognition.php">Personnel Recognition</a>
-										<a class="item" href="">R&R Plan (Yearly)</a>
+										<a class="item" href="rnrplan.php">R&R Plan (Yearly)</a>
 										<a class="item" href="">System Review</a>
 										<a class="item" href="">Search for Outstanding Employees</a>
 									</div>
@@ -66,7 +66,7 @@ require 'header.php';
 										<a class="item" href="indTurnAroundTime.php">Individual Turn Around Time</a>
 										<a class="item" href="">System of Ranking Position</a>
 										<a class="item" href="">Staffing Plan</a>
-										<a class="item" href="">Turn Around</a>
+										<!-- <a class="item" href="">Turn Around</a> -->
 										<a class="item" href="personnelCompetenciesSurveyEncoder.php">Personnel Competency Encode</a>
 										<a class="item" target="_blank" href="personnelCompetenciesSurvey.php">Personnel Competency Form</a>
 										<a class="item" href="personnelCompetenciesReport.php">Personnel Competency Report</a>

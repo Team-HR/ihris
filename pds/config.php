@@ -179,7 +179,7 @@ elseif (isset($_GET['getPdsTrainings'])) {
     $employee_id = $_GET['employee_id'];
     $data = array();
     
-    $sql = "SELECT * FROM `pds_trainings` WHERE `employee_id` = ?";
+    $sql = "SELECT * FROM `pds_trainings` WHERE `employee_id` = ? ORDER BY `tr_from` DESC";
     $stmt = $mysqli->prepare($sql);
     $stmt->bind_param("i",$employee_id);
     $stmt->execute();

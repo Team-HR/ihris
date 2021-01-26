@@ -236,7 +236,7 @@ $html .= <<<EOD
     <td style="text-align:center;border: none;">$date</td>
 </tr>
 <tr>
-    <td style="text-align:center; border: none;">HRMO IV</td>
+    <td style="text-align:center; border: none;">CGDH-I</td>
     <td style="text-align:center; border: none;">Date</td>
     <td style="text-align:center; border: none;">CITY MAYOR</td>
     <td style="text-align:center; border: none;">Date</td>
@@ -251,7 +251,15 @@ $mpdf->defaultfooterline = 0;
 $mpdf->defaultfooterline = 0;
 
 $mpdf->WriteHTML($html);
-$mpdf->Output();
+// $mpdf->Output();
+$department = $department?$department:"NODEPTSELECTED";
+$status = $status=="permanent"?"PERMANENT":$status;
+$gender = $gender=="all"||$gender==""?"M&F":$gender;
+$mpdf->Output("PLANTILLA $department-$status-$gender as of $date.pdf", 'I');
+
+
+
+
 
 function formatDateSlashes($date_in)
 {
