@@ -99,5 +99,18 @@
         }
         $sql = $mysqli->query($sql);
         echo $mysqli->error;
+    }elseif (isset($_POST['nodtr'])){
+        $nodtr = $_POST['nodtr'];
+        $period = $_POST['period'];
+        $employee_id = $_POST['employee_id']; 
+        $sql = "SELECT * from `dtrNoSubmission` where 
+                              `employee_id`='$employee_id' and
+                              `period` = '$period'";
+        $sql = $mysqli->query($sql);
+        $a = []; 
+        while ($row = $sql->fetch_assoc()) {
+            $a[] = $row;
+        }
+        echo json_encode($a);
     }
 ?>

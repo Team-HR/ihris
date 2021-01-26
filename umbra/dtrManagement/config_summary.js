@@ -118,11 +118,9 @@ var dtrSummary = new Vue({
                 sum = parseFloat(sum).toFixed(3);
             return sum;
         },
-        letterGen:function(f){
-            // var fd = new FormData();      
-            //     fd.append('emp_data',this.selected_data);
-            //     fd.append('history',this.tardayHist);
-
+        newLine:function(str,r){
+            c = str.replaceAll(r,"<br>");
+            return c;
         }
     },
     mounted:function(){

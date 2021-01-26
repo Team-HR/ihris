@@ -7,12 +7,12 @@
     <div class="ui small modal" id="optionModal">
         <div class="header"></div>
         <div class="content">
-            <h3>Name: <u>{{selected_data.lastName}} {{selected_data.firstName}} {{selected_data.middleName}}.</u></h3>
-            <h3>Current Month Tardy: <u>{{selected_data.month}}</u></h3>
-            <table class="ui celled table" style="text-align:center">
+            <h3>Name: <u>{{selected_data.lastName}} {{selected_data.firstName}} {{selected_data.middleName}}</u></h3>
+            <h3>Current Month Tardiness: <u>{{selected_data.month}}</u></h3>
+            <table class="ui celled table">
                 <thead>
                     <tr>
-                        <th colspan="2">Tardiness history</th>
+                        <th colspan="2">TARDINESS History</th>
                     </tr>
                     <tr>
                         <th>Month</th>
@@ -27,10 +27,10 @@
                 </tbody>
             </table>
             <center>
-                <a  href='tardy_warningLetter.php' class="ui secondary basic button">Warning</a>
-                <a  href='tardy_reprimandLetter.php'class="ui primary basic button">Reprimand</a>
-                <button class="ui positive basic button">Suspension</button>
-                <button class="ui negative basic button">Termination</button>
+                <button class="ui secondary basic button">Secondary</button>
+                <button class="ui primary basic button">Primary</button>
+                <button class="ui positive basic button">Positive</button>
+                <button class="ui negative basic button">Negative</button>
             </center>
         </div>
     </div>
@@ -82,49 +82,77 @@
     <br>    
     <template>
         <template v-if="filterDepartment.length>0">
-            <table class="ui celled table" style="width:95%;margin:auto" v-for="(dep,index) in filterDepartment" :key="index">
+        <table class="ui celled table" style="width:95%;margin:auto" v-for="(dep,index) in filterDepartment" :key="index">
                 <thead>
                     <tr>
-                        <th colspan="6">
-                            <h2>{{dep.department}}</h2>
+                        <th colspan="11">
+                        <h2>Summary table {{period}}</h2>
                         </th>
                     </tr>
                     <tr>
-                        <th>Employee</th>
-                        <th>No. Times Tardy</th>
-                        <th>Total Mins. Tardy</th>
-                        <th>Total Mins. Undertime.</th>
-                        <th>Options</th>
-                    </tr>                
+                        <th rowspan="2">Employee</th>
+                        <th rowspan="2">Department</th>
+                        <th colspan="4" style="text-align:center">TARDY</th>
+                        <th colspan="3" style="text-align:center">Undertime</th>
+                        <th rowspan="2">Remarks</th>
+                        <th rowspan="2">Options</th>
+                    </tr>
+                    <tr>
+                        <th>No. Times</th>
+                        <th>Total Mins.</th>
+                        <th>Date of Half Day</th>
+                        <th>EQUIV</th>
+                        <th>Total Mins.</th>
+                        <th>Date of Half Day</th>
+                        <th>EQUIV</th>
+                    </tr>
+
                 </thead>
                 <tbody>
-                    <tr v-for="(a,index) in dep.dat">
-                        <td>{{a.firstName}} {{a.middleName}} {{a.lastName}}</td>
-                        <td>{{a.totalTardy}}</td>
-                        <td>{{a.totalMinsTardy}}</td>
-                        <td>{{a.totalMinsUndertime}}</td>
-                        <td><button class="ui button primary" @click="showOptionModal(index)">View</button></td>
+                    <tr v-for="(ar,index) in dep.dat">
+                        <td>{{ar.firstName}} {{ar.middleName}} {{ar.lastName}}</td>
+                        <td>{{ar.department}}</td>
+                        <td>{{ar.totalTardy}}</td>
+                        <td>{{ar.totalMinsTardy}}</td>
+                        <td>{{ar.halfDaysTardy}}</td>
+                        <td>{{showEquiv(ar.totalMinsTardy)}}</td>
+                        <td>{{ar.totalMinsUndertime}}</td>
+                        <td>{{ar.halfDaysUndertime}}</td>
+                        <td>{{showEquiv(ar.totalMinsUndertime)}}</td>
+                        <td><span v-html="newLine(ar.remarks,',')"></span></td>
+                        <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(index)">View Summary</button></td>
                     </tr>
                 </tbody>
             </table>
+
             <br>
         </template>
         <template v-else-if="filterTardy.length>0">
-            <table class="ui celled table" style="width:95%;margin:auto">
+        <table class="ui celled table" style="width:95%;margin:auto">
                 <thead>
                     <tr>
-                        <th colspan="6">
-                            <h2>Summary table {{period}}</h2>
+                        <th colspan="11">
+                        <h2>Summary table {{period}}</h2>
                         </th>
                     </tr>
                     <tr>
-                        <th>Employee</th>
-                        <th>Department</th>
-                        <th>No. Times Tardy</th>
-                        <th>Total Mins. Tardy</th>
-                        <th>Total Mins. Undertime.</th>
-                        <th>Options</th>
+                        <th rowspan="2">Employee</th>
+                        <th rowspan="2">Department</th>
+                        <th colspan="4" style="text-align:center">TARDY</th>
+                        <th colspan="3" style="text-align:center">Undertime</th>
+                        <th rowspan="2">Remarks</th>
+                        <th rowspan="2">Options</th>
                     </tr>
+                    <tr>
+                        <th>No. Times</th>
+                        <th>Total Mins.</th>
+                        <th>Date of Half Day</th>
+                        <th>EQUIV</th>
+                        <th>Total Mins.</th>
+                        <th>Date of Half Day</th>
+                        <th>EQUIV</th>
+                    </tr>
+
                 </thead>
                 <tbody>
                     <tr v-for="(ar,index) in filterTardy">
@@ -132,11 +160,17 @@
                         <td>{{ar.department}}</td>
                         <td>{{ar.totalTardy}}</td>
                         <td>{{ar.totalMinsTardy}}</td>
+                        <td>{{ar.halfDaysTardy}}</td>
+                        <td>{{showEquiv(ar.totalMinsTardy)}}</td>
                         <td>{{ar.totalMinsUndertime}}</td>
-                        <td><button class="ui button primary" @click="showOptionModal(index)">View</button></td>
+                        <td>{{ar.halfDaysUndertime}}</td>
+                        <td>{{showEquiv(ar.totalMinsUndertime)}}</td>
+                        <td><span v-html="newLine(ar.remarks,',')"></span></td>
+                        <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(index)">View Summary</button></td>
                     </tr>
                 </tbody>
             </table>
+
         </template>
         <template v-else>
             <table class="ui celled table" style="width:95%;margin:auto">
@@ -176,8 +210,8 @@
                         <td>{{ar.totalMinsUndertime}}</td>
                         <td>{{ar.halfDaysUndertime}}</td>
                         <td>{{showEquiv(ar.totalMinsUndertime)}}</td>
-                        <td>{{ar.remarks}}</td>
-                        <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(index)">View</button></td>
+                        <td><span v-html="newLine(ar.remarks,',')"></span></td>
+                        <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(index)">View Summary</button></td>
                     </tr>
                 </tbody>
             </table>

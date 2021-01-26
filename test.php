@@ -1,134 +1,42 @@
-<!DOCTYPE>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Convert Number to  Words</title>
-</head>
+<table class="ui celled table" style="width:95%;margin:auto" v-for="(dep,index) in filterDepartment" :key="index">
+                <thead>
+                    <tr>
+                        <th colspan="11">
+                        <h2>Summary table {{period}}</h2>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th rowspan="2">Employee</th>
+                        <th rowspan="2">Department</th>
+                        <th colspan="4" style="text-align:center">TARDY</th>
+                        <th colspan="3" style="text-align:center">Undertime</th>
+                        <th rowspan="2">Remarks</th>
+                        <th rowspan="2">Options</th>
+                    </tr>
+                    <tr>
+                        <th>No. Times</th>
+                        <th>Total Mins.</th>
+                        <th>Date of Half Day</th>
+                        <th>EQUIV</th>
+                        <th>Total Mins.</th>
+                        <th>Date of Half Day</th>
+                        <th>EQUIV</th>
+                    </tr>
 
-<body>
-<form method="post" action="">
-  <label>Enter Number 
-  <input type="text" name="textfield" onchange="convert_number_to_words()" />
-  </label>
-  <input type="submit" value="Convert" />
-</form>
-<p>
-  Equivalent  in words: 
-  <?php
-function convert_number_to_words($number) {
-   
-    $hyphen      = '-';
-    $conjunction = '  ';
-    $separator   = ' ';
-    $negative    = 'negative ';
-    $decimal     = ' point ';
-    $dictionary  = array(
-        0                   => 'Zero',
-        1                   => 'One',
-        2                   => 'Two',
-        3                   => 'Three',
-        4                   => 'Four',
-        5                   => 'Five',
-        6                   => 'Six',
-        7                   => 'Seven',
-        8                   => 'Eight',
-        9                   => 'Nine',
-        10                  => 'Ten',
-        11                  => 'Eleven',
-        12                  => 'Twelve',
-        13                  => 'Thirteen',
-        14                  => 'Fourteen',
-        15                  => 'Fifteen',
-        16                  => 'Sixteen',
-        17                  => 'Seventeen',
-        18                  => 'Eighteen',
-        19                  => 'Nineteen',
-        20                  => 'Twenty',
-        30                  => 'Thirty',
-        40                  => 'Fourty',
-        50                  => 'Fifty',
-        60                  => 'Sixty',
-        70                  => 'Seventy',
-        80                  => 'Eighty',
-        90                  => 'Ninety',
-        100                 => 'Hundred',
-        1000                => 'Thousand',
-        1000000             => 'Million',
-        1000000000          => 'Billion',
-        1000000000000       => 'Trillion',
-        1000000000000000    => 'Quadrillion',
-        1000000000000000000 => 'Quintillion'
-    );
-   
-    if (!is_numeric($number)) {
-        return false;
-    }
-   
-    if (($number >= 0 && (int) $number < 0) || (int) $number < 0 - PHP_INT_MAX) {
-        // overflow
-        trigger_error(
-            'convert_number_to_words only accepts numbers between -' . PHP_INT_MAX . ' and ' . PHP_INT_MAX,
-            E_USER_WARNING
-        );
-        return false;
-    }
-
-    if ($number < 0) {
-        return $negative . convert_number_to_words(abs($number));
-    }
-   
-    $string = $fraction = null;
-   
-    if (strpos($number, '.') !== false) {
-        list($number, $fraction) = explode('.', $number);
-    }
-   
-    switch (true) {
-        case $number < 21:
-            $string = $dictionary[$number];
-            break;
-        case $number < 100:
-            $tens   = ((int) ($number / 10)) * 10;
-            $units  = $number % 10;
-            $string = $dictionary[$tens];
-            if ($units) {
-                $string .= $hyphen . $dictionary[$units];
-            }
-            break;
-        case $number < 1000:
-            $hundreds  = $number / 100;
-            $remainder = $number % 100;
-            $string = $dictionary[$hundreds] . ' ' . $dictionary[100];
-            if ($remainder) {
-                $string .= $conjunction . convert_number_to_words($remainder);
-            }
-            break;
-        default:
-            $baseUnit = pow(1000, floor(log($number, 1000)));
-            $numBaseUnits = (int) ($number / $baseUnit);
-            $remainder = $number % $baseUnit;
-            $string = convert_number_to_words($numBaseUnits) . ' ' . $dictionary[$baseUnit];
-            if ($remainder) {
-                $string .= $remainder < 100 ? $conjunction : $separator;
-                $string .= convert_number_to_words($remainder);
-            }
-            break;
-    }
-   
-    if (null !== $fraction && is_numeric($fraction)) {
-        $string .= $decimal;
-        $words = array();
-        foreach (str_split((string) $fraction) as $number) {
-            $words[] = $dictionary[$number];
-        }
-        $string .= implode(' ', $words);
-    }
-   
-    return $string;
-}
-
-echo '<b>'.convert_number_to_words($_POST['textfield']).'</b>';
-?>
-</p>
-</body>
-</html>
+                </thead>
+                <tbody>
+                    <tr v-for="(ar,index) in dep.dat">
+                        <td>{{ar.firstName}} {{ar.middleName}} {{ar.lastName}}</td>
+                        <td>{{ar.department}}</td>
+                        <td>{{ar.totalTardy}}</td>
+                        <td>{{ar.totalMinsTardy}}</td>
+                        <td>{{ar.halfDaysTardy}}</td>
+                        <td>{{showEquiv(ar.totalMinsTardy)}}</td>
+                        <td>{{ar.totalMinsUndertime}}</td>
+                        <td>{{ar.halfDaysUndertime}}</td>
+                        <td>{{showEquiv(ar.totalMinsUndertime)}}</td>
+                        <td>{{ar.remarks}}</td>
+                        <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(index)">Open Modal</button></td>
+                    </tr>
+                </tbody>
+            </table>
