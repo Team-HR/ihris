@@ -50,7 +50,11 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true && $_SESSION
   <script src='fullcalendar4/packages/core/main.js'></script>
   <script src='fullcalendar4/packages/interaction/main.js'></script>
   <script src='fullcalendar4/packages/daygrid/main.js'></script>
-
+  <!-- autocompleter -->
+  <link rel="stylesheet" type="text/css" href="node_modules/autocompleter/autocomplete.min.css">
+  <script src='node_modules/autocompleter/autocomplete.min.js'></script>
+  <!-- <script src="https://kraaden.github.io/autocomplete/autocomplete.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://kraaden.github.io/autocomplete/autocomplete.css"> -->
   <style>
     @page {
       margin-top: 0.5cm;

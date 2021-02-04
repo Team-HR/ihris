@@ -1,4 +1,4 @@
-    <div id="app_sr">
+<div id="app_sr">
         <template>
             <div class="ui modal" id="addSR">
                 <div class="header">SERVICE RECORD BUILDUP</div>
@@ -69,11 +69,11 @@
                                 <div class="fields">
                                     <div class="eight wide field">
                                         <label>From:</label>
-                                        <input id="sr_date_from" type="date" v-model="sr_date_from">
+                                        <input id="sr_date_from" type="date" v-model="sr_date_from" @keypress.enter.prevent>
                                     </div>
                                     <div class="eight wide field">
                                         <label>To:</label>
-                                        <input type="date" v-model="sr_date_to">
+                                        <input type="date" v-model="sr_date_to" @keypress.enter.prevent>
                                     </div>
                                 </div>
                                 <div class="fields">
@@ -96,7 +96,7 @@
                                 </div>
                                 <div class="field">
                                     <label>Remarks:</label>
-                                    <textarea id="sr_remarks" rows="2" v-model="sr_remarks" placeholder="Enter remarks"></textarea>
+                                    <input type="text" id="sr_remarks" v-model="sr_remarks" placeholder="Enter remarks" @keypress.enter.prevent>
                                 </div>
                                 <div class="field">
                                     <label>Memo:</label>
@@ -136,7 +136,7 @@
                             <th colspan="2">SERVICE (inclusive dates)</th>
                             <th colspan="3">RECORD of appointment</th>
                             <th colspan="2">OFFICE / ENTITY / DIVISION</th>
-                            <th rowspan="2">SEPARTION L/V <br/>ABS W/O PAY</th>
+                            <th rowspan="2">SEPARTION L/V <br />ABS W/O PAY</th>
                             <th rowspan="2"></th>
                         </tr>
                         <tr>
