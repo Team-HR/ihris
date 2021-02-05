@@ -94,11 +94,23 @@
                             `remarks` = '$remarksDtr'
                     WHERE `dtrSummary`.`dtrSummary_id` ='$datID[dtrSummary_id]'";
         }else{
-            $sql = "INSERT INTO `dtrSummary` (`dtrSummary_id`, `employee_id`, `month`, `totalMinsTardy`, `totalTardy`, `totalMinsUndertime`, `letterOfNotice`,`halfDaysTardy`,`halfDaysUndertime`,`remarks`) 
-                                VALUES (NULL, '$emp_id', '$period', '$totalMinsTardy', '$totalTimesTardy', '$totalMinUnderTime', '0','$halfDaysTardy','$halfDaysUndertime','$remarksDtr')";
+            $sql = "INSERT INTO `dtrSummary` (`dtrSummary_id`, `employee_id`, `month`, `totalMinsTardy`, `totalTardy`, `totalMinsUndertime`, `letterOfNotice`,`halfDaysTardy`,`halfDaysUndertime`,`remarks`,`submitted`) 
+                                VALUES (NULL, '$emp_id', '$period', '$totalMinsTardy', '$totalTimesTardy', '$totalMinUnderTime', '0','$halfDaysTardy','$halfDaysUndertime','$remarksDtr','1')";
         }
         $sql = $mysqli->query($sql);
         echo $mysqli->error;
+
+        $getDat = "SELECT * from `dtrSummary` WHERE `employee_id`='$emp_id' AND `month`='$period'";
+        $getDat = $mysqli->query($getDat);
+        $getDat = $getDat->fetch_assoc();
+        echo json_encode($getDat);
+    }elseif(isset($_POST['getSum'])){
+        $emp_id = $_POST['emp_id'];
+        $period = $_POST['period'];
+        $getDat = "SELECT * from `dtrSummary` WHERE `employee_id`='$emp_id' AND `month`='$period'";
+        $getDat = $mysqli->query($getDat);
+        $getDat = $getDat->fetch_assoc();
+        echo json_encode($getDat);
     }elseif (isset($_POST['nodtr'])){
         $nodtr = $_POST['nodtr'];
         $period = $_POST['period'];
@@ -112,5 +124,18 @@
             $a[] = $row;
         }
         echo json_encode($a);
+    }elseif (isset($_POST['hasSumitted'])){
+        $period = $_POST['period'];
+        $emp_id = $_POST['emp_id'];
+        $check = "SELECT * from dtrSummary where `month`='$period' and `employee_id`='$emp_id'";
+        $check = $mysqli->query($check);
+        $check = $check->fetch_assoc();
+        if($check){
+            $sql = "UPDATE `dtrSummary` SET `submitted` = 1 WHERE `dtrSummary_id` = '$check[dtrSummary_id]'";
+        }else{
+            $sql= "INSERT INTO `dtrSummary` (`dtrSummary_id`, `employee_id`, `month`, `submitted`) VALUES (NULL, '$emp_id', '$period','1')";
+        }
+        $sql = $mysqli->query($sql);
+        echo $mysqli->error;
     }
 ?>
