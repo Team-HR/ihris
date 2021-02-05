@@ -27,8 +27,8 @@
                 </tbody>
             </table>
             <center>
-                <a  href='tardy_warningLetter.php' class="ui secondary basic button">Warning</a>
-                <a  href='tardy_reprimandLetter.php'class="ui primary basic button">Reprimand</a>
+                <button  class="ui secondary basic button" @click="letterGen('tardyLetter')">Warning</a>
+                <button class="ui primary basic button">Reprimand</a>
                 <button class="ui positive basic button">Suspension</button>
                 <button class="ui negative basic button">Termination</button>
             </center>
