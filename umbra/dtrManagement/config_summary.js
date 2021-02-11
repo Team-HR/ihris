@@ -17,6 +17,9 @@ var dtrSummary = new Vue({
 
     },
     methods:{
+        letterGen:function(l){
+            window.location.href = l+".php?selectedDat="+JSON.stringify(this.selected_data)+"&hist="+JSON.stringify(this.tardayHist);
+        },
         getDepartment:function(){
             this_dtr = this
             var fd = new FormData()

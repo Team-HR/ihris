@@ -7,12 +7,12 @@
     <div class="ui small modal" id="optionModal">
         <div class="header"></div>
         <div class="content">
-            <h3>Name: <u>{{selected_data.lastName}} {{selected_data.firstName}} {{selected_data.middleName}}</u></h3>
-            <h3>Current Month Tardiness: <u>{{selected_data.month}}</u></h3>
-            <table class="ui celled table">
+            <h3>Name: <u>{{selected_data.lastName}} {{selected_data.firstName}} {{selected_data.middleName}}.</u></h3>
+            <h3>Current Month Tardy: <u>{{selected_data.month}}</u></h3>
+            <table class="ui celled table" style="text-align:center">
                 <thead>
                     <tr>
-                        <th colspan="2">TARDINESS History</th>
+                        <th colspan="2">Tardiness history</th>
                     </tr>
                     <tr>
                         <th>Month</th>
@@ -27,10 +27,10 @@
                 </tbody>
             </table>
             <center>
-                <button class="ui secondary basic button">Secondary</button>
-                <button class="ui primary basic button">Primary</button>
-                <button class="ui positive basic button">Positive</button>
-                <button class="ui negative basic button">Negative</button>
+                <button  class="ui secondary basic button" @click="letterGen('tardyLetter')">Warning</a>
+                <button class="ui primary basic button">Reprimand</a>
+                <button class="ui positive basic button">Suspension</button>
+                <button class="ui negative basic button">Termination</button>
             </center>
         </div>
     </div>
