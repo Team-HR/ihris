@@ -5,10 +5,10 @@
 <div id="dtrSummary_app">
     <!-- modal -->
     <div class="ui small modal" id="optionModal">
-        <div class="header"></div>
+        <div class="header">TARDINESS INFORMATION</div>
         <div class="content">
-            <h3>Name: <u>{{selected_data.lastName}} {{selected_data.firstName}} {{selected_data.middleName}}.</u></h3>
-            <h3>Current Month Tardy: <u>{{selected_data.month}}</u></h3>
+         <h4>Name: {{selected_data.lastName}} {{selected_data.firstName}} {{selected_data.middleName}}<br>
+                Current month x10 Tardy:{{selected_data.month}}</h4> 
             <table class="ui celled table" style="text-align:center">
                 <thead>
                     <tr>
@@ -27,17 +27,17 @@
                 </tbody>
             </table>
             <center>
-                <button  class="ui secondary basic button" @click="letterGen('tardyLetter')">Warning</a>
-                <button class="ui primary basic button">Reprimand</a>
-                <button class="ui positive basic button">Suspension</button>
-                <button class="ui negative basic button">Termination</button>
+                <button class="ui green button"  @click="letterGen('tardy_warningLetter')">Warning</a>
+                <button class="ui blue button"   @click="letterGen('tardy_reprimandLetter')">Reprimand</a>
+                <button class="ui yellow button" >Suspension</button>
+                <button class="ui red button" >Termination</button>
             </center>
         </div>
     </div>
 
     <!-- end  -->
 
-    <div class="ui segment"   style="margin:auto;max-width:50%;min-width:500px;">
+    <div class="ui segment noprint"   style="margin:auto;max-width:50%;min-width:500px;">
         <h1>DTR Summary</h1>
         <div class="ui section divider"></div> 
             <form class="ui form" @submit.prevent="getDataNeeded()">
@@ -93,7 +93,7 @@
                         <th rowspan="2">Employee</th>
                         <th rowspan="2">Department</th>
                         <th colspan="4" style="text-align:center">TARDY</th>
-                        <th colspan="3" style="text-align:center">Undertime</th>
+                        <th colspan="3" style="text-align:center">UNDERTIME</th>
                         <th rowspan="2">Remarks</th>
                         <th rowspan="2">Options</th>
                     </tr>
@@ -120,7 +120,7 @@
                         <td>{{ar.halfDaysUndertime}}</td>
                         <td>{{showEquiv(ar.totalMinsUndertime)}}</td>
                         <td><span v-html="newLine(ar.remarks,',')"></span></td>
-                        <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(index)">View Summary</button></td>
+                        <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(index)">View</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -139,7 +139,7 @@
                         <th rowspan="2">Employee</th>
                         <th rowspan="2">Department</th>
                         <th colspan="4" style="text-align:center">TARDY</th>
-                        <th colspan="3" style="text-align:center">Undertime</th>
+                        <th colspan="3" style="text-align:center">UNDERTIME</th>
                         <th rowspan="2">Remarks</th>
                         <th rowspan="2">Options</th>
                     </tr>
@@ -166,7 +166,7 @@
                         <td>{{ar.halfDaysUndertime}}</td>
                         <td>{{showEquiv(ar.totalMinsUndertime)}}</td>
                         <td><span v-html="newLine(ar.remarks,',')"></span></td>
-                        <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(index)">View Summary</button></td>
+                        <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(index)">View</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -184,18 +184,18 @@
                         <th rowspan="2">Employee</th>
                         <th rowspan="2">Department</th>
                         <th colspan="4" style="text-align:center">TARDY</th>
-                        <th colspan="3" style="text-align:center">Undertime</th>
+                        <th colspan="3" style="text-align:center">UNDERTIME</th>
                         <th rowspan="2">Remarks</th>
                         <th rowspan="2">Options</th>
                     </tr>
                     <tr>
-                        <th>No. Times</th>
-                        <th>Total Mins.</th>
-                        <th>Date of Half Day</th>
-                        <th>EQUIV</th>
-                        <th>Total Mins.</th>
-                        <th>Date of Half Day</th>
-                        <th>EQUIV</th>
+                        <th>No. times</th>
+                        <th>Total mins.</th>
+                        <th>Date of half-day</th>
+                        <th>Equiv.</th>
+                        <th>Total mins.</th>
+                        <th>Date of half-day</th>
+                        <th>Equiv.</th>
                     </tr>
 
                 </thead>
@@ -211,7 +211,7 @@
                         <td>{{ar.halfDaysUndertime}}</td>
                         <td>{{showEquiv(ar.totalMinsUndertime)}}</td>
                         <td><span v-html="newLine(ar.remarks,',')"></span></td>
-                        <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(index)">View Summary</button></td>
+                        <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(index)">View</button></td>
                     </tr>
                 </tbody>
             </table>
