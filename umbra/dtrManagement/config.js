@@ -12,6 +12,7 @@ var dtr_app = new Vue({
         editId:'',
         others:"",
         selectedDate:"",
+        dtrSummary:[],
         // logs
             totalMinsTardy: 0,
             totalTimesTardy:0,
@@ -19,8 +20,6 @@ var dtr_app = new Vue({
             halfDaysTardy:[],
             halfDaysUndertime:[],
             remarksDtr:[],
-        //no dtr  
-            nodtrHist:[]
     },methods: {
         countLogs:function(){
             dtr = this.dtr;
@@ -64,21 +63,6 @@ var dtr_app = new Vue({
             this.halfDaysUndertime = halfUnder;
             this.remarksDtr = remarks;
         },
-        openDtrLogs:function(){
-            var this_dtr = this;
-            var fd = new FormData();
-                fd.append('nodtr',true);
-                fd.append('period',this.period);
-                fd.append('employee_id',this.emp_id)
-            var xml = new XMLHttpRequest()
-                xml.onload = function(){
-                    this_dtr.nodtrHist = xml.responseText;
-                }
-                xml.open('POST','umbra/dtrManagement/config.php',false)
-                xml.send(fd)
-
-            $('#nodtr').modal('show');
-        },
         addDTR:function(){
             this_dtr = this
             var dtr_date = this.period+"-"+this.selectedDate;
@@ -121,6 +105,19 @@ var dtr_app = new Vue({
 
 
             $("#modalEdit").modal('show');
+        },
+        hasSumitted:function(){
+            this_dtr = this
+            var fd = new FormData()
+                fd.append('hasSumitted',true)
+                fd.append('period',this.period)
+                fd.append('emp_id',this.emp_id)
+            var xml = new XMLHttpRequest()
+                xml.onload = function(){
+                    this_dtr.submitReport();
+                }
+                xml.open('POST','umbra/dtrManagement/config.php',false)
+                xml.send(fd);
         },
         getEmp:function(){
             this_dtr = this
@@ -170,8 +167,11 @@ var dtr_app = new Vue({
                 xml.open('POST','umbra/dtrManagement/config.php',false)
                 xml.send(fd)
             }
+            this.getSum();
         },
         submitReport:function(){
+                this_dtr = this
+                this.dtrSummary = [];
             var fd = new FormData();
                 fd.append('totalMinsTardy',this.totalMinsTardy);
                 fd.append('totalTimesTardy',this.totalTimesTardy);
@@ -184,11 +184,33 @@ var dtr_app = new Vue({
                 fd.append('submitReport',true); 
             var xml = new XMLHttpRequest()
                 xml.onload = function(){
-                    console.log(xml.responseText);  
+                    try {
+                        this_dtr.dtrSummary = JSON.parse(xml.responseText);
+                    } catch (error) {
+                        console.log(xml.responseText);  
+                    }
                 }
                 xml.open('POST','umbra/dtrManagement/config.php',false)
                 xml.send(fd);
         },
+        getSum:function(){
+            this.dtrSummary = [];
+            this_dtr = this
+            var fd = new FormData()
+                fd.append('getSum',true)
+                fd.append('period',this.period);
+                fd.append('emp_id',this.emp_id);   
+            var xml = new XMLHttpRequest()
+                xml.onload = function(){
+                    try {
+                        this_dtr.dtrSummary = JSON.parse(xml.responseText);
+                    } catch (error) {
+                        console.log(xml.responseText);  
+                    }
+                }
+                xml.open('POST','umbra/dtrManagement/config.php',false)
+                xml.send(fd)
+        }
     },mounted:function(){
         this.getEmp();
     },watch:{
@@ -197,7 +219,6 @@ var dtr_app = new Vue({
             this.totalMinsTardy =  0;
             this.totalTimesTardy = 0;
             this.totalMinUnderTime = 0;
-
         },
         period:function(){
             this.dtr = [];
@@ -206,5 +227,4 @@ var dtr_app = new Vue({
             this.totalMinUnderTime = 0;
         }, 
     }
-
 });

@@ -3,32 +3,6 @@
     require_once "header.php";
 ?>
 <div id="dtr_app">  
-    <div class="ui mini modal" id="nodtr">
-        <div class="header">No Dtr Logs</div>
-        <div class="content">
-            <table class="ui celled table">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Remarks</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(hist,index) in nodtrHist" :key="index">
-                        <td>{{hist.period}}</td>
-                        <td>{{hist.letterPrinted}}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <center>
-                <button class="ui yellow button" style="margin-bottom:5px;width:40%">Warning</button>
-                <button class="ui brown button" style="margin-bottom:5px;width:40%">Reprimand</button>
-                <button class="ui orange button" style="margin-bottom:5px;width:40%">Suspension</button>
-                <button class="ui negative button" style="margin-bottom:5px;width:40%">Termination</button>
-            </center>
-        </div>
-    </div>
-
     <div class="ui segment"   style="margin:auto;max-width:35%;min-width:600px;">
         <div class="ui segment" style="position:fixed;right:0px;width:250px;z-index:10">
             <table>
@@ -115,7 +89,10 @@
             </div>
         </div>
             <div v-if="dtr.length">
-                <button class="ui button yellow" @click="openDtrLogs()" style="float:right">No DTR</button>
+                <div v-if="!dtrSummary">
+                    <button class="ui button yellow" style="float:right" @click="hasSumitted()">Submitted</button>
+                </div>
+
                 <br>
                 <br>
                 <table class="ui celled table" id="example1"> 
