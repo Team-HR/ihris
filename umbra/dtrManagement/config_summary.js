@@ -12,13 +12,10 @@ var dtrSummary = new Vue({
         // modal dats
             selected_data:"",
             tardayHist:[]
-
-
-
     },
     methods:{
         letterGen:function(l){
-            window.location.href = l+".php?selectedDat="+JSON.stringify(this.selected_data)+"&hist="+JSON.stringify(this.tardayHist);
+            window.location.href = l+".php?selectedDat="+this.selected_data.dtrSummary_id;
         },
         getDepartment:function(){
             this_dtr = this
