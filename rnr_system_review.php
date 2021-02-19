@@ -22,7 +22,7 @@ require "header.php";
 				<div class="card" v-for="(item, index) in data" :key="index">
 					<div class="content">
 						<div class="header">{{item[14]?item[14]:'Anonymous'}}</div>
-						<div class="meta"><b>{{item[15]}}</b> {{item[16]}}</div>
+						<div class="meta"><span>{{item[15]?item[15]+" employee":""}}</span> {{item[16]?"from "+item[16]:""}}</div>
 						<div class="description">
 							<template v-for="(qs, i) in questions">
 								<div v-if="i <= 5">
