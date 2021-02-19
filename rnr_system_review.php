@@ -18,10 +18,20 @@ require "header.php";
 
 		<!-- start here -->
 		<template>
-
-			<!-- <div class="two wide column"><canvas id="AdaptabilityBarChart" style="height: 50px;"></canvas></div> -->
 			<h1 class="ui header block">Total Respondents: {{data.length}}</h1>
-			<table class="ui compact table">
+
+			<div class="ui grid">
+				<template v-for="(item, index) in 6">
+					<div :key="index" class="eight wide column">
+						<p style="text-align: center; font-size: 16px;"><i>{{questions[index]}}</i></p>
+						<canvas class="chart3"></canvas>
+					</div>
+				</template>
+			</div>
+
+
+
+			<!-- <table class="ui compact table">
 				<thead>
 					<tr>
 						<th>Question</th>
@@ -40,16 +50,16 @@ require "header.php";
 						</tr>
 					</template>
 				</tbody>
-			</table>
+			</table> -->
 
-			<h3 class="ui header block">Effects on Performance</h3>
+			<h3 class="ui header block">Effects on Performance <cite style="font-size: 12px;color: grey;"> "How does the grant of incentives affect your job performance?"</cite></h3>
 
 
 			<!-- <div class="ui grid">
 				<div class="eight wide column"><canvas id="AdaptabilityBarChart" style="height: 50px;"></canvas></div>
 			</div> -->
 
-
+			<!-- 
 			<table class="ui compact table">
 				<thead>
 					<tr>
@@ -63,7 +73,7 @@ require "header.php";
 				</thead>
 				<tbody>
 					<template v-for="(perf, p) in performances">
-						<tr :key="p" >
+						<tr :key="p">
 							<td>{{perf}}</td>
 							<td>{{get_percentage(data2.performances[p][1])}}</td>
 							<td>{{get_percentage(data2.performances[p][2])}}</td>
@@ -73,9 +83,27 @@ require "header.php";
 						</tr>
 					</template>
 				</tbody>
-			</table>
+			</table> -->
 
-			<h3 class="ui header block">Impacts on Employees</h3>
+			<div class="ui grid">
+				<template v-for="(item, index) in performances">
+					<div :key="index" class="eight wide column">
+						<canvas class="chart" style="height: 50px;"></canvas>
+					</div>
+				</template>
+			</div>
+
+			<h3 class="ui header block">Impacts on Employees <cite style="font-size: 12px;color: grey;"> "What are your general observation of the impact of the grant?"</cite></h3>
+
+			<div class="ui grid">
+				<template v-for="(item, index) in impacts">
+					<div :key="index" class="eight wide column">
+						<canvas class="chart2" style="height: 50px;"></canvas>
+					</div>
+				</template>
+			</div>
+
+			<!-- 
 			<table class="ui compact table">
 				<thead>
 					<tr>
@@ -95,14 +123,28 @@ require "header.php";
 						</tr>
 					</template>
 				</tbody>
-			</table>
+			</table> -->
 
-		<h2>Respondents:</h2>
+
+			<h2 class="ui header block">Comments and Suggestions:</h2>
+			<div class="ui two cards">
+				<div class="card" v-for="(item, index) in data" :key="index" v-if="is_empty(item[13])">
+					<div class="content">
+						<!-- <div class="header">{{item[14]?item[14]:'Anonymous'}}</div> -->
+						<!-- <div class="meta"><span>{{item[15]?item[15]+" employee":""}}</span> {{item[16]?"from "+item[16]:""}}</div> -->
+						<div class="description">
+							<p style="color:green;"><i>{{item[13]}}</i></p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<h2 class="ui header block">Respondents:</h2>
 
 			<div class="ui two cards">
 				<div class="card" v-for="(item, index) in data" :key="index">
 					<div class="content">
-						<div class="header">{{item[14]?item[14]:'Anonymous'}}</div>
+						<!-- <div class="header">{{item[14]?item[14]:'Anonymous'}}</div> -->
 						<div class="meta"><span>{{item[15]?item[15]+" employee":""}}</span> {{item[16]?"from "+item[16]:""}}</div>
 						<div class="description">
 							<template v-for="(qs, i) in questions">
@@ -259,6 +301,8 @@ require "header.php";
 				data: [],
 				data2: [],
 				configs: [],
+				configs2: [],
+				configs3: [],
 				performances: [
 					"Dependability",
 					"Cooperation",
@@ -284,15 +328,38 @@ require "header.php";
 			}
 		},
 		methods: {
+			is_empty(str) {
+				// var bool = /\S/.test(str)
+				var bool = str.trim() !== "" && str.trim() !== "none" && str.trim() !== "None"
+				console.log(str + ":", bool);
+				return bool
+				// return str === ""?false:true;
+			},
 			get_data() {
-				$.post("rnr_system_review_proc.php", {
-						get_data: true,
-					}, (data, textStatus, jqXHR) => {
-						console.log(data)
-						this.data = Object.assign([], data)
+				// $.post("rnr_system_review_proc.php", {
+				// 		get_data: true,
+				// 	}, (data, textStatus, jqXHR) => {
+				// 		console.log(data)
+				// 		this.data = Object.assign([], data)
+				// 	},
+				// 	"json"
+				// );
+
+				$.ajax({
+					type: "POST",
+					url: "rnr_system_review_proc.php",
+					data: {
+						get_data: true
 					},
-					"json"
-				);
+					dataType: "json",
+					success: (response) => {
+						console.log(response)
+						this.data = Object.assign([], response)
+					},
+					async: false
+
+				});
+
 			},
 			get_data_summary() {
 				// $.post("rnr_system_review_proc.php", {
@@ -327,6 +394,14 @@ require "header.php";
 				}
 				return "0%"
 
+			},
+			get_percentage_(num) {
+				if (num) {
+					var percent = ((num / this.data.length) * 100).toFixed(0)
+					return percent
+				}
+				return 0
+
 			}
 		},
 		created() {
@@ -334,11 +409,19 @@ require "header.php";
 			this.get_data_summary()
 		},
 		mounted() {
-			var ctx2 = $("#AdaptabilityBarChart");
 
+			// start of foreach
 			this.data2.performances.forEach((element, key) => {
-
-				var config2 = {
+				// console.log(this.performances[key]);
+				// console.log(this.data2.performances[key]);
+				var data = []
+				var perfs = Object.assign([], this.data2.performances[key])
+				perfs.forEach(val => {
+					var percentage = this.get_percentage_(val)
+					data.push(percentage)
+					// console.log(this.data.length);
+				});
+				var cfg = {
 					type: 'bar',
 					data: {
 						labels: [
@@ -349,8 +432,8 @@ require "header.php";
 							"Outstanding "
 						],
 						datasets: [{
-							label: this.performances[0],
-							data: [3, 1, 3, 2, 5],
+							label: this.performances[key],
+							data: data,
 							backgroundColor: [
 								'rgba(255, 99, 132, 0.2)',
 								'rgba(255, 206, 86, 0.2)',
@@ -381,7 +464,7 @@ require "header.php";
 								ticks: {
 									display: false,
 									beginAtZero: true,
-									// max: 100,
+									max: 100,
 									stepSize: 1
 								}
 							}],
@@ -390,33 +473,278 @@ require "header.php";
 
 						title: {
 							display: true,
-							text: "Dependability",
+							text: this.performances[key],
 							fontSize: 20
 						},
 						legend: {
 							display: false,
 						},
+						tooltips: {
+							enabled: false
+						},
+						"hover": {
+							"animationDuration": 0
+						},
+						"animation": {
+							"duration": 1,
+							"onComplete": function() {
+								var chartInstance = this.chart,
+									ctx = chartInstance.ctx;
+
+								ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+								ctx.textAlign = 'center';
+								ctx.textBaseline = 'bottom';
+
+								this.data.datasets.forEach(function(dataset, i) {
+									var meta = chartInstance.controller.getDatasetMeta(i);
+									meta.data.forEach(function(bar, index) {
+										var data = dataset.data[index];
+										ctx.fillText(data + "%", bar._model.x, bar._model.y - 5);
+									});
+								});
+							}
+						},
 
 					},
+					showTooltips: false,
 
 				};
 
 
-				this.configs.push = config2;
+				this.configs.push(cfg);
+			});
+			// end of foreach
+
+
+			// start of foreach
+			this.data2.impacts.forEach((element, key) => {
+				// console.log(this.performances[key]);
+				// console.log(this.data2.performances[key]);
+				var data = []
+				var perfs = Object.assign([], this.data2.impacts[key])
+				perfs.forEach(val => {
+					var percentage = this.get_percentage_(val)
+					data.push(percentage)
+					// console.log(this.data.length);
+				});
+				var cfg = {
+					type: 'bar',
+					data: {
+						labels: [
+							"Decreased",
+							"No Impact",
+							"Increased",
+						],
+						datasets: [{
+							label: this.impacts[key],
+							data: data,
+							backgroundColor: [
+								'rgba(255, 99, 132, 0.2)',
+
+								'rgba(75, 192, 192, 0.2)',
+
+								'rgba(153, 102, 255, 0.2)',
+
+							],
+							borderColor: [
+								'rgba(255, 99, 132, 1)',
+
+								'rgba(75, 192, 192, 1)',
+
+								'rgba(153, 102, 255, 1)',
+
+							],
+							fill: true,
+							borderWidth: 2,
+						}]
+					},
+					options: {
+						scales: {
+							yAxes: [{
+								scaleLabel: {
+									display: true,
+									labelString: 'Number of Personnels'
+								},
+								ticks: {
+									display: false,
+									beginAtZero: true,
+									max: 100,
+									stepSize: 1
+								}
+							}],
+
+						}, //end of scales
+
+						title: {
+							display: true,
+							text: this.impacts[key],
+							fontSize: 20
+						},
+						legend: {
+							display: false,
+						},
+						tooltips: {
+							enabled: false
+						},
+						"hover": {
+							"animationDuration": 0
+						},
+						"animation": {
+							"duration": 1,
+							"onComplete": function() {
+								var chartInstance = this.chart,
+									ctx = chartInstance.ctx;
+
+								ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+								ctx.textAlign = 'center';
+								ctx.textBaseline = 'bottom';
+
+								this.data.datasets.forEach(function(dataset, i) {
+									var meta = chartInstance.controller.getDatasetMeta(i);
+									meta.data.forEach(function(bar, index) {
+										var data = dataset.data[index];
+										ctx.fillText(data + "%", bar._model.x, bar._model.y - 5);
+									});
+								});
+							}
+						},
+
+					},
+					showTooltips: false,
+
+				};
+
+
+				this.configs2.push(cfg);
+			});
+			// end of foreach
+
+			// start of foreach
+			this.data2.datus.forEach((element, key) => {
+				// console.log(this.performances[key]);
+				// console.log(this.data2.performances[key]);
+				var data = []
+				var perfs = Object.assign([], this.data2.datus[key])
+
+
+				// $.each(perfs, function (indexInArray, val) { 
+				// 	 console.log("perfs");
+				// });
+				// perfs.forEach(val => {
+				// 	console.log("val", val)
+				// 	var percentage = this.get_percentage_(val)
+				// 	data.push(percentage)
+				// 	console.log(percentage)
+				// });
+
+				data = [
+					this.get_percentage_(perfs.yes),
+					this.get_percentage_(perfs.no),
+					this.get_percentage_(perfs.no_answer),
+				]
+				// console.log("perfs "+key, perfs);
+
+				var cfg = {
+					type: 'bar',
+					data: {
+						labels: [
+							"Yes ",
+							"No",
+							"Preferred not to answer",
+						],
+						datasets: [{
+							label: '',
+							data: data,
+							backgroundColor: [
+								'rgba(75, 192, 192, 0.2)',
+								'rgba(255, 99, 132, 0.2)',
+								'rgba(153, 102, 255, 0.2)',
+							],
+							borderColor: [
+								'rgba(75, 192, 192, 1)',
+								'rgba(255, 99, 132, 1)',
+								'rgba(153, 102, 255, 1)',
+							],
+							fill: true,
+							borderWidth: 2,
+						}]
+					},
+					options: {
+						scales: {
+							yAxes: [{
+								scaleLabel: {
+									display: true,
+									labelString: 'Number of Personnels'
+								},
+								ticks: {
+									display: false,
+									beginAtZero: true,
+									max: 110,
+									stepSize: 1
+								}
+							}],
+
+						}, //end of scales
+
+						title: {
+							display: false,
+							text: this.questions[key],
+							fontSize: 20
+						},
+						legend: {
+							display: false,
+						},
+						tooltips: {
+							enabled: false
+						},
+						"hover": {
+							"animationDuration": 0
+						},
+						"animation": {
+							"duration": 1000,
+							"onComplete": function() {
+								var chartInstance = this.chart,
+									ctx = chartInstance.ctx;
+
+								ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+								ctx.textAlign = 'center';
+								ctx.textBaseline = 'bottom';
+
+								this.data.datasets.forEach(function(dataset, i) {
+									var meta = chartInstance.controller.getDatasetMeta(i);
+									meta.data.forEach(function(bar, index) {
+										var data = dataset.data[index];
+										ctx.fillText(data + "%", bar._model.x, bar._model.y - 5);
+									});
+								});
+							}
+						},
+
+					},
+					showTooltips: false,
+
+				};
+
+
+				this.configs3.push(cfg);
+			});
+			// end of foreach
+
+			$(".chart").each((index, element) => {
+				new Chart(element, this.configs[index]);
 			});
 
+			$(".chart2").each((index, element) => {
+				new Chart(element, this.configs2[index]);
+			});
 
-
-			ldnLsaBarCharts = new Chart(ctx2, this.configs[0]);
+			$(".chart3").each((index, element) => {
+				new Chart(element, this.configs3[index]);
+			});
 
 		},
 
 	})
-
-	$(document).ready(function() {
-
-
-	});
 </script>
 
 <?php
