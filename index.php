@@ -34,7 +34,7 @@ require 'header.php';
 									<div class="ui animated list">
 										<a class="item" href="personnelrecognition.php">Personnel Recognition</a>
 										<a class="item" href="rnrplan.php">R&R Plan (Yearly)</a>
-										<a class="item" href="">System Review</a>
+										<a class="item" href="rnr_system_review.php">System Review</a>
 										<a class="item" href="">Search for Outstanding Employees</a>
 									</div>
 								</div>
