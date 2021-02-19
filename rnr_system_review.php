@@ -35,25 +35,53 @@ require "header.php";
 											<tr>
 												<td>Dependability</td>
 												<td>
-													<div class="ui red rating" data-icon="heart" :data-rating="item[6]"></div>
+													<!-- <div class="ui red rating" data-icon="heart" :data-rating="item[6]"></div> -->
+													<div class="ui red rating disabled">
+														<i class="heart icon" :class="item[6]>=1?'active':''"></i>
+														<i class="heart icon" :class="item[6]>=2?'active':''"></i>
+														<i class="heart icon" :class="item[6]>=3?'active':''"></i>
+														<i class="heart icon" :class="item[6]>=4?'active':''"></i>
+														<i class="heart icon" :class="item[6]>=5?'active':''"></i>
+													</div>
 												</td>
 											</tr>
 											<tr>
 												<td>Cooperation</td>
 												<td>
-													<div class="ui red rating" data-icon="heart" :data-rating="item[7]"></div>
+													<!-- <div class="ui red rating" data-icon="heart" :data-rating="item[7]"></div> -->
+													<div class="ui red rating disabled">
+														<i class="heart icon" :class="item[7]>=1?'active':''"></i>
+														<i class="heart icon" :class="item[7]>=2?'active':''"></i>
+														<i class="heart icon" :class="item[7]>=3?'active':''"></i>
+														<i class="heart icon" :class="item[7]>=4?'active':''"></i>
+														<i class="heart icon" :class="item[7]>=5?'active':''"></i>
+													</div>
 												</td>
 											</tr>
 											<tr>
 												<td>Commitment</td>
 												<td>
-													<div class="ui red rating" data-icon="heart" :data-rating="item[8]"></div>
+													<!-- <div class="ui red rating" data-icon="heart" :data-rating="item[8]"></div> -->
+													<div class="ui red rating disabled">
+														<i class="heart icon" :class="item[8]>=1?'active':''"></i>
+														<i class="heart icon" :class="item[8]>=2?'active':''"></i>
+														<i class="heart icon" :class="item[8]>=3?'active':''"></i>
+														<i class="heart icon" :class="item[8]>=4?'active':''"></i>
+														<i class="heart icon" :class="item[8]>=5?'active':''"></i>
+													</div>
 												</td>
 											</tr>
 											<tr>
 												<td>Initiative</td>
 												<td>
-													<div class="ui red rating" data-icon="heart" :data-rating="item[9]"></div>
+													<!-- <div class="ui red rating" data-icon="heart" :data-rating="item[9]"></div> -->
+													<div class="ui red rating disabled">
+														<i class="heart icon" :class="item[9]>=1?'active':''"></i>
+														<i class="heart icon" :class="item[9]>=2?'active':''"></i>
+														<i class="heart icon" :class="item[9]>=3?'active':''"></i>
+														<i class="heart icon" :class="item[9]>=4?'active':''"></i>
+														<i class="heart icon" :class="item[9]>=5?'active':''"></i>
+													</div>
 												</td>
 											</tr>
 										</tbody>
@@ -73,7 +101,7 @@ require "header.php";
 													<b v-else-if="item[10] == 2" style="color: grey;">
 														<i class="ui circle outline icon grey"></i> Neutral
 													</b>
-													<b v-else-if="item[10] == 1"  style="color: red;">
+													<b v-else-if="item[10] == 1" style="color: red;">
 														<i class="ui angle double down icon red"></i> Decrease
 													</b>
 													<b v-else style="color: grey;">
@@ -91,7 +119,7 @@ require "header.php";
 													<b v-else-if="item[11] == 2" style="color: grey;">
 														<i class="ui circle outline icon grey"></i> Neutral
 													</b>
-													<b v-else-if="item[11] == 1"  style="color: red;">
+													<b v-else-if="item[11] == 1" style="color: red;">
 														<i class="ui angle double down icon red"></i> Decrease
 													</b>
 													<b v-else style="color: grey;">
@@ -109,7 +137,7 @@ require "header.php";
 													<b v-else-if="item[12] == 2" style="color: grey;">
 														<i class="ui circle outline icon grey"></i> Neutral
 													</b>
-													<b v-else-if="item[12] == 1"  style="color: red;">
+													<b v-else-if="item[12] == 1" style="color: red;">
 														<i class="ui angle double down icon red"></i> Decrease
 													</b>
 													<b v-else style="color: grey;">
@@ -178,9 +206,9 @@ require "header.php";
 		},
 	})
 	$(document).ready(function() {
-		$('.rating').rating({
-			maxRating: 5
-		});
+		// $('.rating').rating({
+		// 	maxRating: 5
+		// });
 	});
 </script>
 
