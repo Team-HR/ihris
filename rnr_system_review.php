@@ -26,7 +26,11 @@ require "header.php";
 						<div class="description">
 							<template v-for="(qs, i) in questions">
 								<div v-if="i <= 5">
-									<p :key="i">{{qs}} <b style="color: green;">{{item[i]}}</b></p>
+									<p v-if="i == 2 && item[1] == 'No' || i == 3 && item[1] == 'No'" :key="i"></p>
+									<p v-else-if="i == 4 && item[4] != 'Yes' || i == 5 && item[5] != 'Yes'" :key="i">
+									{{qs}} <b style="color: green;">No, {{item[i]}}</b>
+									</p>
+									<p v-else :key="i">{{qs}} <b style="color: green;">{{item[i]}}</b></p>
 								</div>
 								<div v-else-if="i == 6">
 									<p :key="i">{{qs}}</p>
