@@ -26,7 +26,7 @@
                 <select class="ui fluid search dropdown" v-model="emp_id">
                     <option value="">Select Employee</option>
                     <option v-for="(employee,index) in Employees" :key="index" :value="employee.employees_id">
-                        {{employee.lastName}} {{employee.firstName}}
+                        {{employee.lastName}} {{employee.firstName}} {{employee.middleName}} {{employee.extName}}
                     </option>
                 </select>
             </div>

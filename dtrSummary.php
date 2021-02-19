@@ -7,7 +7,7 @@
     <div class="ui small modal" id="optionModal">
         <div class="header"></div>
         <div class="content">
-            <h3>Name: <u>{{selected_data.lastName}} {{selected_data.firstName}} {{selected_data.middleName}}.</u></h3>
+            <h3>Name: <u>{{selected_data.lastName}} {{selected_data.firstName}} {{selected_data.middleName}}. {{selected_data.extName}}</u></h3>
             <h3>Current Month Tardy: <u>{{selected_data.month}}</u></h3>
             <table class="ui celled table" style="text-align:center">
                 <thead>
@@ -110,7 +110,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="(ar,index) in dep.dat">
-                        <td>{{ar.firstName}} {{ar.middleName}} {{ar.lastName}}</td>
+                        <td>{{ar.lastName}} {{ar.firstName}} {{ar.middleName}} {{ar.extName}}</td>
                         <td>{{ar.department}}</td>
                         <td>{{ar.totalTardy}}</td>
                         <td>{{ar.totalMinsTardy}}</td>
@@ -156,7 +156,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="(ar,index) in filterTardy">
-                        <td>{{ar.firstName}} {{ar.middleName}} {{ar.lastName}}</td>
+                        <td>{{ar.lastName}} {{ar.firstName}} {{ar.middleName}} {{ar.extName}} </td>
                         <td>{{ar.department}}</td>
                         <td>{{ar.totalTardy}}</td>
                         <td>{{ar.totalMinsTardy}}</td>
@@ -201,7 +201,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="(ar,index) in DataRequest">
-                        <td>{{ar.firstName}} {{ar.middleName}} {{ar.lastName}}</td>
+                        <td>{{ar.lastName}} {{ar.firstName}} {{ar.middleName}} {{ar.extName}}</td>
                         <td>{{ar.department}}</td>
                         <td>{{ar.totalTardy}}</td>
                         <td>{{ar.totalMinsTardy}}</td>
