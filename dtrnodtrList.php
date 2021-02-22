@@ -1,5 +1,5 @@
 <?php
-    $title = "DTR Summary";
+    $title = "No DTR List";
     require_once "header.php";
 ?>
 <div id="app_nodtr">
@@ -39,7 +39,7 @@
                 <tbody>
                     <tr v-for="(noDtr,index) in noDtrs">
                         <td style="text-align: center">{{index+1}}.</td>
-                        <td>{{noDtr.lastName}} , {{noDtr.firstName}} {{noDtr.middleName}}. {{noDtr.extName}}</td>
+                        <td><a :href="'employeeinfo.v2.php?employees_id='+noDtr.employees_id" target="_blank">{{noDtr.lastName}} , {{noDtr.firstName}} {{noDtr.middleName}}. {{noDtr.extName}}</td>
                         <td style="text-align: center">
                             <template v-if="noDtr.letterOfNotice">
                                   <i class="check icon green"></i>
