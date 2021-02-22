@@ -59,13 +59,13 @@ require "header.php";
 				<div class="eight wide column"><canvas id="AdaptabilityBarChart" style="height: 50px;"></canvas></div>
 			</div> -->
 
-			<!-- 
-			<table class="ui compact table">
+			
+			<!-- <table class="ui compact table">
 				<thead>
 					<tr>
 						<th>Performance</th>
 						<th>Poor</th>
-						<th>Usatisfactory</th>
+						<th>Unsatisfactory</th>
 						<th>Satisfactory</th>
 						<th>Very Satisfactory</th>
 						<th>Outstanding</th>
@@ -83,7 +83,7 @@ require "header.php";
 						</tr>
 					</template>
 				</tbody>
-			</table> -->
+			</table>  -->
 
 			<div class="ui grid">
 				<template v-for="(item, index) in performances">
@@ -331,7 +331,7 @@ require "header.php";
 			is_empty(str) {
 				// var bool = /\S/.test(str)
 				var bool = str.trim() !== "" && str.trim() !== "none" && str.trim() !== "None"
-				console.log(str + ":", bool);
+				// console.log(str + ":", bool);
 				return bool
 				// return str === ""?false:true;
 			},
@@ -353,7 +353,7 @@ require "header.php";
 					},
 					dataType: "json",
 					success: (response) => {
-						console.log(response)
+						// console.log(response)
 						this.data = Object.assign([], response)
 					},
 					async: false
@@ -380,7 +380,7 @@ require "header.php";
 					dataType: "json",
 					success: (response) => {
 						this.data2 = Object.assign([], response)
-						console.log(response);
+						// console.log(response);
 					},
 					async: false
 
@@ -415,21 +415,27 @@ require "header.php";
 				// console.log(this.performances[key]);
 				// console.log(this.data2.performances[key]);
 				var data = []
+				// var raw_data = []
 				var perfs = Object.assign([], this.data2.performances[key])
 				perfs.forEach(val => {
 					var percentage = this.get_percentage_(val)
+					// raw_data.push(val)
 					data.push(percentage)
 					// console.log(this.data.length);
 				});
+				
+				// console.log("BUG: A82% >>>",data);
+				// console.log("BUG: raw_data >>>",raw_data);
 				var cfg = {
 					type: 'bar',
 					data: {
 						labels: [
-							"Poor ",
-							"Usatisfactory ",
-							"Satisfactory ",
-							"Very Satisfactory ",
-							"Outstanding "
+							"Poor",
+							"Usatisfactory",
+							"Satisfactory",
+							"Very Satisfactory",
+							"Outstanding",
+							"Not Answered",
 						],
 						datasets: [{
 							label: this.performances[key],
@@ -440,7 +446,7 @@ require "header.php";
 								'rgba(75, 192, 192, 0.2)',
 								'rgba(54, 162, 235, 0.2)',
 								'rgba(153, 102, 255, 0.2)',
-
+								'rgba(128, 128, 128, 0.2)',
 							],
 							borderColor: [
 								'rgba(255, 99, 132, 1)',
@@ -448,7 +454,7 @@ require "header.php";
 								'rgba(75, 192, 192, 1)',
 								'rgba(54, 162, 235, 1)',
 								'rgba(153, 102, 255, 1)',
-
+								'rgba(128, 128, 128, 1)',
 							],
 							fill: true,
 							borderWidth: 2,
@@ -527,6 +533,7 @@ require "header.php";
 					data.push(percentage)
 					// console.log(this.data.length);
 				});
+				// console.log("Perfs >>>", perfs);
 				var cfg = {
 					type: 'bar',
 					data: {
@@ -534,25 +541,22 @@ require "header.php";
 							"Decreased",
 							"No Impact",
 							"Increased",
+							"Not Answered",
 						],
 						datasets: [{
 							label: this.impacts[key],
 							data: data,
 							backgroundColor: [
 								'rgba(255, 99, 132, 0.2)',
-
 								'rgba(75, 192, 192, 0.2)',
-
 								'rgba(153, 102, 255, 0.2)',
-
+								'rgba(128, 128, 128, 0.2)',
 							],
 							borderColor: [
 								'rgba(255, 99, 132, 1)',
-
 								'rgba(75, 192, 192, 1)',
-
 								'rgba(153, 102, 255, 1)',
-
+								'rgba(128, 128, 128, 1)',
 							],
 							fill: true,
 							borderWidth: 2,
@@ -658,12 +662,12 @@ require "header.php";
 							backgroundColor: [
 								'rgba(75, 192, 192, 0.2)',
 								'rgba(255, 99, 132, 0.2)',
-								'rgba(153, 102, 255, 0.2)',
+								'rgba(128, 128, 128, 0.2)',
 							],
 							borderColor: [
 								'rgba(75, 192, 192, 1)',
 								'rgba(255, 99, 132, 1)',
-								'rgba(153, 102, 255, 1)',
+								'rgba(128, 128, 128, 1)',
 							],
 							fill: true,
 							borderWidth: 2,
