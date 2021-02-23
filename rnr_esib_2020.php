@@ -131,9 +131,11 @@ require "header.php";
 				<div class="card" v-for="(item, index) in data" :key="index" v-if="is_empty(item[13])">
 					<div class="content">
 						<!-- <div class="header">{{item[14]?item[14]:'Anonymous'}}</div> -->
-						<!-- <div class="meta"><span>{{item[15]?item[15]+" employee":""}}</span> {{item[16]?"from "+item[16]:""}}</div> -->
+						<!-- <div class="meta"></div> -->
 						<div class="description">
-							<p style="color:green;"><i>{{item[13]}}</i></p>
+							<p style="font-size: 20px;">
+								{{item[13]}} <i style="font-size:14px;">- <span>{{item[15]?item[15]+" employee":""}}</span> {{item[16]?"from "+item[16]:""}}</i>
+							</p>
 						</div>
 					</div>
 				</div>
