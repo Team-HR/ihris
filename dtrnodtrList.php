@@ -28,7 +28,7 @@
         <h3 style="text-align:center">List of employees who failed to submit their DTR's for the period of <template v-if="period!=''">{{period}}</template><template v-else>_______</template></h3>
 
         <template v-if="noDtrs.length>0">
-            <table class="ui celled table">
+            <table class="ui celled selectable table">
                 <thead>
                     <tr>
                         <th style="width:50px;text-align: center">No.</th>
@@ -39,7 +39,7 @@
                 <tbody>
                     <tr v-for="(noDtr,index) in noDtrs">
                         <td style="text-align: center">{{index+1}}.</td>
-                        <td><a :href="'employeeinfo.v2.php?employees_id='+noDtr.employees_id" target="_blank">{{noDtr.lastName}} , {{noDtr.firstName}} {{noDtr.middleName}}. {{noDtr.extName}}</td>
+                        <td><a :href="'employeeinfo.v2.php?employees_id='+noDtr.employees_id" target="_blank">{{noDtr.lastName}} , {{noDtr.firstName}} {{noDtr.middleName}} {{noDtr.extName}}</td>
                         <td style="text-align: center">
                             <template v-if="noDtr.letterOfNotice">
                                   <i class="check icon green"></i>

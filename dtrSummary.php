@@ -82,7 +82,7 @@
     <br>    
     <template>
         <template v-if="filterDepartment.length>0">
-        <table class="ui celled table" style="width:95%;margin:auto" v-for="(dep,index) in filterDepartment" :key="index">
+        <table class="ui celled selectable compact table" style="width:95%;margin:auto" v-for="(dep,index) in filterDepartment" :key="index">
                 <thead>
                     <tr>
                         <th colspan="11">
@@ -109,17 +109,17 @@
 
                 </thead>
                 <tbody>
-                    <tr v-for="(ar,index) in dep.dat">
+                    <tr v-for="(ar,index) in sortArrays(dep.dat)">
                         <td>{{ar.lastName}} {{ar.firstName}} {{ar.middleName}} {{ar.extName}}</td>
                         <td>{{ar.department}}</td>
-                        <td>{{ar.totalTardy}}</td>
-                        <td>{{ar.totalMinsTardy}}</td>
-                        <td>{{ar.halfDaysTardy}}</td>
-                        <td>{{showEquiv(ar.totalMinsTardy)}}</td>
-                        <td>{{ar.totalMinsUndertime}}</td>
-                        <td>{{ar.halfDaysUndertime}}</td>
-                        <td>{{showEquiv(ar.totalMinsUndertime)}}</td>
-                        <td><span v-html="newLine(ar.remarks,',')"></span></td>
+                        <td style="background-color:#9ec14b70;color:#086d08">{{ar.totalTardy}}</td>
+                        <td style="background-color:#9ec14b70;color:#086d08">{{ar.totalMinsTardy}}</td>
+                        <td style="background-color:#9ec14b70;color:#086d08">{{ar.halfDaysTardy}}</td>
+                        <td style="background-color:#9ec14b70;color:#086d08">{{showEquiv(ar.totalMinsTardy)}}</td>
+                        <td style="background-color:#7accc078;color:#088dad">{{ar.totalMinsUndertime}}</td>
+                        <td style="background-color:#7accc078;color:#088dad">{{ar.halfDaysUndertime}}</td>
+                        <td style="background-color:#7accc078;color:#088dad">{{showEquiv(ar.totalMinsUndertime)}}</td>
+                      <td><span v-html="newLine(ar.remarks,',')"></span></td>
                         <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(index)">View Summary</button></td>
                     </tr>
                 </tbody>
@@ -128,7 +128,7 @@
             <br>
         </template>
         <template v-else-if="filterTardy.length>0">
-        <table class="ui celled table" style="width:95%;margin:auto">
+        <table class="ui celled selectable compact table" style="width:95%;margin:auto">
                 <thead>
                     <tr>
                         <th colspan="11">
@@ -155,16 +155,16 @@
 
                 </thead>
                 <tbody>
-                    <tr v-for="(ar,index) in filterTardy">
+                    <tr v-for="(ar,index) in sortArrays(filterTardy)">
                         <td>{{ar.lastName}} {{ar.firstName}} {{ar.middleName}} {{ar.extName}} </td>
                         <td>{{ar.department}}</td>
-                        <td>{{ar.totalTardy}}</td>
-                        <td>{{ar.totalMinsTardy}}</td>
-                        <td>{{ar.halfDaysTardy}}</td>
-                        <td>{{showEquiv(ar.totalMinsTardy)}}</td>
-                        <td>{{ar.totalMinsUndertime}}</td>
-                        <td>{{ar.halfDaysUndertime}}</td>
-                        <td>{{showEquiv(ar.totalMinsUndertime)}}</td>
+                        <td style="background-color:#9ec14b70;color:#086d08">{{ar.totalTardy}}</td>
+                        <td style="background-color:#9ec14b70;color:#086d08">{{ar.totalMinsTardy}}</td>
+                        <td style="background-color:#9ec14b70;color:#086d08">{{ar.halfDaysTardy}}</td>
+                        <td style="background-color:#9ec14b70;color:#086d08">{{showEquiv(ar.totalMinsTardy)}}</td>
+                        <td style="background-color:#7accc078;color:#088dad">{{ar.totalMinsUndertime}}</td>
+                        <td style="background-color:#7accc078;color:#088dad">{{ar.halfDaysUndertime}}</td>
+                        <td style="background-color:#7accc078;color:#088dad">{{showEquiv(ar.totalMinsUndertime)}}</td>
                         <td><span v-html="newLine(ar.remarks,',')"></span></td>
                         <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(index)">View Summary</button></td>
                     </tr>
@@ -173,7 +173,7 @@
 
         </template>
         <template v-else>
-            <table class="ui celled table" style="width:95%;margin:auto">
+            <table class="ui celled selectable compact table" style="width:95%;margin:auto">
                 <thead>
                     <tr>
                         <th colspan="11">
@@ -197,19 +197,18 @@
                         <th>Date of Half Day</th>
                         <th>EQUIV</th>
                     </tr>
-
                 </thead>
                 <tbody>
-                    <tr v-for="(ar,index) in DataRequest">
+                    <tr v-for="(ar,index) in sortArrays(DataRequest)">
                         <td>{{ar.lastName}} {{ar.firstName}} {{ar.middleName}} {{ar.extName}}</td>
                         <td>{{ar.department}}</td>
-                        <td>{{ar.totalTardy}}</td>
-                        <td>{{ar.totalMinsTardy}}</td>
-                        <td>{{ar.halfDaysTardy}}</td>
-                        <td>{{showEquiv(ar.totalMinsTardy)}}</td>
-                        <td>{{ar.totalMinsUndertime}}</td>
-                        <td>{{ar.halfDaysUndertime}}</td>
-                        <td>{{showEquiv(ar.totalMinsUndertime)}}</td>
+                        <td style="background-color:#9ec14b70;color:#086d08">{{ar.totalTardy}}</td>
+                        <td style="background-color:#9ec14b70;color:#086d08">{{ar.totalMinsTardy}}</td>
+                        <td style="background-color:#9ec14b70;color:#086d08">{{ar.halfDaysTardy}}</td>
+                        <td style="background-color:#9ec14b70;color:#086d08">{{showEquiv(ar.totalMinsTardy)}}</td>
+                        <td style="background-color:#7accc078;color:#088dad">{{ar.totalMinsUndertime}}</td>
+                        <td style="background-color:#7accc078;color:#088dad">{{ar.halfDaysUndertime}}</td>
+                        <td style="background-color:#7accc078;color:#088dad">{{showEquiv(ar.totalMinsUndertime)}}</td>
                         <td><span v-html="newLine(ar.remarks,',')"></span></td>
                         <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(index)">View Summary</button></td>
                     </tr>
