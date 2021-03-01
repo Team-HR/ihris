@@ -44,7 +44,7 @@ var dtrSummary = new Vue({
                 var xml = new XMLHttpRequest()
                 xml.onload = function(){
                     try {
-                        this_dtr.DataRequest = JSON.parse(xml.responseText);                        
+                        this_dtr.DataRequest = JSON.parse(xml.responseText);   
                     } catch (error) {
                         $('body').toast({
                             class: 'error',
@@ -55,7 +55,13 @@ var dtrSummary = new Vue({
                 }   
                 xml.open('POST','umbra/dtrManagement/config_summary.php',false)
                 xml.send(fd)
-        },filter:function(){
+        },
+        sortArrays(arrays) {
+            return arrays.slice().sort(function(a, b){
+                return (a.lastName > b.lastName) ? 1 : -1;
+              });
+        },
+        filter:function(){
             this_app = this;
             this.filterDepartment = [];
             this.filterTardy = [];
