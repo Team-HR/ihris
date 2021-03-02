@@ -17,6 +17,37 @@ var dtrSummary = new Vue({
         letterGen:function(l){
             window.location.href = l+".php?selectedDat="+this.selected_data.dtrSummary_id;
         },
+        changeColor:function(id,color){
+            var this_dtr = this;
+            var fd = new FormData()
+                fd.append('color',color);
+                fd.append('changeColor',id);
+            var xml = new XMLHttpRequest()
+                xml.onload = function(){
+                    this_dtr.getDataNeeded()
+                }
+                xml.open('POST','umbra/dtrManagement/config_summary.php',false);
+                xml.send(fd);
+        },
+        revertColor:function(id){
+            this_dtr = this
+            $('body')
+            .toast({
+                message: 'Do you really want to revert change',
+                actions:	[{
+                text: 'Yes',
+                icon: 'check',
+                class: 'green',
+                click: function() {
+                    this_dtr.changeColor(id,''); 
+                }
+                },{
+                icon: 'ban',
+                class: 'icon red'
+                }]
+            })
+            ;
+        },
         getDepartment:function(){
             this_dtr = this
             var fd = new FormData()
@@ -45,6 +76,7 @@ var dtrSummary = new Vue({
                 xml.onload = function(){
                     try {
                         this_dtr.DataRequest = JSON.parse(xml.responseText);   
+                        this_dtr.filter();
                     } catch (error) {
                         $('body').toast({
                             class: 'error',

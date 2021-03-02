@@ -39,5 +39,10 @@ if(isset($_POST['getDepartment'])){
         $a[] = $row;
     }
     echo json_encode($a);
+}elseif(isset($_POST['changeColor'])){
+    $id = $_POST['changeColor'];
+    $color = $_POST['color'];
+    $sql = "UPDATE `dtrSummary` SET `color` = '$color' WHERE `dtrSummary`.`dtrSummary_id` = '$id'";
+    $sql = $mysqli->query($sql);
 }
 ?>

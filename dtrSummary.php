@@ -2,6 +2,17 @@
     $title = "DTR Summary";
     require_once "header.php";
 ?>
+<style>
+    th{
+        position:sticky;
+        top:0
+    }
+    table{
+        position:relative;
+    }
+
+</style>
+
 <div id="dtrSummary_app">
     <!-- modal -->
     <div class="ui small modal" id="optionModal">
@@ -10,7 +21,7 @@
             <h3>Name: <u>{{selected_data.lastName}} {{selected_data.firstName}} {{selected_data.middleName}}. {{selected_data.extName}}</u></h3>
             <h3>Current Month Tardy: <u>{{selected_data.month}}</u></h3>
             <table class="ui celled table" style="text-align:center">
-                <thead>
+                <thead >
                     <tr>
                         <th colspan="2">Tardiness history</th>
                     </tr>
@@ -86,18 +97,20 @@
                 <thead>
                     <tr>
                         <th colspan="11">
-                        <h2>Summary table {{period}}</h2>
+                          Summary table {{period}}
                         </th>
                     </tr>
                     <tr>
-                        <th rowspan="2">Employee</th>
-                        <th rowspan="2">Department</th>
-                        <th colspan="4" style="text-align:center">TARDY</th>
-                        <th colspan="3" style="text-align:center">Undertime</th>
-                        <th rowspan="2">Remarks</th>
-                        <th rowspan="2">Options</th>
+                        <th></th>
+                        <th></th>
+                        <th colspan="4">TARDY</th>
+                        <th colspan="3">Undertime</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                     <tr>
+                        <th >Employee</th>
+                        <th>Department</th>
                         <th>No. Times</th>
                         <th>Total Mins.</th>
                         <th>Date of Half Day</th>
@@ -105,8 +118,9 @@
                         <th>Total Mins.</th>
                         <th>Date of Half Day</th>
                         <th>EQUIV</th>
+                        <th>Remarks</th>
+                        <th>Options</th>
                     </tr>
-
                 </thead>
                 <tbody>
                     <tr v-for="(ar,index) in sortArrays(dep.dat)">
@@ -132,18 +146,20 @@
                 <thead>
                     <tr>
                         <th colspan="11">
-                        <h2>Summary table {{period}}</h2>
+                          Summary table {{period}}
                         </th>
                     </tr>
                     <tr>
-                        <th rowspan="2">Employee</th>
-                        <th rowspan="2">Department</th>
-                        <th colspan="4" style="text-align:center">TARDY</th>
-                        <th colspan="3" style="text-align:center">Undertime</th>
-                        <th rowspan="2">Remarks</th>
-                        <th rowspan="2">Options</th>
+                        <th></th>
+                        <th></th>
+                        <th colspan="4">TARDY</th>
+                        <th colspan="3">Undertime</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                     <tr>
+                        <th >Employee</th>
+                        <th>Department</th>
                         <th>No. Times</th>
                         <th>Total Mins.</th>
                         <th>Date of Half Day</th>
@@ -151,8 +167,9 @@
                         <th>Total Mins.</th>
                         <th>Date of Half Day</th>
                         <th>EQUIV</th>
+                        <th>Remarks</th>
+                        <th>Options</th>
                     </tr>
-
                 </thead>
                 <tbody>
                     <tr v-for="(ar,index) in sortArrays(filterTardy)">
@@ -170,25 +187,28 @@
                     </tr>
                 </tbody>
             </table>
-
         </template>
         <template v-else>
             <table class="ui celled selectable compact table" style="width:95%;margin:auto">
                 <thead>
                     <tr>
-                        <th colspan="11">
-                        <h2>Summary table {{period}}</h2>
+                        <th colspan="12">
+                          Summary table {{period}}
                         </th>
                     </tr>
                     <tr>
-                        <th rowspan="2">Employee</th>
-                        <th rowspan="2">Department</th>
-                        <th colspan="4" style="text-align:center">TARDY</th>
-                        <th colspan="3" style="text-align:center">Undertime</th>
-                        <th rowspan="2">Remarks</th>
-                        <th rowspan="2">Options</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th colspan="4">TARDY</th>
+                        <th colspan="3">Undertime</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                     <tr>
+                        <th></th>
+                        <th >Employee</th>
+                        <th>Department</th>
                         <th>No. Times</th>
                         <th>Total Mins.</th>
                         <th>Date of Half Day</th>
@@ -196,10 +216,21 @@
                         <th>Total Mins.</th>
                         <th>Date of Half Day</th>
                         <th>EQUIV</th>
+                        <th>Remarks</th>
+                        <th>Options</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(ar,index) in sortArrays(DataRequest)">
+                    <tr v-for="(ar,index) in sortArrays(DataRequest)" :style="'background-color:'+ar.color">
+                        <td>
+                            <button v-if="!ar.color" class="ui yellow compact icon mini button" @click="changeColor(ar.dtrSummary_id,'#ead74da8')">
+                                <i class="check icon"></i>
+                            </button>
+                            <button v-else class="ui inverted red compact icon mini button" @click="revertColor(ar.dtrSummary_id)">
+                                <i class="close icon"></i>
+                            </button>
+                            
+                        </td>
                         <td>{{ar.lastName}} {{ar.firstName}} {{ar.middleName}} {{ar.extName}}</td>
                         <td>{{ar.department}}</td>
                         <td style="background-color:#9ec14b70;color:#086d08">{{ar.totalTardy}}</td>
@@ -216,8 +247,6 @@
             </table>
         </template>    
     </template>    
-    
-
 </div>
 <script src="umbra/dtrManagement/config_summary.js"></script>
 <script>
