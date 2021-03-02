@@ -127,20 +127,27 @@ require "header.php";
 
 
 			<h2 class="ui header block">Comments and Suggestions:</h2>
-			<div class="ui two cards">
+			<!-- <div class="ui two cards">
 				<div class="card" v-for="(item, index) in data" :key="index" v-if="is_empty(item[13])">
-					<div class="content">
+					<div class="content"> -->
 						<!-- <div class="header">{{item[14]?item[14]:'Anonymous'}}</div> -->
 						<!-- <div class="meta"></div> -->
-						<div class="description">
+						<!-- <div class="description">
 							<p style="font-size: 20px;">
 								{{item[13]}} <i style="font-size:14px;">- <span>{{item[15]?item[15]+" employee":""}}</span> {{item[16]?"from "+item[16]:""}}</i>
 							</p>
 						</div>
 					</div>
 				</div>
-			</div>
-
+			</div> -->
+<ol class="ui list" style="font-size: 24px;">
+<template v-for="(item, index) in data">
+	<li :key="index" v-if="is_empty(item[13])" style="padding-left: 10px;">
+	&nbsp;&nbsp;&nbsp;
+	{{item[13]}} <i style="font-size:14px; color: green;">- <span>{{item[15]?item[15]+" employee":""}}</span> {{item[16]?"from "+item[16]:""}}</i>
+	</li>
+</template>
+</ol>
 			<h2 class="ui header block">Respondents:</h2>
 
 			<div class="ui two cards">
