@@ -89,10 +89,17 @@
             </div>
         </div>
             <div v-if="dtr.length">
-                <div v-if="!dtrSummary">
+                <div v-if="dtrSummary">
+                    <div v-if="dtrSummary.submitted==''||dtrSummary.submitted=='0'">
+                        <button class="ui button yellow" style="float:right" @click="hasSumitted()">Submitted</button>
+                    </div>
+                    <div v-else>
+                        <button class="ui button red" style="float:right" @click="cancelMove()">Cancel</button>
+                    </div>
+                </div>
+                <div v-else>
                     <button class="ui button yellow" style="float:right" @click="hasSumitted()">Submitted</button>
                 </div>
-
                 <br>
                 <br>
                 <table class="ui celled table" id="example1"> 

@@ -63,6 +63,32 @@ var dtr_app = new Vue({
             this.halfDaysUndertime = halfUnder;
             this.remarksDtr = remarks;
         },
+        cancelMove:function(id){
+            this_dtr = this;
+            $('body').toast({
+                message: 'Do you really want to star Fomantic-UI?',
+                class: 'red',
+                actions:	[{
+                  text: 'Yes',
+                  icon: 'check',
+                  class: 'green',
+                  click: function() {
+                    var fd = new FormData() 
+                    fd.append('cancelMove',true);
+                    fd.append('period',this_dtr.period)
+                    fd.append('emp_id',this_dtr.emp_id)
+                var xml = new XMLHttpRequest()
+                    xml.onload = function(){
+                        this_dtr.submitReport();
+                    }   
+                    xml.open('POST','umbra/dtrManagement/config.php',false)
+                    xml.send(fd)                  }
+                },{
+                  icon: 'ban',
+                  class: 'icon red'
+                }]
+              })
+            },
         addDTR:function(){
             this_dtr = this
             var dtr_date = this.period+"-"+this.selectedDate;
