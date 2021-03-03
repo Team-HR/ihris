@@ -96,11 +96,12 @@
         <table class="ui celled selectable compact table" style="width:95%;margin:auto" v-for="(dep,index) in filterDepartment" :key="index">
                 <thead>
                     <tr>
-                        <th colspan="11">
+                        <th colspan="12">
                           Summary table {{period}}
                         </th>
                     </tr>
                     <tr>
+                        <th></th>
                         <th></th>
                         <th></th>
                         <th colspan="4">TARDY</th>
@@ -109,6 +110,7 @@
                         <th></th>
                     </tr>
                     <tr>
+                        <th></th>
                         <th >Employee</th>
                         <th>Department</th>
                         <th>No. Times</th>
@@ -123,7 +125,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(ar,index) in sortArrays(dep.dat)">
+                    <tr v-for="(ar,index) in sortArrays(dep.dat)" :style="'background-color:'+ar.color">
+                        <td>
+                            <button v-if="!ar.color" class="ui yellow compact icon mini button" @click="changeColor(ar.dtrSummary_id,'#ead74da8')">
+                                <i class="check icon"></i>
+                            </button>
+                            <button v-else class="ui inverted red compact icon mini button" @click="revertColor(ar.dtrSummary_id)">
+                                <i class="close icon"></i>
+                            </button>
+                            
+                        </td>
                         <td>{{ar.lastName}} {{ar.firstName}} {{ar.middleName}} {{ar.extName}}</td>
                         <td>{{ar.department}}</td>
                         <td style="background-color:#9ec14b70;color:#086d08">{{ar.totalTardy}}</td>
@@ -145,11 +156,12 @@
         <table class="ui celled selectable compact table" style="width:95%;margin:auto">
                 <thead>
                     <tr>
-                        <th colspan="11">
+                        <th colspan="12">
                           Summary table {{period}}
                         </th>
                     </tr>
                     <tr>
+                        <th></th>
                         <th></th>
                         <th></th>
                         <th colspan="4">TARDY</th>
@@ -158,6 +170,7 @@
                         <th></th>
                     </tr>
                     <tr>
+                        <th></th>
                         <th >Employee</th>
                         <th>Department</th>
                         <th>No. Times</th>
@@ -172,7 +185,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(ar,index) in sortArrays(filterTardy)">
+                    <tr v-for="(ar,index) in sortArrays(filterTardy)" :style="'background-color:'+ar.color">
+                        <td>
+                            <button v-if="!ar.color" class="ui yellow compact icon mini button" @click="changeColor(ar.dtrSummary_id,'#ead74da8')">
+                                <i class="check icon"></i>
+                            </button>
+                            <button v-else class="ui inverted red compact icon mini button" @click="revertColor(ar.dtrSummary_id)">
+                                <i class="close icon"></i>
+                            </button>
+                            
+                        </td>
                         <td>{{ar.lastName}} {{ar.firstName}} {{ar.middleName}} {{ar.extName}} </td>
                         <td>{{ar.department}}</td>
                         <td style="background-color:#9ec14b70;color:#086d08">{{ar.totalTardy}}</td>
