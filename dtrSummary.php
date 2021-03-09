@@ -211,11 +211,17 @@
             </table>
         </template>
         <template v-else>
-            <table class="ui celled selectable compact table" style="width:95%;margin:auto">
+            <table class="ui celled selectable compact table" style="width:95%;margin:auto" v-if="DataRequest.length>0">
                 <thead>
                     <tr>
-                        <th colspan="12">
+                        <th colspan="7">
                           Summary table {{period}}
+                        </th>
+                        <th colspan="5">
+                            <div class="ui icon input fluid">
+                                <i class="search icon"></i>
+                                <input type="text" placeholder="Search..." v-model="findInTable">
+                            </div>                        
                         </th>
                     </tr>
                     <tr>
@@ -242,7 +248,7 @@
                         <th>Options</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="allDataTable">
                     <tr v-for="(ar,index) in sortArrays(DataRequest)" :style="'background-color:'+ar.color">
                         <td>
                             <button v-if="!ar.color" class="ui yellow compact icon mini button" @click="changeColor(ar.dtrSummary_id,'#ead74da8')">
