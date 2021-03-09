@@ -66,7 +66,7 @@ var dtr_app = new Vue({
         cancelMove:function(id){
             this_dtr = this;
             $('body').toast({
-                message: 'Do you really want to star Fomantic-UI?',
+                message: 'Do you really want Revert changes?',
                 class: 'red',
                 actions:	[{
                   text: 'Yes',

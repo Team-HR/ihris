@@ -9,6 +9,7 @@ var dtrSummary = new Vue({
         tardyLetter:false,
         filterTardy:[],
         filterDepartment:[],
+        findInTable:"",
         // modal dats
             selected_data:"",
             tardayHist:[]
@@ -35,7 +36,7 @@ var dtrSummary = new Vue({
             .toast({
                 message: 'Do you really want to revert change',
                 actions:	[{
-                text: 'Yes',
+                text: 'Yes',    
                 icon: 'check',
                 class: 'green',
                 click: function() {
@@ -76,6 +77,15 @@ var dtrSummary = new Vue({
                 xml.onload = function(){
                     try {
                         this_dtr.DataRequest = JSON.parse(xml.responseText);   
+                        if(this_dtr.DataRequest.length<1){
+                            $('body')
+                            .toast({
+                                class: 'error',
+                                position:'center top',
+                                message: `No Results found`
+                            })
+                            ;
+                        }
                         this_dtr.filter();
                     } catch (error) {
                         $('body').toast({
@@ -164,6 +174,24 @@ var dtrSummary = new Vue({
     mounted:function(){
         this.getDepartment();
     },watch:{
+        findInTable:function(){
+            filter = this.findInTable.toUpperCase()       
+            tr = document.getElementById("allDataTable").childNodes;            
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1];
+                if (td) {
+                  txtValue = td.textContent || td.innerText;
+                  if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                  } else {
+                    tr[i].style.display = "none";
+                  }
+                }
+              }
+        },
+        period:function(){
+            this.DataRequest = [];                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+        },
         tardyLetter:function(){
             this.filter();
         },
