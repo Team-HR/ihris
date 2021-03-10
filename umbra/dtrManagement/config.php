@@ -137,5 +137,18 @@
         }
         $sql = $mysqli->query($sql);
         echo $mysqli->error;
+    }elseif (isset($_POST['cancelMove'])) {
+            $period = $_POST['period'];
+            $emp_id = $_POST['emp_id'];
+            $check = "SELECT * from dtrSummary where `month`='$period' and `employee_id`='$emp_id'";
+            $check = $mysqli->query($check);
+            $check = $check->fetch_assoc();
+            if($check){
+                $sql = "UPDATE `dtrSummary` SET `submitted` = '' WHERE `dtrSummary_id` = '$check[dtrSummary_id]'";
+            }else{
+                $sql= "INSERT INTO `dtrSummary` (`dtrSummary_id`, `employee_id`, `month`, `submitted`) VALUES (NULL, '$emp_id', '$period','')";
+            }
+            $sql = $mysqli->query($sql);
+            echo $mysqli->error;            
     }
 ?>

@@ -2,18 +2,54 @@
     $title = "DTR Summary";
     require_once "header.php";
 ?>
+<style>
+    th.a{
+        position:sticky;
+        top:89px;
+    }
+    th.ab{
+        position:sticky;
+        top:50px
+    }
+    th.abc{
+        position:sticky;
+        top:0
+    }
+    table{
+        position:relative;
+    }
+
+</style>
+
 <div id="dtrSummary_app">
     <!-- modal -->
     <div class="ui small modal" id="optionModal">
-        <div class="header">TARDINESS INFORMATION</div>
         <div class="content">
-         <h4>Name: {{selected_data.lastName}} {{selected_data.firstName}} {{selected_data.middleName}}<br>
-                Current month x10 Tardy:{{selected_data.month}}</h4> 
-            <table class="ui celled table" style="text-align:center">
-                <thead>
+    
+                <table class="ui celled table">
+                <thead >
                     <tr>
-                        <th colspan="2">Tardiness history</th>
+                        <th colspan="2" style="background:#004d26; color:white; text-align:center">Tardiness Information</th>
                     </tr>
+                    <tr>
+                        <th style="width:30%; text-align:right">Name:</th>
+                        <th> {{selected_data.firstName}} {{selected_data.middleName}} {{selected_data.lastName}} {{selected_data.extName}}</th>
+                    </tr>
+                    <tr>
+                    <th style="width:30%; text-align:right">Current month tardy:</th>
+                        <th> {{selected_data.month}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(hist,index) in tardayHist">
+                        <td>{{hist.month}}</td>
+                        <td>{{hist.totalTardy}}</td>
+                    </tr>
+                </tbody>
+            </table>
+           
+            <table class="ui celled table" style="text-align:center">
+                <thead >
                     <tr>
                         <th>Month</th>
                         <th>Number of times</th>
@@ -42,7 +78,7 @@
         <div class="ui section divider"></div> 
             <form class="ui form" @submit.prevent="getDataNeeded()">
                 <div class="field">
-                    <label>Month:</label>
+                    <label>Select month:</label>
                     <input type="month" placeholder="Month" v-model="period" required>
                 </div>
                 <!-- <div class="field">
@@ -57,9 +93,9 @@
             <br>
         <div class="ui section divider"></div>
             <form class="ui form">  
-            <h3>Filter:</h3>
+            <h3><i class="filter icon"></i>  Filter: </h3>
                 <div class="field">
-                    <label>Departments</label>
+                    <label>by department</label>
                     <select multiple="" class="ui fluid search dropdown" v-model="selectedDepartment">
                         <option value="">Departments</option>
                         <template>
@@ -73,7 +109,7 @@
                     <div class="ui compact inverted segment">
                         <div class="ui inverted checkbox">
                             <input type="checkbox" v-model="tardyLetter">
-                            <label>10x TARDY ONLY</label>
+                            <label>Show 10x tardy ONLY</label>
                         </div>
                     </div>
                 </div>
@@ -82,44 +118,58 @@
     <br>    
     <template>
         <template v-if="filterDepartment.length>0">
-        <table class="ui celled table" style="width:95%;margin:auto" v-for="(dep,index) in filterDepartment" :key="index">
+        <table class="ui celled selectable compact table" style="width:95%;margin:auto" v-for="(dep,index) in filterDepartment" :key="index">
                 <thead>
                     <tr>
-                        <th colspan="11">
-                        <h2>Summary table {{period}}</h2>
+                        <th colspan="12">
+                          Summary table {{period}}
                         </th>
                     </tr>
                     <tr>
-                        <th rowspan="2">Employee</th>
-                        <th rowspan="2">Department</th>
-                        <th colspan="4" style="text-align:center">TARDY</th>
-                        <th colspan="3" style="text-align:center">UNDERTIME</th>
-                        <th rowspan="2">Remarks</th>
-                        <th rowspan="2">Options</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th colspan="4" style="text-align: center">TARDY</th>
+                        <th colspan="3" style="text-align: center">UNDERTIME</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                     <tr>
-                        <th>No. Times</th>
-                        <th>Total Mins.</th>
-                        <th>Date of Half Day</th>
-                        <th>EQUIV</th>
-                        <th>Total Mins.</th>
-                        <th>Date of Half Day</th>
-                        <th>EQUIV</th>
+                        <th></th>
+                        <th>Employee</th>
+                        <th>Department</th>
+                        <th>No. of times</th>
+                        <th>Total mins.</th>
+                        <th>Date of half-day</th>
+                        <th>Equiv.</th>
+                        <th>Total mins.</th>
+                        <th>Date of half-day</th>
+                        <th>Equiv.</th>
+                        <th style="text-align: center">Remarks</th>
+                        <th style="text-align: center">Options</th>
                     </tr>
-
                 </thead>
                 <tbody>
-                    <tr v-for="(ar,index) in dep.dat">
-                        <td>{{ar.firstName}} {{ar.middleName}} {{ar.lastName}}</td>
+                    <tr v-for="(ar,index) in sortArrays(dep.dat)" :style="'background-color:'+ar.color">
+                        <td>
+                            <button v-if="!ar.color" class="ui yellow compact icon mini button" @click="changeColor(ar.dtrSummary_id,'#ead74da8')">
+                                <i class="check icon"></i>
+                            </button>
+                            <button v-else class="ui inverted red compact icon mini button" @click="revertColor(ar.dtrSummary_id)">
+                                <i class="close icon"></i>
+                            </button>
+                            
+                        </td>
+                        <td>{{ar.lastName}} {{ar.firstName}} {{ar.middleName}} {{ar.extName}}</td>
                         <td>{{ar.department}}</td>
-                        <td>{{ar.totalTardy}}</td>
-                        <td>{{ar.totalMinsTardy}}</td>
-                        <td>{{ar.halfDaysTardy}}</td>
-                        <td>{{showEquiv(ar.totalMinsTardy)}}</td>
-                        <td>{{ar.totalMinsUndertime}}</td>
-                        <td>{{ar.halfDaysUndertime}}</td>
-                        <td>{{showEquiv(ar.totalMinsUndertime)}}</td>
-                        <td><span v-html="newLine(ar.remarks,',')"></span></td>
+                        <td style="background-color:#9ec14b70;color:#086d08">{{ar.totalTardy}}</td>
+                        <td style="background-color:#9ec14b70;color:#086d08">{{ar.totalMinsTardy}}</td>
+                        <td style="background-color:#9ec14b70;color:#086d08">{{ar.halfDaysTardy}}</td>
+                        <td style="background-color:#9ec14b70;color:#086d08">{{showEquiv(ar.totalMinsTardy)}}</td>
+                        <td style="background-color:#7accc078;color:#088dad">{{ar.totalMinsUndertime}}</td>
+                        <td style="background-color:#7accc078;color:#088dad">{{ar.halfDaysUndertime}}</td>
+                        <td style="background-color:#7accc078;color:#088dad">{{showEquiv(ar.totalMinsUndertime)}}</td>
+                      <td><span v-html="newLine(ar.remarks,',')"></span></td>
                         <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(index)">View</button></td>
                     </tr>
                 </tbody>
@@ -128,88 +178,121 @@
             <br>
         </template>
         <template v-else-if="filterTardy.length>0">
-        <table class="ui celled table" style="width:95%;margin:auto">
+        <table class="ui celled selectable compact table" style="width:95%;margin:auto">
                 <thead>
                     <tr>
-                        <th colspan="11">
-                        <h2>Summary table {{period}}</h2>
+                        <th colspan="12">
+                          Summary table {{period}}
                         </th>
                     </tr>
                     <tr>
-                        <th rowspan="2">Employee</th>
-                        <th rowspan="2">Department</th>
-                        <th colspan="4" style="text-align:center">TARDY</th>
-                        <th colspan="3" style="text-align:center">UNDERTIME</th>
-                        <th rowspan="2">Remarks</th>
-                        <th rowspan="2">Options</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th colspan="4" style="text-align: center">TARDY</th>
+                        <th colspan="3" style="text-align: center">UNDERTIME</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                     <tr>
-                        <th>No. Times</th>
-                        <th>Total Mins.</th>
-                        <th>Date of Half Day</th>
-                        <th>EQUIV</th>
-                        <th>Total Mins.</th>
-                        <th>Date of Half Day</th>
-                        <th>EQUIV</th>
+                        <th></th>
+                        <th>Employee</th>
+                        <th>Department</th>
+                        <th>No. of times</th>
+                        <th>Total mins.</th>
+                        <th>Date of half-day</th>
+                        <th>Equiv.</th>
+                        <th>Total mins.</th>
+                        <th>Date of half-day</th>
+                        <th>Equiv.</th>
+                        <th style="text-align: center">Remarks</th>
+                        <th style="text-align: center">Options</th>
                     </tr>
-
                 </thead>
                 <tbody>
-                    <tr v-for="(ar,index) in filterTardy">
-                        <td>{{ar.firstName}} {{ar.middleName}} {{ar.lastName}}</td>
+                    <tr v-for="(ar,index) in sortArrays(filterTardy)" :style="'background-color:'+ar.color">
+                        <td>
+                            <button v-if="!ar.color" class="ui yellow compact icon mini button" @click="changeColor(ar.dtrSummary_id,'#ead74da8')">
+                                <i class="check icon"></i>
+                            </button>
+                            <button v-else class="ui inverted red compact icon mini button" @click="revertColor(ar.dtrSummary_id)">
+                                <i class="close icon"></i>
+                            </button>
+                            
+                        </td>
+                        <td>{{ar.lastName}} {{ar.firstName}} {{ar.middleName}} {{ar.extName}} </td>
                         <td>{{ar.department}}</td>
-                        <td>{{ar.totalTardy}}</td>
-                        <td>{{ar.totalMinsTardy}}</td>
-                        <td>{{ar.halfDaysTardy}}</td>
-                        <td>{{showEquiv(ar.totalMinsTardy)}}</td>
-                        <td>{{ar.totalMinsUndertime}}</td>
-                        <td>{{ar.halfDaysUndertime}}</td>
-                        <td>{{showEquiv(ar.totalMinsUndertime)}}</td>
+                        <td style="background-color:#9ec14b70;color:#086d08">{{ar.totalTardy}}</td>
+                        <td style="background-color:#9ec14b70;color:#086d08">{{ar.totalMinsTardy}}</td>
+                        <td style="background-color:#9ec14b70;color:#086d08">{{ar.halfDaysTardy}}</td>
+                        <td style="background-color:#9ec14b70;color:#086d08">{{showEquiv(ar.totalMinsTardy)}}</td>
+                        <td style="background-color:#7accc078;color:#088dad">{{ar.totalMinsUndertime}}</td>
+                        <td style="background-color:#7accc078;color:#088dad">{{ar.halfDaysUndertime}}</td>
+                        <td style="background-color:#7accc078;color:#088dad">{{showEquiv(ar.totalMinsUndertime)}}</td>
                         <td><span v-html="newLine(ar.remarks,',')"></span></td>
                         <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(index)">View</button></td>
                     </tr>
                 </tbody>
             </table>
-
         </template>
         <template v-else>
-            <table class="ui celled table" style="width:95%;margin:auto">
+            <table class="ui celled selectable compact table" style="width:95%;margin:auto" v-if="DataRequest.length>0">
                 <thead>
                     <tr>
-                        <th colspan="11">
-                        <h2>Summary table {{period}}</h2>
+                        <th colspan="7"  class="abc">
+                          Summary table {{period}}
+                        </th>
+                        <th colspan="5" class="abc">
+                            <div class="ui icon input fluid">
+                                <i class="search icon"></i>
+                                <input type="text" placeholder="Search..." v-model="findInTable">
+                            </div>                        
                         </th>
                     </tr>
                     <tr>
-                        <th rowspan="2">Employee</th>
-                        <th rowspan="2">Department</th>
-                        <th colspan="4" style="text-align:center">TARDY</th>
-                        <th colspan="3" style="text-align:center">UNDERTIME</th>
-                        <th rowspan="2">Remarks</th>
-                        <th rowspan="2">Options</th>
+                        <th  class="ab"></th>
+                        <th  class="ab"></th>
+                        <th  class="ab"></th>
+                        <th  class="ab"colspan="4" style="text-align: center">TARDY</th>
+                        <th  class="ab" colspan="3" style="text-align: center">UNDERTIME</th>
+                        <th  class="ab"></th>
+                        <th  class="ab"></th>
                     </tr>
                     <tr>
-                        <th>No. times</th>
-                        <th>Total mins.</th>
-                        <th>Date of half-day</th>
-                        <th>Equiv.</th>
-                        <th>Total mins.</th>
-                        <th>Date of half-day</th>
-                        <th>Equiv.</th>
+                        <th  class="a"></th>
+                        <th  class="a">Employee</th>
+                        <th  class="a">Department</th>
+                        <th  class="a">No. of times</th>
+                        <th  class="a">Total mins.</th>
+                        <th  class="a">Date of half-day</th>
+                        <th  class="a">Equiv.</th>
+                        <th  class="a">Total mins.</th>
+                        <th  class="a">Date of half-day</th>
+                        <th  class="a">Equiv.</th>
+                        <th  class="a" style="text-align: center">Remarks</th>
+                        <th  class="a" style="text-align: center">Options</th>
                     </tr>
-
                 </thead>
-                <tbody>
-                    <tr v-for="(ar,index) in DataRequest">
-                        <td>{{ar.firstName}} {{ar.middleName}} {{ar.lastName}}</td>
+                <tbody id="allDataTable">
+                    <tr v-for="(ar,index) in sortArrays(DataRequest)" :style="'background-color:'+ar.color">
+                        <td>
+                            <button v-if="!ar.color" class="ui yellow compact icon mini button" @click="changeColor(ar.dtrSummary_id,'#ead74da8')">
+                                <i class="check icon"></i>
+                            </button>
+                            <button v-else class="ui inverted red compact icon mini button" @click="revertColor(ar.dtrSummary_id)">
+                                <i class="close icon"></i>
+                            </button>
+                            
+                        </td>
+                        <td>{{ar.lastName}} {{ar.firstName}} {{ar.middleName}} {{ar.extName}}</td>
                         <td>{{ar.department}}</td>
-                        <td>{{ar.totalTardy}}</td>
-                        <td>{{ar.totalMinsTardy}}</td>
-                        <td>{{ar.halfDaysTardy}}</td>
-                        <td>{{showEquiv(ar.totalMinsTardy)}}</td>
-                        <td>{{ar.totalMinsUndertime}}</td>
-                        <td>{{ar.halfDaysUndertime}}</td>
-                        <td>{{showEquiv(ar.totalMinsUndertime)}}</td>
+                        <td style="background-color:#9ec14b70;color:#086d08">{{ar.totalTardy}}</td>
+                        <td style="background-color:#9ec14b70;color:#086d08">{{ar.totalMinsTardy}}</td>
+                        <td style="background-color:#9ec14b70;color:#086d08">{{ar.halfDaysTardy}}</td>
+                        <td style="background-color:#9ec14b70;color:#086d08">{{showEquiv(ar.totalMinsTardy)}}</td>
+                        <td style="background-color:#7accc078;color:#088dad">{{ar.totalMinsUndertime}}</td>
+                        <td style="background-color:#7accc078;color:#088dad">{{ar.halfDaysUndertime}}</td>
+                        <td style="background-color:#7accc078;color:#088dad">{{showEquiv(ar.totalMinsUndertime)}}</td>
                         <td><span v-html="newLine(ar.remarks,',')"></span></td>
                         <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(index)">View</button></td>
                     </tr>
@@ -217,8 +300,6 @@
             </table>
         </template>    
     </template>    
-    
-
 </div>
 <script src="umbra/dtrManagement/config_summary.js"></script>
 <script>

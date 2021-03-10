@@ -9,16 +9,45 @@ var dtrSummary = new Vue({
         tardyLetter:false,
         filterTardy:[],
         filterDepartment:[],
+        findInTable:"",
         // modal dats
             selected_data:"",
             tardayHist:[]
-
-
-
     },
     methods:{
         letterGen:function(l){
             window.location.href = l+".php?selectedDat="+this.selected_data.dtrSummary_id;
+        },
+        changeColor:function(id,color){
+            var this_dtr = this;
+            var fd = new FormData()
+                fd.append('color',color);
+                fd.append('changeColor',id);
+            var xml = new XMLHttpRequest()
+                xml.onload = function(){
+                    this_dtr.getDataNeeded()
+                }
+                xml.open('POST','umbra/dtrManagement/config_summary.php',false);
+                xml.send(fd);
+        },
+        revertColor:function(id){
+            this_dtr = this
+            $('body')
+            .toast({
+                message: 'Do you really want to revert change?',
+                actions:	[{
+                text: 'Yes',    
+                icon: 'check',
+                class: 'green',
+                click: function() {
+                    this_dtr.changeColor(id,''); 
+                }
+                },{
+                icon: 'ban',
+                class: 'icon red'
+                }]
+            })
+            ;
         },
         getDepartment:function(){
             this_dtr = this
@@ -47,7 +76,17 @@ var dtrSummary = new Vue({
                 var xml = new XMLHttpRequest()
                 xml.onload = function(){
                     try {
-                        this_dtr.DataRequest = JSON.parse(xml.responseText);                        
+                        this_dtr.DataRequest = JSON.parse(xml.responseText);   
+                        if(this_dtr.DataRequest.length<1){
+                            $('body')
+                            .toast({
+                                class: 'error',
+                                position:'center top',
+                                message: `ERROR : No data found`
+                            })
+                            ;
+                        }
+                        this_dtr.filter();
                     } catch (error) {
                         $('body').toast({
                             class: 'error',
@@ -58,7 +97,13 @@ var dtrSummary = new Vue({
                 }   
                 xml.open('POST','umbra/dtrManagement/config_summary.php',false)
                 xml.send(fd)
-        },filter:function(){
+        },
+        sortArrays(arrays) {
+            return arrays.slice().sort(function(a, b){
+                return (a.lastName > b.lastName) ? 1 : -1;
+              });
+        },
+        filter:function(){
             this_app = this;
             this.filterDepartment = [];
             this.filterTardy = [];
@@ -129,6 +174,24 @@ var dtrSummary = new Vue({
     mounted:function(){
         this.getDepartment();
     },watch:{
+        findInTable:function(){
+            filter = this.findInTable.toUpperCase()       
+            tr = document.getElementById("allDataTable").childNodes;            
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1];
+                if (td) {
+                  txtValue = td.textContent || td.innerText;
+                  if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                  } else {
+                    tr[i].style.display = "none";
+                  }
+                }
+              }
+        },
+        period:function(){
+            this.DataRequest = [];                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+        },
         tardyLetter:function(){
             this.filter();
         },

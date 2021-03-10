@@ -5,153 +5,104 @@ require "_connect.db.php";
 $mpdf = new \Mpdf\Mpdf([
     'mode' => 'utf-8', 'format' => 'FOLIO-P',
     'margin_top' => 15,
-    'margin_left' => 5,
-    'margin_right' => 5,
-    'margin_bottom' => 5,
-    'margin_footer' => 1,
-    'default_font' => 'helvetica'
+    'margin_left' => 10,
+    'margin_right' => 15,
+    'margin_bottom' => 0,
+    'margin_footer' => 0,
+    'default_font' => 'calibri',
+    'width' => 210,
+    'height' => 297,
 ]);
-$department_id = 21;
-$department = "";
-$sql = "SELECT `department` from `department` WHERE `department_id` = '$department_id'";
-$result = $mysqli->query($sql);
-$row = $result->fetch_assoc();
-$department = strtoupper($row["department"]);
 
-$mpdf->Bookmark('Start of the document');
+$emp = ($_GET['selectedDat']);
+$sql ="SELECT * from `dtrSummary` 
+left join `employees` on `dtrSummary`.`employee_id`=`employees`.`employees_id`
+left join `positiontitles` on `employees`.`position_id`=`positiontitles`.`position_id`
+WHERE `dtrSummary`.`dtrSummary_id`='$emp'";     
 
-
-$full_name = "";
-$id_no = "";
-$birthdate = "";
-$civil_status = "";
-$birth_place = "";
-$maiden_name = "";
-
-$hrmo = "VERONICA GRACE P. MIRAFLOR";
-$hrmo_position = "HRMO IV";
-$mayor = "PRYDE HENRY A. TEVES";
-$date_now = date("F d,Y");
-
-$service_records = array();
-$employee_id = $_GET["employee_id"];
-$sql = "SELECT employees.firstName,employees.lastName,employees.middleName,employees.extName,pds_personal.employee_id,pds_personal.birthdate,pds_personal.birthplace,pds_personal.civil_status FROM employees LEFT JOIN pds_personal ON employees.employees_id=pds_personal.employee_id WHERE pds_personal.employee_id=?";
 $stmt = $mysqli->prepare($sql);
 $stmt->bind_param('i', $employee_id);
 $stmt->execute();
 $result = $stmt->get_result();
 $employee = $result->fetch_assoc();
+$pos = $employee["position"];
 $full_name = $employee["firstName"] . ($employee["middleName"] != "." && !empty($employee["middleName"]) ? " " . $employee["middleName"] : "") . " " . $employee["lastName"] . ($employee["extName"] ? " " . $employee["extName"] : "");
-$id_no = $employee_id;
-$birthdate = strtoupper(date_format(date_create($employee["birthdate"]),"F d, Y"));
-$civil_status = strtoupper($employee["civil_status"]);
-$birth_place = strtoupper($employee["birthplace"]);
-$maiden_name = "";
+$period = strtoupper(date_format(date_create($employee["month"]),"F Y"));
+$total = $employee["totalTardy"];
 $stmt->close();
 
-$sql = "SELECT * FROM `service_records` WHERE `employee_id` = ? ORDER BY `sr_date_from`,`sr_date_to` ASC";
-$stmt = $mysqli->prepare($sql);
-$stmt->bind_param('i', $employee_id);
-$stmt->execute();
-$result = $stmt->get_result();
-while ($row = $result->fetch_assoc()) {
-    // $row["sr_salary_rate"] = number_format($row["sr_salary_rate"], 2, ".", ",")."/day";
-    
-    $row["salary"] = "₱";
+$mpdf->Bookmark('Start of the document');
 
-    if ($row["sr_status"] === 'CASUAL') {
-        $row["salary"] .= $row["sr_salary_rate"] || $row["sr_rate_on_schedule"]?(number_format(($row["sr_salary_rate"]?$row["sr_salary_rate"]:$row["sr_rate_on_schedule"]), 2, ".", ",")."/DAY"):"N/I";   
-    } else {
-        $row["salary"] .= $row["sr_salary_rate"] || $row["sr_rate_on_schedule"]?(number_format(($row["sr_salary_rate"]?$row["sr_salary_rate"]:$row["sr_rate_on_schedule"]), 2, ".", ",")."/YEAR"):"N/I";    
-    }
-    
-    // $salary = $row["sr_rate_on_schedule"];
-    $row["sr_date_from"] = date_format(date_create($row["sr_date_from"]),"m/d/Y");
-    $row["sr_date_to"] = $row["sr_date_to"]?date_format(date_create($row["sr_date_to"]),"m/d/Y"):"To Present";
-    $service_records[] = $row;
-}
-$stmt->close();
-
-$leave_wo_pays = array();
-$absence_wo_official_leaves = array();
-
+$hrmo = "VERONICA GRACE P. MIRAFLOR";
+$hrmo_position = "CGDH-I";
+$date = date("F d,Y");
 $html = <<< EOD
-<style>
-    .p-2 {
-        padding: 3px;
-    }
-    .u {
-        border-bottom: 1px solid black;
-    }
-    .nw {
-        white-space:nowrap;
-    }
-    .w {
-        width: 250;
-    }
-    th,td {
-        font-size: 10px;
-    }
-    .tbl {
-        width: 100%;
-        border-collapse: collapse;
-    }
-    .tbl tr th {
-        border: 1px inset grey;
-    }
-    .tbl tr td {
-        border: 1px inset grey;
-        padding: 3px;
-    }
-    .center {
-        text-align: center;
-    }
-    .grey {
-        background-color: lightgrey;
-    }
-</style>
+                <table><tr>
+                        <td width="80%"> <img src="form_header.png" width="200px"></td>
+                        <td width="40%">
+                         <div style="float: right;text-align:right;font-size: 10px; ">
+                            <b>OFFICE OF THE HUMAN RESOURCE MANAGEMENT & DEV'T</b><br>
+                            New City Hall, Cabcabon, Banga<br>
+                            Bayawan City,Negros Oriental, Philippines<br>
+                            Fax No.: 430 0222
+                            <br>
+                            (035) 430 - 0263<br>
+                            <u>email : vgpmiraflor@gmail.com</u><br>
+                        </div></td>
+                      </tr>
+                  </table>
+                  <br> <br> <br>
+                <p  style="font-size: 12px; text-align: justify;  text-indent: -2em; line-height: 1.3">
+                    MEMORANDUM NO._______________<br><br>
+                    $date
+                    <br><br><br>
+                    TO:	   &nbsp; &nbsp; $full_name<br>
+                          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $pos<br><br>
+        
+                    RE	:	  <i>Habitual Tardiness</i>
+                 <br><br><br>
+   
+                    This is to inform that per your DTR submitted to the Office of Human Resource Management & Development, you have incurred <b>$total</b> times tardy for the month of <b>$period</b>.
+                    <br>
+                    <br>
+                    Please be reminded that Section 8, Rule XVIII of the Omnibus Rules Implementing Title I, Subtitle A, Book V of the Administrative Code of 1987, as amended, provides that:
+                    <br><br>
+                   <i>  
+                      “SEC. 8. Officers and employees who have incurred tardiness and undertime, regardless of the number of minutes per day, ten (10) times a month for at least two (2) consecutive months during the year or at least two (2) months in a semester shall be subject to disciplinary action.”
+                   </i>   
 
-<table class="tbl">
-    <tr>
-        <th>Month<br></th>
-        <th>No. of times</th>
-    </tr>
-EOD;
+                      <br><br>
+                    Section 52, Rule VI of Civil Service Circular No. 19, Series of 1999, on the Revised Uniform Rules on Administrative Cases in the Civil Service, provides:
+                        <br><br>
+                    Frequent unauthorized tardiness (Habitual Tardiness)<br><br>
+                    1st Offense	-	Reprimand<br>
+                    2nd Offense	-	Suspension 1-30 days<br>
+                    3rd Offense	-	Dismissal<br>
 
-foreach ($service_records as $record) {
-
-    // $record["sr_is_per_session"] === 1 ? $record["sr_salary_rate"] = $record["sr_rate_on_schedule"] : "";
-
-         
-
-    $html .= <<< EOD
-    <tr>
-        <td>$record[sr_date_from]</td>
-        <td>$record[sr_date_to]</td>
-    </tr>
-EOD;
-}
-
-$html .= <<< EOD
-    <tr>
-        <td colspan="8" class="center">************************************************* nothing follows *************************************************</td>
-    </tr>
-    <tr>
-        <th colspan="8" class="grey center">Leave Without Pay</th>
-    </tr>
-    <tr>
-        <td colspan="8">No Leave Without Pay</td>
-    </tr>
-    <tr>
-        <th colspan="8" class="grey center">Absence Without Official Leave</th>
-    </tr>
-    <tr>
-        <td colspan="8">No Absence Without Official Leave</td>
-    </tr>
-</table>
-  
+                    
+                    <br><br>
+                    Hence, this memorandum serves as a stern warning that we will be compelled to impose above penalties should you continue to violate this policy.
+                    <br><br>
+                    Be guided accordingly.
+                    <br> <br>
+                    <br> <br>
+                  
+                    <b>$hrmo</b><br>
+                    $hrmo_position <br><br>
+                    Received by: _______________________<br>
+                    Date Received: _____________________
+                    </p>
+                
+               <br><br>
+  </center> 
+                  
+<br><br><br>
+                   <div>
+                     <img src="form_footer.png" style= width="1000px">
+                   </div>
 
 EOD;
+
 
 $mpdf->defaultheaderline = 0;
 $mpdf->defaultfooterline = 0;

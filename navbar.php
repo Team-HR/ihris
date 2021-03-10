@@ -67,6 +67,7 @@
               <h4 class="ui header">Attendance Monitoring</h4>
                 <a href="dtrManagement.php" class="item">Dtr Monitoring</a>
                 <a href="dtrSummary.php" class="item">Dtr Summary</a>
+                <a href="dtrnodtrList.php" class="item">No Dtr List</a>
           <!-- 
           <a href="plantilla_report.php" class="item"><i class="icon print"></i>Attendance Monitoring</a>
           <a href="plantilla_vacantpos.php" class="item"><i class="icon print"></i></a> -->

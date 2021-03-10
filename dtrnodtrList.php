@@ -2,6 +2,7 @@
     $title = "No DTR List";
     require_once "header.php";
 ?>
+
 <div id="app_nodtr">
     <div class="ui segment" style="max-width:80%;margin:auto">
         <div class="ui secondary  menu">
