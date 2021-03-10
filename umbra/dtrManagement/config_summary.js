@@ -34,7 +34,7 @@ var dtrSummary = new Vue({
             this_dtr = this
             $('body')
             .toast({
-                message: 'Do you really want to revert change',
+                message: 'Do you really want to revert change?',
                 actions:	[{
                 text: 'Yes',    
                 icon: 'check',
@@ -82,7 +82,7 @@ var dtrSummary = new Vue({
                             .toast({
                                 class: 'error',
                                 position:'center top',
-                                message: `No Results found`
+                                message: `ERROR : No data found`
                             })
                             ;
                         }

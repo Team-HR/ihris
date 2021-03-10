@@ -1,105 +1,47 @@
 <?php
-//============================================================+
-// File name   : example_048.php
-// Begin       : 2009-03-20
-// Last Update : 2013-05-14
-//
-// Description : Example 048 for TCPDF class
-//               HTML tables and table headers
-//
-// Author: Nicola Asuni
-//
-// (c) Copyright:
-//               Nicola Asuni
-//               Tecnick.com LTD
-//               www.tecnick.com
-//               info@tecnick.com
-//============================================================+
+require "vendor/autoload.php";
+require "_connect.db.php";
 
-/**
- * Creates an example PDF TEST document using TCPDF
- * @package com.tecnick.tcpdf
- * @abstract TCPDF - Example: HTML tables and table headers
- * @author Nicola Asuni
- * @since 2009-03-20
- */
+$mpdf = new \Mpdf\Mpdf([
+    'mode' => 'utf-8', 'format' => 'FOLIO-P',
+    'margin_top' => 15,
+    'margin_left' => 10,
+    'margin_right' => 15,
+    'margin_bottom' => 0,
+    'margin_footer' => 0,
+    'default_font' => 'calibri',
+    'width' => 210,
+    'height' => 297,
+]);
 
-// Include the main TCPDF library (search for installation path).
-require_once('TCPDF-master/tcpdf.php');
+$emp = ($_GET['selectedDat']);
+$sql ="SELECT * from `dtrSummary` 
+left join `employees` on `dtrSummary`.`employee_id`=`employees`.`employees_id`
+left join `positiontitles` on `employees`.`position_id`=`positiontitles`.`position_id`
+WHERE `dtrSummary`.`dtrSummary_id`='$emp'";     
 
-// create new PDF document
-$width=210;
-$height= 297;
-$pageLayout = array($width, $height); //  or array($height, $width) 
-// $pdf = new TCPDF('p', 'pt', $pageLayout, true, 'UTF-8', false);
-// $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, $pageLayout, true, 'UTF-8', false);
+$stmt = $mysqli->prepare($sql);
+$stmt->bind_param('i', $employee_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$employee = $result->fetch_assoc();
+$pos = $employee["position"];
+$full_name = $employee["firstName"] . ($employee["middleName"] != "." && !empty($employee["middleName"]) ? " " . $employee["middleName"] : "") . " " . $employee["lastName"] . ($employee["extName"] ? " " . $employee["extName"] : "");
+$period = strtoupper(date_format(date_create($employee["month"]),"F Y"));
+$total = $employee["totalTardy"];
+$stmt->close();
 
+$mpdf->Bookmark('Start of the document');
 
-// set some language-dependent strings (optional)
-if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
-  require_once(dirname(__FILE__).'/lang/eng.php');
-  $pdf->setLanguageArray($l);
-}
-
-// ---------------------------------------------------------
-$where ="";
-$file_title ="";
-
-
-// set document information
-$pdf->SetCreator(PDF_CREATOR);
-$pdf->SetAuthor('HRMO');
-$pdf->SetTitle($file_title.'Letter of Notice [Tardiness]');
-require_once('_connect.db.php');
-
-// $pdf->SetSubject('TCPDF Tutorial');
-// $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
-
-// set default header data
-// $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 048', PDF_HEADER_STRING);
-
-// set header and footer fonts
-$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
-
-// set default monospaced font
-$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-
-// set margins
-$pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT);
-// $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-
-// $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-// $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-$pdf->SetPrintHeader(false);
-$pdf->SetPrintFooter(false);
-// $pdf->SetFooterMargin(1);
-// set auto page breaks
-$pdf->SetAutoPageBreak(TRUE, 1);
-
-// set image scale factor
-$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-
-// set font
-$pdf->SetFont('helvetica', 'B', 10);
-
-// add a page
-$pdf->AddPage();
-
-$pdf->SetFont('helvetica', '', 8);
-$dateOfUse = date('F d, Y');
-$year = date('Y');
-
-
-require_once "_connect.db.php";
-// -----------------------------------------------------------------------------
-$tbl = <<<EOD
-                  <table><tr>
-                        <td width="60%"> <img src="form_header.png" width="200px"></td>
+$hrmo = "VERONICA GRACE P. MIRAFLOR";
+$hrmo_position = "CGDH-I";
+$date = date("F d,Y");
+$html = <<< EOD
+                <table><tr>
+                        <td width="80%"> <img src="form_header.png" width="200px"></td>
                         <td width="40%">
-                         <div style="float: right;text-align:right ">
-                            <b>CITY HUMAN RESOURCE MANAGEMENT OFFICE</b><br>
+                         <div style="float: right;text-align:right;font-size: 10px; ">
+                            <b>OFFICE OF THE HUMAN RESOURCE MANAGEMENT & DEV'T</b><br>
                             New City Hall, Cabcabon, Banga<br>
                             Bayawan City,Negros Oriental, Philippines<br>
                             Fax No.: 430 0222
@@ -109,20 +51,18 @@ $tbl = <<<EOD
                         </div></td>
                       </tr>
                   </table>
-
-                  <br><br><br>
-                  
-                <p  style="font-size: 12.5px; text-align: justify;  text-indent: -2em; line-height: 1.3">
+                  <br> <br> <br>
+                <p  style="font-size: 12px; text-align: justify;  text-indent: -2em; line-height: 1.3">
                     MEMORANDUM NO._______________<br><br>
-                    $dateOfUse
-
+                    $date
                     <br><br><br>
-                    TO:	    Name of Employee <br>
-                            Position <br><br>
+                    TO:	   &nbsp; &nbsp; $full_name<br>
+                          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $pos<br><br>
+        
                     RE	:	  <i>Habitual Tardiness</i>
                  <br><br><br>
-
-                    This is to inform that per your DTR submitted to the Human Resource Management Office, you have incurred more than 10 times tardy for the month <b>$dateOfUse</b>.
+   
+                    This is to inform that per your DTR submitted to the Office of Human Resource Management & Development, you have incurred <b>$total</b> times tardy for the month of <b>$period</b>.
                     <br>
                     <br>
                     Please be reminded that Section 8, Rule XVIII of the Omnibus Rules Implementing Title I, Subtitle A, Book V of the Administrative Code of 1987, as amended, provides that:
@@ -147,8 +87,8 @@ $tbl = <<<EOD
                     <br> <br>
                     <br> <br>
                   
-                    <b>VERONICA GRACE P. MIRAFLOR</b><br>
-                    CGDH I <br><br>
+                    <b>$hrmo</b><br>
+                    $hrmo_position <br><br>
                     Received by: _______________________<br>
                     Date Received: _____________________
                     </p>
@@ -161,30 +101,12 @@ $tbl = <<<EOD
                      <img src="form_footer.png" style= width="1000px">
                    </div>
 
- 
 EOD;
 
-$pdf->writeHTML($tbl, true, false, false, false, '');
 
-// $pdf->writeHTML($tbl, true, false, false, false, '');
-// -----------------------------------------------------------------------------
+$mpdf->defaultheaderline = 0;
+$mpdf->defaultfooterline = 0;
+$mpdf->defaultfooterline = 0;
 
-//Close and output PDF document
-$pdf->Output($file_title.'Letter of Notice [Tardiness]', 'I');
-
-//============================================================+
-// END OF FILE
-//============================================================+
-function lister($arr){
-  $item ="";
-  if (isset($arr)) {
-    foreach ($arr as $key => $value) {
-      $item .= " *".$value;
-    }
-  } else {
-    $item ="*None Required";
-  }
-  
-  return $item;
-
-}
+$mpdf->WriteHTML($html);
+$mpdf->Output();

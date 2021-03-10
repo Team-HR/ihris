@@ -2,6 +2,27 @@
     $title = "DTR Management";
     require_once "header.php";
 ?>
+
+<style>
+    th.abc{
+        position:sticky;
+        top: 0;
+    }
+    th.a{
+        position:sticky;
+        top: 45px
+    }
+    th.ab{
+        position:sticky;
+        top: 90px
+    }
+    table{
+        position:relative;
+    }
+
+</style>
+
+
 <div id="dtr_app">  
     <div class="ui segment"   style="margin:auto;max-width:35%;min-width:600px;">
         <div class="ui segment" style="position:fixed;right:0px;width:250px;z-index:10">
@@ -102,32 +123,32 @@
                 </div>
                 <br>
                 <br>
-                <table class="ui celled table" id="example1"> 
+                <table class="ui celled table" > 
                     <thead>
                         <tr>
-                            <th colspan="7">Period</th>
+                            <th class="abc" colspan="7" style="text-align:center" >Month of {{period}}</th>
                         </tr>
                         <tr>
-                            <th rowspan="2">Date</th>
-                            <th colspan="2">AM</th>
-                            <th colspan="2">PM</th>
-                            <th rowspan="2">Remarks</th>
-                            <th rowspan="2">Options</th>
+                            <th class="a" rowspan="2">Date</th>
+                            <th class="a" colspan="2" style="text-align:center">AM</th>
+                            <th class="a" colspan="2" style="text-align:center">PM</th>
+                            <th class="a" rowspan="2">Remarks</th>
+                            <th class="a" rowspan="2">Options</th>
                         </tr>
                         <tr>
-                            <th>Tardiness</th>
-                            <th>Under-Time</th>
-                            <th>Tardiness</th>
-                            <th>Under-Time</th>
+                            <th class="ab">Tardiness</th>
+                            <th class="ab">Undertime</th>
+                            <th class="ab">Tardiness</th>
+                            <th class="ab">Undertime</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(day,index) in dtr" :key="index"> 
+                        <tr v-for="(day,index) in dtr" :key="index" style="text-align:center">                                  
                             <td>{{day.date.split('-')[2]}}</td>
-                            <td>{{day.amTardy}}</td>
-                            <td>{{day.amUnderTime}}</td>
-                            <td>{{day.pmTardy}}</td>
-                            <td>{{day.pmUnderTime}}</td>
+                            <td style="background-color:#9ec14b70;color:#086d08">{{day.amTardy}}</td>
+                            <td style="background-color:#9ec14b70;color:#086d08">{{day.amUnderTime}}</td>
+                            <td  style="background-color:#7accc078;color:#088dad">{{day.pmTardy}}</td>
+                            <td  style="background-color:#7accc078;color:#088dad">{{day.pmUnderTime}}</td>
                             <td style="text-align:center;font-weight: bold;color:red">{{day.other}}</td>
                             <td>
 
