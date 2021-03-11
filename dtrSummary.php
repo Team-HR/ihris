@@ -6,14 +6,19 @@
     th.a{
         position:sticky;
         top:89px;
+        z-index: 100
+        
     }
     th.ab{
         position:sticky;
-        top:50px
+        top:50px;
+        z-index: 100
     }
     th.abc{
         position:sticky;
-        top:0
+        top:0;
+        z-index: 100
+
     }
     table{
         position:relative;
@@ -121,32 +126,38 @@
         <table class="ui celled selectable compact table" style="width:95%;margin:auto" v-for="(dep,index) in filterDepartment" :key="index">
                 <thead>
                     <tr>
-                        <th colspan="12">
+                        <th class ="abc" colspan="7">
                           Summary table {{period}}
+                        </th>
+                        <th colspan="5" class="abc">
+                            <div class="ui icon input fluid" style="visibility:hidden">
+                                <i class="search icon"></i>
+                                <input type="text" placeholder="Search..." v-model="findInTable">
+                            </div>                        
                         </th>
                     </tr>
                     <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th colspan="4" style="text-align: center">TARDY</th>
-                        <th colspan="3" style="text-align: center">UNDERTIME</th>
-                        <th></th>
-                        <th></th>
+                        <th class ="ab"></th>
+                        <th class ="ab"></th>
+                        <th class ="ab" ></th>
+                        <th class ="ab" colspan="4" style="text-align: center">TARDY</th>
+                        <th class ="ab" colspan="3" style="text-align: center">UNDERTIME</th>
+                        <th class ="ab" ></th>
+                        <th class ="ab" ></th>
                     </tr>
                     <tr>
-                        <th></th>
-                        <th>Employee</th>
-                        <th>Department</th>
-                        <th>No. of times</th>
-                        <th>Total mins.</th>
-                        <th>Date of half-day</th>
-                        <th>Equiv.</th>
-                        <th>Total mins.</th>
-                        <th>Date of half-day</th>
-                        <th>Equiv.</th>
-                        <th style="text-align: center">Remarks</th>
-                        <th style="text-align: center">Options</th>
+                        <th class ="a"></th>
+                        <th class ="a">Employee</th>
+                        <th class ="a">Department</th>
+                        <th class ="a">No. of times</th>
+                        <th class ="a">Total mins.</th>
+                        <th class ="a">Date of half-day</th>
+                        <th class ="a">Equiv.</th>
+                        <th class ="a">Total mins.</th>
+                        <th class ="a">Date of half-day</th>
+                        <th class ="a">Equiv.</th>
+                        <th class ="a" style="text-align: center">Remarks</th>
+                        <th class ="a" style="text-align: center">Options</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -181,7 +192,7 @@
         <table class="ui celled selectable compact table" style="width:95%;margin:auto">
                 <thead>
                     <tr>
-                        <th colspan="12">
+                        <th colspan="12"  class="abc">
                           Summary table {{period}}
                         </th>
                     </tr>

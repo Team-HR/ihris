@@ -28,22 +28,32 @@
     <!--    Add model    -->
     <div class="ui modal small" id="addModal">
       <div class="header">
-        <h3 class="ui header">Add Leave Record</h3>
+        <h3 class="ui header">Add New Leave Record</h3>
       </div>
       <div class="content">
         <div class="ui form">
           <div class="field">
             <div class="two fields">
               <div class="field">
-                <label>Control #:</label>
-                <input type="text" name="" readonly value="HRMO-LEAVE<?=DATE('Y')?>-*****">
-              </div>
-              <div class="field">
-                <label>Date Received:</label>
-                <input type="date" name="" v-model="date_received"> 
-              </div>
+                  <strong>Control Number:</strong> <span>HRMO - <?php echo date('Y');?> - <span>*****</span></span>
+                </div>
+                <div class="eight wide field" style="visibility:hidden">
+                  <strong>Date Logged:</strong> <span><?php echo date('F d, Y');?></span>
+                </div>
             </div>
           </div>
+          <div class="field">
+           <div class="two fields">
+              <div class="field">
+                <label>Date Received</label>
+                <input type="date" name=""  v-model="date_received"> 
+              </div>
+              <div class="field">
+                <label>Date of Filing:</label>
+                <input type="date" name="" v-model="date_filed"> 
+              </div>
+            </div>
+          </div> 
           <div class="field">
             <div class="two fields">
               <div class="field">
@@ -59,27 +69,50 @@
                 <label>Type of leave:</label>
                 <select class="ui fluid search dropdown" id="leaveType" v-model="leaveType">
                     <option value="">Type</option>
-                    <option value="VL">Vacation Leave</option>
-                    <option value="FL">Forced Leave</option>
-                    <option value="SL">Sick Leave</option>
+                    <option value="Vacation">Vacation Leave</option>
+                    <option value="Forced">Forced Leave</option>
+                    <option value="Sick">Sick Leave</option>
                     <option value="SP">Special Leave</option>
+                    <option value="Monetization">Monetization</option>
                 </select>
               </div>
             </div>
           </div>
+          <template  v-if="leaveType=='Monetization'">
+          <div class="field">
+            <div class="two fields">
+              <div class="field">
+                <label>Total Days:</label>
+                  <div class="field" v-model="mone_days">
+                     <input type="number" placeholder="Days" required>
+                   </div>
+              </div>
+              <div class="field">
+                <label>Type of monetization:</label>
+                <select class="ui fluid search dropdown"   id="mone_type" v-model="mone_type">
+                    <option value="">Type</option>
+                    <option value="(Regular)">Regular Monetization</option>
+                    <option value="(50%)">50% Monetization</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          </template>
           <template  v-if="leaveType=='SP'">
             <div class="field">
                 <label>Type of Special Leave:</label>
                 <select class="ui fluid search dropdown" id="sp_type" v-model="sp_type">
-                    <option value="Filial Leave">Filial Leave</option>
-                    <option value="SP">Domestic Emergency Leave</option>
-                    <option value="VL">Maternity Leave</option>
-                    <option value="FL">Rehabilitation Leave</option>
-                    <option value="SL">Solo Parent Leave</option>
-                    <option value="SP">Paternity Leave</option>
-                    <option value="SP">Magna Carta Leave</option>
-                    <option value="SP">Anti-VAWCY Leave</option>
-                    <option value="SP">Study Leave</option>
+                    <option value="(Filial)">Filial Leave</option>
+                    <option value="(Domestic)">Domestic Emergency Leave</option>
+                    <option value="(Maternity)">Maternity Leave</option>
+                    <option value="(Rehabilitattion)">Rehabilitation Leave</option>
+                    <option value="(Solo Parent)">Solo Parent Leave</option>
+                    <option value="(Paternity)">Paternity Leave</option>
+                    <option value="(Magna Carta)">Magna Carta Leave</option>
+                    <option value="(Anti-VAWCY)">Anti-VAWCY Leave</option>
+                    <option value="(Study)">Study Leave</option>
+                    <option value="(Birthday)">Birthday Leave</option>
+                    <option value="(Fiesta)">Fiesta Leave</option>
                 </select>
           </div>
           </template>
@@ -118,50 +151,6 @@
     </div>
 <!--   add modal End   -->
 
-<!--    open model    -->
- <div class="ui small modal" id="approveModal">
-      <div class="header">
-        <h3 class="ui header"> Approving Leave Application</h3>
-      </div>
-      <div class="content">
-        <div class="ui form">
-
-         <div class="two fields">
-              <div class="field">
-                <label>Control Number: HRMO-LEAVE-2020-0001</label>
-            </div>
-            <div class="field">
-                <strong>Date Received: February 30, 2021</strong>
-            </div>
-          </div>
-
-          <div class="two fields">
-            <div class="field">
-              <strong>Name of Applicant: Juan Dela Cruz</strong> 
-            </div>
-            <div class="field">
-              <strong>Type of Leave: Sick Leave</strong> 
-            </div>
-          </div>
-
-          <div class="two fields">
-            <div class="field">
-              <strong>Name of Applicant: Juan Dela Cruz</strong> 
-            </div>
-            <div class="field">
-              <strong>Type of Leave: Sick Leave</strong> 
-            </div>
-          </div>
-
-        </div>
-        
-      </div>
-      <div class="actions">
-        <div class="ui approve button positive" @click="saveLeave()">Approve</div>
-        <div class="ui button cancel negative">Close</div>
-      </div>
-    </div>
- <!--   open modal End   -->
 
     <div class="ui medium header">Leave Admin Dashboard</div>
     <button class="ui positive button" id="addButton" onclick="showAddModal()">Add New</button>
@@ -170,9 +159,10 @@
       <thead>
         <tr>
             <th>Control Number</th>
+            <th>Date Filed</th>
             <th>Date Received</th>
             <th>Name of Applicant</th>
-            <th>Date Applied</th>
+            <th>Date/s Applied</th>
             <th>Type of Leave</th>
             <th>Total Days</th>
             <th>Remarks</th>
@@ -182,12 +172,13 @@
       </thead>
       <tbody>
         <tr v-for="(log,index) in Logs" :key="index">
-          <td>{{ log.log_id }}
+          <td>HRMO -  {{log.dateReceived}}
           </td>
+          <td>{{ log.date_filed}}</td>
           <td>{{ log.dateReceived }}</td>
           <td>{{ log.firstName}} {{ log.lastName}}</td>
           <td>{{ log.dateApplied }}</td>
-          <td>{{ log.leaveType }}</td>
+          <td>{{ log.leaveType }} {{ log.sp_type }} </td>
           <td>{{ log.totalDays }}</td>
           <td>{{ log.remarks }}</td>
           <td>{{ log.status }}</td>

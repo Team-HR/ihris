@@ -6,8 +6,11 @@ var lm_app = new Vue({
         Employees:"",
         leaveType:"",
         date_received:"",
+        date_filed:"",
         emp_id:"",
         sp_type:"",
+        mone_type:"",
+        mone_days:"",
         remarks:"",
         log_editId:"",
     },
@@ -57,6 +60,9 @@ var lm_app = new Vue({
             if(this.leaveType!="SP"){
                 this.sp_type =""
             }
+            if(this.leaveType!="Monetization"){
+                this.mone_type =""
+            }
             var this_app = this
             var xml = new XMLHttpRequest();
             var fd = new FormData();
@@ -64,7 +70,9 @@ var lm_app = new Vue({
             fd.append('selectedDate',this.selectedDate)
             fd.append('leaveType',this.leaveType)
             fd.append('date_received',this.date_received)
+            fd.append('date_filed',this.date_filed)
             fd.append('sp_type',this.sp_type)
+            fd.append('mone_type',this.mone_type)
             fd.append('remarks',this.remarks)
             fd.append('saveLeave',true)
             fd.append('totalDays',this.selectedDate.length)
@@ -75,7 +83,9 @@ var lm_app = new Vue({
                 this_app.selectedDate="";
                 this_app.leaveType = "";
                 this_app.date_received="";
+                this_app.date_filed="";
                 this_app.sp_type="";
+                this_app.mone_type="";
                 this_app.remarks="";
                 this_app.log_editId = "";
               this_app.getLog()
@@ -94,6 +104,7 @@ var lm_app = new Vue({
             $('#leaveType').dropdown('set selected', log['leaveType']);
             this_app.selectedDate= log["dateApplied"].split(",");
             this_app.date_received= log['dateReceived'];
+            this_app.date_filed= log['date_filed'];
             this_app.remarks= log['remarks'];
             this_app.log_editId = log['log_id'];
             $("#addModal").modal('show');
