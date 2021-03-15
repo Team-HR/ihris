@@ -1,3 +1,8 @@
+// var leaveEvents = [];
+// document.addEventListener('DOMContentLoaded',function(){
+// });
+
+
 var lm_app = new Vue({
     el:"#leaveCont",
     data:{
@@ -13,6 +18,7 @@ var lm_app = new Vue({
         mone_days:"",
         remarks:"",
         log_editId:"",
+        leaveEvents:[]
     },
     methods: {
         cal:function(){
@@ -67,7 +73,7 @@ var lm_app = new Vue({
             var xml = new XMLHttpRequest();
             var fd = new FormData();
             fd.append('emp_id',this.emp_id)
-            fd.append('selectedDate',this.selectedDate)
+            fd.append('selectedDate',this.leaveEvents)
             fd.append('leaveType',this.leaveType)
             fd.append('date_received',this.date_received)
             fd.append('date_filed',this.date_filed)
@@ -75,7 +81,7 @@ var lm_app = new Vue({
             fd.append('mone_type',this.mone_type)
             fd.append('remarks',this.remarks)
             fd.append('saveLeave',true)
-            fd.append('totalDays',this.selectedDate.length)
+            fd.append('totalDays',this.leaveEvents.length)
             fd.append('log_editId',this.log_editId)
             xml.onload =function(){
               $("#addModal").modal('hide');
@@ -119,11 +125,82 @@ var lm_app = new Vue({
                 }
                 xml.open('POST','umbra/leaveManagement/config.php',false)
                 xml.send(fd)
+        },
+        calendarRender:function(){
+            this_leave = this;
+            var clndr = document.getElementById('clndr');
+            var event_id = 0;
+            var leaveCalendar = new FullCalendar.Calendar(clndr,{
+                plugins:['dayGrid','interaction'],
+                height: "auto",
+                initialView: 'dayGridMonth',
+                dateClick:function(info){
+                    e = this.getEvents();
+                    if(e.length>0){
+                        for(c=0;c<e.length;c++){
+                            if(e[c].start.toString()==info.date.toString()){
+                                evnt = e[c];
+                                evnt.remove();
+                            }else if(e[c].end!=null){
+                                evnt = e[c];
+                                evnt.remove();
+                            }
+                            else if(c==e.length-1){
+                                leaveCalendar.addEvent({start:info.dateStr,title:"Selected",id:event_id});
+                                event_id++;
+                            }
+                        }
+                    }else{
+                        leaveCalendar.addEvent({start:info.dateStr,title:"Selected",id:event_id});
+                        event_id++;
+                    }
+                    lvevnts = [];
+                    this_leave.leaveEvents = [];
+                    e = this.getEvents();
+                    for(c=0;c<=e.length;c++){
+                        if(c==e.length){
+                            break;
+                        }else{ 
+                            lvevnts = {'start':e[c].start,'end':e[c].end};
+                            this_leave.leaveEvents.push(lvevnts);
+                        }
+                    }
+                },
+                eventResize:function(info){
+                    lvevnts = [];
+                    e = this.getEvents();
+                    this_leave.leaveEvents = [];
+                    for(c=0;c<=e.length;c++){
+                        if(c==e.length){
+                            break;
+                        }else{ 
+                            lvevnts = {'start':e[c].start,'end':e[c].end};
+                            this_leave.leaveEvents.push(lvevnts);
+                        }
+                    }
+                },
+                eventDrop:function(){
+                    lvevnts = [];
+                    e = this.getEvents();
+                    this_leave.leaveEvents = [];
+                    for(c=0;c<=e.length;c++){
+                        if(c==e.length){
+                            break;
+                        }else{ 
+                            lvevnts = {'start':e[c].start,'end':e[c].end};
+                            this_leave.leaveEvents.push(lvevnts);
+                        }
+                    }
+                },
+                editable:true
+            });
+            leaveCalendar.render();        
         }
     }
     ,mounted:function(){
         this.getEmployeeData();
         this.getLog();
+        this.calendarRender();
     }
 
 })

@@ -83,8 +83,8 @@
             <div class="two fields">
               <div class="field">
                 <label>Total Days:</label>
-                  <div class="field" v-model="mone_days">
-                     <input type="number" placeholder="Days" required>
+                  <div class="field">
+                     <input type="number"  v-model="mone_days" placeholder="Days" required>
                    </div>
               </div>
               <div class="field">
@@ -116,17 +116,20 @@
                 </select>
           </div>
           </template>
-          <div class="field">
-            <label>Applied Date:</label>
-            <form class="two fields" @submit.prevent="cal()">
+          <br>
+          <div class="ui segment">
+              <div id="clndr"></div>    
+            </div>
+          <br>
+            <!-- <form class="two fields" @submit.prevent="cal()">
               <div class="field">
                 <input type="date" name="" id="calen" required>
               </div>
               <div class="field">
                 <input type="submit" class="ui button primary" value="ADD">
               </div>
-            </form>
-          </div>
+            </form> -->
+
           <div class="ui link list">
             <a class="item" v-for="(d,index) in selectedDate" :key="index">
               <span class="left floated like">
@@ -198,6 +201,7 @@
     </table>
     </template>
   </div>
+
   <script>
     $(document).ready(function() {
         $(".dropdown").dropdown();
