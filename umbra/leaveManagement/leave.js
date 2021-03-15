@@ -11,7 +11,9 @@ var lm_app = new Vue({
         sp_type:"",
         mone_type:"",
         mone_days:"",
+        others:"",
         remarks:"",
+        others:"",
         log_editId:"",
     },
     methods: {
@@ -61,7 +63,10 @@ var lm_app = new Vue({
                 this.sp_type =""
             }
             if(this.leaveType!="Monetization"){
-                this.mone_type =""
+                this.mone_type=""
+            }
+            if(this.leaveType!="Others"){
+                this.others=""
             }
             var this_app = this
             var xml = new XMLHttpRequest();
@@ -73,7 +78,9 @@ var lm_app = new Vue({
             fd.append('date_filed',this.date_filed)
             fd.append('sp_type',this.sp_type)
             fd.append('mone_type',this.mone_type)
+            fd.append('mone_days',this.mone_days)
             fd.append('remarks',this.remarks)
+            fd.append('others',this.remarks)
             fd.append('saveLeave',true)
             fd.append('totalDays',this.selectedDate.length)
             fd.append('log_editId',this.log_editId)
@@ -86,6 +93,8 @@ var lm_app = new Vue({
                 this_app.date_filed="";
                 this_app.sp_type="";
                 this_app.mone_type="";
+                this_app.mone_days="";
+                this_app.others="";
                 this_app.remarks="";
                 this_app.log_editId = "";
               this_app.getLog()
@@ -101,6 +110,8 @@ var lm_app = new Vue({
             log = this_app.Logs[index];
             $('#emp_id').dropdown('set selected', log['employees_id']);
             $('#sp_type').dropdown('set selected', log['sp_type']);
+            $('#mone_type').dropdown('set selected', log['mone_type']);
+            $('#mone_days').dropdown('set selected', log['mone_days']);
             $('#leaveType').dropdown('set selected', log['leaveType']);
             this_app.selectedDate= log["dateApplied"].split(",");
             this_app.date_received= log['dateReceived'];

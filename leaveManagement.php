@@ -8,7 +8,7 @@
 <style type="text/css">
     #leaveCont {
       transform-origin: 50% 50% 0px;
-      top: 141px;
+      top: 0;
       left: 19px;
       width: 96.92%;
     }
@@ -18,7 +18,7 @@
     }
     .gwd-button-11xy {
       top: 48px;
-      left: 14px;
+      left: 14px;w
     }
     #addModal {
       padding: 15px;
@@ -74,17 +74,18 @@
                     <option value="Sick">Sick Leave</option>
                     <option value="SP">Special Leave</option>
                     <option value="Monetization">Monetization</option>
+                    <option value="Others">Others</option>
                 </select>
               </div>
-            </div>
+            </div>        
           </div>
           <template  v-if="leaveType=='Monetization'">
           <div class="field">
             <div class="two fields">
               <div class="field">
                 <label>Total Days:</label>
-                  <div class="field" v-model="mone_days">
-                     <input type="number" placeholder="Days" required>
+                  <div class="field" >
+                     <input v-model="mone_days" type="number" placeholder="Days" required>
                    </div>
               </div>
               <div class="field">
@@ -98,6 +99,11 @@
             </div>
           </div>
           </template>
+          <template  v-if="leaveType=='Others'">
+            <div class="field" >
+              <input type="text" id="others" v-model="others" placeholder="Please type what kind of other leave it is.." required>
+          </div>
+          </template>
           <template  v-if="leaveType=='SP'">
             <div class="field">
                 <label>Type of Special Leave:</label>
@@ -105,7 +111,7 @@
                     <option value="(Filial)">Filial Leave</option>
                     <option value="(Domestic)">Domestic Emergency Leave</option>
                     <option value="(Maternity)">Maternity Leave</option>
-                    <option value="(Rehabilitattion)">Rehabilitation Leave</option>
+                    <option value="(Rehabilitation)">Rehabilitation Leave</option>
                     <option value="(Solo Parent)">Solo Parent Leave</option>
                     <option value="(Paternity)">Paternity Leave</option>
                     <option value="(Magna Carta)">Magna Carta Leave</option>
@@ -158,7 +164,7 @@
     <table class="ui celled table gwd-table-16du">
       <thead>
         <tr>
-            <th>Control Number</th>
+            <th> </th>
             <th>Date Filed</th>
             <th>Date Received</th>
             <th>Name of Applicant</th>
@@ -172,10 +178,9 @@
       </thead>
       <tbody>
         <tr v-for="(log,index) in Logs" :key="index">
-          <td>HRMO -  {{log.dateReceived}}
-          </td>
-          <td>{{ log.date_filed}}</td>
+          <td>{{log.log_id}}</td>
           <td>{{ log.dateReceived }}</td>
+          <td>{{ log.date_filed}}</td>
           <td>{{ log.firstName}} {{ log.lastName}}</td>
           <td>{{ log.dateApplied }}</td>
           <td>{{ log.leaveType }} {{ log.sp_type }} </td>

@@ -65,9 +65,11 @@
         <i class="dropdown icon"></i>
         <div class="menu">
               <h4 class="ui header">Attendance Monitoring</h4>
-                <a href="dtrManagement.php" class="item">Dtr Monitoring</a>
-                <a href="dtrSummary.php" class="item">Dtr Summary</a>
-                <a href="dtrnodtrList.php" class="item">No Dtr List</a>
+                <a href="dtrManagement.php" class="item">DTR Monitoring</a>
+                <a href="dtrSummary.php" class="item">DTR Summary</a>
+                <a href="dtrnodtrList.php" class="item">No DTR List</a>
+                <h4 class="ui header">Leave Management</h4>
+                <a href="leaveManagement.php" class="item">Leave Logs</a>
           <!-- 
           <a href="plantilla_report.php" class="item"><i class="icon print"></i>Attendance Monitoring</a>
           <a href="plantilla_vacantpos.php" class="item"><i class="icon print"></i></a> -->
