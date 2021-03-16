@@ -192,6 +192,7 @@
         <table class="ui celled selectable compact table" style="width:95%;margin:auto">
                 <thead>
                     <tr>
+                    
                         <th colspan="12"  class="abc">
                           Summary table {{period}}
                         </th>
@@ -250,7 +251,7 @@
             <table class="ui celled selectable compact table" style="width:95%;margin:auto" v-if="DataRequest.length>0">
                 <thead>
                     <tr>
-                        <th colspan="7"  class="abc">
+                        <th colspan="6"  class="abc">
                           Summary table {{period}}
                         </th>
                         <th colspan="5" class="abc">

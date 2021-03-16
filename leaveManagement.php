@@ -8,7 +8,7 @@
 <style type="text/css">
     #leaveCont {
       transform-origin: 50% 50% 0px;
-      top: 141px;
+      top: 0;
       left: 19px;
       width: 96.92%;
     }
@@ -18,7 +18,7 @@
     }
     .gwd-button-11xy {
       top: 48px;
-      left: 14px;
+      left: 14px;w
     }
     #addModal {
       padding: 15px;
@@ -74,17 +74,18 @@
                     <option value="Sick">Sick Leave</option>
                     <option value="SP">Special Leave</option>
                     <option value="Monetization">Monetization</option>
+                    <option value="Others">Others</option>
                 </select>
               </div>
-            </div>
+            </div>        
           </div>
           <template  v-if="leaveType=='Monetization'">
           <div class="field">
             <div class="two fields">
               <div class="field">
                 <label>Total Days:</label>
-                  <div class="field">
-                     <input type="number"  v-model="mone_days" placeholder="Days" required>
+                  <div class="field" >
+                     <input v-model="mone_days" type="number" placeholder="Days" required>
                    </div>
               </div>
               <div class="field">
@@ -98,6 +99,11 @@
             </div>
           </div>
           </template>
+          <template  v-if="leaveType=='Others'">
+            <div class="field" >
+              <input type="text" id="others" v-model="others" placeholder="Please type what kind of other leave it is.." required>
+          </div>
+          </template>
           <template  v-if="leaveType=='SP'">
             <div class="field">
                 <label>Type of Special Leave:</label>
@@ -105,7 +111,7 @@
                     <option value="(Filial)">Filial Leave</option>
                     <option value="(Domestic)">Domestic Emergency Leave</option>
                     <option value="(Maternity)">Maternity Leave</option>
-                    <option value="(Rehabilitattion)">Rehabilitation Leave</option>
+                    <option value="(Rehabilitation)">Rehabilitation Leave</option>
                     <option value="(Solo Parent)">Solo Parent Leave</option>
                     <option value="(Paternity)">Paternity Leave</option>
                     <option value="(Magna Carta)">Magna Carta Leave</option>
@@ -116,29 +122,22 @@
                 </select>
           </div>
           </template>
-          <br>
           <div class="ui segment">
               <div id="clndr"></div>    
+          </div>
+            <div class="field">
+              <label>Number of days</label>
+              <input type="text" v-model="numberOfDays">
             </div>
-          <br>
-            <!-- <form class="two fields" @submit.prevent="cal()">
-              <div class="field">
-                <input type="date" name="" id="calen" required>
-              </div>
-              <div class="field">
-                <input type="submit" class="ui button primary" value="ADD">
-              </div>
-            </form> -->
-
           <div class="ui link list">
-            <a class="item" v-for="(d,index) in selectedDate" :key="index">
+            <!-- <a class="item" v-for="(d,index) in selectedDate" :key="index">
               <span class="left floated like">
                   {{d}}
               </span>
               <span class="right floated">
                 <i class="close icon" @click="slice_date(index)"></i>
               </span>          
-            </a>
+            </a> -->
           </div>
           <br>
           <div class="field">
@@ -161,7 +160,7 @@
     <table class="ui celled table gwd-table-16du">
       <thead>
         <tr>
-            <th>Control Number</th>
+            <th> </th>
             <th>Date Filed</th>
             <th>Date Received</th>
             <th>Name of Applicant</th>
@@ -175,12 +174,11 @@
       </thead>
       <tbody>
         <tr v-for="(log,index) in Logs" :key="index">
-          <td>HRMO -  {{log.dateReceived}}
-          </td>
-          <td>{{ log.date_filed}}</td>
+          <td>{{log.log_id}}</td>
           <td>{{ log.dateReceived }}</td>
+          <td>{{ log.date_filed}}</td>
           <td>{{ log.firstName}} {{ log.lastName}}</td>
-          <td>{{ log.dateApplied }}</td>
+          <td> <span v-html="decodeAppliedDates(log.dateApplied)"></span></td>
           <td>{{ log.leaveType }} {{ log.sp_type }} </td>
           <td>{{ log.totalDays }}</td>
           <td>{{ log.remarks }}</td>
@@ -200,7 +198,7 @@
       </tbody>
     </table>
     </template>
-  </div>
+  </div>  
 
   <script>
     $(document).ready(function() {
