@@ -122,26 +122,22 @@
                 </select>
           </div>
           </template>
-          <div class="field">
-            <label>Applied Date:</label>
-            <form class="two fields" @submit.prevent="cal()">
-              <div class="field">
-                <input type="date" name="" id="calen" required>
-              </div>
-              <div class="field">
-                <input type="submit" class="ui button primary" value="ADD">
-              </div>
-            </form>
+          <div class="ui segment">
+              <div id="clndr"></div>    
           </div>
+            <div class="field">
+              <label>Number of days</label>
+              <input type="text" v-model="numberOfDays">
+            </div>
           <div class="ui link list">
-            <a class="item" v-for="(d,index) in selectedDate" :key="index">
+            <!-- <a class="item" v-for="(d,index) in selectedDate" :key="index">
               <span class="left floated like">
                   {{d}}
               </span>
               <span class="right floated">
                 <i class="close icon" @click="slice_date(index)"></i>
               </span>          
-            </a>
+            </a> -->
           </div>
           <br>
           <div class="field">
@@ -182,7 +178,7 @@
           <td>{{ log.dateReceived }}</td>
           <td>{{ log.date_filed}}</td>
           <td>{{ log.firstName}} {{ log.lastName}}</td>
-          <td>{{ log.dateApplied }}</td>
+          <td> <span v-html="decodeAppliedDates(log.dateApplied)"></span></td>
           <td>{{ log.leaveType }} {{ log.sp_type }} </td>
           <td>{{ log.totalDays }}</td>
           <td>{{ log.remarks }}</td>
@@ -202,7 +198,8 @@
       </tbody>
     </table>
     </template>
-  </div>
+  </div>  
+
   <script>
     $(document).ready(function() {
         $(".dropdown").dropdown();
