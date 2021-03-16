@@ -67,6 +67,7 @@
               <h4 class="ui header">Attendance Monitoring</h4>
                 <a href="dtrManagement.php" class="item">DTR Monitoring</a>
                 <a href="dtrSummary.php" class="item">DTR Summary</a>
+                <a href="dtrSummary_report.php" class="item">DTR Summary Report</a>
                 <a href="dtrnodtrList.php" class="item">No DTR List</a>
                 <h4 class="ui header">Leave Management</h4>
                 <a href="leaveManagement.php" class="item">Leave Logs</a>
