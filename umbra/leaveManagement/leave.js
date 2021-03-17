@@ -16,12 +16,18 @@ var lm_app = new Vue({
         log_editId:"",
         leaveEvents:[]
         ,numberOfDays:0
-        ,clndr:''
+        ,leaveCalendar:''
+        ,selectedEventsForEdit:[]
 
     },
     methods: {
         slice_date:(i)=>{
 
+        },
+        showAddModal:function() {
+            $("#addModal").modal('show');
+            this.selectedEventsForEdit = [];
+            this.calendarRender();
         },
         getEmployeeData:function(){
             var this_app = this
@@ -93,6 +99,26 @@ var lm_app = new Vue({
             $('#mone_days').dropdown('set selected', log['mone_days']);
             $('#leaveType').dropdown('set selected', log['leaveType']);
             this_app.date_received= log['dateReceived'];
+            this_app.selectedEventsForEdit = [];
+            try{
+
+                dateApplied = JSON.parse(log.dateApplied);
+                for(c=0;c<=dateApplied.length;c++){
+                    if(c==dateApplied.length){
+                        break;
+                    }else{
+                        this_app.selectedEventsForEdit.push(
+                            {
+                                title: 'Selected',
+                                start: dateApplied[c].start,
+                                end: dateApplied[c].end 
+                            });
+                        }
+                    }
+            }catch(e){
+                console.log(e);
+            }
+            this.calendarRender();
             this_app.date_filed= log['date_filed'];
             this_app.remarks= log['remarks'];
             this_app.log_editId = log['log_id'];
@@ -111,9 +137,12 @@ var lm_app = new Vue({
         },
         calendarRender:function(){
             this_leave = this;
-            this.clndr = document.getElementById('clndr');
+            clndr = document.getElementById('clndr');
             var event_id = 0;
-            var leaveCalendar = new FullCalendar.Calendar(this.clndr,{
+            if(this.leaveCalendar){
+                this.leaveCalendar.destroy();
+            }
+            this.leaveCalendar = new FullCalendar.Calendar(clndr,{
                 plugins:['dayGrid','interaction'],
                 height: "auto",
                 initialView: 'dayGridMonth',
@@ -129,12 +158,12 @@ var lm_app = new Vue({
                                 evnt.remove();
                             }
                             else if(c==e.length-1){
-                                leaveCalendar.addEvent({start:info.dateStr,title:"Selected",id:event_id});
+                                this.addEvent({start:info.dateStr,title:"Selected",id:event_id});
                                 event_id++;
                             }
                         }
                     }else{
-                        leaveCalendar.addEvent({start:info.dateStr,title:"Selected",id:event_id});
+                        this.addEvent({start:info.dateStr,title:"Selected",id:event_id});
                         event_id++;
                     }
                     lvevnts = [];
@@ -178,7 +207,7 @@ var lm_app = new Vue({
                         if(c==e.length){
                             break;
                         }else{ 
-                            end = e[c].end 
+                            end = e[c].end
                             if(!end){
                                 end = "";
                             }
@@ -187,27 +216,34 @@ var lm_app = new Vue({
                         }
                     }
                 },
+                events:this_leave.selectedEventsForEdit,
                 editable:true
             });
-            leaveCalendar.render();        
+            this.leaveCalendar.render();
+            console.log(this.leaveCalendar);
         }
         ,decodeAppliedDates:function(dat){
-            dat = JSON.parse(dat);
-            s = "";
-            for(c = 0;c<=dat.length;c++){
-                if(c==dat.length){
-                    break;
-                }else{
-                    // dat = new Date(dat.start);
-                    // console.log(dat.toDateString());
-                        strt = new Date(dat[c].start);
-                    if(dat[c].end!=""){
-                        e_nd = new Date(dat[c].end);
-                        s+=`${this.getD_ate(strt)} to ${this.getD_ate(e_nd)},<br>`;
+                s = "";
+            try{
+                dat = JSON.parse(dat);
+                for(c = 0;c<=dat.length;c++){
+                    if(c==dat.length){
+                        break;
                     }else{
-                        s+=this.getD_ate(strt)+",<br>";
+                        // dat = new Date(dat.start);
+                        // console.log(dat.toDateString());
+                        strt = new Date(dat[c].start);
+                        if(dat[c].end!=""){
+                            e_nd = new Date(dat[c].end);
+                            s+=`${this.getD_ate(strt)} to ${this.getD_ate(e_nd)},<br>`;
+                        }else{
+                            s+=this.getD_ate(strt)+",<br>";
+                        }
                     }
                 }
+                
+            }catch(e){
+
             }
             return s;
         }

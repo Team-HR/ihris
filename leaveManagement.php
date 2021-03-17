@@ -155,7 +155,7 @@
 
 
     <div class="ui medium header">Leave Admin Dashboard</div>
-    <button class="ui positive button" id="addButton" onclick="showAddModal()">Add New</button>
+    <button class="ui positive button" id="addButton" @click="showAddModal()">Add New</button>
     <template v-if="Logs.length">
     <table class="ui celled table gwd-table-16du">
       <thead>
@@ -204,10 +204,6 @@
     $(document).ready(function() {
         $(".dropdown").dropdown();
     });
-
-    function showAddModal() {
-      $("#addModal").modal('show');
-    }
     function approveModal() {
       $("#approveModal").modal('show');
     }
