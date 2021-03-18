@@ -1,96 +1,100 @@
 var lm_app = new Vue({
-    el:"#leaveCont",
-    data:{
-        Logs:[],
-        Employees:"",
-        leaveType:"",
-        date_received:"",
-        date_filed:"",
-        emp_id:"",
-        sp_type:"",
-        mone_type:"",
-        mone_days:"",
-        others:"",
-        remarks:"",
-        others:"",
-        log_editId:"",
-        leaveEvents:[]
-        ,numberOfDays:0
-        ,leaveCalendar:''
-        ,selectedEventsForEdit:[]
+    el: "#leaveCont",
+    data: {
+        Logs: [],
+        Employees: "",
+        leaveType: "",
+        date_received: "",
+        date_filed: "",
+        emp_id: "",
+        sp_type: "",
+        mone_type: "",
+        mone_days: "",
+        others: "",
+        remarks: "",
+        others: "",
+        log_editId: "",
+        leaveEvents: []
+        , numberOfDays: 0
+        , leaveCalendar: ''
+        , selectedEventsForEdit: []
 
     },
     methods: {
-        slice_date:(i)=>{
+        slice_date: (i) => {
 
         },
-        showAddModal:function() {
+        showAddModal: function () {
             $("#addModal").modal('show');
             this.selectedEventsForEdit = [];
             this.calendarRender();
         },
-        getEmployeeData:function(){
+        getEmployeeData: function () {
             var this_app = this
             var xml = new XMLHttpRequest();
             var fd = new FormData();
-            fd.append('getEmployee',true)
-            xml.onload =function(){
+            fd.append('getEmployee', true)
+            xml.onload = function () {
                 this_app.Employees = JSON.parse(xml.responseText)
             }
-            xml.open('POST','umbra/leaveManagement/config.php',false)
-            xml.send(fd)            
+            xml.open('POST', 'umbra/leaveManagement/config.php', false)
+            xml.send(fd)
         },
-        saveLeave:function(e){
+        saveLeave: function (e) {
             var buttonEvent = event;
             buttonEvent.target.disabled = true;
             // $("#saveLogs").addClass("disabled")
-            if(this.leaveType!="SP"){
-                this.sp_type =""
+            if (this.leaveType != "SP") {
+                this.sp_type = ""
             }
-            if(this.leaveType!="Monetization"){
-                this.mone_type=""
+            if (this.leaveType != "Monetization") {
+                this.mone_type = ""
             }
-            if(this.leaveType!="Others"){
-                this.others=""
+            if (this.leaveType != "Others") {
+                this.others = ""
             }
             var this_app = this
             var xml = new XMLHttpRequest();
             var fd = new FormData();
-            fd.append('emp_id',this.emp_id)
-            fd.append('selectedDate',JSON.stringify(this.leaveEvents))
-            fd.append('leaveType',this.leaveType)
-            fd.append('date_received',this.date_received)
-            fd.append('date_filed',this.date_filed)
-            fd.append('sp_type',this.sp_type)
-            fd.append('mone_type',this.mone_type)
-            fd.append('mone_days',this.mone_days)
-            fd.append('remarks',this.remarks)
-            fd.append('others',this.remarks)
-            fd.append('saveLeave',true)
-            fd.append('totalDays',this.numberOfDays)
-            fd.append('log_editId',this.log_editId)
-            xml.onload =function(){
-              $("#addModal").modal('hide');
+
+            const selectedDate = this.formatDate(this.leaveEvents)
+
+
+            fd.append('emp_id', this.emp_id)
+            fd.append('selectedDate', JSON.stringify(selectedDate))
+            fd.append('leaveType', this.leaveType)
+            fd.append('date_received', this.date_received)
+            fd.append('date_filed', this.date_filed)
+            fd.append('sp_type', this.sp_type)
+            fd.append('mone_type', this.mone_type)
+            fd.append('mone_days', this.mone_days)
+            fd.append('remarks', this.remarks)
+            fd.append('others', this.remarks)
+            fd.append('saveLeave', true)
+            fd.append('totalDays', this.numberOfDays)
+            fd.append('log_editId', this.log_editId)
+            xml.onload = function () {
+                $("#addModal").modal('hide');
                 this_app.emp_id = "";
-                this_app.leaveEvents="";
+                this_app.leaveEvents = "";
                 this_app.leaveType = "";
-                this_app.date_received="";
-                this_app.date_filed="";
-                this_app.sp_type="";
-                this_app.mone_type="";
-                this_app.mone_days="";
-                this_app.others="";
-                this_app.remarks="";
+                this_app.date_received = "";
+                this_app.date_filed = "";
+                this_app.sp_type = "";
+                this_app.mone_type = "";
+                this_app.mone_days = "";
+                this_app.others = "";
+                this_app.remarks = "";
                 this_app.log_editId = "";
-              this_app.getLog()
+                this_app.getLog()
                 setTimeout(() => {
                     buttonEvent.target.disabled = "";
-                },1000);
+                }, 1000);
             }
-            xml.open('POST','umbra/leaveManagement/config.php',true)
+            xml.open('POST', 'umbra/leaveManagement/config.php', true)
             xml.send(fd)
         },
-        getEdit:function(index){
+        getEdit: function (index) {
             this_app = this;
             log = this_app.Logs[index];
             $('#emp_id').dropdown('set selected', log['employees_id']);
@@ -98,191 +102,235 @@ var lm_app = new Vue({
             $('#mone_type').dropdown('set selected', log['mone_type']);
             $('#mone_days').dropdown('set selected', log['mone_days']);
             $('#leaveType').dropdown('set selected', log['leaveType']);
-            this_app.date_received= log['dateReceived'];
+            this_app.date_received = log['dateReceived'];
             this_app.selectedEventsForEdit = [];
-            try{
+            try {
 
                 dateApplied = JSON.parse(log.dateApplied);
-                for(c=0;c<=dateApplied.length;c++){
-                    if(c==dateApplied.length){
+                for (c = 0; c <= dateApplied.length; c++) {
+                    if (c == dateApplied.length) {
                         break;
-                    }else{
+                    } else {
                         this_app.selectedEventsForEdit.push(
                             {
                                 title: 'Selected',
                                 start: dateApplied[c].start,
-                                end: dateApplied[c].end 
+                                end: dateApplied[c].end
                             });
-                        }
                     }
-            }catch(e){
+                }
+            } catch (e) {
                 console.log(e);
             }
             this.calendarRender();
-            this_app.date_filed= log['date_filed'];
-            this_app.remarks= log['remarks'];
+            this_app.date_filed = log['date_filed'];
+            this_app.remarks = log['remarks'];
             this_app.log_editId = log['log_id'];
             $("#addModal").modal('show');
         },
 
-        getLog:function(){
+        getLog: function () {
             var this_app = this
             var xml = new XMLHttpRequest();
             var fd = new FormData();
-                fd.append('getLog',true)
-                xml.onload =function(){
-                    this_app.Logs = JSON.parse(xml.responseText)  
-                }
-                xml.open('POST','umbra/leaveManagement/config.php',false)
-                xml.send(fd)
+            fd.append('getLog', true)
+            xml.onload = function () {
+                this_app.Logs = JSON.parse(xml.responseText)
+            }
+            xml.open('POST', 'umbra/leaveManagement/config.php', false)
+            xml.send(fd)
         },
-        calendarRender:function(){
+        calendarRender: function () {
             this_leave = this;
             clndr = document.getElementById('clndr');
             var event_id = 0;
-            if(this.leaveCalendar){
+            if (this.leaveCalendar) {
                 this.leaveCalendar.destroy();
             }
-            this.leaveCalendar = new FullCalendar.Calendar(clndr,{
-                plugins:['dayGrid','interaction'],
+            this.leaveCalendar = new FullCalendar.Calendar(clndr, {
+                plugins: ['dayGrid', 'interaction'],
                 height: "auto",
                 initialView: 'dayGridMonth',
-                dateClick:function(info){
+                dateClick: function (info) {
                     e = this.getEvents();
-                    if(e.length>0){
-                        for(c=0;c<e.length;c++){
-                            if(e[c].start.toString()==info.date.toString()){
+                    if (e.length > 0) {
+                        for (c = 0; c < e.length; c++) {
+                            if (e[c].start.toString() == info.date.toString()) {
                                 evnt = e[c];
                                 evnt.remove();
-                            }else if(e[c].end!=null){
+                            } else if (e[c].end != null) {
                                 evnt = e[c];
                                 evnt.remove();
                             }
-                            else if(c==e.length-1){
-                                this.addEvent({start:info.dateStr,title:"Selected",id:event_id});
+                            else if (c == e.length - 1) {
+                                this.addEvent({ start: info.dateStr, title: "Selected", id: event_id });
                                 event_id++;
                             }
                         }
-                    }else{
-                        this.addEvent({start:info.dateStr,title:"Selected",id:event_id});
+                    } else {
+                        this.addEvent({ start: info.dateStr, title: "Selected", id: event_id });
                         event_id++;
                     }
                     lvevnts = [];
                     this_leave.leaveEvents = [];
                     e = this.getEvents();
-                    for(c=0;c<=e.length;c++){
-                        if(c==e.length){
+                    for (c = 0; c <= e.length; c++) {
+                        if (c == e.length) {
                             break;
-                        }else{ 
+                        } else {
                             end = e[c].end
-                            if(!end){
+                            if (!end) {
                                 end = "";
-                            }else{
-                                end = e[c].end.toUTCString()
+                            } else {
+                                end = e[c].end//### .toUTCString()
 
                             }
-                            lvevnts = {'start':e[c].start,'end':end};
+                            lvevnts = { 'start': e[c].start, 'end': end };
                             this_leave.leaveEvents.push(lvevnts);
                         }
                     }
                 },
-                eventResize:function(info){
+                eventResize: function (info) {
+                    console.log(info);
                     lvevnts = [];
                     e = this.getEvents();
                     this_leave.leaveEvents = [];
-                    for(c=0;c<=e.length;c++){
-                        if(c==e.length){
+                    for (c = 0; c <= e.length; c++) {
+                        if (c == e.length) {
                             break;
-                        }else{ 
+                        } else {
                             end = e[c].end
-                            if(!end){
+                            if (!end) {
                                 end = "";
-                            }else{
-                                end = e[c].end.toUTCString()
+                            } else {
+                                end = e[c].end//###.toUTCString()
                             }
-                            lvevnts = {'start':e[c].start,'end':end};
+                            lvevnts = { 'start': e[c].start, 'end': end };
                             this_leave.leaveEvents.push(lvevnts);
                         }
                     }
                 },
-                eventDrop:function(){
+                eventDrop: function () {
                     lvevnts = [];
                     e = this.getEvents();
                     this_leave.leaveEvents = [];
-                    for(c=0;c<=e.length;c++){
-                        if(c==e.length){
+                    for (c = 0; c <= e.length; c++) {
+                        if (c == e.length) {
                             break;
-                        }else{ 
+                        } else {
                             end = e[c].end
-                            if(!end){
+                            if (!end) {
                                 end = "";
-                            }else{
-                                end = e[c].end.toUTCString()
+                            } else {
+                                end = e[c].end//#### .toUTCString()
 
                             }
-                            lvevnts = {'start':e[c].start,'end':end};
+                            lvevnts = { 'start': e[c].start, 'end': end };
                             this_leave.leaveEvents.push(lvevnts);
                         }
                     }
                 },
-                events:this_leave.selectedEventsForEdit,
-                editable:true
+                events: this_leave.selectedEventsForEdit,
+                editable: true
             });
             this.leaveCalendar.render();
         }
-        ,decodeAppliedDates:function(dat){
-                s = "";
-            try{
+        , decodeAppliedDates: function (dat) {
+            s = "";
+            try {
                 dat = JSON.parse(dat);
-                for(c = 0;c<=dat.length;c++){
-                    if(c==dat.length){
+                for (c = 0; c <= dat.length; c++) {
+                    if (c == dat.length) {
                         break;
-                    }else{
+                    } else {
                         // dat = new Date(dat.start);
                         // console.log(dat.toDateString());
                         strt = new Date(dat[c].start);
-                        if(dat[c].end!=""){
+                        
+                        // console.log(strt.toISOString());
+
+                        if (dat[c].end != "") {
                             e_nd = new Date(dat[c].end);
-                            s+=`${this.getD_ate(strt)} to ${this.getD_ate(e_nd)},<br>`;
-                        }else{
-                            s+=this.getD_ate(strt)+",<br>";
+                            s += `${this.getD_ate(strt)} to ${this.getD_ate(e_nd)},<br>`;
+                        } else {
+                            s += this.getD_ate(strt) + ",<br>";
                         }
                     }
                 }
-            }catch(e){
+            } catch (e) {
 
             }
             return s;
         }
-        ,getD_ate:function(d){
+        , getD_ate: function (d) {
             monthNames = ["January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"];   
+                "July", "August", "September", "October", "November", "December"];
             d = new Date(d);
-            console.log(d);
-            s = `${monthNames[d.getMonth()]} ${d.getDate()} ${d.getFullYear()}`;
-            return s;           
+            // console.log(d.toISOString());
+            det = d.toISOString().split('T')[0].split("-")
+            // console.log(det);
+
+            year = det[0]
+            month = Number(det[1]!==0?det[1]-1:det[1])
+            day = det[2]
+            
+            s = `${monthNames[month]} ${day} ${year}`;
+            return s;
         }
+        ,
+
+        //################################### convert raw date to local ISO formatted date string
+        formatDate(leaveEvents) {
+            const data = []
+            if (!leaveEvents) return false
+
+            $.each(leaveEvents, (i, val) => {
+                datum = {
+                    start: "",
+                    end: "",
+                }
+                startDate = val.start
+                const offset = startDate.getTimezoneOffset()
+                startDate = new Date(startDate.getTime() - (offset * 60 * 1000))
+                startDateISO = startDate.toISOString()
+                // console.log('START: ', startDateISO)
+                datum.start = startDateISO
+                if (val.end) {
+                    endDate = val.end
+                    endDateISO = endDate.toISOString()
+                    // console.log('END: ', endDateISO)
+                    datum.end = endDateISO
+                }
+                data.push(datum)
+            });
+            return data
+        }
+        //###################################
+
     }
-    ,mounted:function(){
+    , mounted: function () {
         this.getEmployeeData();
         this.getLog();
         this.calendarRender();
     }
-    ,watch:{
-        leaveEvents:function(){
+    , watch: {
+        leaveEvents: function () {
             d = this.leaveEvents;
+
+            console.log(JSON.stringify(this.formatDate(d)));
+
             this.numberOfDays = 0;
-            for(c=0;c<=d.length;c++){
-                if(c==d.length){
+            for (c = 0; c <= d.length; c++) {
+                if (c == d.length) {
                     break;
-                }else{
-                    if(d[c].end){
+                } else {
+                    if (d[c].end) {
                         strt = new Date(d[c].start);
                         e_nd = new Date(d[c].end);
-                        totalDays = strt.getTime()-e_nd.getTime();
-                        totalDays = Math.round(totalDays/-86400000);
-                        this.numberOfDays +=totalDays;
-                    }else{
+                        totalDays = strt.getTime() - e_nd.getTime();
+                        totalDays = Math.round(totalDays / -86400000);
+                        this.numberOfDays += totalDays;
+                    } else {
                         this.numberOfDays++;
                     }
                 }
