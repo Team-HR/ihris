@@ -124,6 +124,7 @@ var lm_app = new Vue({
             this_app.log_editId = log['log_id'];
             $("#addModal").modal('show');
         },
+
         getLog:function(){
             var this_app = this
             var xml = new XMLHttpRequest();
@@ -173,9 +174,12 @@ var lm_app = new Vue({
                         if(c==e.length){
                             break;
                         }else{ 
-                            end = e[c].end 
+                            end = e[c].end
                             if(!end){
                                 end = "";
+                            }else{
+                                end = e[c].end.toUTCString()
+
                             }
                             lvevnts = {'start':e[c].start,'end':end};
                             this_leave.leaveEvents.push(lvevnts);
@@ -190,9 +194,11 @@ var lm_app = new Vue({
                         if(c==e.length){
                             break;
                         }else{ 
-                            end = e[c].end 
+                            end = e[c].end
                             if(!end){
                                 end = "";
+                            }else{
+                                end = e[c].end.toUTCString()
                             }
                             lvevnts = {'start':e[c].start,'end':end};
                             this_leave.leaveEvents.push(lvevnts);
@@ -210,6 +216,9 @@ var lm_app = new Vue({
                             end = e[c].end
                             if(!end){
                                 end = "";
+                            }else{
+                                end = e[c].end.toUTCString()
+
                             }
                             lvevnts = {'start':e[c].start,'end':end};
                             this_leave.leaveEvents.push(lvevnts);
@@ -220,7 +229,6 @@ var lm_app = new Vue({
                 editable:true
             });
             this.leaveCalendar.render();
-            console.log(this.leaveCalendar);
         }
         ,decodeAppliedDates:function(dat){
                 s = "";
@@ -241,7 +249,6 @@ var lm_app = new Vue({
                         }
                     }
                 }
-                
             }catch(e){
 
             }
@@ -250,6 +257,8 @@ var lm_app = new Vue({
         ,getD_ate:function(d){
             monthNames = ["January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"];   
+            d = new Date(d);
+            console.log(d);
             s = `${monthNames[d.getMonth()]} ${d.getDate()} ${d.getFullYear()}`;
             return s;           
         }
