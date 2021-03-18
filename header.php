@@ -159,11 +159,15 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true && $_SESSION
           // alert('clicked ' + info.dateStr);
           dateStart = info.startStr;
           $("#inputDate1_cal").val(dateStart);
-
+          // console.log('start:', dateStart);
           str = info.endStr;
-          dateEnd = (parseInt(str.substring(0, 4), 10)) + "-" +
-            pad(parseInt(str.substring(6), 10)) + "-" +
-            pad(parseInt(str.substring(8, 10), 10) - 1);
+          endDate = new Date(str);
+          endDate.setDate(endDate.getDate() - 1);
+          dateEnd = endDate.toISOString().split("T")[0];
+          // console.log('end:', dateEnd);
+          // dateEnd = (parseInt(str.substring(0, 4), 10)) + "-" +
+          //   pad(parseInt(str.substring(6), 10)) + "-" +
+          //   pad(parseInt(str.substring(8, 10), 10) - 1);
           // alert(dateEnd);
           $("#inputDate2_cal").val(dateEnd);
           // $("#event").html(info.dateStr);
