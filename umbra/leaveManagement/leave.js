@@ -69,7 +69,7 @@ var lm_app = new Vue({
             fd.append('mone_type', this.mone_type)
             fd.append('mone_days', this.mone_days)
             fd.append('remarks', this.remarks)
-            fd.append('others', this.remarks)
+            fd.append('others', this.others)
             fd.append('saveLeave', true)
             fd.append('totalDays', this.numberOfDays)
             fd.append('log_editId', this.log_editId)
@@ -113,7 +113,7 @@ var lm_app = new Vue({
                     } else {
                         this_app.selectedEventsForEdit.push(
                             {
-                                title: 'Selected',
+                                title: 'Leave',
                                 start: dateApplied[c].start,
                                 end: dateApplied[c].end
                             });
@@ -163,12 +163,12 @@ var lm_app = new Vue({
                                 evnt.remove();
                             }
                             else if (c == e.length - 1) {
-                                this.addEvent({ start: info.dateStr, title: "Selected", id: event_id });
+                                this.addEvent({ start: info.dateStr, title: "Leave", id: event_id });
                                 event_id++;
                             }
                         }
                     } else {
-                        this.addEvent({ start: info.dateStr, title: "Selected", id: event_id });
+                        this.addEvent({ start: info.dateStr, title: "Leave", id: event_id });
                         event_id++;
                     }
                     lvevnts = [];

@@ -3,16 +3,13 @@
     require_once "header.php";
 ?>
 <style>
-   
-   table, th, td, tr {
-         border: 1px solid black;
-}
+
 
 </style>
 
 
 <div id="dtrSummary_app">
-    <div class="ui segment noprint"   style="margin:auto;max-width:50%;min-width:500px;">
+<div class="ui segment noprint"   style="margin:auto;max-width:50%;min-width:500px;">
         <h3>DTR Summary Report</h3>
         <div class="ui section divider"></div> 
             <form class="ui form" @submit.prevent="getDataNeeded()">
@@ -20,61 +17,56 @@
                     <label>Select month:</label>
                     <input type="month" placeholder="Month" v-model="period" required>
                 </div>
-                <!-- <div class="field">
-                    <label>Type:</label>
-                    <select class="ui selection dropdown" v-model="type" required>
-                        <option value="TARDY">TARDY</option>
-                        <option value="ABSENT">ABSENT</option>
-                    </select>
-                </div> -->
                 <input type="submit" value="Generate" class="ui button blue">
             </form>
             <br>
     </div>
     <br>    
-   
-     <center>      
-        <div style="background:white; width:1080px;">
-            <div style="float:left; margin-left:30%">
-                    <img src="bayawanLogo.png" width="100px" style="margin-left:5px;margin-top:16px">
-            </div>
-    
-            <div style="float: left; width:25%; margin-top:30px">
-                <strong>
-                     Republic of the Philippines<br>Province of Negros Oriental<br>CITY OF BAYAWAN
-                </strong>
-                <br><br>
-            </div>
-           
-            <div style="clear:both"></div>
-
-            
-                 <div  style="margin-top:20px;font-size:14px"> 
-                            <b>Office of the Human Resource Management and Development</b>
-                 </div>
-
-            <div style="text-align:left; margin-top:40px">
-                    <p>
-                       <b> PRYDE HENRY TEVES<br>
-                        City Mayor<br>
-                        LGU-Bayawan City<br>
-                        <br><br>
-                        Sir,</b>
-                        <br><br>
-                            Respectfully submitting to your office the report  on Attendance/Tardiness/Punctuality & Leave of Absence/s of permanent and casual employees of the
-                        City Government for the Month of {{period}}  to wit;
-                    </p>
-            </div>
-           
-        
-        </div>
-        </center>      
-      <br>
-    <template>    
         <template>
-            <table class="ui celled selectable compact table" style="width:1080px;margin:auto;font-size:12px;    border: 1px solid black;" v-if="DataRequest.length>0">
+            <table class="ui celled table" style="width:1080px;margin:auto;font-size:12px;" v-if="DataRequest.length>0">
                 <thead>
-                   
+                    
+                     <tr> 
+                        <th colspan="12">
+                              <center>      
+                                    <div style="background:white; width:1080px;">
+                                        <div style="float:left; margin-left:30%">
+                                                <img src="bayawanLogo.png" width="100px" style="margin-left:5px;margin-top:16px">
+                                        </div>
+                                
+                                        <div style="float: left; width:25%; margin-top:30px">
+                                            <strong>
+                                                Republic of the Philippines<br>Province of Negros Oriental<br>CITY OF BAYAWAN
+                                            </strong>
+                                            <br><br>
+                                        </div>
+                                    
+                                        <div style="clear:both"></div>
+
+                                        
+                                            <div  style="margin-top:20px;font-size:14px"> 
+                                                        <b>Office of the Human Resource Management and Development</b>
+                                            </div>
+
+                                        <div style="text-align:left; margin-top:40px">
+                                                <p>
+                                                <b> PRYDE HENRY TEVES<br>
+                                                    City Mayor<br>
+                                                    LGU-Bayawan City<br>
+                                                    <br><br>
+                                                    Sir,</b>
+                                                    <br><br>
+                                                        Respectfully submitting to your office the report  on Attendance/Tardiness/Punctuality & Leave of Absence/s of permanent and casual employees of the
+                                                    City Government for the Month of {{period}}  to wit;
+                                                </p>
+                                        </div>
+                                    
+                                    
+                                    </div>
+                             </center>      
+                        </th>
+                    </tr>
+
                     <tr> 
                         <th  class="ab"></th>
                         <th  class="ab"></th>
@@ -97,7 +89,7 @@
                         
                     </tr>
                 </thead>
-                <tbody id="allDataTable" style="font-size:12px">
+                <tbody id="allDataTable" style="font-size:12px; border: 1px solid black ">
                     <tr v-for="(ar,index) in sortArrays(DataRequest)">
                        
                         <td>{{ar.lastName}} {{ar.firstName}} {{ar.middleName}} {{ar.extName}}</td>
@@ -112,50 +104,53 @@
                         <td><span v-html="newLine(ar.remarks,',')"></span></td>
                       
                     </tr>
+                    <tr>
+                        <th  colspan="12">
+                            <center>      
+                                <div style="background:white; width:1080px;">
+                                    <div style="text-align:left; margin-top:30px">
+                                    <div class="ui horizontal list">
+                                        <div class="item">
+                                            <i >Prepared by:</i> <br><br><br><br>
+                                                    <p style="margin-left:20px; font-weight: bold">
+                                                        Jonalyn G. Velasco <br>
+                                                        AAI<br>
+                                                    </p>
+                                            </div>
+                                        <div class="item"  style="margin-left:150px">
+                                            <i >Noted by:</i> <br><br><br><br>
+                                                    <p style="margin-left:20px; font-weight: bold">
+                                                        VERONICA GRACE P. MIRAFLOR <br>
+                                                        CGDH-I<br>
+                                                </p>
+                                        </div>
+                                        <div class="item"  style="margin-left:200px">
+                                            <i >Approved by:</i> <br><br><br><br>
+                                                    <p style="margin-left:20px; font-weight: bold">
+                                                        PRYDE HENRY A. TEVES <br>
+                                                        CITY MAYOR<br>
+                                                    </p>
+                                    </div>
+                                </div>
+                          </center>  
+                        </th>
+                    </tr>
                 </tbody>
             </table>
-                <template v-else>
-                    <div style="text-align: center">
+
+                 <template v-else>
+                 <center>
+                    <div style="text-align: center; background:white; width:800px;">
                         <br>
-                        <h2 style="color:#00000042;">Please select period to print report.</h2>
+                        <h2 style="color:#bfbfbf">Please select period to print report.</h2>
                         <br>
                     </div>
-                </template>    
+                </center>
+                </template>       
         </template>
 
     </template>    
 </div>
-
-
-
-<center>      
-        <div style="background:white; width:1080px;">
-            <div style="text-align:left; margin-top:40px">
-
-            <div class="ui horizontal list">
-                <div class="item">
-                    <i >Prepared by:</i> <br><br><br><br>
-                            <p style="margin-left:20px; font-weight: bold">
-                                Jonalyn G. Velasco <br>
-                                AAI<br>
-                            </p>
-                    </div>
-                <div class="item"  style="margin-left:150px">
-                    <i >Noted by:</i> <br><br><br><br>
-                            <p style="margin-left:20px; font-weight: bold">
-                                VERONICA GRACE P. MIRAFLOR <br>
-                                CGDH-I<br>
-                        </p>
-                </div>
-                <div class="item"  style="margin-left:200px">
-                    <i >Approved by:</i> <br><br><br><br>
-                            <p style="margin-left:20px; font-weight: bold">
-                                PRYDE HENRY A. TEVES <br>
-                                CITY MAYOR<br>
-                            </p>
-            </div>
-        </div>
-</center>     
 <script src="umbra/dtrManagement/config_summary.js"></script>
 <script>
     $(document).ready(function(){

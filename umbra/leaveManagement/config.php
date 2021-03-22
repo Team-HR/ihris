@@ -19,6 +19,9 @@
         if ($sp_type  == '') {
                 $sp_type =  $_POST["mone_type"];
         }
+        if ($leaveType  == 'Others') {
+            $leaveType =  $_POST["others"];
+        }
         $remarks = $_POST["remarks"];
         $selectedDate = $_POST["selectedDate"];
         // $totalDays = $_POST["mone_days"];
@@ -36,14 +39,14 @@
     
         if($log_editId){
             $sql = "UPDATE `lm_logs` SET   
-                        `employees_id` = '$emp_id', 
-                        `dateReceived` = '$date_received', 
-                        `date_filed` = '$date_filed',
-                        `dateApplied` = '$selectedDate', 
-                        `totalDays` = '$totalDays', 
-                        `leaveType` = '$leaveType', 
-                        `sp_type` = '$sp_type', 
-                        `remarks` = '$remarks' 
+                         `employees_id` = '$emp_id', 
+                         `dateReceived` = '$date_received', 
+                         `date_filed` = '$date_filed',
+                         `dateApplied` = '$selectedDate', 
+                         `totalDays` = '$totalDays', 
+                         `leaveType` = '$leaveType', 
+                         `sp_type` = '$sp_type', 
+                         `remarks` = '$remarks' 
                     WHERE `lm_logs`.`log_id` = $log_editId";
         }
             
