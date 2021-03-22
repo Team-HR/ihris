@@ -181,7 +181,7 @@
                         <td style="background-color:#7accc078;color:#088dad">{{ar.halfDaysUndertime}}</td>
                         <td style="background-color:#7accc078;color:#088dad">{{showEquiv(ar.totalMinsUndertime)}}</td>
                       <td><span v-html="newLine(ar.remarks,',')"></span></td>
-                        <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(ar)">View</button></td>
+                        <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(index)">View</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -242,7 +242,7 @@
                         <td style="background-color:#7accc078;color:#088dad">{{ar.halfDaysUndertime}}</td>
                         <td style="background-color:#7accc078;color:#088dad">{{showEquiv(ar.totalMinsUndertime)}}</td>
                         <td><span v-html="newLine(ar.remarks,',')"></span></td>
-                        <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(ar)">View</button></td>
+                        <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(index)">View</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -306,7 +306,7 @@
                         <td style="background-color:#7accc078;color:#088dad">{{ar.halfDaysUndertime}}</td>
                         <td style="background-color:#7accc078;color:#088dad">{{showEquiv(ar.totalMinsUndertime)}}</td>
                         <td><span v-html="newLine(ar.remarks,',')"></span></td>
-                        <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(ar)">View</button></td>
+                        <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(index)">View</button></td>
                     </tr>
                 </tbody>
             </table>

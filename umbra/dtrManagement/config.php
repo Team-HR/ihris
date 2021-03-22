@@ -99,6 +99,7 @@
         }
         $sql = $mysqli->query($sql);
         echo $mysqli->error;
+
         $getDat = "SELECT * from `dtrSummary` WHERE `employee_id`='$emp_id' AND `month`='$period'";
         $getDat = $mysqli->query($getDat);
         $getDat = $getDat->fetch_assoc();
@@ -109,7 +110,7 @@
         $getDat = "SELECT * from `dtrSummary` WHERE `employee_id`='$emp_id' AND `month`='$period'";
         $getDat = $mysqli->query($getDat);
         $getDat = $getDat->fetch_assoc();
-        echo json_encode($getDat);  
+        echo json_encode($getDat);
     }elseif (isset($_POST['nodtr'])){
         $nodtr = $_POST['nodtr'];
         $period = $_POST['period'];
@@ -149,19 +150,5 @@
             }
             $sql = $mysqli->query($sql);
             echo $mysqli->error;            
-    }elseif(isset($_POST['passSlipFormSave'])){
-        $passSlipFormSave = $_POST['passSlipFormSave'];
-        $emp_id = $_POST['emp_id'];
-        $period = $_POST['period'];
-        $sqlCheck = "SELECT * from `dtrSummary` where `employee_id`='$emp_id' and `month`='$period'";
-        $sqlCheck = $mysqli->query($sqlCheck);
-        if($sqlCheck->num_rows>0){
-            $sqlCheck = $sqlCheck->fetch_assoc();
-            $sql = "UPDATE `dtrSummary` SET `passSlip`='$passSlipFormSave' WHERE `dtrSummary_id`='$sqlCheck[dtrSummary_id]'";
-        }else{
-            $sql = "INSERT INTO `dtrSummary` (`dtrSummary_id`,`month`,`employee_id`,`passSlip`) values (NULL,'$period','$employee_id','$passSlipFormSave')";
-        }
-        $mysqli->query($sql);
-        echo $mysqli->error;
     }
 ?>
