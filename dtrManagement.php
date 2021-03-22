@@ -24,11 +24,25 @@
 
 
 <div id="dtr_app">  
+    <div class="ui mini modal" id="passSlipModal">
+        <div class="header">Pass SLip Form</div>
+        <div class="content">
+            <form class="ui form" @submit.prevent="passSlipFormSave()">
+                <div class="field">
+                    <label>Mins of deduction</label>
+                    <input type="text" v-model="passSlipForm">
+                </div>
+                <div>
+                    <button type="submit" class="ui button blue" id=>Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <div class="ui segment"   style="margin:auto;max-width:35%;min-width:600px;">
-        <div class="ui segment" style="position:fixed;right:0px;width:250px;z-index:10">
+        <div class="ui segment" style="position:fixed;right:0px;width:280px;z-index:10">
             <table>
                 <tr>
-                    <th style="text-align: right">Total mins Tardy:</th>
+                    <th style="text-align: right">Total mins. Tardy:</th>
                     <th style="color:red">{{totalMinsTardy}}</th>
                 </tr>
                 <tr>
@@ -36,8 +50,20 @@
                     <th style="color:red">{{totalTimesTardy}}</th>
                 </tr>
                 <tr>
-                    <th style="text-align: right">Total mins Undertime:</th>
+                    <th style="text-align: right">Total mins. Undertime:</th>
                     <th style="color:red">{{totalMinUnderTime}}</th>
+                </tr>
+                <tr>
+                    <th style="text-align: right">Pass Slip in mins.:</th>
+                    <th>
+                        <template v-if="dtr.length>0">
+                            <span style="color:red">{{dtrSummary.passSlip}} </span><i class="edit icon green" @click="passSlipModal()"></i>
+                        </template>
+                        <template v-else>
+                            <span style="color:red">0</span>
+                        </template>
+                    
+                    </th>
                 </tr>
             </table>
         </div>

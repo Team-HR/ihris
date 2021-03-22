@@ -147,7 +147,8 @@ var dtrSummary = new Vue({
         },
         showOptionModal:function(i){
             $('#optionModal').modal('show');
-            this.selected_data = this.DataRequest[i];
+            console.log(i);
+            this.selected_data = i;
             this_dtr = this;
             var fd = new FormData();
                 fd.append('period',this.selected_data.month);

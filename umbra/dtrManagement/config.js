@@ -13,6 +13,7 @@ var dtr_app = new Vue({
         others:"",
         selectedDate:"",
         dtrSummary:[],
+        passSlipForm:"",
         // logs
             totalMinsTardy: 0,
             totalTimesTardy:0,
@@ -63,6 +64,20 @@ var dtr_app = new Vue({
             this.halfDaysUndertime = halfUnder;
             this.remarksDtr = remarks;
         },
+        passSlipFormSave:function(){
+                this_dtr = this;
+            var fd = new FormData();
+                fd.append('passSlipFormSave',this.passSlipForm);
+                fd.append('emp_id',this.emp_id);
+                fd.append('period',this.period);
+            var xml = new XMLHttpRequest()
+                xml.onload = function(){
+                    this_dtr.submitReport()
+                    $('#passSlipModal').modal('hide')
+                }
+                xml.open('POST','umbra/dtrManagement/config.php',false)
+                xml.send(fd);
+            },
         cancelMove:function(id){
             this_dtr = this;
             $('body').toast({
@@ -236,6 +251,9 @@ var dtr_app = new Vue({
                 }
                 xml.open('POST','umbra/dtrManagement/config.php',false)
                 xml.send(fd)
+        },
+        passSlipModal:function(){
+            $('#passSlipModal').modal('show')
         }
     },mounted:function(){
         this.getEmp();
