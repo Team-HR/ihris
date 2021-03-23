@@ -148,27 +148,31 @@ var lm_app = new Vue({
                 this.leaveCalendar.destroy();
             }
             this.leaveCalendar = new FullCalendar.Calendar(clndr, {
-                plugins: ['dayGrid', 'interaction'],
-                height: "auto",
-                initialView: 'dayGridMonth',
-                dateClick: function (info) {
+                plugins: ['dayGrid', 'interaction']
+                ,height: "auto"
+                ,selectable: true
+                ,initialView: 'dayGridMonth'
+                ,select: function (info) {
                     e = this.getEvents();
                     if (e.length > 0) {
                         for (c = 0; c < e.length; c++) {
-                            if (e[c].start.toString() == info.date.toString()) {
-                                evnt = e[c];
-                                evnt.remove();
-                            } else if (e[c].end != null) {
+                            console.log(e[c]);
+                            if (e[c].start.toDateString() == info.start.toDateString()) {
                                 evnt = e[c];
                                 evnt.remove();
                             }
                             else if (c == e.length - 1) {
-                                this.addEvent({ start: info.dateStr, title: "Leave", id: event_id });
+                                if(info.end){
+                                    this.addEvent({ start: info.start,end:info.end,title: "Leave", id: event_id });
+                                }else{
+                                    this.addEvent({ start: info.start,title: "Leave", id: event_id });
+                                }
                                 event_id++;
                             }
                         }
                     } else {
-                        this.addEvent({ start: info.dateStr, title: "Leave", id: event_id });
+                        // this.addEvent({ start: info.dateStr, title: "Leave", id: event_id });
+                        this.addEvent({ start: info.start,end:info.end,title: "Leave", id: event_id });
                         event_id++;
                     }
                     lvevnts = [];
@@ -189,27 +193,28 @@ var lm_app = new Vue({
                             this_leave.leaveEvents.push(lvevnts);
                         }
                     }
+                    console.log(this_leave.leaveEvents);
                 },
-                eventResize: function (info) {
-                    console.log(info);
-                    lvevnts = [];
-                    e = this.getEvents();
-                    this_leave.leaveEvents = [];
-                    for (c = 0; c <= e.length; c++) {
-                        if (c == e.length) {
-                            break;
-                        } else {
-                            end = e[c].end
-                            if (!end) {
-                                end = "";
-                            } else {
-                                end = e[c].end//###.toUTCString()
-                            }
-                            lvevnts = { 'start': e[c].start, 'end': end };
-                            this_leave.leaveEvents.push(lvevnts);
-                        }
-                    }
-                },
+                // eventResize: function (info) {
+                //     // console.log(info);
+                //     lvevnts = [];
+                //     e = this.getEvents();
+                //     this_leave.leaveEvents = [];
+                //     for (c = 0; c <= e.length; c++) {
+                //         if (c == e.length) {
+                //             break;
+                //         } else {
+                //             end = e[c].end
+                //             if (!end) {
+                //                 end = "";
+                //             } else {
+                //                 end = e[c].end//###.toUTCString()
+                //             }
+                //             lvevnts = { 'start': e[c].start, 'end': end };
+                //             this_leave.leaveEvents.push(lvevnts);
+                //         }
+                //     }
+                // },
                 eventDrop: function () {
                     lvevnts = [];
                     e = this.getEvents();
@@ -317,7 +322,7 @@ var lm_app = new Vue({
         leaveEvents: function () {
             d = this.leaveEvents;
 
-            console.log(JSON.stringify(this.formatDate(d)));
+            // console.log(JSON.stringify(this.formatDate(d)));
 
             this.numberOfDays = 0;
             for (c = 0; c <= d.length; c++) {
