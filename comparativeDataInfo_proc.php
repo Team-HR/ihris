@@ -161,9 +161,22 @@ function createYosList($serial)
 
 function formatDate($numeric_date)
 {
-	$date = new DateTime($numeric_date);
-	$strDate = $date->format('M d, Y');
-	return $strDate;
+	// return $numeric_date;
+	$date_exploded = explode("-",$numeric_date);
+	
+	if ($date_exploded[2]== "00") {
+		$date = new DateTime($numeric_date);
+		$date->modify('+1 day');
+		$strDate = $date->format('M Y');
+		return $strDate;
+	} else  {
+		$date = new DateTime($numeric_date);
+		// $date->modify('+1 day');
+		$strDate = $date->format('M d, Y');
+		return $strDate;
+	}
+
+	
 }
 
 function check_if_exist($mysqli, $rspcomp_id)
