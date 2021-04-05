@@ -129,6 +129,20 @@ if (isset($_POST['get_salaries'])) {
     $stmt->close();
 
     echo json_encode("success");
+} elseif (isset($_POST['get_remarks'])) {
+    // for remarks autocompletetion
+    $data = array();
+    $sql = "SELECT DISTINCT `sr_remarks` FROM `service_records`  
+    ORDER BY `service_records`.`sr_remarks` ASC";
+    $res = $mysqli->query($sql);
+    while ($row = $res->fetch_assoc()) {
+        $datum = array(
+            "label"=> $row["sr_remarks"],
+            "value"=> $row["sr_remarks"],
+        );
+        $data[] = $datum;
+    }
+    echo json_encode($data);
 }
 
 function format_salary($yearly_salary){

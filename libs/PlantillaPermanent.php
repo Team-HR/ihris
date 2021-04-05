@@ -28,22 +28,26 @@ class PlantillaPermanent extends Model
         $result = $stmt->get_result();
         $data = $result->fetch_assoc();
         $date = $data["date_of_appointment"];
-        $stmt->close();
+        
         return $date ? date("m/d/Y", strtotime($date)) : "";
     }
 
     public function getDateLastPromoted($employees_id)
     {
+        // return "02/11/2021";
         $mysqli = $this->mysqli;
         $sql = "SELECT `date_of_last_promotion` FROM `appointments` WHERE `employee_id`=? AND `nature_of_appointment`='promotion' ORDER BY `date_of_last_promotion` DESC LIMIT 1";
         $stmt = $mysqli->prepare($sql);
         $stmt->bind_param("i", $employees_id);
         $stmt->execute();
         $result = $stmt->get_result();
-        $data = $result->fetch_assoc();
-        $date = $data["date_of_last_promotion"];
-        $stmt->close();
-        return $date ? date("m/d/Y", strtotime($date)) : "";
+        
+        if ($data = $result->fetch_assoc()) {
+            $date = $data["date_of_last_promotion"];
+            return $date ? date("m/d/Y", strtotime($date)) : "";
+        }
+        return "";
+        
     }
 
     public function getCurrentEmploymentStatus($employees_id)
@@ -56,7 +60,7 @@ class PlantillaPermanent extends Model
         $result = $stmt->get_result();
         $data = $result->fetch_assoc();
         $status = $data["status_of_appointment"];
-        $stmt->close();
+        
         return $status ? strtoupper($status) : "";
     }
 
@@ -71,7 +75,7 @@ class PlantillaPermanent extends Model
         $result = $stmt->get_result();
         $data = $result->fetch_assoc();
         $data["monthly_salary"] = $this->getMonthlySalary($data["position_id"], $data["step"], $data["schedule"]);
-        $stmt->close();
+        
         $data = $data + $this->positionData($data["position_id"]);
         $data = $data + $this->departmentData($data["department_id"]);
         return $data;
@@ -109,7 +113,7 @@ class PlantillaPermanent extends Model
         $row = $result->fetch_assoc();
         $parent_id = 0;
         $parent_id = $row["id"];
-        $stmt->close();
+        
         if (empty($parent_id)) return false;
         $sql = "SELECT monthly_salary FROM `setup_salary_adjustments_setup` WHERE parent_id = ? AND salary_grade = ? AND step_no = ?";
         $stmt = $mysqli->prepare($sql);
@@ -118,7 +122,7 @@ class PlantillaPermanent extends Model
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
         $monthly_salary = $row["monthly_salary"];
-        $stmt->close();
+        
         return $monthly_salary;
     }
 }

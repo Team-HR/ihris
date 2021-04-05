@@ -34,7 +34,7 @@ require 'header.php';
 									<div class="ui animated list">
 										<a class="item" href="personnelrecognition.php">Personnel Recognition</a>
 										<a class="item" href="rnrplan.php">R&R Plan (Yearly)</a>
-										<a class="item" href="">System Review</a>
+										<a class="item" href="rnr_system_review.php">System Review</a>
 										<a class="item" href="">Search for Outstanding Employees</a>
 									</div>
 								</div>
@@ -67,9 +67,21 @@ require 'header.php';
 										<a class="item" href="">System of Ranking Position</a>
 										<a class="item" href="">Staffing Plan</a>
 										<!-- <a class="item" href="">Turn Around</a> -->
-										<a class="item" href="personnelCompetenciesSurveyEncoder.php">Personnel Competency Encode</a>
+										<!-- <a class="item" href="personnelCompetenciesSurveyEncoder.php">Personnel Competency Encode</a>
 										<a class="item" target="_blank" href="personnelCompetenciesSurvey.php">Personnel Competency Form</a>
-										<a class="item" href="personnelCompetenciesReport.php">Personnel Competency Report</a>
+										<a class="item" href="personnelCompetenciesReport.php">Personnel Competency Report</a> -->
+
+										<div class="dropdown item">
+											<a class="item">Personnel Competency <i class="caret down icon"></i></a>
+											<div class="dropdown-content">
+												<div class="ui animated list">
+													<a class="item" href="personnelCompetenciesSurveyEncoder.php">- Encoder's Tool</a>
+													<a class="item" target="_blank" href="personnelCompetenciesSurvey.php">- Survey Form</a>
+													<a class="item" href="personnelCompetenciesReport.php">- Summary Report</a>
+												</div>
+											</div>
+										</div>
+
 									</div>
 								</div>
 							</div>
@@ -142,6 +154,26 @@ require 'header.php';
 		</div>
 	</div>
 </div>
+<style>
+	.dropdown {
+		position: relative;
+		display: inline-block;
+	}
+
+	.dropdown-content {
+		display: none;
+		position: absolute;
+		/* background-color: #f9f9f9; */
+		min-width: 360px;
+		/* box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2); */
+		/* padding: 12px 16px; */
+		z-index: 1;
+	}
+
+	.dropdown:hover .dropdown-content {
+		display: block;
+	}
+</style>
 
 <?php
 require "footer.php";

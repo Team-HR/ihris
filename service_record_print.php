@@ -29,7 +29,7 @@ $birth_place = "";
 $maiden_name = "";
 
 $hrmo = "VERONICA GRACE P. MIRAFLOR";
-$hrmo_position = "HRMO IV";
+$hrmo_position = "CGDH-I";
 $mayor = "PRYDE HENRY A. TEVES";
 $date_now = date("F d,Y");
 

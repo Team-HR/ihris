@@ -43,7 +43,8 @@ var sr_app = new Vue({
       sr_branch: "",
       sr_remarks: "",
       sr_memo: "",
-      employee_id: 0
+      employee_id: 0,
+      remarks_history: [],
     };
   },
   computed: {
@@ -178,7 +179,6 @@ var sr_app = new Vue({
       $("#sr_branch").dropdown("set selected", this.sr_branch);
       this.sr_remarks = sr.sr_remarks;
       this.sr_memo = sr.sr_memo;
-
       $("#addSR").modal("show");
     },
     init_delete(index) {
@@ -254,7 +254,7 @@ var sr_app = new Vue({
               $("#addSR").modal("hide");
               this.clear_form();
               this.init_load();
-              // $("#add_edit_form").form("set as clean");
+              this.get_remarks();
             },
             async: false
           });
@@ -266,6 +266,23 @@ var sr_app = new Vue({
       if (date == "") return "To Present";
       var _date = moment(date).format("MMM DD,YYYY");
       return _date;
+    },
+    get_remarks() {
+      // var remarks_history = []
+      $.ajax({
+        type: "post",
+        url: "umbra/service_record/config.php",
+        data: {
+          get_remarks: true,
+        },
+        dataType: "json",
+        success: data => {
+          this.remarks_history = data
+          // console.log("remarks this",this.remarks_history);
+        },
+        async: false
+      });
+      // this.remarks_history = Object.assign([], remarks_history)
     }
   },
   mounted() {
@@ -327,5 +344,37 @@ var sr_app = new Vue({
     $("#sr_branch").dropdown({
       showOnFocus: false
     });
+
+    this.get_remarks()
+
+    var input = document.getElementById("sr_remarks");
+    autocomplete({
+      input: input,
+      fetch: (text, update) => {
+        text = text.toLowerCase();
+        // you can also use AJAX requests instead of preloaded data
+        var suggestions = this.remarks_history.filter(n => n.label.toLowerCase().startsWith(text))
+        update(suggestions);
+      },
+      onSelect: (item) => {
+        // input.value = item.label;
+        this.sr_remarks = item.value
+      }
+    });
   }
 });
+
+// var input = $("#sr_remarks");
+
+// autocomplete({
+//   input: input,
+//   fetch: function (text, update) {
+//     text = text.toLowerCase();
+//     // you can also use AJAX requests instead of preloaded data
+//     var suggestions = this.remarks_history.filter(n => n.label.toLowerCase().startsWith(text))
+//     update(suggestions);
+//   },
+//   onSelect: function (item) {
+//     input.value = item.label;
+//   }
+// });

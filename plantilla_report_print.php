@@ -1,5 +1,6 @@
 <?php
 require "vendor/autoload.php";
+require 'libs/PlantillaPermanent.php';
 require "_connect.db.php";
 
 $mpdf = new \Mpdf\Mpdf([
@@ -105,52 +106,61 @@ if ($gender === "all") {
 }
 $stmt->execute();
 $result = $stmt->get_result();
-require_once 'libs/PlantillaPermanent.php';
 $plantilla = new PlantillaPermanent();
+
 
 $data = array();
 while ($row = $result->fetch_assoc()) {
   $data[] = $row;
 }
 
-// 
-$item_nos = array_column($data, 'item_no');
-$sorted_item_nos = new ItemNumbersSorter($item_nos);
-echo "<pre>" . print_r($sorted_item_nos->arr, true) . "</pre>";
+$num_items = $result->num_rows;
+if ($num_items === 0) {
+  $html .= <<<EOD
+  <tr>
+    <td colspan="20" align="center">******************* EMPTY *******************</td>
+  </tr>
+  EOD;
+  $num_items = "O";
+} else {
+  // 
+  $item_nos = array_column($data, 'item_no');
+  // print("<pre>".print_r($data,true)."</pre>");
+  // var_dump($item_nos);
+  $sorted_item_nos = new ItemNumbersSorter($item_nos);
+  // echo "<pre>" . print_r($sorted_item_nos->arr, true) . "</pre>";
 
 
-$sorted_data = array();
-foreach ($sorted_item_nos->arr as $item_no) {
-  echo $item_no . "<br/>";
-  foreach ($data as $item) {
-    if ($item_no === $item['item_no']) {
-      $sorted_data[] = $item;
-      break;
+  $sorted_data = array();
+  foreach ($sorted_item_nos->arr as $item_no) {
+    // echo $item_no . "<br/>";
+    foreach ($data as $item) {
+      if ($item_no === $item['item_no']) {
+        $sorted_data[] = $item;
+        break;
+      }
     }
   }
-}
-// 
 
-
-foreach ($sorted_data as $row) {
-  $employee_id = $row["employee_id"];
-  $sg = $row["salaryGrade"];
-  $step = $row["step"];
-  $sg = $row["salaryGrade"];
-  $schedule = $row["schedule"];
-  $authorized_salary = getMonthlySalary($mysqli, $sg, $step, $schedule);
-  $actual_salary = $authorized_salary;
-  $area_code = "7";
-  $area_type = "C";
-  $level = $row["category"] ? $row["category"][0] : "";
-  $lastName = $row["lastName"];
-  $firstName = $row["firstName"];
-  $middleName = $row["middleName"] == "." ? "" : $row["middleName"];
-  $extName = $row["extName"];
-  $gender = $row["gender"] ? $row["gender"][0] : "";
-  $position = $row["position"];
-  $functional = $row["functional"];
-  $html .= <<<EOD
+  foreach ($sorted_data as $row) {
+    $employee_id = $row["employee_id"];
+    $sg = $row["salaryGrade"];
+    $step = $row["step"];
+    $sg = $row["salaryGrade"];
+    $schedule = $row["schedule"];
+    $authorized_salary = getMonthlySalary($mysqli, $sg, $step, $schedule);
+    $actual_salary = $authorized_salary;
+    $area_code = "7";
+    $area_type = "C";
+    $level = $row["category"] ? $row["category"][0] : "";
+    $lastName = $row["lastName"];
+    $firstName = $row["firstName"];
+    $middleName = $row["middleName"] == "." ? "" : $row["middleName"];
+    $extName = $row["extName"];
+    $gender = $row["gender"] ? $row["gender"][0] : "";
+    $position = $row["position"];
+    $functional = $row["functional"];
+    $html .= <<<EOD
     <tr>
          <td>$row[item_no]</td>
          <td style="white-space:nowrap">$position</td>
@@ -164,23 +174,23 @@ foreach ($sorted_data as $row) {
          <td style="text-align:center">$level</td>
     EOD;
 
-  if ($row["abolish"] == "1") {
-    $html .= <<<EOD
+    if ($row["abolish"] == "1") {
+      $html .= <<<EOD
         <td colspan="10" style="white-space:nowrap; text-align:center;"><i>(TO BE ABOLISHED)</i></td>
     EOD;
-  } elseif (empty($row["incumbent"])) {
-    $html .= <<<EOD
+    } elseif (empty($row["incumbent"])) {
+      $html .= <<<EOD
         <td colspan="10" style="white-space:nowrap; text-align:center;"><i>(VACANT)</i></td>
     EOD;
-  } else {
+    } else {
 
-    $date_of_birth = formatDateSlashes($row["birthdate"]);
-    $date_of_orig_appointment = $plantilla->getDateOrigAppointment($employee_id); // formatDate($row["date_of_orig_appointment"]);
-    $date_of_last_promotion = $plantilla->getDateLastPromoted($employee_id); // formatDate($row["date_of_last_promotion"]);
-    // $status = $row["status_of_appointment"] ? strtoupper($row["status_of_appointment"]) : "";
-    $status = strtoupper($status);
-    $eligibility = get_eligiblity($mysqli, $row["employee_id"]);
-    $html .= <<<EOD
+      $date_of_birth = formatDateSlashes($row["birthdate"]);
+      $date_of_orig_appointment = $plantilla->getDateOrigAppointment($employee_id); // formatDate($row["date_of_orig_appointment"]);
+      $date_of_last_promotion = $plantilla->getDateLastPromoted($employee_id); // formatDate($row["date_of_last_promotion"]);
+      // $status = $row["status_of_appointment"] ? strtoupper($row["status_of_appointment"]) : "";
+      $status = strtoupper($status);
+      $eligibility = get_eligiblity($mysqli, $row["employee_id"]);
+      $html .= <<<EOD
         <td style="white-space:nowrap">$lastName</td>
         <td style="white-space:nowrap">$firstName</td>
         <td style="white-space:nowrap">$middleName</td>
@@ -192,27 +202,16 @@ foreach ($sorted_data as $row) {
         <td style="text-align:center;">$status</td>
         <td style="white-space:nowrap;">$eligibility</td>
     EOD;
-  }
+    }
 
-
-  $html .= <<<EOD
+    $html .= <<<EOD
      </tr>
     EOD;
-}
-
-$num_items = $result->num_rows;
-
-if ($num_items === 0) {
-  $html .= <<<EOD
-  <tr>
-    <td colspan="20" align="center">******************* EMPTY *******************</td>
-  </tr>
-  EOD;
-  $num_items = "O";
+  }
 }
 
 
-$stmt->close();
+// $stmt->close();
 
 $html .= <<<EOD
     </tbody>
@@ -250,19 +249,19 @@ $mpdf->defaultheaderline = 0;
 $mpdf->defaultfooterline = 0;
 $mpdf->defaultfooterline = 0;
 
+// echo $html;
 $mpdf->WriteHTML($html);
-// $mpdf->Output();
-$department = $department?$department:"NODEPTSELECTED";
-$status = $status=="permanent"?"PERMANENT":$status;
-$gender = $gender=="all"||$gender==""?"M&F":$gender;
+$department = $department ? $department : "NODEPTSELECTED";
+$status = $status == "permanent" ? "PERMANENT" : $status;
+$gender = $gender == "all" || $gender == "" ? "M&F" : $gender;
 $mpdf->Output("PLANTILLA $department-$status-$gender as of $date.pdf", 'I');
-
-
+// $mpdf->Output("plantilla.pdf", 'I');
 
 
 
 function formatDateSlashes($date_in)
 {
+  // return "01/01/2019";
   if (!$date_in) return "";
   // if (!$date_in) return date("m/d/Y");
   $date = date_create($date_in);
@@ -271,6 +270,7 @@ function formatDateSlashes($date_in)
 
 function formatDate($date_in)
 {
+  // return "February 11, 2021";
   if (!$date_in) return date('F d, Y');
   $date = date_create($date_in);
   return date_format($date, "F d, Y");
@@ -279,6 +279,7 @@ function formatDate($date_in)
 
 function getMonthlySalary($mysqli, $sg, $step, $schedule)
 {
+  // return "---";
   $monthly_salary = 0;
   if (empty($sg) || empty($step) || empty($schedule)) return false;
   $sql = "SELECT id FROM `setup_salary_adjustments` WHERE schedule = ? AND active = '1'";
@@ -289,7 +290,6 @@ function getMonthlySalary($mysqli, $sg, $step, $schedule)
   $row = $result->fetch_assoc();
   $parent_id = 0;
   $parent_id = $row["id"];
-  $stmt->close();
   if (empty($parent_id)) return false;
   $sql = "SELECT monthly_salary FROM `setup_salary_adjustments_setup` WHERE parent_id = ? AND salary_grade = ? AND step_no = ?";
   $stmt = $mysqli->prepare($sql);
@@ -297,19 +297,24 @@ function getMonthlySalary($mysqli, $sg, $step, $schedule)
   $stmt->execute();
   $result = $stmt->get_result();
   $row = $result->fetch_assoc();
-  $monthly_salary = $row["monthly_salary"];
-  // return $monthly_salary?number_format(($monthly_salary*12),2,'.',','):"---";
-  return $monthly_salary ? ($monthly_salary * 12) : "---";
+
+  if ($monthly_salary = $row["monthly_salary"]) {
+    // return $monthly_salary?number_format(($monthly_salary*12),2,'.',','):"---";
+    return $monthly_salary ? ($monthly_salary * 12) : "---";
+  }
+  return "---";
 }
 function get_eligiblity($mysqli, $employee_id)
 {
+  // return "";
   $sql = "SELECT `pds_eligibilities`.`elig_title` AS `eligibility` FROM `pds_eligibilities` WHERE `employee_id` = ? LIMIT 1";
   $stmt = $mysqli->prepare($sql);
   $stmt->bind_param('i', $employee_id);
   $stmt->execute();
   $result = $stmt->get_result();
-  $row = $result->fetch_assoc();
-  $eligibility = $row["eligibility"];
-  $stmt->close();
-  return $eligibility ? $eligibility : "";
+  $eligibility = "";
+  if ($row = $result->fetch_assoc()) {
+    $eligibility = $row["eligibility"];
+  }
+  return $eligibility;
 }
