@@ -42,7 +42,13 @@ elseif (isset($_POST["addNew"])) {
 			$mysqli->query($sql1);
 			$i = $mysqli->insert_id;
 			if($sql1){
-				$getEmp = "SELECT * FROM `employees` where employmentStatus='$dropdown_type_add' AND status='ACTIVE' ORDER BY gender ASC , lastName ASC ";
+				if(strtoupper($dropdown_type_add)=="PERMANENT"){
+					$empStatus = "employmentStatus='PERMANENT' or employmentStatus='COTERMINUS'";
+				}else{	
+					$empStatus = "employmentStatus='$dropdown_type_add'";
+				}
+				$getEmp = "SELECT * FROM `employees` where $empStatus AND status='ACTIVE' ORDER BY gender ASC , lastName ASC ";
+				// $getEmp = "SELECT * FROM `employees` where employmentStatus='$dropdown_type_add' AND status='ACTIVE' ORDER BY gender ASC , lastName ASC ";
 				$getEmp = $mysqli->query($getEmp);
 				while ($addEmp = $getEmp->fetch_assoc()) {
 					$insertEmp = "INSERT INTO `prrlist` (`prrlist_id`, `prr_id`, `employees_id`, `date_submitted`, `appraisal_type`, `date_appraised`, `numerical`, `adjectival`, `remarks`, `comments`,`stages`) VALUES (NULL, '$i', '$addEmp[employees_id]', '', '', '', '', '', '', '','C')";

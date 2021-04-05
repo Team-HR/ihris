@@ -17,7 +17,8 @@ function view($mysqli,$counter,$prr_id){
   $year = $year['year'];
   // $sql1 = "SELECT * from prrlist left join employees on prrlist.employees_id=employees.employees_id where prr_id='$prr_id'";
   //ako gi usob to ha
-  $sql1 = "SELECT * from employees right join prrlist on employees.employees_id=prrlist.employees_id where prr_id='$prr_id' ORDER BY `gender` ASC,`lastName` ASC ";
+  // $sql1 = "SELECT * from employees right join prrlist on employees.employees_id=prrlist.employees_id where prr_id='$prr_id' ORDER BY `gender` ASC,`lastName` ASC ";
+  $sql1 = "SELECT * from prrlist right join employees on prrlist.employees_id=employees.employees_id where prr_id='$prr_id' ORDER BY `gender` ASC,`lastName` ASC ";
   $result1 = $mysqli->query($sql1);
   $i=0;
   $tr="";

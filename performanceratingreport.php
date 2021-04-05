@@ -132,7 +132,7 @@ function clear(){
                 <i class="dropdown icon"></i>
                 <div class="default text">Permanent/Casual</div>
                 <div class="menu">
-                  <div class="item" data-value="Permanent">Permanent</div>
+                  <div class="item" data-value="Permanent">Permanent & Coterminus</div>
                   <div class="item" data-value="Casual">Casual</div>
                 </div>
               </div>
