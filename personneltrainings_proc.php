@@ -10,49 +10,54 @@ if (isset($_POST["load"])) {
 	}
 	$result = $mysqli->query($sql);
 	$counter = 0;
-		// $counter = $result->num_rows;
+	// $counter = $result->num_rows;
 	while ($row = $result->fetch_assoc()) {
 		$counter++;
 		$personneltrainings_id = $row["personneltrainings_id"];
-// get training name start
+		// get training name start
 		$training_id = $row["training_id"];
 		$sql2 = "SELECT `training` FROM `trainings` WHERE `training_id` = '$training_id'";
 		$result2 = $mysqli->query($sql2);
 		$row2 = $result2->fetch_assoc();
 		$training = addslashes($row2["training"]);
-// get training name end
+		// get training name end
 		$startDate = $row["startDate"];
 		$endDate = $row["endDate"];
 		$numHours = $row["numHours"];
 		$venue = $row["venue"];
 		$remarks = $row["remarks"];
 ?>
-<tr id="<?php echo "row".$personneltrainings_id;?>">
-	<td>(<?php echo $counter;?>)</td>
-  <td><?php echo $training;?></td>
-  <td><?php echo formatDate($startDate);?></td>
-  <td><?php echo formatDate($endDate);?></td>
-  <td><?php echo $numHours;?></td>
-  <td><?php echo $venue;?></td>
-  <td><?php
-  	if (!$remarks) {
-  		$remarks = "<i style='color: lightgrey;'>N/A</i>";
-  	}
-  	echo $remarks;
-  ?></td>
-  <td>
-  	<div class="ui icon basic mini buttons">
-		  <a href="personneltrainingspreview.php?personneltrainings_id=<?php echo $personneltrainings_id;?>" title="Open" class="ui button"><i class="folder open outline icon"></i></a>
-		  <button onclick="editFunc('<?=$personneltrainings_id;?>')" title="Quick Edit" class="ui button"><i class="edit outline icon"></i></button>
-		  <button onclick="deleteFunc('<?php echo $personneltrainings_id;?>')" title="Delete" class="ui button"><i class="trash alternate outline icon"></i></button>
-		</div>
-  </td>
-</tr>
-<?php
+		<tr id="<?php echo "row" . $personneltrainings_id; ?>">
+			<td>(<?php echo $counter; ?>)</td>
+			<td><?php echo $training; ?></td>
+			<td><?php echo formatDate($startDate); ?></td>
+			<td><?php echo formatDate($endDate); ?></td>
+			<td><?php echo $numHours; ?></td>
+			<td><?php echo $venue; ?></td>
+			<td><?php
+				if (!$remarks) {
+					$remarks = "<i style='color: lightgrey;'>N/A</i>";
+				}
+				echo $remarks;
+				?></td>
+			<!-- <td>
+				geNumberOfParticipants($mysqli, $personneltrainings_id)
+			</td> -->
+			<td>
+				<?= geNumberOfRespondents($mysqli, $personneltrainings_id) ?>
+			</td>
+			<td>
+				<div class="ui icon basic mini buttons">
+					<a href="personneltrainingspreview.php?personneltrainings_id=<?php echo $personneltrainings_id; ?>" title="Open" class="ui button"><i class="folder open outline icon"></i></a>
+					<button onclick="editFunc('<?= $personneltrainings_id; ?>')" title="Quick Edit" class="ui button"><i class="edit outline icon"></i></button>
+					<button onclick="deleteFunc('<?php echo $personneltrainings_id; ?>')" title="Delete" class="ui button"><i class="trash alternate outline icon"></i></button>
+				</div>
+			</td>
+		</tr>
+	<?php
 
 	}
-}
-elseif (isset($_POST["addTraining"])) {
+} elseif (isset($_POST["addTraining"])) {
 	$training = addslashes($_POST["training"]);
 	$startDate = $_POST["startDate"];
 	$endDate = $_POST["endDate"];
@@ -88,8 +93,7 @@ elseif (isset($_POST["addTraining"])) {
 		$sql = "INSERT INTO `personneltrainingslist` (`dateAdded`, `personneltrainings_id`, `employees_id`) VALUES ('$dateAdded', '$personneltrainings_id', '$employees_id')";
 		$mysqli->query($sql);
 	}
-}
-elseif (isset($_POST["deleteTraining"])) {
+} elseif (isset($_POST["deleteTraining"])) {
 	$personneltrainings_id = $_POST["personneltrainings_id"];
 	$sql1 = "DELETE FROM `personneltrainings` WHERE `personneltrainings`.`personneltrainings_id` = '$personneltrainings_id'";
 	$sql2 = "DELETE FROM `personneltrainingslist` WHERE `personneltrainingslist`.`personneltrainings_id` = '$personneltrainings_id'";
@@ -98,8 +102,7 @@ elseif (isset($_POST["deleteTraining"])) {
 	$mysqli->query($sql1);
 	$mysqli->query($sql2);
 	$mysqli->query($sql3);
-}
-elseif (isset($_POST["editTraining"])) {
+} elseif (isset($_POST["editTraining"])) {
 	$personneltrainings_id = $_POST["personneltrainings_id"];
 	$training = addslashes($_POST["training"]);
 	// check first if training is already in trainings
@@ -128,53 +131,47 @@ elseif (isset($_POST["editTraining"])) {
 	$timeEnd = $_POST["timeEnd"];
 	$sql = "UPDATE `personneltrainings` SET `training_id` = '$training_id', `startDate` = '$startDate', `endDate` = '$endDate', `numHours` = '$numHours', `venue` = '$venue', `remarks` = '$remarks', `timeStart` = '$timeStart', `timeEnd` = '$timeEnd' WHERE `personneltrainings`.`personneltrainings_id` = '$personneltrainings_id'";
 	$mysqli->query($sql);
-}
-elseif (isset($_POST["loadListToAdd"])) {
+} elseif (isset($_POST["loadListToAdd"])) {
 	$sql = "SELECT * FROM `employees` ORDER BY `lastName` ASC";
 	$result = $mysqli->query($sql);
 	while ($row = $result->fetch_assoc()) {
-				$employees_id = $row["employees_id"];
-				$lastName = $row["lastName"];
-				$firstName = $row["firstName"];
-				$middleName = $row["middleName"];
-				$extName = $row["extName"];
-				$fullName = $lastName.", ".$firstName." ".$middleName." ".$extName."<br>";
-?>
-	<div id="<?php echo $employees_id;?>" class="item">
-    <div class="right floated content">
-      <button onclick="addToList('<?php echo $employees_id;?>')" class="ui icon basic mini button"><i class="icon add"></i></button>
-    </div>
-    <div class="content"><?php echo $fullName; ?></div>
-  </div>
+		$employees_id = $row["employees_id"];
+		$lastName = $row["lastName"];
+		$firstName = $row["firstName"];
+		$middleName = $row["middleName"];
+		$extName = $row["extName"];
+		$fullName = $lastName . ", " . $firstName . " " . $middleName . " " . $extName . "<br>";
+	?>
+		<div id="<?php echo $employees_id; ?>" class="item">
+			<div class="right floated content">
+				<button onclick="addToList('<?php echo $employees_id; ?>')" class="ui icon basic mini button"><i class="icon add"></i></button>
+			</div>
+			<div class="content"><?php echo $fullName; ?></div>
+		</div>
+
+	<?php
+	}
+} elseif (isset($_POST["loadListToAdd_cal"])) {
+	$sql = "SELECT * FROM `employees` WHERE `status` = 'ACTIVE' ORDER BY `lastName` ASC";
+	$result = $mysqli->query($sql);
+	while ($row = $result->fetch_assoc()) {
+		$employees_id = $row["employees_id"];
+		$lastName = $row["lastName"];
+		$firstName = $row["firstName"];
+		$middleName = $row["middleName"];
+		$extName = $row["extName"];
+		$fullName = $lastName . ", " . $firstName . " " . $middleName . " " . $extName . "<br>";
+	?>
+		<div id="cal<?php echo $employees_id; ?>" class="item">
+			<div class="right floated content">
+				<button onclick="addToList_cal('<?php echo $employees_id; ?>')" class="ui icon basic mini button"><i class="icon add"></i></button>
+			</div>
+			<div class="content"><?php echo $fullName; ?></div>
+		</div>
 
 <?php
 	}
-}
-
-elseif (isset($_POST["loadListToAdd_cal"])) {
-  $sql = "SELECT * FROM `employees` WHERE `status` = 'ACTIVE' ORDER BY `lastName` ASC";
-  $result = $mysqli->query($sql);
-  while ($row = $result->fetch_assoc()) {
-        $employees_id = $row["employees_id"];
-        $lastName = $row["lastName"];
-        $firstName = $row["firstName"];
-        $middleName = $row["middleName"];
-        $extName = $row["extName"];
-        $fullName = $lastName.", ".$firstName." ".$middleName." ".$extName."<br>";
-?>
-  <div id="cal<?php echo $employees_id;?>" class="item">
-    <div class="right floated content">
-      <button onclick="addToList_cal('<?php echo $employees_id;?>')" class="ui icon basic mini button"><i class="icon add"></i></button>
-    </div>
-    <div class="content"><?php echo $fullName; ?></div>
-  </div>
-
-<?php
-  }
-}
-
-
-elseif (isset($_POST["get_data"])) {
+} elseif (isset($_POST["get_data"])) {
 	$personneltrainings_id = $_POST["personneltrainings_id"];
 	$sql = "SELECT * FROM `personneltrainings` LEFT JOIN `trainings` ON `trainings`.`training_id` = `personneltrainings`.`training_id` WHERE `personneltrainings`.`personneltrainings_id` = '$personneltrainings_id'";
 	$result = $mysqli->query($sql);
@@ -205,11 +202,38 @@ elseif (isset($_POST["get_data"])) {
 }
 
 
-function formatDate($numeric_date){
-	  $date = new DateTime($numeric_date);
-		$strDate = $date->format('F d, Y');
-		return $strDate;
+function formatDate($numeric_date)
+{
+	$date = new DateTime($numeric_date);
+	$strDate = $date->format('F d, Y');
+	return $strDate;
 }
 
-?>
 
+function geNumberOfParticipants($mysqli, $personneltrainings_id)
+{
+	$sql = "SELECT COUNT(`employees_id`) AS `participants` FROM `personneltrainingslist` WHERE `personneltrainings_id` = '$personneltrainings_id'";
+	$result = $mysqli->query($sql);
+	$count = 0;
+	$row = $result->fetch_assoc();
+	$count = $row['participants'];
+	return $count;
+}
+
+function geNumberOfRespondents($mysqli, $personneltrainings_id)
+{
+	$sql = "SELECT COUNT(`personneltrainings_id`) AS `respondents` FROM `personneltrainingseval` WHERE `personneltrainings_id` = '$personneltrainings_id'";
+	$result = $mysqli->query($sql);
+	$count = 0;
+	$row = $result->fetch_assoc();
+	$count = $row['respondents'];
+
+	if ($count == 0) {
+		return "0 - for encoding";
+	}
+
+	return $count;
+}
+
+
+?>

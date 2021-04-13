@@ -539,7 +539,7 @@ var date_diff_indays = function(date1, date2) {
     </div>
   </div>
 </div>
-<div class="ui container" style="min-height: 1000px;">
+<div class="ui fluid container" style="min-height: 1000px;">
   <table id="trTable" class="ui blue selectable striped very compact small table" style="font-size: 12px;">
     <thead>
       <tr>
@@ -550,6 +550,8 @@ var date_diff_indays = function(date1, date2) {
         <th>Hrs</th>
         <th>Venue</th>
         <th>Remarks</th>
+        <!-- <th>Participants</th> -->
+        <th>Survey Respondents</th>
         <th>Options</th>
       </tr>
     </thead>
