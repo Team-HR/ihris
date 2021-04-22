@@ -1,7 +1,74 @@
 <?php
   require_once "_connect.db.php";
 
-if (isset($_POST["load"])) {
+  // vueing start
+if (isset($_POST["getItems"])) {
+  $data = array();
+  $ldplan_id = $_POST["ldplan_id"];
+  $sql = "SELECT * FROM `ldplgusponsoredtrainings` WHERE `ldplan_id` = '$ldplan_id'";
+  $result = $mysqli->query($sql);
+
+  while ($row = $result->fetch_assoc()) {
+    $ldplgusponsoredtrainings_id = $row["ldplgusponsoredtrainings_id"];
+    $ldplan_id = $row["ldplan_id"];
+    $training_id = $row["training_id"];
+
+    $sql1 = "SELECT `training` FROM `trainings` WHERE `training_id` = '$training_id'";
+    $result1 = $mysqli->query($sql1);
+    $row1 = $result1->fetch_assoc();
+    $training = $row1["training"];
+
+    $goal = $row["goal"];
+    $numHours = $row["numHours"];
+    $participants = $row["participants"];
+    $activities = $row["activities"];
+    $evaluation = $row["evaluation"];
+    $evaluation = $evaluation;//str_replace("\n", "<br/>", $evaluation);
+    $frequency = $row["frequency"];
+    $budgetReq = $row["budgetReq"];
+    $partner = $row["partner"];
+    // added for vue
+    $budget = json_decode($row["budget"]);
+
+
+    $datum = array(
+      "ldplgusponsoredtrainings_id" => $ldplgusponsoredtrainings_id,
+      "training" => $training,
+      "goal" => $goal,
+      "numHours" => $numHours,
+      "participants" => $participants,
+      "activities" => $activities,
+      "evaluation" => $evaluation,
+      "frequency" => $frequency,
+      "budgetReq" => $budgetReq,
+      "partner" => $partner,
+      "budget" => $budget,
+    );
+    
+    array_push($data, $datum);
+
+  }
+
+  echo json_encode($data);
+}
+
+elseif (isset($_POST["updateBudget"])) {
+  $ldplgusponsoredtrainings_id = $_POST["ldplgusponsoredtrainings_id"];
+  $budget = $_POST["budget"];
+  $budget = $mysqli->real_escape_string(json_encode($budget));
+
+  $sql = "UPDATE `ldplgusponsoredtrainings` SET
+  `budget` = '$budget'
+  WHERE `ldplgusponsoredtrainings_id` = '$ldplgusponsoredtrainings_id'";
+  $mysqli->query($sql);
+
+  echo json_encode("saved");
+}
+
+  // vueing end
+
+
+elseif (isset($_POST["load"])) {
     $ldplan_id = $_POST["ldplan_id"];
     $sql = "SELECT * FROM `ldplgusponsoredtrainings` WHERE `ldplan_id` = '$ldplan_id'";
     $result = $mysqli->query($sql);
