@@ -13,13 +13,13 @@ require_once "header.php"; ?>
 
   $(document).ready(function() {
     $.post('dna_proc.php', {
-        search_by_training: true,
-        keyword: ""
-      }, function(data, textStatus, xhr) {
-        /*optional stuff to do after success */
-        $("#search_by_training_result").html(data);
-        $('.accordion').accordion();
-      });
+      search_by_training: true,
+      keyword: ""
+    }, function(data, textStatus, xhr) {
+      /*optional stuff to do after success */
+      $("#search_by_training_result").html(data);
+      $('.accordion').accordion();
+    });
     $("#targetParticipantsSearchForm").on('submit', function(e) {
       e.preventDefault();
 
@@ -404,12 +404,12 @@ require_once "message_pop.php";
 
 
   <div class="ui top attached tabular menu" id="tabs" style="background-color: white;">
-    <a class="item active" data-tab="tna">TNA</a>
-    <a class="item" data-tab="cons">Consolidated</a>
+    <a class="item" data-tab="tna">TNA</a>
+    <a class="item active" data-tab="cons">Consolidated</a>
     <a class="item" data-tab="targetPart">Target Participants</a>
     <a class="item" data-tab="spms">SPMS Recommendations</a>
   </div>
-  <div class="ui bottom attached tab segment active" data-tab="tna">
+  <div class="ui bottom attached tab segment" data-tab="tna">
 
     <div class="ui secondary small menu noprint">
       <div class="right item">
@@ -443,7 +443,7 @@ require_once "message_pop.php";
 
 
 
-  <div id="cons-tna-vue" class="ui bottom attached tab segment" data-tab="cons">
+  <div id="cons-tna-vue" class="ui bottom attached tab segment active" data-tab="cons">
     <template>
 
 
@@ -458,8 +458,11 @@ require_once "message_pop.php";
             <th class="ui center aligned">
               Instances
             </th>
-            <th>
+            <!-- <th>
               Target Departments
+            </th> -->
+            <th>
+              Target Participants
             </th>
           </tr>
         </thead>
@@ -468,7 +471,7 @@ require_once "message_pop.php";
             <td width="5">{{index+1}}</td>
             <td class=" ui centesr aligned">{{item.training}}</td>
             <td class="center aligned">{{item.countDepartments}}</td>
-            <td>
+            <!-- <td>
               
 
 
@@ -486,12 +489,87 @@ require_once "message_pop.php";
 
 
 
+            </td> -->
+
+            <td>
+              <button class="ui button mini" @click="showTargetParticipants(item)">Participants</button>
             </td>
           </tr>
         </tbody>
       </table>
 
 
+
+
+
+      <!-- target participants start -->
+      <div class="ui modal target participants">
+        <div class="header">
+          {{item.training}}
+        </div>
+        <div class="content">
+          Found {{item.countDepartments}} departments needing this training.
+
+
+          <!-- <span v-for="(target, tar) in targets" :key="tar">{{target.department}}</span> -->
+          <div class="ui accordion" id="targetsAccordion">
+          <div class="target participants" v-for="(target, t) in targets" :key="t">
+            <div class="title">
+              <i class="dropdown icon"></i>
+              {{target.department}}
+            </div>
+            <div class="content">
+              <table class="ui very compact structured celled table" style="vertical-align: top;">
+                <thead>
+                  <tr class="center aligned">
+                    <th>Manager</th>
+                    <th>Staff</th>
+                    <th>All</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <span style="color: grey;" v-if="target.managers.length == 0">--None--</span>
+                      <ol>
+                        <li v-for="(mngr, m) in target.managers" :key="m">
+                          {{mngr}}
+                        </li>
+                      </ol>
+
+                    </td>
+                    <td>
+                      <span style="color: grey;" v-if="target.staffs.length == 0">--None--</span>
+                      <ol>
+                        <li v-for="(staff, s) in target.staffs" :key="s">
+                          {{staff}}
+                        </li>
+                      </ol>
+                    </td>
+                    <td>
+                      <span style="color: grey;" v-if="target.all.length == 0">--None--</span>
+                      <ol>
+                        <li v-for="(al, a) in target.all" :key="a">
+                          {{al}}
+                        </li>
+                      </ol>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+          </div>
+
+
+
+        </div>
+        <div class="actions">
+          <button class="ui deny button">Close</button>
+        </div>
+      </div>
+      <!-- target participants end -->
 
     </template>
   </div>
@@ -527,11 +605,11 @@ require_once "message_pop.php";
         </div>
       </div>
       <button type="submit" class="ui mini button blue">Search</button>
-      </form>
+    </form>
 
-      <div id="search_by_training_result" class="ui basic segment fluid" style="min-height: 300px;">
-        <h1 style="color: lightgrey; text-align: center; margin-top: 100px;">...SEARCH TRAINING...</h1>
-      </div>
+    <div id="search_by_training_result" class="ui basic segment fluid" style="min-height: 300px;">
+      <h1 style="color: lightgrey; text-align: center; margin-top: 100px;">...SEARCH TRAINING...</h1>
+    </div>
   </div>
   <!-- Target Participants ends -->
   <!-- SPMS Recs starts -->
