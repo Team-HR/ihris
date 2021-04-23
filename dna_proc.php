@@ -417,10 +417,18 @@ SQL;
     <?php
 
   }
-} elseif (isset($_POST["search_by_training"])) {
+} 
+elseif (isset($_POST["search_by_training"])) {
 
   $keyword = $_POST["keyword"];
-  $sql = "SELECT * FROM `trainings` WHERE `training` LIKE '%$keyword%'";
+  $tnaIDS = getTNAuniqueIDs($mysqli);
+// echo implode(',', $tnaIDS);
+
+// " . implode(',', $tnaIDS) . "
+  $sql = "SELECT * FROM `trainings` WHERE `training_id` IN (" . implode(',', $tnaIDS) . ") AND `training` LIKE '%$keyword%'";
+
+  // $sql = "SELECT * FROM table WHERE comp_id IN (" . implode(',', $arr) . ")";
+
   $result = $mysqli->query($sql);
   $num_results = $result->num_rows;
   // if found multiple results
@@ -603,7 +611,8 @@ SQL;
   else {
     echo "<div>No training with keyword [$keyword] was found!</div>";
   }
-} elseif (isset($_POST["getConsolidatedTNA"])) {
+}
+elseif (isset($_POST["getConsolidatedTNA"])) {
   $data = [];
   $tnas = getTNAdata($mysqli);
   $trainings = getTrainings($mysqli);
@@ -838,5 +847,23 @@ function sortArrayDesc($a, $b)
 }
 
 
+function getTNAuniqueIDs($mysqli)
+{
+    $data = [];
+    $sql = "SELECT `tna`.*, `department`.`department` FROM `tna` LEFT JOIN `department` ON `tna`.`department_id` = `department`.`department_id`";
+    $result = $mysqli->query($sql);
+    while ($row = $result->fetch_assoc()) {
+        $training_ids = unserialize($row["all_trs"]);
+        $training_ids_manager = unserialize($row["manager_trs"]);
+        $training_ids_staff = unserialize($row["staff_trs"]);
+        $training_ids_merged = array_merge($training_ids, $training_ids_manager, $training_ids_staff);
+        array_push($data, $training_ids_merged);
+    }
+    $merged_array = [];
+    foreach ($data as $dat) {
+        $merged_array = array_merge($merged_array, $dat);
+    }
+    return array_values(array_unique($merged_array));
+}
 
 ?>

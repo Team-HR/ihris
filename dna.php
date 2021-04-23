@@ -403,50 +403,21 @@ require_once "message_pop.php";
   </div>
 
 
+
+
   <div class="ui top attached tabular menu" id="tabs" style="background-color: white;">
+    <a class="item active" data-tab="cons">Consolidated ...</a>
     <a class="item" data-tab="tna">TNA</a>
-    <a class="item active" data-tab="cons">Consolidated</a>
     <a class="item" data-tab="targetPart">Target Participants</a>
     <a class="item" data-tab="spms">SPMS Recommendations</a>
   </div>
-  <div class="ui bottom attached tab segment" data-tab="tna">
-
-    <div class="ui secondary small menu noprint">
-      <div class="right item">
-        <div class="ui right input">
-
-          <div style="padding: 0px; margin: 0px; margin-right: 5px; width: 500px;">
-            <select id="findDeptDrop" class="ui fluid dropdown selection">
-            </select>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-    <div class="ui container" id="load_container"></div>
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
   <div id="cons-tna-vue" class="ui bottom attached tab segment active" data-tab="cons">
     <template>
 
-
+    <h3 class="header">Consolidated List of Trainings and Target Participants based on TNA</h3>
 
       <table class="ui very compact celled structured table selectable striped">
         <thead>
@@ -513,53 +484,53 @@ require_once "message_pop.php";
 
           <!-- <span v-for="(target, tar) in targets" :key="tar">{{target.department}}</span> -->
           <div class="ui accordion" id="targetsAccordion">
-          <div class="target participants" v-for="(target, t) in targets" :key="t">
-            <div class="title">
-              <i class="dropdown icon"></i>
-              {{target.department}}
-            </div>
-            <div class="content">
-              <table class="ui very compact structured celled table" style="vertical-align: top;">
-                <thead>
-                  <tr class="center aligned">
-                    <th>Manager</th>
-                    <th>Staff</th>
-                    <th>All</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <!-- <span style="color: grey;" v-if="target.managers.length == 0">--None--</span> -->
-                      <ol>
-                        <li v-for="(mngr, m) in target.managers" :key="m">
-                          {{mngr}}
-                        </li>
-                      </ol>
+            <div class="target participants" v-for="(target, t) in targets" :key="t">
+              <div class="title">
+                <i class="dropdown icon"></i>
+                {{target.department}}
+              </div>
+              <div class="content">
+                <table class="ui very compact structured celled table" style="vertical-align: top;">
+                  <thead>
+                    <tr class="center aligned">
+                      <th>Manager</th>
+                      <th>Staff</th>
+                      <th>All</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <!-- <span style="color: grey;" v-if="target.managers.length == 0">--None--</span> -->
+                        <ol>
+                          <li v-for="(mngr, m) in target.managers" :key="m">
+                            {{mngr}}
+                          </li>
+                        </ol>
 
-                    </td>
-                    <td>
-                      <!-- <span style="color: grey;" v-if="target.staffs.length == 0">--None--</span> -->
-                      <ol>
-                        <li v-for="(staff, s) in target.staffs" :key="s">
-                          {{staff}}
-                        </li>
-                      </ol>
-                    </td>
-                    <td>
-                      <!-- <span style="color: grey;" v-if="target.all.length == 0">--None--</span> -->
-                      <ol>
-                        <li v-for="(al, a) in target.all" :key="a">
-                          {{al}}
-                        </li>
-                      </ol>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+                      </td>
+                      <td>
+                        <!-- <span style="color: grey;" v-if="target.staffs.length == 0">--None--</span> -->
+                        <ol>
+                          <li v-for="(staff, s) in target.staffs" :key="s">
+                            {{staff}}
+                          </li>
+                        </ol>
+                      </td>
+                      <td>
+                        <!-- <span style="color: grey;" v-if="target.all.length == 0">--None--</span> -->
+                        <ol>
+                          <li v-for="(al, a) in target.all" :key="a">
+                            {{al}}
+                          </li>
+                        </ol>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
 
-          </div>
+            </div>
           </div>
 
 
@@ -579,17 +550,23 @@ require_once "message_pop.php";
 
 
 
+  <div class="ui bottom attached tab segment" data-tab="tna">
 
+    <div class="ui secondary small menu noprint">
+      <div class="right item">
+        <div class="ui right input">
 
+          <div style="padding: 0px; margin: 0px; margin-right: 5px; width: 500px;">
+            <select id="findDeptDrop" class="ui fluid dropdown selection">
+            </select>
+          </div>
 
+        </div>
+      </div>
+    </div>
 
-
-
-
-
-
-
-
+    <div class="ui container" id="load_container"></div>
+  </div>
   <!-- Target Participants starts -->
   <div class="ui bottom attached tab segment" data-tab="targetPart">
 
