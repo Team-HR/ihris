@@ -432,7 +432,7 @@ SQL;
       echo "<div style=\"color: grey;\">Search Results: Found $num_results training with keyword [$keyword]</div><br>";
     }
 
-    echo "<div class=\"ui styled fluid accordion\">";
+    echo "<div class=\"ui styled fluid accordion tp\">";
 
     while ($row = $result->fetch_assoc()) {
       $training_id = $row["training_id"];
@@ -675,20 +675,6 @@ SQL;
     }
 
 
-    if ($haveManagerTraining) {
-      $sql3 = "SELECT * FROM `employees` WHERE `natureOfAssignment` = 'SUPERVISORY' AND `status`='ACTIVE' AND `department_id` = '$department_id' AND `employees_id` NOT IN (SELECT `employees_id` FROM `personneltrainingslist` WHERE `personneltrainings_id` IN (SELECT `personneltrainings_id` FROM `personneltrainings` WHERE `training_id` = '$training_id'))";
-      $result3 = $mysqli->query($sql3);
-      while ($row3 = $result3->fetch_assoc()) {
-        $firstName = $row3["firstName"];
-        $middleName = $row3["middleName"];
-        $lastName = $row3["lastName"];
-        $extName = $row3["extName"];
-        $employee_fullName = "$lastName, $firstName $middleName $extName";
-        $managers[] = $employee_fullName;
-      }
-    }
-
-
 
     $haveStaffTraining = false;
     $sql = "SELECT * FROM `tna` WHERE `department_id` = '$department_id'";
@@ -702,21 +688,6 @@ SQL;
         }
       }
     }
-
-    if ($haveStaffTraining) {
-      $sql3 = "SELECT * FROM `employees` WHERE `natureOfAssignment` = 'RANK & FILE' AND `status`='ACTIVE' AND `department_id` = '$department_id' AND `employees_id` NOT IN (SELECT `employees_id` FROM `personneltrainingslist` WHERE `personneltrainings_id` IN (SELECT `personneltrainings_id` FROM `personneltrainings` WHERE `training_id` = '$training_id'))";
-      $result3 = $mysqli->query($sql3);
-      while ($row3 = $result3->fetch_assoc()) {
-        $firstName = $row3["firstName"];
-        $middleName = $row3["middleName"];
-        $lastName = $row3["lastName"];
-        $extName = $row3["extName"];
-
-        $employee_fullName = "$lastName, $firstName $middleName $extName";
-        $staffs[] = $employee_fullName;
-      }
-    }
-
 
 
     $haveAllTraining = false;
@@ -732,7 +703,47 @@ SQL;
       }
     }
 
-    if ($haveAllTraining) {
+  if ($haveManagerTraining && $haveStaffTraining) {
+    $haveAllTraining = true;
+  }
+
+
+
+    if ($haveManagerTraining && $haveAllTraining != true) {
+      $sql3 = "SELECT * FROM `employees` WHERE `natureOfAssignment` = 'SUPERVISORY' AND `status`='ACTIVE' AND `department_id` = '$department_id' AND `employees_id` NOT IN (SELECT `employees_id` FROM `personneltrainingslist` WHERE `personneltrainings_id` IN (SELECT `personneltrainings_id` FROM `personneltrainings` WHERE `training_id` = '$training_id'))";
+      $result3 = $mysqli->query($sql3);
+      while ($row3 = $result3->fetch_assoc()) {
+        $firstName = $row3["firstName"];
+        $middleName = $row3["middleName"];
+        $lastName = $row3["lastName"];
+        $extName = $row3["extName"];
+        $employee_fullName = "$lastName, $firstName $middleName $extName";
+        $managers[] = $employee_fullName;
+      }
+    }
+
+
+
+    if ($haveStaffTraining && $haveAllTraining != true) {
+      $sql3 = "SELECT * FROM `employees` WHERE `natureOfAssignment` != 'SUPERVISORY' AND `status`='ACTIVE' AND `department_id` = '$department_id' AND `employees_id` NOT IN (SELECT `employees_id` FROM `personneltrainingslist` WHERE `personneltrainings_id` IN (SELECT `personneltrainings_id` FROM `personneltrainings` WHERE `training_id` = '$training_id'))";
+      $result3 = $mysqli->query($sql3);
+      while ($row3 = $result3->fetch_assoc()) {
+        $firstName = $row3["firstName"];
+        $middleName = $row3["middleName"];
+        $lastName = $row3["lastName"];
+        $extName = $row3["extName"];
+
+        $employee_fullName = "$lastName, $firstName $middleName $extName";
+        $staffs[] = $employee_fullName;
+      }
+    }
+
+
+
+    // haveManagerTraining
+    // haveStaffTraining
+    // haveAllTraining
+    if ($haveAllTraining || $haveManagerTraining && $haveStaffTraining) {
       $sql3 = "SELECT * FROM `employees` WHERE `department_id` = '$department_id' AND `status`='ACTIVE' AND `employees_id` NOT IN (SELECT `employees_id` FROM `personneltrainingslist` WHERE `personneltrainings_id` IN (SELECT `personneltrainings_id` FROM `personneltrainings` WHERE `training_id` = '$training_id'))";
       $result3 = $mysqli->query($sql3);
       while ($row3 = $result3->fetch_assoc()) {

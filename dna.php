@@ -18,7 +18,7 @@ require_once "header.php"; ?>
     }, function(data, textStatus, xhr) {
       /*optional stuff to do after success */
       $("#search_by_training_result").html(data);
-      $('.accordion').accordion();
+      $('.accordion.tp').accordion();
     });
     $("#targetParticipantsSearchForm").on('submit', function(e) {
       e.preventDefault();
@@ -30,7 +30,7 @@ require_once "header.php"; ?>
       }, function(data, textStatus, xhr) {
         /*optional stuff to do after success */
         $("#search_by_training_result").html(data);
-        $('.accordion').accordion();
+        $('.accordion.tp').accordion();
       });
 
 
@@ -491,8 +491,8 @@ require_once "message_pop.php";
 
             </td> -->
 
-            <td>
-              <button class="ui button mini" @click="showTargetParticipants(item)">Participants</button>
+            <td class="center aligned">
+              <button class="ui button mini" @click="showTargetParticipants(item)">Show Participants</button>
             </td>
           </tr>
         </tbody>
@@ -530,7 +530,7 @@ require_once "message_pop.php";
                 <tbody>
                   <tr>
                     <td>
-                      <span style="color: grey;" v-if="target.managers.length == 0">--None--</span>
+                      <!-- <span style="color: grey;" v-if="target.managers.length == 0">--None--</span> -->
                       <ol>
                         <li v-for="(mngr, m) in target.managers" :key="m">
                           {{mngr}}
@@ -539,7 +539,7 @@ require_once "message_pop.php";
 
                     </td>
                     <td>
-                      <span style="color: grey;" v-if="target.staffs.length == 0">--None--</span>
+                      <!-- <span style="color: grey;" v-if="target.staffs.length == 0">--None--</span> -->
                       <ol>
                         <li v-for="(staff, s) in target.staffs" :key="s">
                           {{staff}}
@@ -547,7 +547,7 @@ require_once "message_pop.php";
                       </ol>
                     </td>
                     <td>
-                      <span style="color: grey;" v-if="target.all.length == 0">--None--</span>
+                      <!-- <span style="color: grey;" v-if="target.all.length == 0">--None--</span> -->
                       <ol>
                         <li v-for="(al, a) in target.all" :key="a">
                           {{al}}

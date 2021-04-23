@@ -47,8 +47,8 @@ new Vue({
                 this.$nextTick(() => {
                     // The whole view is rendered, so I can safely access or query
                     // the DOM. ¯\_(ツ)_/¯
-                    // $("#targetsAccordion").accordion("refresh");
                     // $("#targetsAccordion").accordion();
+                    $("#targetsAccordion").accordion("refresh");
                     $(".ui.modal.target.participants").modal("show");
                 })
 
