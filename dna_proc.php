@@ -656,8 +656,10 @@ elseif (isset($_POST["getConsolidatedTNA"])) {
 } elseif (isset($_POST["getTargetParticipants"])) {
 
   $training_id = $_POST["training_id"];
-  $departments = $_POST["departments"];
+  $departments = isset($_POST["departments"])?$_POST["departments"]:[];
   $data = [];
+
+  // if (count($departments)==0) return $data;
 
   foreach ($departments as $dept) {
 
