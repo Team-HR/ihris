@@ -644,68 +644,139 @@ SQL;
   usort($data, "sortArrayDesc");
 
   echo json_encode($data);
+} elseif (isset($_POST["getTargetParticipants"])) {
+
+  $training_id = $_POST["training_id"];
+  $departments = $_POST["departments"];
+  $data = [];
+
+  foreach ($departments as $dept) {
+
+    $department_id = $dept["department_id"];
+    $department = $dept["department"];
+    
+    $managers = [];
+    $staffs = [];
+    $all = [];
+
+
+
+    $sql3 = "SELECT * FROM `employees` WHERE `natureOfAssignment` = 'SUPERVISORY' AND `status`='ACTIVE' AND `department_id` = '$department_id' AND `employees_id` NOT IN (SELECT `employees_id` FROM `personneltrainingslist` WHERE `personneltrainings_id` IN (SELECT `personneltrainings_id` FROM `personneltrainings` WHERE `training_id` = '$training_id'))";
+    $result3 = $mysqli->query($sql3);
+    while ($row3 = $result3->fetch_assoc()) {
+      $firstName = $row3["firstName"];
+      $middleName = $row3["middleName"];
+      $lastName = $row3["lastName"];
+      $extName = $row3["extName"];
+      $employee_fullName = "$lastName, $firstName $middleName $extName";
+      $managers[] = $employee_fullName;
+    }
+
+
+
+    $sql3 = "SELECT * FROM `employees` WHERE `natureOfAssignment` = 'RANK & FILE' AND `status`='ACTIVE' AND `department_id` = '$department_id' AND `employees_id` NOT IN (SELECT `employees_id` FROM `personneltrainingslist` WHERE `personneltrainings_id` IN (SELECT `personneltrainings_id` FROM `personneltrainings` WHERE `training_id` = '$training_id'))";
+    $result3 = $mysqli->query($sql3);
+    while ($row3 = $result3->fetch_assoc()) {
+      $firstName = $row3["firstName"];
+      $middleName = $row3["middleName"];
+      $lastName = $row3["lastName"];
+      $extName = $row3["extName"];
+  
+      $employee_fullName = "$lastName, $firstName $middleName $extName";
+      $staffs[] = $employee_fullName;
+    }
+  
+  
+    $sql3 = "SELECT * FROM `employees` WHERE `department_id` = '$department_id' AND `status`='ACTIVE' AND `employees_id` NOT IN (SELECT `employees_id` FROM `personneltrainingslist` WHERE `personneltrainings_id` IN (SELECT `personneltrainings_id` FROM `personneltrainings` WHERE `training_id` = '$training_id'))";
+    $result3 = $mysqli->query($sql3);
+    while ($row3 = $result3->fetch_assoc()) {
+      $firstName = $row3["firstName"];
+      $middleName = $row3["middleName"];
+      $lastName = $row3["lastName"];
+      $extName = $row3["extName"];
+  
+      $employee_fullName = "$lastName, $firstName $middleName $extName";
+      $all[] = $employee_fullName;
+    }
+  
+    $datum = [
+      "department" => $department,
+      "managers" => $managers,
+      "staffs" => $staffs,
+      "all" => $all
+    ];
+
+    array_push($data, $datum);
+  }
+
+
+  echo json_encode($data);
 }
+
+
+
 
 
 function getDepartmentsWithTraining($mysqli, $training_id)
 {
-    $departments = array();
+  $departments = array();
 
 
 
-    return $departments;
+  return $departments;
 }
 
 
 function getTrainings($mysqli)
 {
 
-    $data = [];
-    $sql = "SELECT * FROM `trainings` ORDER BY `trainings`.`training_id` ASC";
-    $result = $mysqli->query($sql);
+  $data = [];
+  $sql = "SELECT * FROM `trainings` ORDER BY `trainings`.`training_id` ASC";
+  $result = $mysqli->query($sql);
 
-    while ($row = $result->fetch_assoc()) {
-        $training_id = $row["training_id"];
-        $training = $row["training"];
-        $datum = array(
-            "training_id" => $training_id,
-            "training" => $training
-        );
-        array_push($data, $datum);
-    }
+  while ($row = $result->fetch_assoc()) {
+    $training_id = $row["training_id"];
+    $training = $row["training"];
+    $datum = array(
+      "training_id" => $training_id,
+      "training" => $training
+    );
+    array_push($data, $datum);
+  }
 
-    return $data;
+  return $data;
 }
 
 
 function getTNAdata($mysqli)
 {
-    $data = [];
-    $sql = "SELECT `tna`.*, `department`.`department` FROM `tna` LEFT JOIN `department` ON `tna`.`department_id` = `department`.`department_id`";
-    $result = $mysqli->query($sql);
-    while ($row = $result->fetch_assoc()) {
-        $training_ids = unserialize($row["all_trs"]);
-        $training_ids_manager = unserialize($row["manager_trs"]);
-        $training_ids_staff = unserialize($row["staff_trs"]);
+  $data = [];
+  $sql = "SELECT `tna`.*, `department`.`department` FROM `tna` LEFT JOIN `department` ON `tna`.`department_id` = `department`.`department_id`";
+  $result = $mysqli->query($sql);
+  while ($row = $result->fetch_assoc()) {
+    $training_ids = unserialize($row["all_trs"]);
+    $training_ids_manager = unserialize($row["manager_trs"]);
+    $training_ids_staff = unserialize($row["staff_trs"]);
 
-        $training_ids_merged = array_merge($training_ids,$training_ids_manager,$training_ids_staff);
-        $department_id = $row["department_id"];
-        $department = $row["department"];
-        $datum = array(
-            "department_id" => $department_id,
-            // "training_ids" => $training_ids,
-            // "training_ids_manager" => $training_ids_manager,
-            // "training_ids_staff" => $training_ids_staff,
-            "training_ids" => $training_ids_merged,
-            "department" => $department
-        );
-        array_push($data, $datum);
-    }
-    return $data;
+    $training_ids_merged = array_merge($training_ids, $training_ids_manager, $training_ids_staff);
+    $department_id = $row["department_id"];
+    $department = $row["department"];
+    $datum = array(
+      "department_id" => $department_id,
+      // "training_ids" => $training_ids,
+      // "training_ids_manager" => $training_ids_manager,
+      // "training_ids_staff" => $training_ids_staff,
+      "training_ids" => $training_ids_merged,
+      "department" => $department
+    );
+    array_push($data, $datum);
+  }
+  return $data;
 }
 
-function sortArrayDesc($a, $b) {
-    return $b["countDepartments"] <=> $a["countDepartments"];
+function sortArrayDesc($a, $b)
+{
+  return $b["countDepartments"] <=> $a["countDepartments"];
 }
 
 
