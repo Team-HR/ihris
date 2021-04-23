@@ -8,39 +8,36 @@ new Vue({
             items: [],
             editedIndex: -1,
             budget: {
-                allocated: 180000,
-                fors: [
-                    {
-                        for: "Venue",
-                        amount: 78000
-                    },
-                    {
-                        for: "Food",
-                        amount: 20000
-                    }
-                ],
+                allocated: "",
+                fors: [],
             },
             budgetDefault: {
-                allocated: 0,
+                allocated: "",
                 fors: [],
             },
             budgetItem: {
                 for: "",
-                amount: 0
+                amount: ""
             },
             budgetItemDefault: {
                 for: "",
-                amount: 0
+                amount: ""
             }
         }
     },
     methods: {
-
         addFor() {
+            var newFor = JSON.parse(JSON.stringify(this.budgetItem))
+            this.budget.fors.push(newFor)
+        },
+        saveAddedFor() {
             var item = JSON.parse(JSON.stringify(this.budgetItem))
             this.budget.fors.push(item)
             this.budgetItem = JSON.parse(JSON.stringify(this.budgetItemDefault))
             // this.getBudgetTotal()
+        },
+        trashFor(i) {
+            this.budget.fors.splice(i, 1)
         },
         getBudgetTotal() {
             var total = 0
@@ -77,7 +74,7 @@ new Vue({
             );
         },
         editBudget(item) {
-            // console.log(item);
+
             if (!item.budget) {
                 this.budget = JSON.parse(JSON.stringify(this.budgetDefault))
             } else {
@@ -88,6 +85,8 @@ new Vue({
             }).indexOf(item.ldplgusponsoredtrainings_id);
             // console.log(index);
             this.editedIndex = index
+
+            $('.first.modal').modal('show');
 
         },
         getTotal(fors) {
@@ -176,5 +175,21 @@ new Vue({
 
         this.getURLparams()
         this.getItems()
+
+
+// initialize all modals
+$('.coupled.modal')
+  .modal({
+      allowMultiple: true,
+      closable: false
+  })
+;
+// open second modal on first modal buttons
+// $('.second.modal')
+//   .modal('attach events', '.first.modal #addForBtn_');
+// show first immediately
+
+
+
     },
 })

@@ -261,131 +261,203 @@ require_once "message_pop.php";
   <div id="lnd-plan-vue">
     <template>
 
+
+
+
+      <table class="ui very compact celled structured small selectable table">
+        <thead>
+          <tr style="text-align: center;">
+            <th class="headers">No.</th>
+            <th class="headers">Title of Training</th>
+            <th class="headers">Training Goal/Objectives</th>
+            <th class="headers">No. Hours</th>
+            <th class="headers">Target Participants</th>
+            <th class="headers">Learning Methods/Activities</th>
+            <th class="headers">Evaluation/Evidence of Learning</th>
+            <th class="headers">Frequency</th>
+            <th class="headers">Budgetary Requirements</th>
+            <th class="headers">Training Institution/Partner</th>
+            <th class="noprint headers"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in items" :key="index">
+            <td>{{ index+1 }}</td>
+            <td style="font-weight: bold;">{{item.training}}</td>
+            <td>{{item.goal}}</td>
+            <td style="text-align: center;">{{item.numHours}} hrs</td>
+            <td>{{item.participants}}</td>
+            <td>{{item.activities}}</td>
+            <td>{{item.evaluation}}</td>
+            <td>{{item.frequency}}</td>
+            <td>
+              <!-- {{item.budgetReq}} -->
+              <!-- <button class="ui mini button">Edit</button> -->
+
+
+
+
+              <div class="" v-if="item.budget">
+                <div class="ui center aligned">
+                  Php. {{thousands_separators(item.budget.allocated)}}
+                </div>
+                <div class="ui center aligned">
+                  <cite v-if="item.frequency=='Semi-Annually'">
+                    (x2 = {{thousands_separators(item.budget.allocated * 2)}})
+                  </cite>
+                </div>
+
+
+
+                <table class="ui structured very compact celled table">
+                  <tr v-for="(para, p) in item.budget.fors" :key="p">
+                    <td>{{p+1}}</td>
+                    <td>{{para.for}}</td>
+                    <td>{{thousands_separators(para.amount)}}</td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" style="text-align: right;">Total:</td>
+                    <td>{{thousands_separators(getTotal(item.budget.fors))}}</td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" style="text-align: right;">Change:</td>
+                    <td>{{thousands_separators(getChange(item.budget))}}</td>
+                  </tr>
+                </table>
+
+
+
+
+
+
+
+
+              </div>
+              <button class="ui mini fluid button noprint" @click="editBudget(item)"><i class="ui icon edit"></i>Edit Budget</button>
+
+
+
+
+            </td>
+            <td>{{item.partner}}</td>
+            <td class="right aligned noprint">
+              <div class="ui mini basic icon buttons">
+                <button class="ui button" title="Edit" @click="editRow(item.ldplgusponsoredtrainings_id)"><i class="edit outline icon"></i></button>
+                <button class="ui button" title="Delete" @click="deleteRow(item.ldplgusponsoredtrainings_id)"><i class="trash alternate outline icon"></i></button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+  </div>
+
+  <!-- <button class="ui button">Modal</button> -->
+
+  <div class="ui first coupled small modal" style="max-width: 500px ;">
+    <div class="header">
+      Edit Budget
+    </div>
+    <div class="content">
+
       <!-- budget editor start -->
       <div class="ui segment">
 
 
-        <label>Allocated:</label>
-        <input type="number" v-model="budget.allocated">
-          <cite v-if="true">
-            (x2 = {{thousands_separators(budget.allocated * 2)}})
-          </cite>
+        <label>Allocated Amount:</label>
+
+        <div class="ui input">
+          <input type="number" v-model="budget.allocated">
+        </div>
+        <!-- 
+        <cite v-if="true">
+          (x2 = {{thousands_separators(budget.allocated * 2)}})
+        </cite> -->
         <br>
-        <label>For:</label>
+        <table>
+          <thead>
+            <tr>
+              <th colspan="4">Breadkdown:</th>
+            </tr>
+          </thead>
+          <tr v-for="(alloc, f) in budget.fors" :key="f">
+            <td width="10">{{f+1}}.)</td>
+            <td>
+
+              <div class="ui input">
+                <input type="text" v-model="alloc.for">
+              </div>
+            </td>
+            <td>
+              <div class="ui input">
+                <input type="number" v-model="alloc.amount" @blur="sortBudgetFors">
+              </div>
+            </td>
+            <td><i class="ui link icon times" @click="trashFor(f)"></i></td>
+          </tr>
+          <tr>
+          <tr>
+            <td colspan="4">
+              <button class="ui mini fluid button" id="addForBtn" @click="addFor"><i class="ui icon add"></i> Add</button>
+            </td>
+          </tr>
+          </tr>
+          <!-- <tr>
+            <td></td>
+            <td style="text-align: right;">Total:</td>
+            <td>{{thousands_separators(totalBudget)}}</td>
+            <td></td>
+          </tr> -->
+        </table>
+        <label>Total: </label> {{thousands_separators(totalBudget)}}
+        <br>
+        <label>Change: </label> {{thousands_separators(changeBudget)}}
+        <br>
+        <!-- <button @click="saveBudget">Save</button> -->
+        <!-- budget editor end -->
+
+
+      </div>
+      <div class="actions">
+        <button class="ui button deny" @click="saveBudget">Save & Exit</button>
+        <button class="ui button deny">Cancel</button>
+      </div>
+
+    </div>
+
+    <div class="ui mini modal second coupled modal">
+      <div class="content">
+        <!-- <label>For:</label>
         <input type="text" v-model="budgetItem.for">
         <br>
         <label>Amount:</label>
         <input type="number" min="0" v-model="budgetItem.amount">
         <br>
-        <button @click="addFor">Add</button>
-
-
-        <table>
-
-        <tr v-for="(alloc, f) in budget.fors" :key="f">
-            <td>{{f+1}}.)</td>
-            <td><input type="text" v-model="alloc.for"></td>
-            <td><input type="number" v-model="alloc.amount" @blur="sortBudgetFors"></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td style="text-align: right;">Total:</td>
-            <td>{{thousands_separators(totalBudget)}}</td>
-        </tr>
-        </table>
-        <label>Change: </label> {{thousands_separators(changeBudget)}}
-        <br>
-        <button @click="saveBudget">Save</button>
-        <!-- budget editor end -->
-
-
-        <table class="ui very compact celled structured small selectable table">
-          <thead>
-            <tr style="text-align: center;">
-              <th class="headers">No.</th>
-              <th class="headers">Title of Training</th>
-              <th class="headers">Training Goal/Objectives</th>
-              <th class="headers">No. Hours</th>
-              <th class="headers">Target Participants</th>
-              <th class="headers">Learning Methods/Activities</th>
-              <th class="headers">Evaluation/Evidence of Learning</th>
-              <th class="headers">Frequency</th>
-              <th class="headers">Budgetary Requirements</th>
-              <th class="headers">Training Institution/Partner</th>
-              <th class="noprint headers"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(item, index) in items" :key="index">
-              <td>{{ index+1 }}</td>
-              <td style="font-weight: bold;">{{item.training}}</td>
-              <td>{{item.goal}}</td>
-              <td style="text-align: center;">{{item.numHours}} hrs</td>
-              <td>{{item.participants}}</td>
-              <td>{{item.activities}}</td>
-              <td>{{item.evaluation}}</td>
-              <td>{{item.frequency}}</td>
-              <td>
-                <!-- {{item.budgetReq}} -->
-                <!-- <button class="ui mini button">Edit</button> -->
-
-
-
-
-                <div v-if="item.budget">
-                  {{thousands_separators(item.budget.allocated)}}
-                  <cite v-if="item.frequency=='Semi-Annually'">
-                    (x2 = {{thousands_separators(item.budget.allocated * 2)}})
-                  </cite>
-                  
-
-
-
-                  <table class="ui structured very compact celled table">
-                    <tr v-for="(para, p) in item.budget.fors" :key="p">
-                      <td>{{p+1}}</td>
-                      <td>{{para.for}}</td>
-                      <td>{{thousands_separators(para.amount)}}</td>
-                    </tr>
-                    <tr>
-                      <td colspan="2" style="text-align: right;">Total:</td>
-                      <td>{{thousands_separators(getTotal(item.budget.fors))}}</td>
-                    </tr>
-                    <tr>
-                      <td colspan="2" style="text-align: right;">Change:</td>
-                      <td>{{thousands_separators(getChange(item.budget))}}</td>
-                    </tr>
-                  </table>
-
-
-
-
-
-
-
-
-                </div>
-                <button class="ui mini fluid button" @click="editBudget(item)"><i class="ui icon edit"></i>Edit Budget</button>
-
-
-
-
-              </td>
-              <td>{{item.partner}}</td>
-              <td class="right aligned noprint">
-                <div class="ui mini basic icon buttons">
-                  <button class="ui button" title="Edit" @click="editRow(item.ldplgusponsoredtrainings_id)"><i class="edit outline icon"></i></button>
-                  <button class="ui button" title="Delete" @click="deleteRow(item.ldplgusponsoredtrainings_id)"><i class="trash alternate outline icon"></i></button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <button @click="addFor">Add</button> -->
+        <form class="ui form actions" @submit.prevent="saveAddedFor">
+          <div class="field">
+            <label>For:</label>
+            <input type="text" v-model="budgetItem.for" placeholder="...">
+          </div>
+          <div class="field">
+            <label>Amount:</label>
+            <input type="number" min="0" v-model="budgetItem.amount">
+          </div>
+          <!-- <div class="field">
+            <div class="ui checkbox">
+              <input type="checkbox" tabindex="0" class="hidden">
+              <label>I agree to the Terms and Conditions</label>
+            </div>
+          </div> -->
+          <button class="ui button" type="submit">Add</button>
+          <button class="ui button deny" type="button">Close</button>
+        </form>
       </div>
-      <!-- vue app end -->
+    </div>
 
     </template>
   </div>
+  <!-- vue app end -->
 
 
 
