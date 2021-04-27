@@ -291,50 +291,8 @@ require_once "message_pop.php";
             <td>{{item.evaluation}}</td>
             <td>{{item.frequency}}</td>
             <td>
-              <!-- {{item.budgetReq}} -->
+              {{item.budgetReq}}
               <!-- <button class="ui mini button">Edit</button> -->
-
-
-
-
-              <div class="" v-if="item.budget">
-                <div class="ui center aligned">
-                  Php. {{thousands_separators(item.budget.allocated)}}
-                </div>
-                <div class="ui center aligned">
-                  <cite v-if="item.frequency=='Semi-Annually'">
-                    (x2 = {{thousands_separators(item.budget.allocated * 2)}})
-                  </cite>
-                </div>
-
-
-
-                <table class="ui structured very compact celled table">
-                  <tr v-for="(para, p) in item.budget.fors" :key="p">
-                    <td>{{p+1}}</td>
-                    <td>{{para.for}}</td>
-                    <td>{{thousands_separators(para.amount)}}</td>
-                  </tr>
-                  <tr>
-                    <td colspan="2" style="text-align: right;">Total:</td>
-                    <td>{{thousands_separators(getTotal(item.budget.fors))}}</td>
-                  </tr>
-                  <tr>
-                    <td colspan="2" style="text-align: right;">Change:</td>
-                    <td>{{thousands_separators(getChange(item.budget))}}</td>
-                  </tr>
-                </table>
-
-
-
-
-
-
-
-
-              </div>
-              <button class="ui mini fluid button noprint" @click="editBudget(item)"><i class="ui icon edit"></i>Edit Budget</button>
-
 
 
 
