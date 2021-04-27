@@ -203,7 +203,7 @@ require_once "message_pop.php";
             <td>{{item.participants}}</td>
             <td class="center aligned">
               <!-- {{ item.targetParticipants.countDepartments }} -->
-              <button class="ui mini block button" :class="item.targetParticipants.length > 0?'':'disabled'" @click="showParticipants(item.training,item.targetParticipants)">Show Participants</button>
+              <button class="ui mini block button" :class="isNotEmpty(item.targetParticipants)?'':'disabled'" @click="showParticipants(item.training,item.targetParticipants)">Show Participants</button>
             </td>
             <td>{{item.activities}}</td>
             <td>{{item.evaluation}}</td>
@@ -218,7 +218,7 @@ require_once "message_pop.php";
                     (x2 = {{thousands_separators(item.budget.allocated * 2)}})
                   </cite>
                 </div>
-                <table class="ui structured very compact celled table">
+                <table class="ui structured very compact celled table" v-if="item.budget.fors">
                   <tr v-for="(para, p) in item.budget.fors" :key="p">
                     <td>{{p+1}}</td>
                     <td>{{para.for}}</td>
@@ -228,10 +228,6 @@ require_once "message_pop.php";
                     <td colspan="2" style="text-align: right;">Total:</td>
                     <td>{{thousands_separators(getTotal(item.budget.fors))}}</td>
                   </tr>
-                  <!-- <tr>
-                    <td colspan="2" style="text-align: right;">Change:</td>
-                    <td>{{thousands_separators(getChange(item.budget))}}</td>
-                  </tr> -->
                 </table>
               </div>
               <button class="ui mini fluid button noprint" @click="editBudget(item)"><i class="ui icon edit"></i>Edit Budget</button>
@@ -247,7 +243,10 @@ require_once "message_pop.php";
           </tr>
         </tbody>
       </table>
-      <!-- <button class="ui button">Modal</button> -->
+
+
+
+
       <div class="ui first coupled small modal" style="max-width: 500px ;">
         <div class="header">
           Edit Budget
@@ -256,7 +255,6 @@ require_once "message_pop.php";
           <!-- budget editor start -->
           <div class="ui segment">
             <label>Allocated Amount:</label>
-
             <div class="ui input">
               <input type="number" v-model="budget.allocated">
             </div>
@@ -267,8 +265,8 @@ require_once "message_pop.php";
                   <th colspan="4">Breadkdown:</th>
                 </tr>
               </thead>
-              <tr v-for="(alloc, f) in budget.fors" :key="f">
-                <td width="10">{{f+1}}.)</td>
+              <tr v-for="(alloc, af) in budget.fors" :key="af">
+                <td width="10">{{af+1}}.)</td>
                 <td>
 
                   <div class="ui input">
@@ -280,17 +278,17 @@ require_once "message_pop.php";
                     <input type="number" v-model="alloc.amount" @blur="sortBudgetFors">
                   </div>
                 </td>
-                <td><i class="ui link icon times" @click="trashFor(f)"></i></td>
+                <td><i class="ui link icon times" @click="trashFor(af)"></i></td>
               </tr>
               <tr>
               <tr>
                 <td colspan="4">
-                  <button class="ui mini fluid button" id="addForBtn" @click="addFor"><i class="ui icon add"></i> Add</button>
+                  <button class="ui mini fluid button" @click="addFor"><i class="ui icon add"></i> Add</button>
                 </td>
               </tr>
               </tr>
             </table>
-            <label>Total: </label> {{thousands_separators(totalBudget)}}
+            <!-- <label>Total: </label> {{thousands_separators(totalBudget)}} -->
             <br>
             <!-- <label>Change: </label> {{thousands_separators(changeBudget)}} -->
             <!-- <br> -->
@@ -302,22 +300,22 @@ require_once "message_pop.php";
         </div>
       </div>
 
-      <div class="ui mini modal second coupled modal">
-        <div class="content">
-          <form class="ui form actions" @submit.prevent="saveAddedFor">
-            <div class="field">
-              <label>For:</label>
-              <input type="text" v-model="budgetItem.for" placeholder="...">
-            </div>
-            <div class="field">
-              <label>Amount:</label>
-              <input type="number" min="0" v-model="budgetItem.amount">
-            </div>
-            <button class="ui button" type="submit">Add</button>
-            <button class="ui button deny" type="button">Close</button>
-          </form>
-        </div>
-      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     </div>
 
 
@@ -345,7 +343,7 @@ require_once "message_pop.php";
           <div class="fields">
             <div class="four wide field">
               <label>Total Number of Training Hours:</label>
-              <input v-model="plan.numHours" type="text" placeholder="Hrs">
+              <input v-model="plan.numHours" type="number" placeholder="Hrs">
             </div>
             <div class="four wide field"></div>
             <div class="eight wide field">
@@ -383,7 +381,7 @@ require_once "message_pop.php";
                     (x2 = {{thousands_separators(item.budget.allocated * 2)}})
                   </cite>
                 </div> -->
-                <table class="ui structured very compact celled table">
+                <table class="ui structured very compact celled table" v-if="plan.budget.fors">
                   <tr v-for="(para, p) in plan.budget.fors" :key="p">
                     <td>{{p+1}}</td>
                     <td>{{para.for}}</td>
@@ -422,74 +420,7 @@ require_once "message_pop.php";
       </div>
     </div>
     <!-- addnew modal end -->
-    <!-- edit modal start -->
-    <div class="ui modal" id="modal_edit">
-      <div class="header">Edit</div>
-      <div class="content">
-        <div class="ui form">
-          <div class="fields">
-            <div class="eight wide field">
-              <label>Title of Training:</label>
-              <!-- <textarea id="title_edit" rows="3" placeholder="Title of training..."></textarea> -->
-              <div class="ui search getTrainings">
-                <div class="ui icon input">
-                  <input id="title_edit" class="prompt" type="text" placeholder="Search/Add Training...">
-                </div>
-                <div class="results"></div>
-              </div>
-            </div>
-            <div class="eight wide field">
-              <label>Training Goal/Objective:</label>
-              <textarea id="goal_edit" rows="3" placeholder="Goal/Objective of training..."></textarea>
-            </div>
-          </div>
-          <div class="fields">
-            <div class="four wide field">
-              <label>Total Number of Training Hours:</label>
-              <input id="hrs_edit" type="text" placeholder="Hrs">
-            </div>
-            <div class="four wide field"></div>
-            <div class="eight wide field">
-              <label>Target Participants:</label>
-              <textarea id="participants_edit" rows="3" type="text" placeholder="Participants..."></textarea>
-            </div>
-          </div>
-          <div class="fields">
-            <div class="eight wide field">
-              <label>Learning Methods/Activities:</label>
-              <textarea id="methods_edit" rows="3" placeholder="Learning Methods/Activities..."></textarea>
-            </div>
-            <div class="eight wide field">
-              <label>Evaluation/Evidence of Learning:</label>
-              <textarea id="eval_edit" rows="3" placeholder="Evaluation/Evidence of Learning..."></textarea>
-            </div>
-          </div>
-          <div class="fields">
 
-            <div class="four wide field">
-              <label>Frequency:</label>
-              <textarea id="freq_edit" rows="3" type="text" placeholder="Frequency..."></textarea>
-            </div>
-
-            <div class="four wide field">
-              <label>Budgetary Requirements:</label>
-              <textarea id="budget_edit" rows="3" type="text" placeholder="Budgetary Requirements..."></textarea>
-            </div>
-
-            <div class="eight wide field">
-              <label>Training Institution/Partner:</label>
-              <textarea id="partner_edit" rows="3" type="text" placeholder="Training Institution/Partner..."></textarea>
-            </div>
-
-          </div>
-        </div>
-      </div>
-      <div class="actions">
-        <div class="ui approve tiny basic button">Save</div>
-        <div class="ui cancel tiny basic button">Cancel</div>
-      </div>
-    </div>
-    <!-- edit modal end -->
     <!-- delete modal start -->
     <div class="ui mini modal" id="modal_delete">
       <div class="header"></div>

@@ -16,11 +16,11 @@ new Vue({
                 allocated: "",
                 fors: [],
             },
-            budgetItem: {
+            forItem: {
                 for: "",
                 amount: ""
             },
-            budgetItemDefault: {
+            forItemDefault: {
                 for: "",
                 amount: ""
             },
@@ -36,7 +36,10 @@ new Vue({
                 budgetReq: "",
                 partner: "",
                 venue: "",
-                budget: null
+                budget: {
+                    allocated: "",
+                    fors: [],
+                },
             },
             planDefault: {
                 ldplan_id: null,
@@ -50,7 +53,10 @@ new Vue({
                 budgetReq: "",
                 partner: "",
                 venue: "",
-                budget: null
+                budget: {
+                    allocated: "",
+                    fors: [],
+                },
             },
             participants: {
                 training: "",
@@ -59,82 +65,120 @@ new Vue({
         }
     },
     methods: {
-        addFor() {
-            var newFor = JSON.parse(JSON.stringify(this.budgetItem))
-            this.budget.fors.push(newFor)
+        editBudget(item) {
+            // console.log("edit:",item);
+            if (!item.budget) {
+                this.budget = JSON.parse(JSON.stringify(this.budgetDefault))
+            } else {
+                // console.log("else:",item);
+                this.budget = item.budget//JSON.parse(JSON.stringify(item.budget))
+            }
+            if (item.ldplgusponsoredtrainings_id) {
+                var index = this.items.map(function (el) {
+                    return el.ldplgusponsoredtrainings_id;
+                }).indexOf(item.ldplgusponsoredtrainings_id);
+                this.editedIndex = index
+            }
+            $('.first.modal').modal('show');
         },
-        saveAddedFor() {
-            var item = JSON.parse(JSON.stringify(this.budgetItem))
-            this.budget.fors.push(item)
-            this.budgetItem = JSON.parse(JSON.stringify(this.budgetItemDefault))
-            // this.getBudgetTotal()
+        addFor() {
+            console.log(this.editedIndex);
+            console.log(this.plan);
+            var newFor = JSON.parse(JSON.stringify(this.forItem))
+            // var budgetDefault = JSON.parse(JSON.stringify(this.budgetDefault))
+            this.budget.fors.push(newFor)
+
+        },
+        sortBudgetFors() {
+            // console.log("sorted");
+            if (this.budget.fors) {
+                this.budget.fors.sort((a, b) => (Number(a.amount) < Number(b.amount)) ? 1 : -1)
+            }
         },
         trashFor(i) {
             this.budget.fors.splice(i, 1)
         },
-        getBudgetTotal() {
-            var total = 0
-            this.budget.fors.forEach(item => {
-                total += item.amount
-            });
-            this.budget.total = total
-        },
-        sortBudgetFors() {
-            this.budget.fors.sort((a, b) => (Number(a.amount) < Number(b.amount)) ? 1 : -1)
-        },
+
         saveBudget() {
+            // for existing plan
+            // console.log(this.editedIndex);
             if (this.editedIndex != -1) {
-                // console.log(this.budget);
                 var editedIndex = this.editedIndex
                 // get items[editedIndex].ldplgusponsoredtrainings_id 
+                // console.log(this.items[editedIndex]);
                 var ldplgusponsoredtrainings_id = this.items[editedIndex].ldplgusponsoredtrainings_id
                 var budget = JSON.parse(JSON.stringify(this.budget))
-
+                // console.log(budget);
                 $.post("ldplanlgusponsored_proc.php", {
                     updateBudget: true,
                     ldplgusponsoredtrainings_id: ldplgusponsoredtrainings_id,
                     budget: budget
                 }, (data, textStatus, jqXHR) => {
 
-                    // console.log(ldplgusponsoredtrainings_id);
-                    // vue update
-                    this.items[editedIndex].budget = budget
-                    // reset
-                    this.budget = JSON.parse(JSON.stringify(this.budgetDefault))
-                    this.editedIndex = -1
+
+                    // if existing clear all 
+                    // if (this.editedIndex > -1) {
+                    // this.clearPlan()
+                    // this.getItems()
+                    // }
+                    // else if new
+                    // else {
+                    // console.log(data);
+                    this.items[editedIndex].budget = data
+                    // this.budget = JSON.parse(JSON.stringify( this.budgetDefault))
+                    this.plan.budget = JSON.parse(JSON.stringify(data))
+                    // this.editedIndex = -1
+                    // }
 
                 },
                     "json"
                 );
-            } else {
+
+            }
+            // for new plan
+            else {
                 this.plan.budget = JSON.parse(JSON.stringify(this.budget))
             }
-        },
-        editBudget(item) {
-            // console.log(!item.budget);
-            if (!item.budget) {
-                this.budget = JSON.parse(JSON.stringify(this.budgetDefault))
-            } else {
-                this.budget = JSON.parse(JSON.stringify(item.budget))
-            }
-            if (item.ldplan_id) {
-                var index = this.items.map(function (el) {
-                    return el.ldplgusponsoredtrainings_id;
-                }).indexOf(item.ldplgusponsoredtrainings_id);
-                // console.log(index);
-                this.editedIndex = index
-            }
-            $('.first.modal').modal('show');
 
         },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        getBudgetTotal() {
+            var total = 0
+            if (this.budget.fors) {
+                this.budget.fors.forEach(item => {
+                    total += item.amount
+                });
+            }
+            this.budget.total = total
+        },
+
         getTotal(fors) {
             var total = 0
-            fors.forEach(item => {
-                total += Number(item.amount)
-            });
+            // if (this.budget.fors) {
+                fors.forEach(item => {
+                    total += Number(item.amount)
+                });
+            // }
             return total
         },
         getChange(budget) {
+
+            if (!budget.allocated) return 0
+
             var change = 0,
                 allocated = budget.allocated,
                 total = 0
@@ -153,10 +197,19 @@ new Vue({
             return num_parts.join(".");
         },
 
+
+
+
+
+
+
+
         editPlan(index) {
+            console.log(index);
             if (index > -1) {
                 // this.editedIndex = index
                 this.plan = this.items[index]
+                console.log(this.plan);
                 var plan = this.plan
                 $("#editModalTitle").html("Edit Plan");
                 $("#editModal").modal({
@@ -191,6 +244,7 @@ new Vue({
             }
             // index  = -1 ; add new modal
             else {
+                // console.log(this.plan);
                 $("#editModalTitle").html("Add New");
                 $("#editModal").modal({
                     onDeny: () => {
@@ -201,7 +255,9 @@ new Vue({
                         console.log("adding...")
                         console.log(this.plan)
                         this.items.push(this.plan)
+                        // console.log(this.items);
                         var plan = this.plan
+                        console.log(plan);
                         $.post('ldplanlgusponsored_proc.php', {
                             addNew: true,
                             ldplan_id: this.ldplan_id,
@@ -222,7 +278,7 @@ new Vue({
                             console.log(data);
                             this.clearPlan()
                             this.getItems()
-                        });
+                        }, "json");
                     }
                 }).modal("show")
             }
@@ -247,13 +303,14 @@ new Vue({
         // delete row end
 
 
-        showParticipants(training,item) {
+        showParticipants(training, item) {
             this.participants.training = training
             this.participants.participants = JSON.parse(JSON.stringify(item))
             console.log(item);
             $("#showParticipantsModal").modal({
-                onHide: () => {
-                    $("#showParticipantsAccordion").accordion("close others");
+                onHidden: () => {
+                    $("#showParticipantsAccordion").accordion("open", 0);
+                    // console.log("onHide");
                 }
             }).modal("show");
         },
@@ -274,7 +331,8 @@ new Vue({
                 ldplan_id: this.ldplan_id
             }, (data, textStatus, jqXHR) => {
                 this.items = data
-                // console.log(this.items);
+                console.log(this.items);
+                // console.log("items: ", this.items);
             },
                 "json"
             );
@@ -297,18 +355,30 @@ new Vue({
                 "json"
             );
         },
+        isNotEmpty(arr) {
+            if (arr) {
+                if (arr.length > 0) {
+                    return true
+                }
+                return false
+            } else return false
+        }
     },
     computed: {
         totalBudget() {
             var total = 0
-            this.budget.fors.forEach(item => {
-                total += Number(item.amount)
-            });
+            if (this.budget.fors) {
+                this.budget.fors.forEach(item => {
+                    total += Number(item.amount)
+                });
+            }
             return total
         },
         changeBudget() {
             var change = 0
-            change = this.budget.allocated - this.totalBudget
+            if (this.budget.allocated) {
+                change = this.budget.allocated - this.totalBudget
+            }
             return change
         },
     },
