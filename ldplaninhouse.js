@@ -75,22 +75,22 @@ new Vue({
                 this.budget = JSON.parse(JSON.stringify(this.budgetDefault))
             } else {
                 // //console.log("else:",item);
-                
+
                 this.budget = item.budget//JSON.parse(JSON.stringify(item.budget))
                 if (!this.budget.fors) {
                     this.budget = {
                         allocated: this.budget.allocated,
-                        multiplier: this.budget.multiplier?this.budget.multiplier: 1,
+                        multiplier: this.budget.multiplier ? this.budget.multiplier : 1,
                         fors: []
                     }
                 }
                 //console.log("this.budget:",this.budget);
-                    
+
             }
-            if (item.ldplgusponsoredtrainings_id) {
+            if (item.ldpinhousetrainings_id) {
                 var index = this.items.map(function (el) {
-                    return el.ldplgusponsoredtrainings_id;
-                }).indexOf(item.ldplgusponsoredtrainings_id);
+                    return el.ldpinhousetrainings_id;
+                }).indexOf(item.ldpinhousetrainings_id);
                 this.editedIndex = index
             }
             $('.first.modal').modal('show');
@@ -115,14 +115,14 @@ new Vue({
             // //console.log(this.editedIndex);
             if (this.editedIndex != -1) {
                 var editedIndex = this.editedIndex
-                // get items[editedIndex].ldplgusponsoredtrainings_id 
+                // get items[editedIndex].ldpinhousetrainings_id 
                 // //console.log(this.items[editedIndex]);
-                var ldplgusponsoredtrainings_id = this.items[editedIndex].ldplgusponsoredtrainings_id
+                var ldpinhousetrainings_id = this.items[editedIndex].ldpinhousetrainings_id
                 var budget = JSON.parse(JSON.stringify(this.budget))
                 // //console.log(budget);
-                $.post("ldplanlgusponsored_proc.php", {
+                $.post("ldplaninhouse_proc.php", {
                     updateBudget: true,
-                    ldplgusponsoredtrainings_id: ldplgusponsoredtrainings_id,
+                    ldpinhousetrainings_id: ldpinhousetrainings_id,
                     budget: budget
                 }, (data, textStatus, jqXHR) => {
 
@@ -152,21 +152,6 @@ new Vue({
             }
 
         },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         getBudgetTotal() {
             var total = 0
             if (this.budget.fors) {
@@ -180,9 +165,9 @@ new Vue({
         getTotal(fors) {
             var total = 0
             // if (this.budget.fors) {
-                fors.forEach(item => {
-                    total += Number(item.amount)
-                });
+            fors.forEach(item => {
+                total += Number(item.amount)
+            });
             // }
             return total
         },
@@ -214,13 +199,6 @@ new Vue({
             }
             return count
         },
-
-
-
-
-
-
-
         editPlan(index) {
             //console.log(index);
             if (index > -1) {
@@ -237,9 +215,9 @@ new Vue({
                     onApprove: () => {
                         //console.log("adding...")
                         //console.log(this.plan)
-                        $.post('ldplanlgusponsored_proc.php', {
+                        $.post('ldplaninhouse_proc.php', {
                             editRow: true,
-                            ldplgusponsoredtrainings_id: plan.ldplgusponsoredtrainings_id,
+                            ldpinhousetrainings_id: plan.ldpinhousetrainings_id,
                             title_edit: plan.training,
                             goal_edit: plan.goal,
                             hrs_edit: plan.numHours,
@@ -257,7 +235,6 @@ new Vue({
                         });
                     }
                 }).modal("show")
-
             }
             // index  = -1 ; add new modal
             else {
@@ -275,7 +252,7 @@ new Vue({
                         // //console.log(this.items);
                         var plan = this.plan
                         //console.log(plan);
-                        $.post('ldplanlgusponsored_proc.php', {
+                        $.post('ldplaninhouse_proc.php', {
                             addNew: true,
                             ldplan_id: this.ldplan_id,
                             training: plan.training,
@@ -302,13 +279,13 @@ new Vue({
         },
 
         // delete row start
-        deleteRow(ldplgusponsoredtrainings_id) {
+        deleteRow(ldpinhousetrainings_id) {
             // //console.log("delete");
             $("#modal_delete").modal({
                 onApprove: () => {
-                    $.post('ldplanlgusponsored_proc.php', {
+                    $.post('ldplaninhouse_proc.php', {
                         deleteRow: true,
-                        ldplgusponsoredtrainings_id: ldplgusponsoredtrainings_id
+                        ldpinhousetrainings_id: ldpinhousetrainings_id
                     }, (data, textStatus, xhr) => {
                         // $(load);
                         // $(msg_deleted);
@@ -318,8 +295,6 @@ new Vue({
             }).modal("show");
         },
         // delete row end
-
-
         showParticipants(training, item) {
             this.participants.training = training
             this.participants.participants = JSON.parse(JSON.stringify(item))
@@ -331,9 +306,6 @@ new Vue({
                 }
             }).modal("show");
         },
-
-
-
         clearPlan() {
             this.editedIndex = -1
             this.plan = JSON.parse(JSON.stringify(this.planDefault))
@@ -343,7 +315,7 @@ new Vue({
             this.ldplan_id = url.searchParams.get("ldplan_id");
         },
         getItems() {
-            $.post("ldplanlgusponsored_proc.php", {
+            $.post("ldplaninhouse_proc.php", {
                 getItems: true,
                 ldplan_id: this.ldplan_id
             }, (data, textStatus, jqXHR) => {
@@ -355,7 +327,7 @@ new Vue({
             );
         },
         getTrainings() {
-            $.post('ldplanlgusponsored_proc.php', {
+            $.post('ldplaninhouse_proc.php', {
                 getTrainings: true
             }, (data, textStatus, xhr) => {
                 // var content = jQuery.parseJSON(data);

@@ -58,7 +58,7 @@ $year = $row["year"];
             <th class="headers">Training Goal/Objectives</th>
             <th class="headers">No. Hours</th>
             <th class="headers">Target Participants</th>
-            <th class="headers"></th>
+            <th class="headers noprint"></th>
             <th class="headers">Learning Methods/Activities</th>
             <th class="headers">Evaluation/Evidence of Learning</th>
             <th class="headers">Frequency</th>
@@ -75,7 +75,7 @@ $year = $row["year"];
             <td>{{item.goal}}</td>
             <td style="text-align: center;">{{item.numHours}} hrs</td>
             <td>{{item.participants}}</td>
-            <td class="center aligned">
+            <td class="center aligned noprint">
               <!-- {{ item.targetParticipants.countDepartments }} -->
               <!-- {{countDepts(item.targetParticipants)}} possible participating department/s -->
 
