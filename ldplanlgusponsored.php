@@ -13,140 +13,14 @@ $year = $row["year"];
 
 <script type="text/javascript">
   $(document).ready(function() {
-    // $(addNew);
-    // $(load);
-
-    $("#table_search").on("keyup", function() {
-      var value = $(this).val().toLowerCase();
-      $("#tableBody tr").filter(function() {
-        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-      });
-    });
-
+    // $("#table_search").on("keyup", function() {
+    //   var value = $(this).val().toLowerCase();
+    //   $("#tableBody tr").filter(function() {
+    //     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    //   });
+    // });
   });
-
-  // function load() {
-  //   $("#tableBody").load('ldplanlgusponsored_proc.php', {
-  //       load: true,
-  //       ldplan_id: <?php echo $ldplan_id; ?>
-  //     },
-  //     function() {
-  //       /* Stuff to do after the page is loaded */
-  //     });
-
-  //   $.post('ldplanlgusponsored_proc.php', {
-  //       getTrainings: true
-  //     },
-  //     function(data, textStatus, xhr) {
-  //       var content = jQuery.parseJSON(data);
-  //       $('.getTrainings').search({
-  //         source: content,
-  //         searchOnFocus: false
-  //       });
-  //     });
-
-  // }
-
-  // function addNew() {
-  //   $("#modal_new").modal({
-  //     closable: false,
-  //     onHidden: function() {
-  //       $(clear);
-  //     },
-  //     onDeny: function() {
-  //       $(clear);
-  //     },
-  //     onApprove: function() {
-  //       $.post('ldplanlgusponsored_proc.php', {
-  //         addNew: true,
-  //         ldplan_id: <?php echo $ldplan_id; ?>,
-  //         training: $("#title_add").val(),
-  //         goal: $("#goal_add").val(),
-  //         numHours: $("#hrs_add").val(),
-  //         participants: $("#participants_add").val(),
-  //         activities: $("#methods_add").val(),
-  //         evaluation: $("#eval_add").val(),
-  //         frequency: $("#freq_add").val(),
-  //         budgetReq: $("#budget_add").val(),
-  //         partner: $("#partner_add").val(),
-  //       }, function(data, textStatus, xhr) {
-  //         $(load);
-  //         $(msg_added);
-  //       });
-  //     }
-  //   }).modal("show");
-  // }
-
-  function editRow(ldplgusponsoredtrainings_id) {
-    $.post('ldplanlgusponsored_proc.php', {
-      getRowData: true,
-      ldplgusponsoredtrainings_id: ldplgusponsoredtrainings_id
-    }, function(data, textStatus, xhr) {
-      var array = jQuery.parseJSON(data);
-      $("#title_edit").val(array.training);
-      $("#goal_edit").val(array.goal);
-      $("#hrs_edit").val(array.numHours);
-      $("#participants_edit").val(array.participants);
-      $("#methods_edit").val(array.activities);
-      $("#eval_edit").val(array.evaluation);
-      $("#freq_edit").val(array.frequency);
-      $("#budget_edit").val(array.budgetReq);
-      $("#partner_edit").val(array.partner);
-
-      $("#modal_edit").modal({
-        onApprove: function() {
-          $.post('ldplanlgusponsored_proc.php', {
-            editRow: true,
-            ldplgusponsoredtrainings_id: ldplgusponsoredtrainings_id,
-            title_edit: $("#title_edit").val(),
-            goal_edit: $("#goal_edit").val(),
-            hrs_edit: $("#hrs_edit").val(),
-            participants_edit: $("#participants_edit").val(),
-            methods_edit: $("#methods_edit").val(),
-            eval_edit: $("#eval_edit").val(),
-            freq_edit: $("#freq_edit").val(),
-            budget_edit: $("#budget_edit").val(),
-            partner_edit: $("#partner_edit").val(),
-          }, function(data, textStatus, xhr) {
-            $(load);
-            $(msg_saved);
-          });
-        }
-      }).modal("show");
-    });
-  }
-
-  // function deleteRow(ldplgusponsoredtrainings_id) {
-  //   $("#modal_delete").modal({
-  //     onApprove: function() {
-  //       $.post('ldplanlgusponsored_proc.php', {
-  //         deleteRow: true,
-  //         ldplgusponsoredtrainings_id: ldplgusponsoredtrainings_id
-  //       }, function(data, textStatus, xhr) {
-  //         $(load);
-  //         $(msg_deleted);
-  //       });
-  //     }
-  //   }).modal("show");
-  // }
-
-  function clear() {
-    $("#title_add").val("");
-    $("#goal_add").val("");
-    $("#hrs_add").val("");
-    $("#participants_add").val("");
-    $("#methods_add").val("");
-    $("#eval_add").val("");
-    $("#freq_add").val("");
-    $("#budget_add").val("");
-    $("#partner_add").val("");
-  }
 </script>
-
-<?php
-require_once "message_pop.php";
-?>
-
 <!-- vue app start -->
 <div id="lnd-plan-vue">
   <template>
@@ -165,10 +39,10 @@ require_once "message_pop.php";
           <button onclick="print()" class="blue ui icon button" title="Back" style="margin-right: 5px;">
             <i class="icon print"></i> Print
           </button>
-          <div class="ui icon fluid input" style="width: 300px;">
+          <!-- <div class="ui icon fluid input" style="width: 300px;">
             <input id="table_search" type="text" placeholder="Search...">
             <i class="search icon"></i>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -203,7 +77,9 @@ require_once "message_pop.php";
             <td>{{item.participants}}</td>
             <td class="center aligned">
               <!-- {{ item.targetParticipants.countDepartments }} -->
-              <button class="ui mini block button" :class="isNotEmpty(item.targetParticipants)?'':'disabled'" @click="showParticipants(item.training,item.targetParticipants)">Show Participants</button>
+              <!-- {{countDepts(item.targetParticipants)}} possible participating department/s -->
+
+              <button class="ui mini block button" :class="isNotEmpty(item.targetParticipants)?'':'disabled'" @click="showParticipants(item.training,item.targetParticipants)">Possible Participants</button>
             </td>
             <td>{{item.activities}}</td>
             <td>{{item.evaluation}}</td>
@@ -214,23 +90,23 @@ require_once "message_pop.php";
                   <div class="ui mini header block">Php. {{thousands_separators(item.budget.allocated)}}</div>
                 </div>
                 <div class="ui center aligned">
-                  <cite v-if="item.frequency=='Semi-Annually'">
-                    (x2 = {{thousands_separators(item.budget.allocated * 2)}})
+                  <cite v-if="item.budget.multiplier && item.budget.multiplier > 1">
+                    (x{{item.budget.multiplier}} = {{thousands_separators(item.budget.allocated * item.budget.multiplier)}})
                   </cite>
                 </div>
                 <table class="ui structured very compact celled table" v-if="item.budget.fors">
                   <tr v-for="(para, p) in item.budget.fors" :key="p">
-                    <td>{{p+1}}</td>
+                    <td>{{p+1}}.)</td>
                     <td>{{para.for}}</td>
                     <td>{{thousands_separators(para.amount)}}</td>
                   </tr>
                   <tr>
-                    <td colspan="2" style="text-align: right;">Total:</td>
+                    <td colspan="2" style="text-align: right;">Subtotal:</td>
                     <td>{{thousands_separators(getTotal(item.budget.fors))}}</td>
                   </tr>
                 </table>
               </div>
-              <button class="ui mini fluid button noprint" @click="editBudget(item)"><i class="ui icon edit"></i>Edit Budget</button>
+              <button class="ui mini fluid button noprint" @click="editBudget(item)"><i class="ui icon edit"></i>Edit</button>
             </td>
             <td>{{item.partner}}</td>
             <td>{{item.venue}}</td>
@@ -246,19 +122,41 @@ require_once "message_pop.php";
 
 
 
-
+      <!-- edit budget modal start -->
       <div class="ui first coupled small modal" style="max-width: 500px ;">
         <div class="header">
           Edit Budget
         </div>
         <div class="content">
-          <!-- budget editor start -->
           <div class="ui segment">
-            <label>Allocated Amount:</label>
-            <div class="ui input">
-              <input type="number" v-model="budget.allocated">
+
+            <div class="ui form">
+              <div class="three fields">
+                <div class="six wide field">
+                  <label>Allocated Amount:</label>
+                  <div class="ui input">
+                    <input type="number" v-model="budget.allocated">
+                  </div>
+                </div>
+                <div class="four wide field">
+                  <label>x</label>
+                  <div class="ui input">
+                    <input type="number" min="1" v-model="budget.multiplier" placeholder="1">
+                  </div>
+                </div>
+                <div class="six wide field">
+                  <label>Total:</label>
+                  <div class="ui transparent input">
+                    <input readonly type="text" :value="`Php.${thousands_separators(multiple)}`">
+                    <!-- Php. {{thousands_separators(multiple)}} -->
+                  </div>
+                </div>
+              </div>
             </div>
-            <br>
+
+
+
+
             <table>
               <thead>
                 <tr>
@@ -270,12 +168,12 @@ require_once "message_pop.php";
                 <td>
 
                   <div class="ui input">
-                    <input type="text" v-model="alloc.for">
+                    <input type="text" v-model="alloc.for" placeholder="Budget for...">
                   </div>
                 </td>
                 <td>
                   <div class="ui input">
-                    <input type="number" v-model="alloc.amount" @blur="sortBudgetFors">
+                    <input type="number" v-model="alloc.amount" placeholder="Amount..." @blur="sortBudgetFors">
                   </div>
                 </td>
                 <td><i class="ui link icon times" @click="trashFor(af)"></i></td>
@@ -288,10 +186,10 @@ require_once "message_pop.php";
               </tr>
               </tr>
             </table>
-            <!-- <label>Total: </label> {{thousands_separators(totalBudget)}} -->
-            <br>
-            <!-- <label>Change: </label> {{thousands_separators(changeBudget)}} -->
-            <!-- <br> -->
+            <label>Subtotal: </label> {{thousands_separators(totalBudget)}}
+            <!-- <br>
+            <label>Change: </label> {{thousands_separators(changeBudget)}}
+            <br> -->
           </div>
         </div>
         <div class="actions">
@@ -299,7 +197,7 @@ require_once "message_pop.php";
           <button class="ui button deny">Cancel</button>
         </div>
       </div>
-
+      <!-- edit budget modal end -->
 
 
 
@@ -318,8 +216,7 @@ require_once "message_pop.php";
 
     </div>
 
-
-    <!-- addnew modal start -->
+    <!-- add/edit plan modal start -->
     <div class="ui modal" id="editModal">
       <div class="header" id="editModalTitle"></div>
       <div class="content">
@@ -376,19 +273,19 @@ require_once "message_pop.php";
                 <div class="ui center aligned">
                   Php. {{thousands_separators(plan.budget.allocated)}}
                 </div>
-                <!-- <div class="ui center aligned">
-                  <cite v-if="item.frequency=='Semi-Annually'">
-                    (x2 = {{thousands_separators(item.budget.allocated * 2)}})
+                <div class="ui center aligned">
+                  <cite v-if="plan.budget.multiplier && plan.budget.multiplier >1">
+                    (x{{plan.budget.multiplier}} = Php.{{thousands_separators(plan.budget.multiplier*plan.budget.allocated)}})
                   </cite>
-                </div> -->
+                </div>
                 <table class="ui structured very compact celled table" v-if="plan.budget.fors">
                   <tr v-for="(para, p) in plan.budget.fors" :key="p">
-                    <td>{{p+1}}</td>
+                    <td>{{p+1}}.)</td>
                     <td>{{para.for}}</td>
                     <td>{{thousands_separators(para.amount)}}</td>
                   </tr>
                   <tr>
-                    <td colspan="2" style="text-align: right;">Total:</td>
+                    <td colspan="2" style="text-align: right;">Subtotal:</td>
                     <td>{{thousands_separators(getTotal(plan.budget.fors))}}</td>
                   </tr>
                   <!-- <tr>
@@ -398,7 +295,9 @@ require_once "message_pop.php";
                 </table>
               </div>
 
-              <button class="ui fluid mini button" @click="editBudget(plan)">Edit Budget</button>
+              <button class="ui fluid mini button" @click="editBudget(plan)">
+               <i class="ui edit icon"></i> Edit
+              </button>
             </div>
 
             <div class="eight wide field">
@@ -419,7 +318,7 @@ require_once "message_pop.php";
         <div class="ui cancel tiny basic button">Cancel</div>
       </div>
     </div>
-    <!-- addnew modal end -->
+    <!-- add/edit plan modal end -->
 
     <!-- delete modal start -->
     <div class="ui mini modal" id="modal_delete">

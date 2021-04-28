@@ -10,10 +10,12 @@ new Vue({
             editedIndex: -1,
             budget: {
                 allocated: "",
+                multiplier: 1,
                 fors: [],
             },
             budgetDefault: {
                 allocated: "",
+                multiplier: 1,
                 fors: [],
             },
             forItem: {
@@ -38,6 +40,7 @@ new Vue({
                 venue: "",
                 budget: {
                     allocated: "",
+                    multiplier: 1,
                     fors: [],
                 },
             },
@@ -55,6 +58,7 @@ new Vue({
                 venue: "",
                 budget: {
                     allocated: "",
+                    multiplier: 1,
                     fors: [],
                 },
             },
@@ -66,12 +70,22 @@ new Vue({
     },
     methods: {
         editBudget(item) {
-            // console.log("edit:",item);
+            // console.log(item);
             if (!item.budget) {
                 this.budget = JSON.parse(JSON.stringify(this.budgetDefault))
             } else {
                 // console.log("else:",item);
+                
                 this.budget = item.budget//JSON.parse(JSON.stringify(item.budget))
+                if (!this.budget.fors) {
+                    this.budget = {
+                        allocated: this.budget.allocated,
+                        multiplier: this.budget.multiplier?this.budget.multiplier: 1,
+                        fors: []
+                    }
+                }
+                console.log("this.budget:",this.budget);
+                    
             }
             if (item.ldplgusponsoredtrainings_id) {
                 var index = this.items.map(function (el) {
@@ -82,12 +96,9 @@ new Vue({
             $('.first.modal').modal('show');
         },
         addFor() {
-            console.log(this.editedIndex);
-            console.log(this.plan);
             var newFor = JSON.parse(JSON.stringify(this.forItem))
             // var budgetDefault = JSON.parse(JSON.stringify(this.budgetDefault))
             this.budget.fors.push(newFor)
-
         },
         sortBudgetFors() {
             // console.log("sorted");
@@ -196,7 +207,13 @@ new Vue({
             num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             return num_parts.join(".");
         },
-
+        countDepts(arr) {
+            var count = 0
+            if (arr) {
+                count = arr.length
+            }
+            return count
+        },
 
 
 
@@ -365,6 +382,14 @@ new Vue({
         }
     },
     computed: {
+        multiple() {
+            var multiple = this.budget.allocated
+            if (this.budget.multiplier) {
+                multiple = Number(multiple) * Number(this.budget.multiplier)
+            }
+            return multiple
+            // return this.budget.multiplier
+        },
         totalBudget() {
             var total = 0
             if (this.budget.fors) {
