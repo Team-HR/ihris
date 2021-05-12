@@ -14,3 +14,6 @@ lower_case_table_names=1
 
 # FIX FOR CERTBOT ERR_CERT_COMMON_NAME_INVALID:
 https://gist.github.com/FranzValencia/8b863d1bc97be58bf67f646e0080fff8
+
+# SETUP MAILX FOR LINUX
+https://drive.google.com/file/d/1ueFT8b4i_YXYurv1uObjhe17kvCKLGrz/view?usp=sharing
