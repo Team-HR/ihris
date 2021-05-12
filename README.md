@@ -13,4 +13,4 @@ sql_mode=
 lower_case_table_names=1
 
 # FIX FOR CERTBOT ERR_CERT_COMMON_NAME_INVALID:
-<script src="https://gist.github.com/FranzValencia/8b863d1bc97be58bf67f646e0080fff8.js"></script>
+https://gist.github.com/FranzValencia/8b863d1bc97be58bf67f646e0080fff8
