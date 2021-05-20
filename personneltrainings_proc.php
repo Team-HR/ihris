@@ -200,10 +200,71 @@ if (isset($_POST["load"])) {
 	);
 	echo json_encode($json);
 }
+// vue api start
+elseif (isset($_POST["init_load"])) {
+	$year = $_POST["year"];
+	if ($year == "all" || $year == "") {
+		$sql = "SELECT * FROM `personneltrainings` ORDER BY `startDate` DESC";
+	} else {
+		$sql = "SELECT * FROM `personneltrainings` WHERE year(`startDate`) = '$year' ORDER BY `startDate` DESC";
+	}
+	$result = $mysqli->query($sql);
+	// $counter = 0;
+	// $counter = $result->num_rows;
+	$data = array();
+	while ($row = $result->fetch_assoc()) {
+		// $counter++;
+		$personneltrainings_id = $row["personneltrainings_id"];
+		$training_id = $row["training_id"];
+		$sql2 = "SELECT `training` FROM `trainings` WHERE `training_id` = '$training_id'";
+		$result2 = $mysqli->query($sql2);
+		$row2 = $result2->fetch_assoc();
+		$training = addslashes($row2["training"]);
+		$startDate = formatDate($row["startDate"]);
+		$endDate = formatDate($row["endDate"]);
+		$numHours = $row["numHours"];
+		$venue = $row["venue"];
+		$remarks = $row["remarks"];
+		$numberOfRespondents = geNumberOfRespondents($mysqli, $personneltrainings_id);
+
+
+		$datum = array(
+			"personneltrainings_id" => $personneltrainings_id,
+			"training_id" => $training_id,
+			"training" => $training,
+			"startDate" => $startDate,
+			"endDate" => $endDate,
+			"numHours" => $numHours,
+			"venue" => $venue,
+			"remarks" => $remarks,
+			"numberOfRespondents" => $numberOfRespondents
+		);
+
+		$data[] = $datum;
+	}
+
+	$withRespondents = array();
+	$noRespondents = array();
+	foreach ($data as $item) {
+		if ($item["numberOfRespondents"] > 0) {
+			$withRespondents[] = $item;
+		} else {
+			$noRespondents[] = $item;
+		}
+	}
+
+	echo json_encode(array(
+		"withRespondents" => $withRespondents,
+		"noRespondents" => $noRespondents
+	));
+	
+}
+// vue api end
 
 
 function formatDate($numeric_date)
 {
+	if (!$numeric_date) return NULL;
 	$date = new DateTime($numeric_date);
 	$strDate = $date->format('F d, Y');
 	return $strDate;
@@ -228,8 +289,8 @@ function geNumberOfRespondents($mysqli, $personneltrainings_id)
 	$row = $result->fetch_assoc();
 	$count = $row['respondents'];
 
-	if ($count == 0) {
-		return "0 - for encoding";
+	if (!$count) {
+		return 0;
 	}
 
 	return $count;
