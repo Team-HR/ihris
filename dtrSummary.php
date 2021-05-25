@@ -45,12 +45,12 @@
                         <th> {{selected_data.month}}</th>
                     </tr>
                 </thead>
-                <tbody>
+                <!-- <tbody>
                     <tr v-for="(hist,index) in tardayHist">
                         <td>{{hist.month}}</td>
                         <td>{{hist.totalTardy}}</td>
                     </tr>
-                </tbody>
+                </tbody> -->
             </table>
            
             <table class="ui celled table" style="text-align:center">
@@ -69,7 +69,7 @@
             </table>
             <center>
                 <button class="ui green button"  @click="letterGen('tardy_warningLetter')">Warning</a>
-                <button class="ui blue button"   @click="letterGen('tardy_reprimandLetter')">Reprimand</a>
+                <button class="ui blue button"  @click="letterGen('tardy_reprimandLetter')">Reprimand</a>
                 <button class="ui yellow button" >Suspension</button>
                 <button class="ui red button" >Termination</button>
             </center>

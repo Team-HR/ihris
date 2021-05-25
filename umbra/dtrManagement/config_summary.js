@@ -12,7 +12,8 @@ var dtrSummary = new Vue({
         findInTable:"",
         // modal dats
             selected_data:"",
-            tardayHist:[]
+            tardayHist:[],
+           
     },
     methods:{
         letterGen:function(l){

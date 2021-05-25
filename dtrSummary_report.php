@@ -70,12 +70,14 @@
                     <tr> 
                         <th  class="ab"></th>
                         <th  class="ab"></th>
+                        <th  class="ab"></th>
                         <th  class="ab"colspan="4" style="text-align: center">TARDY</th>        
                         <th  class="ab" colspan="3" style="text-align: center">UNDERTIME</th>
                         <th  class="ab"></th>
                        
                     </tr>
-                    <tr>    
+                    <tr> 
+                        <th  class="a">No.</th>
                         <th  class="a">Employee</th>
                         <th  class="a"  style="width:20%">Department</th>
                         <th  class="a"  style="width:10px">No. of times</th>
@@ -90,8 +92,8 @@
                     </tr>
                 </thead>
                 <tbody id="allDataTable" style="font-size:12px; border: 1px solid black ">
-                    <tr v-for="(ar,index) in sortArrays(DataRequest)">
-                       
+                    <tr v-for="(ar,index) in sortArrays(DataRequest)" >
+                         <td></td>
                         <td>{{ar.lastName}} {{ar.firstName}} {{ar.middleName}} {{ar.extName}}</td>
                         <td style="font-size:10px">{{ar.department}}</td>
                         <td>{{ar.totalTardy}}</td>

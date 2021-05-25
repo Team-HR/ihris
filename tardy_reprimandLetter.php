@@ -14,10 +14,11 @@
 
     $hrmo = "VERONICA GRACE P. MIRAFLOR";
     $hrmo_pos = "CGDH - I";
+  
     ?>
 
     
-<div id="">
+<div id="dtrSummary_app">
     <div class="ui segment"  style="margin:auto;max-width:50%;min-width:1080px;">
            <div> <img src="form_header.png" style="width:200px; height:100px; float:left; margin-left:50px">
                   </div>         
@@ -46,12 +47,12 @@
         
               RE	: &nbsp; &nbsp; 	 
                              <i>Reprimand due to Habitual Tardiness</i>
-<br><br><br><br>
+                 <br><br><br><br>
 
                   <div style="margin:10px; line-height: 1.5">
-                        This is to inform that per your DTR submitted to the Office of Human Resource Management & Development, you have incurred <b>$total</b> times tardy for the month of <b>$period</b>.
-                       <i  class=" green edit icon noprint">       
-                      </i>
+                        This is to inform that per your DTR submitted to the Office of Human Resource Management & Development, you have incurred <b><?=$row['totalTardy']?></b> times tardy for the period of <b><?=$row['month']?></b> </b>.
+                 
+                       <button class="ui green button small noprint" @click="showOptionModal(ar)"><i class="edit icon"></i></button>
                   </div>
 
                 <!-- <template >
@@ -60,7 +61,7 @@
                           </textarea>
                     </div>
                 </template> -->
-<br>
+                <br>
                 <div style="margin:10px;font-size:18px;line-height:1.5">
                      Please be reminded that Section 8, Rule XVIII of the Omnibus Rules Implementing Title I, Subtitle A, Book V of the Administrative Code of 1987, as amended, provides that:
                         <br><br>
@@ -83,9 +84,9 @@
                       </i>
               </div>
             
-<br><br>
+                <br><br>
                  Be guided accordingly.
-<br><br><br><br><br><br>
+                <br><br><br><br><br><br>
                     <b><?php echo $hrmo?> </b><br>
                     <?php echo $hrmo_pos?><br><br><br><br>
                     Received by: _______________________<br>
@@ -100,6 +101,9 @@
             </div>         
 </div>
 
+
+<script src="umbra/dtrManagement/config_summary.js"></script>
+<script>
 <?php
     require_once "footer.php";
 ?>
