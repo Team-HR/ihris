@@ -1,6 +1,7 @@
 # PRE-SETUP
 * `npm install`
 * `composer install`
+* db config file: https://gist.github.com/FranzValencia/36bfe675600bef62512b0ed05d3ee664
 # FOR LINUX SERVER (for mpdf to function else HTTP ERROR 500)
 * Requires >= php7.8 for mpdf/mpdf to work
 * `sudo chmod -R 775 ihris/vendor`
