@@ -11,7 +11,17 @@
         }
         echo json_encode($a);
 
-    }elseif (isset($_POST['saveLeave'])) {
+    }elseif(isset($_POST['getDepartment'])){
+        $sql = "SELECT * from `department`";
+        $sql = $mysqli->query($sql);
+        echo $mysqli->error;
+        $a = [];
+        while ($row = $sql->fetch_assoc()){
+            $a[] = $row;
+        }
+        echo json_encode($a);
+
+     }elseif (isset($_POST['saveLeave'])) {
         $emp_id = $_POST["emp_id"];
         $date_logged = date('Y-m-d H:i:s');
         $date_received = $_POST["date_received"];
@@ -24,6 +34,8 @@
         if ($leaveType  == 'Others') {
             $leaveType =  $_POST["others"];
         }
+        $deduct = $_POST["deductions"];
+        $moneApplied = $_POST["moneApplied"];
         $remarks = $_POST["remarks"];
         $selectedDate = $_POST["selectedDate"];
         $totalDays = $_POST["totalDays"];
@@ -33,6 +45,7 @@
         $log_editId = $_POST["log_editId"];
         $log_disapproveId = $_POST["log_disapproveId"];
         $log_revertId = $_POST["log_revertId"];
+        $log_approvedId = $_POST["log_approvedId"];
 
         $sql = "INSERT INTO `lm_logs` (`log_id`, `date_logged`, `employees_id`, `dateReceived`,  `date_filed`,`dateApplied`, `totalDays`, `leaveType` , `sp_type`, `stats`, `remarks`)
              VALUES (NULL, '$date_logged', '$emp_id', '$date_received','$date_filed', '$selectedDate', '$totalDays', '$leaveType', '$sp_type', 'PENDING', '$remarks')";
@@ -49,21 +62,35 @@
                          `stats` = 'PENDING', 
                          `remarks` = '$remarks' 
                     WHERE `lm_logs`.`log_id` = $log_editId";
-          }   
+          }  
+          
+        if($log_approvedId){
+            $sql = "UPDATE `lm_logs` SET   
+                         `stats` = 'APPROVED', 
+                         `remarks` = '$remarks' 
+                    WHERE `lm_logs`.`log_id` = $log_approvedId";
+
+
+          }    
           
         if($log_disapproveId){
             $sql = "UPDATE `lm_logs` SET  
                          `stats` = 'DISAPPROVED', 
                          `remarks` = '$remarks' 
                     WHERE `lm_logs`.`log_id` = $log_disapproveId";
+
+             $sql2 = "INSERT INTO `lm_disapproved` (`disapproved_id`, `log_id`) VALUES ('', '$log_disapproveId')";
         }
-            
+    
         if($log_revertId){
             $sql = "UPDATE `lm_logs` SET  
-                         `stats` = 'PENDING'
+                           `stats` = 'PENDING'
                     WHERE `lm_logs`.`log_id` = $log_revertId";
+
+            $sql2 = "DELETE FROM `lm_disapproved` WHERE `lm_disapproved`.`log_id` = $log_revertId";
         }
          $sql = $mysqli->query($sql);
+         $sql2 = $mysqli->query($sql2);
         
         
         }elseif (isset($_POST['getLog'])) {
@@ -76,6 +103,8 @@
             }   
             echo json_encode($a);
         }
+     
+        
 ?> 
 
 

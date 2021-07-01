@@ -68,7 +68,7 @@
                 </tbody>
             </table>
             <center>
-                <button class="ui green button"  @click="letterGen('tardy_warningLetter')">Warning</a>
+                <button class="ui green button"  @click="letterGen('tardy_warningLetter')">Warning</button>
                 <button class="ui blue button"  @click="letterGen('tardy_reprimandLetter')">Reprimand</a>
                 <button class="ui yellow button" >Suspension</button>
                 <button class="ui red button" >Termination</button>

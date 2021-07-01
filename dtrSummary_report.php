@@ -31,10 +31,10 @@
                               <center>      
                                     <div style="background:white; width:1080px;">
                                         <div style="float:left; margin-left:30%">
-                                                <img src="bayawanLogo.png" width="100px" style="margin-left:5px;margin-top:16px">
+                                                <img src="bayawanLogo.png" width="80px" style="margin-left:5px;margin-top:16px">
                                         </div>
                                 
-                                        <div style="float: left; width:25%; margin-top:30px">
+                                        <div style="float: left; width:25%; margin-top:30px; font-size:10px">
                                             <strong>
                                                 Republic of the Philippines<br>Province of Negros Oriental<br>CITY OF BAYAWAN
                                             </strong>
@@ -91,11 +91,11 @@
                         
                     </tr>
                 </thead>
-                <tbody id="allDataTable" style="font-size:12px; border: 1px solid black ">
+                <tbody id="allDataTable" style="font-size:11px; border: 1px solid black ">
                     <tr v-for="(ar,index) in sortArrays(DataRequest)" >
                          <td></td>
                         <td>{{ar.lastName}} {{ar.firstName}} {{ar.middleName}} {{ar.extName}}</td>
-                        <td style="font-size:10px">{{ar.department}}</td>
+                        <td style="font-size:9px">{{ar.department}}</td>
                         <td>{{ar.totalTardy}}</td>
                         <td>{{ar.totalMinsTardy}}</td>
                         <td>{{ar.halfDaysTardy}}</td>
@@ -103,7 +103,7 @@
                         <td>{{ar.totalMinsUndertime}}</td>
                         <td>{{ar.halfDaysUndertime}}</td>
                         <td>{{showEquiv(ar.totalMinsUndertime)}}</td>
-                        <td><span v-html="newLine(ar.remarks,',')"></span></td>
+                        <td style="text-align: center"><span v-html="newLine(ar.remarks,',')"></span></td>
                       
                     </tr>
                     <tr>

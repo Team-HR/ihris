@@ -7,13 +7,13 @@ var lm_app = new Vue({
         date_received: "",
         date_filed: "",
         emp_id: "",
+        moneApplied: "",
         sp_type: "",
         mone_type: "",
         mone_days: "",
         others: "",
         remarks: "",
         others: "",
-        toDeduct: "",
         log_editId: "",
         log_approveId: "",
         log_disapproveId: "",
@@ -29,14 +29,17 @@ var lm_app = new Vue({
         deduct: {
             deducted_to: null,
             deductions: null,
+           
               },
-        
     },
     
     methods: {
+        
+        
         slice_date: (i) => {
 
         },
+       
         showAddModal: function () {
             $("#addModal").modal('show');
             this.selectedEventsForEdit = [];
@@ -51,46 +54,21 @@ var lm_app = new Vue({
             xml.onload = function () {
                 this_app.Employees = JSON.parse(xml.responseText)
             }
-            xml.open('POST', 'umbra/leaveManagement/config.php', false)
+            xml.open('POST', 'umbra/leaveManagement/config.php', true)
             xml.send(fd)
         },
-        showParticulars:function(num){  
-         
-            d = Math.floor(num*480/480); 
-            h = Math.floor((num-d)/60*480);
-            m = Math.floor(num-d)*60;        
-    
-            d = parseInt(d).toString().padStart(2, '0');
-            h = parseInt(h).toString().padStart(2, '0');
-            m = parseInt(m).toString().padStart(2, '0');
-            if(d>0){
-                return(d + "-" + h + "-" + m );
-              }else{
-                return("00"+ "-" + h + "-" + m );
-              }
-          },
-        changeColor:function(log_id,color){
-            var this_log = this;
-            var fd = new FormData()
-                fd.append('color',color);
-                fd.append('changeColor',log_id);
-            var xml = new XMLHttpRequest()
-                xml.onload = function(){
-                    this_dtr.getDataNeeded()
-                }
-                xml.open('POST', 'umbra/leaveManagement/config.php', false)
-                xml.send(fd);
+        getDepartment: function () {
+            var this_app = this
+            var xml = new XMLHttpRequest();
+            var fd = new FormData();
+            fd.append('getDepartment', true)
+            xml.onload = function () {
+                this_app.Departments = JSON.parse(xml.responseText)
+            }
+            xml.open('POST', 'umbra/leaveManagement/config.php', true)
+            xml.send(fd)
         },
-             getEmpDat(){
-                window.$_GET = new URLSearchParams(location.search);
-                this.employee_id = $_GET.get('employees_id');
-                $.get("umbra/leaveManagement/config.php",{getDeduct: true, employee_id: this.employee_id},
-                    (data, textStatus, jqXHR)=>{
-                        this.deducts = data
-                    },
-                    "json"
-                );
-            },
+           
                 goDeduct(){
                         this.readonly = false
                         $(".btns_deduct").show();
@@ -108,31 +86,19 @@ var lm_app = new Vue({
                 created() {
                     var checkLoaded = setInterval(() => {
                         if (document.readyState == 'complete') {
-                            this.getEmpDat()
+                            this.getEmployeeData()
                             clearInterval(checkLoaded);
                         }
                     }, 100);
                 },
+               
                 goCancel(){
-                    this.getEmpDat()
+                    this.getEmployeeData()
                     this.readonly = true
                     $("#btns_deduct").show();
                     $(".btn_deduct").hide();
                 },
-                goSave(){
-                    $.post("umbra/leaveManagement/config.php", {saveDeduct: true, employee_id: this.employee_id, data: this.deducts},
-                        (data, textStatus, jqXHR)=>{    
-                            if (data > 0) {
-                                this.savedToast()
-                            }
-                            this.getEmployeeData()
-                            this.readonly = true
-                            // $("#btn_pds_elig_update").show();
-                            // $(".btns_pds_elig_update").hide();
-                        },
-                        "json"
-                    );
-                },
+            
         saveLeave: function (e) {
             var buttonEvent = event;
             buttonEvent.target.disabled = true;
@@ -165,6 +131,7 @@ var lm_app = new Vue({
             fd.append('others', this.others)
             fd.append('saveLeave', true)
             fd.append('totalDays', this.numberOfDays)
+            fd.append('moneApplied', this.dateApplied)
             fd.append('log_editId', this.log_editId)
             xml.onload = function () {
                 $("#addModal").modal('hide');
@@ -178,6 +145,7 @@ var lm_app = new Vue({
                 this_app.mone_days = "";
                 this_app.others = "";
                 this_app.remarks = "";
+                this_app.moneApplied = "";
                 this_app.log_editId = "";
                 this_app.getLog()
                 setTimeout(() => {
@@ -209,6 +177,28 @@ var lm_app = new Vue({
             xml.open('POST', 'umbra/leaveManagement/config.php', true)
             xml.send(fd)
         },
+        saveApproved: function (e) {
+            var buttonEvent = event;
+            buttonEvent.target.disabled = true;
+            var this_app = this
+            var xml = new XMLHttpRequest();
+            var fd = new FormData();
+            const selectedDate = this.formatDate(this.leaveEvents)
+            fd.append('totalDays', this.totalDays)
+            fd.append('remarks', this.remarks)
+            fd.append('saveLeave', true)
+            fd.append('log_approvedId', this.log_approvedId)
+            xml.onload = function () {
+                $("#approveModal").modal('hide');      
+                this_app.getLog()
+                setTimeout(() => {
+                    buttonEvent.target.disabled = "";
+                }, 1000);
+            }
+            xml.open('POST', 'umbra/leaveManagement/config.php', true)
+            xml.send(fd)
+        },
+        
         saveRev: function (e) {
             var buttonEvent = event;
             buttonEvent.target.disabled = true;
@@ -260,6 +250,7 @@ var lm_app = new Vue({
             this.calendarRender();
             this_app.date_filed = log['date_filed'];
             this_app.remarks = log['remarks'];
+            this_app.totalDays = log['totalDays'];
             this_app.log_editId = log['log_id'];
             $("#addModal").modal('show');
         },
@@ -277,21 +268,17 @@ var lm_app = new Vue({
             this_app.log_revertId = log['log_id'];
             $("#revertModal").modal('show');
         },
-            approve: function (index) {
+        getApprove: function (index) {
                 this_app = this;
-                log = this_app.Logs[index];
+                log = this_app.Logs[index]; 
                 $('#emp_id').dropdown('set selected', log['employees_id']);
+                $('#sp_type').dropdown('set selected', log['sp_type']);
                 $('#mone_type').dropdown('set selected', log['mone_type']);
                 $('#mone_days').dropdown('set selected', log['mone_days']);
-                $('#leaveType').dropdown('set selected', log['leaveType']);  
-                this_app.dateApplied = log['dateApplied'];
-                this_app.totalDays = log['totalDays'];
-                this_app.date_received = log['dateReceived'];
-                this_app.date_filed = log['date_filed'];
-                this_app.sp_type = log['sp_type'];
+                $('#leaveType').dropdown('set selected', log['leaveType']);
+                this_app.dateReceived = log['dateReceived'];
                 this_app.remarks = log['remarks'];
-                this_app.log_approveId = log['log_id'];
-                this_app.emp_id = log['employees_id'];
+                this_app.log_approvedId = log['log_id'];
                 $("#approveModal").modal('show');
             },
           
@@ -433,7 +420,7 @@ var lm_app = new Vue({
 
                         if (dat[c].end != "") {
                             e_nd = new Date(dat[c].end);
-                            s += `${this.getD_ate(strt)} <b>TO</b> ${this.getD_ate(e_nd)}<br> `;
+                            s += `${this.getD_ate(strt)} <b>TO</b> ${this.getD_ate(e_nd)} <br>`;
                         } else {
                             s += this.getD_ate(strt) + ",<br>";
                         } 
@@ -494,6 +481,7 @@ var lm_app = new Vue({
         this.getEmployeeData();
         this.getLog();
         this.calendarRender();
+        this.getDepartment();
     }
     , watch: {
         leaveEvents: function () {

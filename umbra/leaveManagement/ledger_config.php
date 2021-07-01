@@ -1,25 +1,13 @@
 <?php
-    require_once "_connect.db.php";
-    $emp_id = $_GET["employees_id"];
-    $sql = "SELECT * from `lm_logs` left join `employees` on `lm_logs`.`employees_id`=`employees`.`employees_id`
-                                    left join `department` on `employees`.`department_id`=`department`.`department_id`
-                                    left join `positiontitles` on `employees`.`position_id`=`positiontitles`.`position_id`
-                                    where `lm_logs`.`employees_id` = '$emp_id'
-                                      ";
-    $result = $mysqli->query($sql);
-    $row = $result->fetch_assoc();
-    $employees_id = $row["employees_id"];
-    $fullName =$row['firstName']." ".$row['middleName']."".$row['lastName']." ".$row['extName'];   
-    $department =$row["department"];  
-    $position =$row["position"];   
-    $firstDay =$row["dateActivated"]; 
-    $filed =$row["dateApplied"]; 
-    $leave =$row["leaveType"]; 
-    $sp =$row["sp_type"]; 
-    $total =$row["totalDays"];
+require_once '../../_connect.db.php';
 
-?> 
-
-
-
-
+if (isset($_GET['getLedger'])) {
+    $employee_id = $_GET['employee_id'];
+    $sql =  "SELECT * from `lm_logs` left join `lm_earnings` on `lm_logs`.`employees_id`=`lm_earnings`.`emp_id` WHERE `lm_logs`.`employees_id`= $employee_id ORDER BY `date_filed` DESC";
+        $sql = $mysqli->query($sql);
+        $a = [];
+        while($ar = $sql->fetch_assoc()){
+            $a[]  = $ar;
+        }
+        echo json_encode($a);
+}

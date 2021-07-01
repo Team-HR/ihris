@@ -5,40 +5,25 @@
     require_once "header.php";
     
 ?>
-
-<style type="text/css">
-    #leaveCont {
-      transform-origin: 50% 50% 0px;
-      top: 0;
-      left: 19px;
-      width: 96.92%;
-    }
-    .gwd-table-16du {
-      left: 14px;
-      top: 98px;
-    }
-    .gwd-button-11xy {
-      top: 48px;
-      left: 14px;w
-    }
-    #addModal {
-      padding: 15px;
-    }
-  </style>
   <div class="ui segment" id="leaveCont">
-
- 
   <!--    Add model    -->
   <div class="ui modal small" id="addModal">
+    <template  v-if="date_received != '' ">
+      <div class="header">
+        <h3 class="ui header">Edit Leave Record</h3>
+      </div>
+    </template>
+    <template v-else>
       <div class="header">
         <h3 class="ui header">Add New Leave Record</h3>
       </div>
+    </template>
       <div class="content">
         <div class="ui form">
           <div class="field">
             <div class="two fields">
-              <div class="field">
-                  <strong>Control Number:</strong> <span>HRMO - <?php echo date('Y');?> - <span>*****</span></span>
+               <div class="field">
+                  <strong>Control Number:</strong> <span>HRMO - <?php echo date('Y');?> - <span>****</span></span>
                 </div>
                 <div class="eight wide field" style="visibility:hidden">
                   <strong>Date Logged:</strong> <span><?php echo date('F d, Y');?></span>
@@ -84,11 +69,17 @@
           </div>
           <template  v-if="leaveType=='Monetization'">
           <div class="field">
-            <div class="two fields">
+            <div class="three fields">
               <div class="field">
                 <label>Total Days:</label>
                   <div class="field" >
                      <input v-model="mone_days" type="number" placeholder="Days" required>
+                   </div>
+              </div>
+              <div class="field">
+                <label>Date of monetized:</label>
+                  <div class="field" >
+                     <input v-model="moneApplied" type="date">
                    </div>
               </div>
               <div class="field">
@@ -125,23 +116,19 @@
                 </select>
           </div>
           </template>
+          <template  v-if="leaveType!='Monetization'">
           <div class="ui segment">
               <div id="clndr"></div>    
           </div>
-            <div class="field">
+          
+          <div class="field">
               <label>Number of days</label>
               <input type="text" v-model="numberOfDays">
             </div>
-          <div class="ui link list">
-            <!-- <a class="item" v-for="(d,index) in selectedDate" :key="index">
-              <span class="left floated like">
-                  {{d}}
-              </span>
-              <span class="right floated">
-                <i class="close icon" @click="slice_date(index)"></i>
-              </span>          
-            </a> -->
-          </div>
+        </template>
+          
+          
+
           <br>
           <div class="field">
             <label>Remarks:</label>
@@ -286,8 +273,10 @@
                                 <template v-else>
                                 <div class="two fields">          
                                     <div class="field">
-                                            <label>Date Applied</label>
-                                            <input type="text" v-model="decodeAppliedDates(dateApplied)">
+                                            <label>Date Applied</label><hr>
+                                            <span v-html="decodeAppliedDates(dateApplied)"></span>
+                                            </hr>
+                                         
                                     </div>
                                     <div class="field">
                                             <label>Number of days</label>
@@ -312,34 +301,49 @@
                          </div><br>
                            <div class="two fields">
                                           <div class="field">
-                                              <label>CHECK BALANCE</label>
-                                              <input type="date" name=""  v-model="date_received"> 
+                                          <form>
+                                                <div class="inline fields">
+                                                   <button class="ui mini orange button"> Check Balance</button>
+                                                    <div class="field">
+                                                        <select>
+                                                            <option value="(vl)">Vacation Leave Credits</option>
+                                                            <option value="(sl)">Sick Leave Credits</option>
+                                                          </select>
+                                                    </div>
+                                                        <label>:</label>
+                                                    <div class="field">
+                                                      <input type="text"placeholder="Balance is xxx ">
+                                                    </div>
+                                                 </div>
+                                                </form>  
                                           </div>
                             </div>
                           <button @click="goDeduct" id="btn_deduct" class="ui mini blue button"><i class="icon edit"></i> Deductions</button>
-                          <h4 class="ui header">DEDUCTIONS</h4>
+                          <h4 class="ui header">DEDUCTION BREAKDOWN:</h4>
                           <hr>
                          <table class="ui very small compact structured celled table" >
                               <thead>
                               <tr class="center aligned">
                                   <th rowspan="2">Deducted to</th>
                                   <th rowspan="2">Leave credits to deduct</th>
-                                  <th rowspan="2">Options</th>
+                                  <th rowspan="2"></th>
                               </tr>
                               </thead>
                               <tbody>
                               <template v-if="deducts.length != 0">
-                              <tr  v-for="(deducts,i) in deducts" :key="i">
-                                  <td><select :readonly="readonly" :class="{readOnly: readonly}"v-model="deducted_to">
+                              <tr  v-for="(deduct,i) in deducts" :key="i">
+                                  <td><select :readonly="readonly" :class="{readOnly: readonly}"v-model="deduct.deducted_to">
                                               <option value="(vl)">Vacation Leave Credits</option>
                                               <option value="(sl)">Sick Leave Credits</option>
                                               <option value="(sp)">Special Leave</option>
                                           </select></td>
-                                  <td><input :readonly="readonly" :class="{readOnly: readonly}" type="number"  v-model="deductions"></td>
+                                  <td><input :readonly="readonly" :class="{readOnly: readonly}" type="number"  v-model="deduct.deductions"></td>
                                   <td :hidden="readonly">
+                                    <center>
                                       <button class="ui mini button red icon" @click="removeItem(i)"> 
-                                          <i class="icon times"></i>
+                                        Remove
                                       </button>
+                                    </center>
                                   </td>
                               </tr>
                               </template>
@@ -352,7 +356,7 @@
                                   <tr>
                                       <td colspan="7">
                                           <strong>
-                                             Total: [total here]
+                                             Total: {{totalCompute}}
                                           </strong>
                                       </td>
                                   </tr>
@@ -367,12 +371,11 @@
                                   </tr>
                               </template>
                               </tbody>
-                          </table>  
-
+                          </table>
                           
                           <center>
-                          <button class="ui approve button positive">Save</button>
-                          <div class="ui button cancel negative">Close</div>
+                          <button class="ui approve button blue positive" @click="saveApproved">Save</button>
+                          <div class="ui button cancel negative" >Close</div>
                           </center>
                         
 
@@ -383,10 +386,43 @@
    </div>
 </div>
   <!-- On-approve modal End   -->
+ 
+  <div class="ui fluid container" style="margin: 5px;">
+    <div class="ui borderless blue inverted mini menu">
+      <div class="left item" style="margin-right: 0px !important;">
+        <button onclick="window.history.back();" class="blue ui icon button" title="Back" style="width: 65px;">
+          <i class="icon chevron left"></i> Back
+        </button>
+      </div>
+      <div class="right item">
+        <div class="ui right input">
+          <button class="ui icon mini green  button" id="addButton" @click="showAddModal()" > <i class="icon add"></i>Add New Log</button>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+  <form class="ui mini form" style="margin-top:10px; margin-bottom:10px">
+    <div class="field">
+     <div class="menu">
+      <div class="scrolling menu">
+      <label><i class="ui icon blue filter"></i>Filter By Department:</label>
+        <select multiple="" class="ui fluid search dropdown">
+            <option value="">Select department</option>
+                <template>
+                    <option v-for="(departments,index) in Departments" :key="index" :value="departments.department_id">
+                      <div class="ui green empty circular label"> </div>
+                      {{departments.department}}
+                    </option>
+                </template>
+         </select>
+         </div>
+      </div>
+    </div>
+  </form>  
 
-  <button class="ui blue button" id="addButton" @click="showAddModal()">Add New Log</button>
-    <center><div class="ui large header">Leave Logs</div></center> 
     <template v-if="Logs.length">
+    <h3 style="text-align:center"> Leave Logs</h3>
     <table class="ui celled table gwd-table-16du">
       <thead>
         <tr style="text-align:center">
@@ -415,8 +451,8 @@
           <td>{{ log.remarks }}</td>
           <td>{{ log.stats }}</td>
           <td >
-            <template  v-if="log.stats=='PENDING'">
-              <button class=" mini ui icon button green" id="approveButton" @click="approve(index)"  title="Approve Leave">
+            <template  v-if="log.stats != 'DISAPPROVED'">
+              <button class=" mini ui icon button green" id="approveButton" @click="getApprove(index)"  title="Approve Leave">
                 <i class="icon check"></i>
               </button>    
               <button class=" mini ui icon button blue" id="editButton" @click="getEdit(index)"  title="Edit Leave">
@@ -425,6 +461,9 @@
               <button class=" mini ui icon button red"   id="DisButton" @click="getDis(index)"  title="Disapprove Leave">
                 <i class="icon close"></i>
               </button>
+              <!-- <button class=" mini ui icon button orange" > <a :href="'lm_ledger.php?employees_id='+log.employees_id"></a>
+                <i class="icon file"></i>
+              </button> -->
             </template>
             <template  v-else>
               <button class=" mini ui icon button orange" id="" @click="getRev(index)"  title="Approve Leave">
@@ -438,7 +477,7 @@
     </template>
   </div>  
 </div>
-<script src="umbra/leavemanagement/deduction.js"></script>
+
   <script>
     $(document).ready(function() {
         $(".dropdown").dropdown();
