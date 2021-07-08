@@ -7,7 +7,7 @@ var lm_app = new Vue({
         date_received: "",
         date_filed: "",
         emp_id: "",
-        moneApplied: "",
+        mone_applied: "",
         sp_type: "",
         mone_type: "",
         mone_days: "",
@@ -126,6 +126,7 @@ var lm_app = new Vue({
             fd.append('date_filed', this.date_filed)
             fd.append('sp_type', this.sp_type)
             fd.append('mone_type', this.mone_type)
+            fd.append('mone_applied', this.mone_applied)
             fd.append('mone_days', this.mone_days)
             fd.append('remarks', this.remarks)
             fd.append('others', this.others)
@@ -142,6 +143,7 @@ var lm_app = new Vue({
                 this_app.date_filed = "";
                 this_app.sp_type = "";
                 this_app.mone_type = "";
+                this_app.mone_applied = "";
                 this_app.mone_days = "";
                 this_app.others = "";
                 this_app.remarks = "";
@@ -184,6 +186,9 @@ var lm_app = new Vue({
             var xml = new XMLHttpRequest();
             var fd = new FormData();
             const selectedDate = this.formatDate(this.leaveEvents)
+            fd.append('emp_id', this.emp_id)
+            fd.append('vl_deductions', this.vl_deductions)
+            fd.append('sl_deductions', this.sl_deductions)
             fd.append('totalDays', this.totalDays)
             fd.append('remarks', this.remarks)
             fd.append('saveLeave', true)
@@ -271,13 +276,18 @@ var lm_app = new Vue({
         getApprove: function (index) {
                 this_app = this;
                 log = this_app.Logs[index]; 
-                $('#emp_id').dropdown('set selected', log['employees_id']);
-                $('#sp_type').dropdown('set selected', log['sp_type']);
-                $('#mone_type').dropdown('set selected', log['mone_type']);
-                $('#mone_days').dropdown('set selected', log['mone_days']);
                 $('#leaveType').dropdown('set selected', log['leaveType']);
-                this_app.dateReceived = log['dateReceived'];
+                $('#emp_id').dropdown('set selected', log['employees_id']);
+                this_app.vl = log['vl'];
+                this_app.sl = log['sl'];
+                this_app.dateApplied = log['dateApplied'];
+                this_app.totalDays = log['totalDays'];
+                this_app.sp_type = log['sp_type'];
+                this_app.date_received = log['dateReceived'];
+                this_app.date_filed = log['date_filed'];
                 this_app.remarks = log['remarks'];
+                this_app.vl_deductions = log['vl_deductions'];
+                this_app.sl_deductions = log['sl_deductions'];
                 this_app.log_approvedId = log['log_id'];
                 $("#approveModal").modal('show');
             },
@@ -287,6 +297,7 @@ var lm_app = new Vue({
                 $("#deductBtn").hide();
                 $(".deductionBtns").show();
             }, 
+            
              cancel(){
             this.getEmployeeData()
             this.readonly = true
@@ -304,6 +315,13 @@ var lm_app = new Vue({
             xml.open('POST', 'umbra/leaveManagement/config.php', false)
             xml.send(fd)
         },
+
+        //  calculateTotal: function (logs) {
+        //     var  total=0;
+    
+        //     total = ((log.vl_deductions));
+        //     return total;
+        // },
         calendarRender: function () {
             this_leave = this;
             clndr = document.getElementById('clndr');

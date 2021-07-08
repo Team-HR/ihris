@@ -38,17 +38,6 @@ new Vue({
             xml.open('POST', 'umbra/leaveManagement/config.php', false)
             xml.send(fd)
         },
-
-        // getEmployeeData(){
-        //     window.$_GET = new URLSearchParams(location.search);
-        //     this.employee_id = $_GET.get('employees_id');
-        //     $.get("umbra/leaveManagement/ledger_config.php",{getLedger: true, employee_id: this.employee_id},
-        //         (data, textStatus, jqXHR)=>{
-        //             this.ledgers = data
-        //         },
-        //         "json"
-        //     );
-        // },
         showParticulars:function(num){  
          
             d = Math.floor(num*480/480); 

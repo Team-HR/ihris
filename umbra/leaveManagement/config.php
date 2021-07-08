@@ -34,8 +34,9 @@
         if ($leaveType  == 'Others') {
             $leaveType =  $_POST["others"];
         }
-        $deduct = $_POST["deductions"];
-        $moneApplied = $_POST["moneApplied"];
+        $vl_deductions = $_POST["vl_deductions"];
+        $sl_deductions = $_POST["sl_deductions"];
+        $mone_applied = $_POST["mone_applied"];
         $remarks = $_POST["remarks"];
         $selectedDate = $_POST["selectedDate"];
         $totalDays = $_POST["totalDays"];
@@ -47,8 +48,8 @@
         $log_revertId = $_POST["log_revertId"];
         $log_approvedId = $_POST["log_approvedId"];
 
-        $sql = "INSERT INTO `lm_logs` (`log_id`, `date_logged`, `employees_id`, `dateReceived`,  `date_filed`,`dateApplied`, `totalDays`, `leaveType` , `sp_type`, `stats`, `remarks`)
-             VALUES (NULL, '$date_logged', '$emp_id', '$date_received','$date_filed', '$selectedDate', '$totalDays', '$leaveType', '$sp_type', 'PENDING', '$remarks')";
+        $sql = "INSERT INTO `lm_logs` (`log_id`, `date_logged`, `employees_id`, `dateReceived`,  `date_filed`,`dateApplied`,`mone_applied`, `totalDays`, `leaveType` , `sp_type`, `stats`, `remarks`)
+             VALUES (NULL, '$date_logged', '$emp_id', '$date_received','$date_filed', '$selectedDate', '$mone_applied',  '$totalDays', '$leaveType', '$sp_type', 'PENDING', '$remarks')";
 
         if($log_editId){
             $sql = "UPDATE `lm_logs` SET   
@@ -70,7 +71,7 @@
                          `remarks` = '$remarks' 
                     WHERE `lm_logs`.`log_id` = $log_approvedId";
 
-
+            $sql2 = "INSERT INTO `lm_deductions` (`deduction_id`, `log_id`, `employee_id`, `vl_deductions`, `sl_deductions`) VALUES (NULL, '$log_approvedId', '$emp_id', '$vl_deductions', '$sl_deductions')";
           }    
           
         if($log_disapproveId){
@@ -94,7 +95,10 @@
         
         
         }elseif (isset($_POST['getLog'])) {
-            $sql = "SELECT * from `lm_logs` left join `employees` on `lm_logs`.`employees_id`=`employees`.`employees_id`";
+            $sql = "SELECT * from `lm_logs` left join `employees` on `lm_logs`.`employees_id`=`employees`.`employees_id`
+                                            left join `lm_earnings` on `lm_logs`.`employees_id`=`lm_earnings`.`emp_id`
+            
+            ";
             $counter = 0;
             $sql = $mysqli->query($sql);
             $a = [];

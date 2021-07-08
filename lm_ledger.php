@@ -65,15 +65,28 @@
 
  <template v-if="ledgers.length != 0">
         <tr v-for="(ledger,i) in ledgers" :key="i">
-             <td><span v-html="decodeAppliedDates(ledger.dateApplied)"></span></td>
+             <td>
+                <template v-if="ledger.leaveType == 'Monetization'">
+                {{ ledger.mone_applied}}
+                </template>
+                <template v-else>
+                <span v-html="decodeAppliedDates(ledger.dateApplied)"></span>
+                </template>
+            </td>
              <td><span v-html="showParticulars(ledger.totalDays)"></span>  ( {{ledger.leaveType}}{{ledger.sp_type}} )</td>
              <td></td>
+             <td>
+             
+                {{ ledger.vl_deductions}}
+               
              <td></td>
-             <td>{{ ledger.vl}}</td>
              <td></td>
              <td></td>
+             <td>  
+         
+                {{ ledger.sl_deductions}}
+                
              <td></td>
-             <td>{{ ledger.sl}}</td>
              <td></td>
              <td>{{ledger.remarks}}</td>
         </tr>
