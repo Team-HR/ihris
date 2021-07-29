@@ -282,7 +282,9 @@ function getMonthlySalary($mysqli, $sg, $step, $schedule)
   // return "---";
   $monthly_salary = 0;
   if (empty($sg) || empty($step) || empty($schedule)) return false;
-  $sql = "SELECT id FROM `setup_salary_adjustments` WHERE schedule = ? AND active = '1'";
+  // $sql = "SELECT id FROM `setup_salary_adjustments` WHERE schedule = ? AND active = '1'";
+  // Fixed: Getting salary info causes error if a no new schedule has been added with active = 1
+  $sql = "SELECT * FROM `setup_salary_adjustments` WHERE `schedule` = ? ORDER BY `id` DESC LIMIT 1;";
   $stmt = $mysqli->prepare($sql);
   $stmt->bind_param('i', $schedule);
   $stmt->execute();

@@ -3,6 +3,7 @@ require_once "_connect.db.php";
 ?>
 
 <?php
+// start of load
 if (isset($_POST["load"])) {
 	/*$sql = "SELECT *,`plantillas`.`position_id` AS `post_id` ,`plantillas`.`department_id` AS `dept_id` ,`plantillas`.`schedule` AS `sched`
 
@@ -56,7 +57,10 @@ if (isset($_POST["load"])) {
 	$counter = 0;
 	while ($row = $result->fetch_assoc()) {
 
-		$sql2 = "SELECT * FROM  `setup_salary_adjustments` WHERE `schedule` = '$row[schedule]' and active = '1'";
+		//get salary info start
+		// $sql2 = "SELECT * FROM  `setup_salary_adjustments` WHERE `schedule` = '$row[schedule]'";//and active = '1'";
+		// Fixed: Getting salary info causes error if a no new schedule has been added with active = 1
+		$sql2 = "SELECT * FROM `setup_salary_adjustments` WHERE `schedule` = '$row[schedule]' ORDER BY `id` DESC LIMIT 1;";
 		$sql2 = $mysqli->query($sql2);
 		$sql2 = $sql2->fetch_assoc();
 
@@ -64,6 +68,7 @@ if (isset($_POST["load"])) {
 		$sql3 = $mysqli->query($sql3);
 		$sql3 = $sql3->fetch_assoc();
 
+		//get salary info end
 
 		$sql4 = "SELECT appointments.appointment_id, 
 		employees.employees_id, 
@@ -123,6 +128,7 @@ if (isset($_POST["load"])) {
 		$level = $row["level"];
 		$category = $row["category"];
 		$sg = $row["salaryGrade"];
+		$monthly_salary = isset($sql3['monthly_salary'])?$sql3['monthly_salary']:"";
 		$department = $row["department"];
 
 		$vacated_by = $sql4['firstName'] . " " . $sql4['middleName'] . " " . $sql4['lastName'] . " " . $sql4['extName'];
@@ -152,7 +158,7 @@ if (isset($_POST["load"])) {
 			<td><?= $category ?></td>
 			<td><?= $level; ?></td>
 			<td><?= $sg; ?></td>
-			<td>P<?= $sql3['monthly_salary']; ?>.00</td>
+			<td>P<?= $monthly_salary ?>.00</td>
 			<td><?= $department ?></td>
 			<td><?= $incumbent ?></td>
 			<td><?= $reason_of_vacancy ?></td>
@@ -163,6 +169,9 @@ if (isset($_POST["load"])) {
 			</td>
 		</tr><?php
 			}
+
+// end of load
+
 		} elseif (isset($_POST["addPlantilla"])) {
 			$position = $_POST["position"];
 			$department = $_POST["department"];
