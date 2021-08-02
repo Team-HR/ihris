@@ -330,7 +330,7 @@ p{
         <div class="ui label" style="background-color: #607d8b; color: white;">
           NAME:
         </div>
-        <input id="fullName" type="text" required="" name="name" placeholder="Please search and select your name from here." style="display: inline-block;">
+        <input id="fullName" type="text" required="" name="name" placeholder="" style="display: inline-block;">
       </div>
       <br>
       <div class="ui labeled fluid input">
