@@ -300,7 +300,8 @@ function getMonthlySalary($mysqli, $sg, $step, $schedule)
   $result = $stmt->get_result();
   $row = $result->fetch_assoc();
 
-  if ($monthly_salary = $row["monthly_salary"]) {
+  if (isset($row["monthly_salary"])) {
+    $monthly_salary = $row["monthly_salary"];
     // return $monthly_salary?number_format(($monthly_salary*12),2,'.',','):"---";
     return $monthly_salary ? ($monthly_salary * 12) : "---";
   }
