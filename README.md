@@ -13,12 +13,14 @@
 * Requires >= php7.8 for mpdf/mpdf to work
 * `sudo chmod -R 775 ihris/vendor`
 * `sudo chown -R $USER:www-data ihris/vendor`
-# Disable mysql strict mode default (Prevents saving DB records with null/empty data) and disable table name case sensitivity.
-* /etc/mysql/my.conf  --> under [mysqld] insert <sql_mode= >,then `sudo systemctl restart mysql` (to disable mysql strict mode)
-* Example:
-[mysqld]
-sql_mode=
-lower_case_table_names=1 #Disable table name case sensitivity
+# DISABLE MYSQL STRICT MODE
+SQL mode default (Prevents saving DB records with null/empty data) and disable table name case sensitivity.
+* `sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf`  --> under `[mysqld]` insert `<sql_mode= >`, then `sudo systemctl restart mysql` (to disable mysql strict mode)
+* Example: <br>
+`[mysqld]` <br>
+`sql_mode=` <br>
+`#Disable table name case sensitivity` <br>
+`lower_case_table_names=1`
 # FIX FOR CERTBOT ERR_CERT_COMMON_NAME_INVALID:
 https://gist.github.com/FranzValencia/8d4a224f5b8186be1275766e4b3dc9a0
 # SETUP MAILX FOR LINUX
