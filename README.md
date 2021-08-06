@@ -7,6 +7,9 @@
 * `sudo systemctl restart php7.4-fpm`
 * `sudo systemctl restart apache2`
 * `sudo apache2ctl configtest`
+* Enable Mod Rewrite: https://www.digitalocean.com/community/tutorials/how-to-rewrite-urls-with-mod_rewrite-for-apache-on-ubuntu-20-04
+* `sudo a2enmod rewrite`
+* `sudo systemctl restart apache2`
 * `npm install`
 * `composer install`
 * db config file: https://gist.github.com/FranzValencia/36bfe675600bef62512b0ed05d3ee664
