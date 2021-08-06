@@ -6,6 +6,7 @@
 * Change `upload_max_filesize=2M` to `upload_max_filesize=256M`
 * `sudo systemctl restart php7.4-fpm`
 * `sudo systemctl restart apache2`
+* `sudo apache2ctl configtest`
 * `npm install`
 * `composer install`
 * db config file: https://gist.github.com/FranzValencia/36bfe675600bef62512b0ed05d3ee664
@@ -21,6 +22,7 @@ SQL mode default (Prevents saving DB records with null/empty data) and disable t
 `sql_mode=` <br>
 `#Disable table name case sensitivity` <br>
 `lower_case_table_names=1`
+* `sudo systemctl restart mariadb`
 # FIX FOR CERTBOT ERR_CERT_COMMON_NAME_INVALID:
 https://gist.github.com/FranzValencia/8d4a224f5b8186be1275766e4b3dc9a0
 # SETUP MAILX FOR LINUX
