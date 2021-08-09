@@ -1,22 +1,5 @@
 <?php
-date_default_timezone_set("Asia/Manila");
-
-$host = "localhost";
-// $user = "ihris";
-// $password = "7AqeLwwAfrpk307Q";
-$user = "root";
-$password = "teamhrmo2019";
-$database = "hrnibai";
-
-$mysqli2 = new mysqli($host, $user, $password, $database);
-$mysqli2->set_charset("utf8");
-
-// ######## DISPLAY ALL PHP ERRORS START
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-// ######## DISPLAY ALL PHP ERRORS END
-
+include "./_connect.db.php";
 if (isset($_POST["get_data"])) {
     $data = [];
     $sql = "SELECT * FROM `rnr_survey_esib_records` ORDER BY `id` DESC";
