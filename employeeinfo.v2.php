@@ -335,7 +335,7 @@ if (isset($_GET["spms"])) {
         <div class="ui segment grid">
             <div class="three wide column">
                 <div id="pim-menu" class="ui vertical pointing menu fluid">
-                    <a class="item active" data-tab="appointments">
+                    <a class="item" data-tab="appointments">
                         Appointment
                     </a>
                     <a class="item" data-tab="pds">
@@ -347,14 +347,14 @@ if (isset($_GET["spms"])) {
                     <a class="item" data-tab="leave_records">
                         Leave Records
                     </a>
-                    <a class="item" data-tab="hr_cores">
+                    <a class="item active" data-tab="hr_cores">
                         HR CORES
                     </a>
                 </div>
             </div>
             <div class="thirteen wide stretched column">
 
-                <div class="ui tab active" data-tab="appointments" id="appointment-app">
+                <div class="ui tab" data-tab="appointments" id="appointment-app">
                     <div class="ui pointing secondary blue menu fluid" id="pds">
                         <a class="item active" data-tab="appointment_history">Appointment History</a>
                     </div>
@@ -458,7 +458,7 @@ if (isset($_GET["spms"])) {
                     </div>
 
                 </div>
-                <div class="ui tab" data-tab="hr_cores">
+                <div class="ui tab active" data-tab="hr_cores">
 
 
                     <!-- <div class="ui container segment" style="min-height: 500px;"> -->
