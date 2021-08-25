@@ -78,6 +78,7 @@
       </div>
 
       <div class="right menu">
+        <span class="ui item"> <?= $_SESSION["username"]?>  </span>
         <a title="Lead Deliver Nurture" href="ldn-resources" class="item" style="padding: 7px;">
           <img src="assets/ico/ldn.jpg" style="border-radius: 360px; width: 25px; height: 25px; margin-right: 5px;" title="Lead Deliver Nurture">
           LDN Resource Materials

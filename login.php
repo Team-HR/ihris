@@ -3,13 +3,15 @@ require_once "_connect.db.php";
 // Initialize the session
 session_start();
 // Check if the user is already logged in, if yes then redirect him to welcome page
-if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true && $_SESSION["type"] === "admin") {
-  header("location: ". $app_uri_admin);
-  exit;
-} elseif(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true && $_SESSION["type"] !== "admin") {
-  header("location: ". $app_uri_public);
-  exit;
-}
+if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]) {
+  if ($_SESSION["is_admin"]) {
+    header("location: ". $app_uri_admin);
+    exit;
+  } else {
+    header("location: ". $app_uri_public);
+    exit;
+  }
+} 
 ?>
 <!DOCTYPE html>
 <html>

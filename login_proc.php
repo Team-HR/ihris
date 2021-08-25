@@ -55,7 +55,7 @@ if (isset($_POST["login"])) {
                         $_SESSION["id"] = $id;
                         $_SESSION["username"] = $username;
                         $_SESSION["type"] = $type;
-
+                        $_SESSION["is_admin"] = ($type == "admin")?true:false;
                         // Redirect user to welcome page
                         // header("location: index.php");
                         if ($type === null) {
@@ -99,11 +99,12 @@ if (isset($_POST["login"])) {
                                 $_SESSION["id"] = $id;
                                 $_SESSION["username"] = $username;
                                 $_SESSION["type"] = $type;
-
+                                $_SESSION["is_admin"] = ($type == "admin")?true:false;
                                 // Redirect user to welcome page
                                 // header("location: index.php");
                                 if ($type === null) {
                                     echo "6";
+                                    // echo "2";
                                 } elseif ($type === "denied") {
                                     echo "7";
                                 } else {
