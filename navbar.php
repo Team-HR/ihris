@@ -30,7 +30,12 @@
       <a title="Home" href="index.php" class="item" style="padding: 7px;">
         <img src="favicon.ico" style="width: 36px; height: 36px;" title="Integrated Human Resource System">
       </a>
-      <a class="item" href="employeelist.v2.php"><i class="users icon"></i>Employee List</a>
+      
+      <?php
+        echo $_SESSION["is_admin"]?'<a class="item" href="employeelist.v2.php"><i class="users icon"></i>Employee List</a>':'';
+      ?>
+      
+
       <a class="item" onclick="_calendar()"><i class="calendar outline icon"></i>Calendar</a>
       <div id="setup_dropdown" class="ui pointing dropdown link item">
         <i class="icon settings"></i>
