@@ -1,9 +1,13 @@
 <?php
+require_once "_connect.db.php";
 // Initialize the session
 session_start();
 // Check if the user is already logged in, if yes then redirect him to welcome page
 if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true && $_SESSION["type"] === "admin") {
-  header("location: index.php");
+  header("location: ". $app_uri_admin);
+  exit;
+} elseif(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true && $_SESSION["type"] !== "admin") {
+  header("location: ". $app_uri_public);
   exit;
 }
 ?>
@@ -88,56 +92,6 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true && $_SESSION[
       });
 
       $('#submitBtn').popup();
-      //   $(".ui.error.message").hide();
-      //   $(".ui.warning.message").hide();
-      //   $(".field.error").removeClass('error');
-      //   $(".field.warning").removeClass('warning');
-      //   $.post('login_proc.php', {
-      //     login: true,
-      //     username: $("#usernameInput").val(),
-      //     password: $("#passwordInput").val()
-      //   }, function(data, textStatus, xhr) {
-      //     /*optional stuff to do after success */
-      //     // alert (data);
-      //     if (data === "01") {
-      //       // alert("Please Enter Username and Password!");
-      //       $("#usernameField").addClass('error');
-      //       $("#passwordField").addClass('error');
-      //       $("#usrAndPassMissing").show();
-      //     } else if (data === "0") {
-      //       // alert("Please Enter Username!");
-      //       $("#usernameField").addClass('error');
-      //       $("#usernameMissing").show();
-      //     } else if (data === "1") {
-      //       // alert("Please Enter Password!");
-      //       $("#passwordField").addClass('error');
-      //       $("#passwordMissing").show();
-      //     } else if (data === "2") {
-      //       window.location.reload();
-      //     } else if (data === "3") {
-      //       // alert("The password entered is not valid.");
-      //       $("#passwordField").addClass('error');
-      //       $("#passwordMismatch").show();
-      //     } else if (data === "4") {
-      //       // alert("No account found with that username.");
-      //       $("#usernameField").addClass('error');
-      //       $("#usernameNotFound").show();
-      //     } else if (data === "5") {
-      //       alert("Oops! Something went wrong. Please try again later.");
-      //     } else if (data === "6") {
-      //       $("#usernameField").addClass('warning');
-      //       $("#passwordField").addClass('warning');
-      //       $("#accountApproval").show();
-      //       // alert("Account is not approved yet! Please ask the HRMO admin for approval.");
-      //     } else if (data === "7") {
-      //       $("#accountDenied").show();
-      //       // alert("Account is not approved yet! Please ask the HRMO admin for approval.");
-      //     }
-
-
-      //   });
-      // }).popup();
-
       $("#regBtn").unbind().click(function(event) {
         $("#regModal").modal({
           closable: false,

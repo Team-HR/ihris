@@ -22,7 +22,7 @@ require 'header.php';
 					<div class="ui move up reveal" style="width: 360px;">
 						<div class="visible content" style="height: 250px; width: 360px;">
 							<!-- <p style="padding: 20px;">REWARDS AND RECOGNITION</p> -->
-							<img src="assets/images/r&r-cover.png" style="height: 250px; width: 360px;">
+							<img src="test_assets/images/r&r-cover.png" style="height: 250px; width: 360px;">
 						</div>
 						<div class="hidden content">
 							<div class="ui green segment" style="height: 250px; width: 360px;">
@@ -33,9 +33,9 @@ require 'header.php';
 								<div class="content">
 									<div class="ui animated list">
 										<a class="item" href="personnelrecognition.php">Personnel Recognition</a>
-										<a class="item" href="rnrplan.php">R&R Plan (Yearly)</a>
+										<a class="item omit" href="rnrplan.php">R&R Plan (Yearly)</a>
 										<a class="item" href="rnr_system_review.php">System Review</a>
-										<a class="item" href="">Search for Outstanding Employees</a>
+										<a class="item omit" href="">Search for Outstanding Employees</a>
 									</div>
 								</div>
 							</div>
@@ -50,7 +50,7 @@ require 'header.php';
 					<div class="ui move up reveal">
 						<div class="visible content" style="height: 300px; width: 360px;">
 							<!-- <p style="padding: 20px;">RECRUITMENT, SELECTION, AND PLACEMENT</p> -->
-							<img src="assets/images/rsp-cover.png" style="height: 300px; width: 410px;">
+							<img src="test_assets/images/rsp-cover.png" style="height: 300px; width: 410px;">
 						</div>
 						<div class="hidden content">
 							<div class="ui green segment" style="height: 300px; width: 360px;">
@@ -60,19 +60,19 @@ require 'header.php';
 								<hr>
 								<div class="content">
 									<div class="ui animated list">
-										<a class="item" href="plantilla.php">Plantilla (Permanent)</a>
+										<a class="item omit" href="plantilla.php">Plantilla (Permanent)</a>
 										<a class="item" href="plantilla_vacantpos.php">Publications</a>
-										<a class="item" href="comparativeData.php">Comparative Data</a>
-										<a class="item" href="indTurnAroundTime.php">Individual Turn Around Time</a>
-										<a class="item" href="">System of Ranking Position</a>
-										<a class="item" href="">Staffing Plan</a>
+										<a class="item omit" href="comparativeData.php">Comparative Data</a>
+										<a class="item omit" href="indTurnAroundTime.php">Individual Turn Around Time</a>
+										<a class="item omit" href="">System of Ranking Position</a>
+										<a class="item omit" href="">Staffing Plan</a>
 										<!-- <a class="item" href="">Turn Around</a> -->
 										<!-- <a class="item" href="personnelCompetenciesSurveyEncoder.php">Personnel Competency Encode</a>
 										<a class="item" target="_blank" href="personnelCompetenciesSurvey.php">Personnel Competency Form</a>
 										<a class="item" href="personnelCompetenciesReport.php">Personnel Competency Report</a> -->
-
-										<div class="dropdown item">
-											<a class="item">Personnel Competency <i class="caret down icon"></i></a>
+										<a class="item" href="personnelCompetenciesReport.php">Personnel Competency</a>
+										<div class="dropdown item omit">
+											<a class="item omit">Personnel Competency <i class="caret down icon"></i></a>
 											<div class="dropdown-content">
 												<div class="ui animated list">
 													<a class="item" href="personnelCompetenciesSurveyEncoder.php">- Encoder's Tool</a>
@@ -94,7 +94,7 @@ require 'header.php';
 					<div class="ui move up reveal">
 						<div class="visible content" style="height: 250px; width: 360px;">
 							<!-- <p style="padding: 20px;">STRATEGIC PERFORMANCE MANAGEMENT SYSTEM</p> -->
-							<img src="assets/images/pms-cover.png" style="height: 250px; width: 360px;">
+							<img src="test_assets/images/pms-cover.png" style="height: 250px; width: 360px;">
 						</div>
 						<div class="hidden content">
 							<div class="ui green segment" style="height: 250px; width: 360px;">
@@ -123,8 +123,8 @@ require 'header.php';
 					<div class="ui move up reveal" style="width: 360px;">
 						<div class="visible content" style="height: 250px; width: 360px;">
 							<!-- <p style="padding: 20px;">LEARNING AND DEVELOPMENT</p> -->
-							<img src="assets/images/l&d-cover.png" style="height: 250px; width: 360px;">
-						</div>
+							<img src="test_assets/images/l&d-cover.png" style="height: 250px; width: 360px;">
+						</div>font
 						<div class="hidden content">
 							<div class="ui green segment" style="height: 250px; width: 360px;">
 								<div class="content" style="color: green; font-weight: bold; font-style: italic;">
@@ -133,11 +133,11 @@ require 'header.php';
 								<hr>
 								<div class="content">
 									<div class="ui animated list">
-										<a class="item" href="reqsandcoms.php">Training/Seminar Invitation/Communication</a>
+										<a class="item omit" href="reqsandcoms.php">Training/Seminar Invitation/Communication</a>
 										<a class="item" href="personneltrainings.php">Training Schedule/Evaluation</a>
-										<a class="item" href="ldprofile.php">L&D Profile</a>
-										<a class="item" href="ldplan.php">L&D Plan</a>
-										<a class="item" href="ldactivities.php">L&D Activities</a>
+										<a class="item omit" href="ldprofile.php">L&D Profile</a>
+										<a class="item omit" href="ldplan.php">L&D Plan</a>
+										<a class="item omit" href="ldactivities.php">L&D Activities</a>
 										<!-- <a class="item" href="tna.php">L&D Training Needs Assessment</a> -->
 										<a class="item" href="dna.php">Development Needs Assessment</a>
 										<a class="item" href="trainingreport.php">Training Report</a>
@@ -155,6 +155,11 @@ require 'header.php';
 	</div>
 </div>
 <style>
+	.omit {
+		color: red !important;
+		/* font-weight: b; */
+		/* display: none !important; */
+	}
 	.dropdown {
 		position: relative;
 		display: inline-block;

@@ -17,7 +17,10 @@ $_SERVER["DOCUMENT_ROOT"] = $file_location;
 // SET $_SERVER["DOCUMENT_ROOT"] END
 // Check if the user is logged in, if not then redirect him to login page
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true && $_SESSION["type"] !== "admin") {
-  header("location: login.php");
+  header("location: ". $app_uri_admin);
+  exit;
+} elseif(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true && $_SESSION["type"] !== "admin") {
+  header("location: ". $app_uri_public);
   exit;
 }
 
