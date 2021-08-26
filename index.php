@@ -1,8 +1,15 @@
 <?php
 $title = "Home";
 require 'header.php';
-?>
 
+require_once "libs/Auth.php";
+$auth = new Auth;
+// echo json_encode($auth->is_hr);
+if ($auth->is_hr) {
+	// header("location: employeeinfo.v2.php?employees_id=".$auth->employee_id);
+	// die();
+//   }
+?>
 
 <style type="text/css">
 	.item {
@@ -176,5 +183,6 @@ require 'header.php';
 </style>
 
 <?php
+}
 require "footer.php";
 ?>

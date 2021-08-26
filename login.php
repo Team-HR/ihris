@@ -4,13 +4,15 @@ require_once "_connect.db.php";
 session_start();
 // Check if the user is already logged in, if yes then redirect him to welcome page
 if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]) {
-  if ($_SESSION["is_admin"]) {
-    header("location: ". $app_uri_admin);
+    header("location: dashboard.php?employees_id=".$_SESSION["employee_id"]);
     exit;
-  } else {
-    header("location: ". $app_uri_public);
-    exit;
-  }
+  // if ($_SESSION["is_admin"]) {
+  //   header("location: ". $app_uri_admin);
+  //   exit;
+  // } else {
+  //   header("location: ". $app_uri_public);
+  //   exit;
+  // }
 } 
 ?>
 <!DOCTYPE html>
@@ -222,7 +224,7 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]) {
 
   <div class="ui mini container" style="width: 300px; padding-top: 100px;">
     <form id="loginForm">
-      <div class="ui form blue stacked segment" style="">
+      <div class="ui form blue stacked segment">
         <!-- <div style="text-align: center; padding: 30px; color: #23193e;">
             <i class="large icon users circle" style="transform: scale(4);"></i>
           </div> -->

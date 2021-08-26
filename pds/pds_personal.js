@@ -1,5 +1,5 @@
 
-new Vue({
+var app_pds_personal = new Vue({
     el: "#pds_personal",
     data: {
         readonly: true,
@@ -7,6 +7,9 @@ new Vue({
         },
     },
     methods: {
+        testinger(){
+            alert("TESTINGER!");
+        },
         getEmployeeData(){
             window.$_GET = new URLSearchParams(location.search);
             this.employee.employee_id = $_GET.get('employees_id');

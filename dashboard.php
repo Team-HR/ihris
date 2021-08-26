@@ -1,21 +1,12 @@
 <?php
 $employees_id = $_GET["employees_id"];
+
 require_once "_connect.db.php";
-
-$sql = "SELECT * FROM `employees` WHERE `employees_id` = '$employees_id'";
-$result = $mysqli->query($sql);
-$row = $result->fetch_assoc();
-$lastName = $row["lastName"];
-$firstName = $row["firstName"];
-$middleName = $row["middleName"];
-$extName = $row["extName"];
-
-$title = $lastName . ", " . $firstName . " $middleName" . " " . $extName;
-
 require_once "header.php";
 require_once "employeeinfo.v2.ajax.php";
+require_once "libs/Auth.php";
 
-
+$auth = new Auth;
 if (isset($_GET["spms"])) {
 ?>
     <script type="text/javascript">
@@ -30,112 +21,8 @@ if (isset($_GET["spms"])) {
     </script>
 <?php
 }
-
-
 ?>
-<!-- <script src="employeeinfo.js"></script> -->
-<script type="text/javascript">
-    $(document).ready(function() {
-        $(load);
-        $("#editStat_drop").dropdown();
-        $("#genderModal").dropdown();
-        $("#natureOfAssignmentModal").dropdown();
-        $("#departmentModal").dropdown();
-        $("#positionModal").dropdown({
-            fullTextSearch: true,
-        });
-        $('#context1 .menu .item').tab({
-            context: $('#context1')
-        })
-    });
 
-    function editModalFunc() {
-        $("#editModal").modal({
-            onDeny: function() {
-                $(load);
-            },
-            onApprove: function() {
-                $(update);
-                // save msg animation start
-                $("#saveMsg").transition({
-                    animation: 'fly down',
-                    onComplete: function() {
-                        setTimeout(function() {
-                            $("#saveMsg").transition('fly down');
-                        }, 1000);
-                    }
-                });
-                // save msg animation end
-            }
-        }).modal("show");
-    }
-
-    function load() {
-        $.post('employeeinfo.v2.ajax.php', {
-            loadProfile: true,
-            employees_id: <?php echo $employees_id; ?>
-        }, function(data, textStatus, xhr) {
-            var array = jQuery.parseJSON(data);
-            // alert(array.employees_id);
-            $("#employeeName").html(array.fullname);
-            $("#firstNameModal").val(array.firstName);
-            $("#middleNameModal").val(array.middleName);
-            $("#lastNameModal").val(array.lastName);
-            $("#extNameModal").val(array.extName);
-            $("#genderModal").val(array.gender).change();
-            $("#employees_idModal").val(array.employees_id);
-            $("#editStat_drop").dropdown("set selected", array.status);
-            $("#editStat_date").val(array.statusDate);
-            $("#editStat_dateIPCR").val(array.dateIPCR);
-            $("#employmentStatusModal").dropdown("set selected", array.employmentStatus);
-            $("#natureOfAssignmentModal").val(array.natureOfAssignment).change();
-            $("#departmentModal").val(array.department_id).change();
-            $("#positionModal").val(array.position_id).change();
-            $("#categoryModal").val(array.category);
-            $("#levelModal").val(array.level);
-            $("#salaryGradeModal").val(array.salaryGrade);
-
-            // for table start
-            $("#status").html(array.status);
-            $("#statusDate").html(array.statusDateStr);
-            $("#dateIPCRView").html(array.dateIPCRView);
-            $("#employees_idView").html(array.employees_id_padded);
-            $("#departmentView").html(array.department);
-            $("#levelView").html(array.level);
-            $("#genderView").html(array.gender);
-            $("#positionView").html(array.position);
-            $("#categoryView").html(array.category);
-            $("#employmentStatusView").html(array.employmentStatus);
-            $("#natureOfAssignmentView").html(array.natureOfAssignment);
-            $("#salaryGradeView").html(array.salaryGrade);
-            // for table end
-        });
-    }
-
-    function update() {
-        $.post('employeeinfo.v2.ajax.php', {
-            update: true,
-            employees_id: <?php echo $employees_id; ?>,
-            firstName: $("#firstNameModal").val(),
-            middleName: $("#middleNameModal").val(),
-            lastName: $("#lastNameModal").val(),
-            extName: $("#extNameModal").val(),
-            status: $("#editStat_drop").dropdown("get value"),
-            statusDate: $("#editStat_date").val(),
-            dateIPCR: $("#editStat_dateIPCR").val(),
-            gender: $("#genderModal").val(),
-            employmentStatus: $("#employmentStatusModal").dropdown("get value"),
-            natureOfAssignment: $("#natureOfAssignmentModal").val(),
-            department_id: $("#departmentModal").val(),
-            position_id: $("#positionModal").val()
-        }, function(data, textStatus, xhr) {
-            // console.log(data);
-            /*optional stuff to do after success */
-            $(load);
-        });
-
-    }
-</script>
 <div id="saveMsg" class="" style="top: 15px; display: none; position: fixed; z-index: 10; width: 100%; left: 0; text-align: center;">
     <div class="ui center green inverted aligned segment" style="width: 100px; margin-left: auto; margin-right: auto;">
         <i class="checkmark icon"></i> Saved!
@@ -266,23 +153,20 @@ if (isset($_GET["spms"])) {
     </div>
 </div>
 
-<div class="ui fluid container" style="min-height: 600px; padding: 5px;">
+<div class="ui container" style="min-height: 600px; padding: 5px;">
     <div class="ui borderless blue inverted mini menu">
         <div class="left item" style="margin-right: 0px !important;">
-            <button onclick="window.history.back(); console.log(window.history);" class="blue ui icon button" title="Back" style="width: 65px;">
-                <i class="icon chevron left"></i> Back
-            </button>
 
         </div>
         <div class="item">
             <h3 style="color: white;"><i class="user circle icon"></i> <i id="employeeName"></i></h3>
         </div>
         <div class="right item">
-            <button onclick="editModalFunc()" class="ui right floated blue button" style="padding: 10px 10px; font-size: 10px;"><i class="ui icon edit"></i> Edit</button>
+            <!-- <button onclick="editModalFunc()" class="ui right floated blue button" style="padding: 10px 10px; font-size: 10px;"><i class="ui icon edit"></i> Edit</button> -->
         </div>
     </div>
 
-    <div class="ui container ">
+    <div class="ui container" style="padding: 5px; width: 1300px;">
         <style type="text/css">
             .actives {
                 background-color: #f2f2f2;
@@ -380,9 +264,9 @@ if (isset($_GET["spms"])) {
                                         <td>{{appointment.date_of_appointment}}</td>
                                         <td>{{appointment.nature_of_appointment}}</td>
                                         <td>
-                                        <a :href="'form_CS_form33B.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon button">
-                                            <i class="icon print"></i>
-                                        </a>
+                                            <a :href="'form_CS_form33B.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon button">
+                                                <i class="icon print"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 </template>
@@ -607,6 +491,105 @@ if (isset($_GET["spms"])) {
     <!-- scripts -->
     <script src="pds/config.js"></script>
     <script src="appointments/config.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(load);
+            $("#editStat_drop").dropdown();
+            $("#genderModal").dropdown();
+            $("#natureOfAssignmentModal").dropdown();
+            $("#departmentModal").dropdown();
+            $("#positionModal").dropdown({
+                fullTextSearch: true,
+            });
+            $('#context1 .menu .item').tab({
+                context: $('#context1')
+            })
+        });
+
+        function editModalFunc() {
+            $("#editModal").modal({
+                onDeny: function() {
+                    $(load);
+                },
+                onApprove: function() {
+                    $(update);
+                    // save msg animation start
+                    $("#saveMsg").transition({
+                        animation: 'fly down',
+                        onComplete: function() {
+                            setTimeout(function() {
+                                $("#saveMsg").transition('fly down');
+                            }, 1000);
+                        }
+                    });
+                    // save msg animation end
+                }
+            }).modal("show");
+        }
+
+        function load() {
+            $.post('employeeinfo.v2.ajax.php', {
+                loadProfile: true,
+                employees_id: <?php echo $employees_id; ?>
+            }, function(data, textStatus, xhr) {
+                var array = jQuery.parseJSON(data);
+                // alert(array.employees_id);
+                var full_name = array.fullname
+                $("#employeeName").html(full_name);
+                document.title = full_name
+                $("#firstNameModal").val(array.firstName);
+                $("#middleNameModal").val(array.middleName);
+                $("#lastNameModal").val(array.lastName);
+                $("#extNameModal").val(array.extName);
+                $("#genderModal").val(array.gender).change();
+                $("#employees_idModal").val(array.employees_id);
+                $("#editStat_drop").dropdown("set selected", array.status);
+                $("#editStat_date").val(array.statusDate);
+                $("#editStat_dateIPCR").val(array.dateIPCR);
+                $("#employmentStatusModal").dropdown("set selected", array.employmentStatus);
+                $("#natureOfAssignmentModal").val(array.natureOfAssignment).change();
+                $("#departmentModal").val(array.department_id).change();
+                $("#positionModal").val(array.position_id).change();
+                $("#categoryModal").val(array.category);
+                $("#levelModal").val(array.level);
+                $("#salaryGradeModal").val(array.salaryGrade);
+
+                // for table start
+                $("#status").html(array.status);
+                $("#statusDate").html(array.statusDateStr);
+                $("#dateIPCRView").html(array.dateIPCRView);
+                $("#employees_idView").html(array.employees_id_padded);
+                $("#departmentView").html(array.department);
+                $("#natureOfAssignmentView").html(array.natureOfAssignment);
+                $("#salaryGradeView").html(array.salaryGrade);
+                // for table end
+            });
+        }
+
+        function update() {
+            $.post('employeeinfo.v2.ajax.php', {
+                update: true,
+                employees_id: <?php echo $employees_id; ?>,
+                firstName: $("#firstNameModal").val(),
+                middleName: $("#middleNameModal").val(),
+                lastName: $("#lastNameModal").val(),
+                extName: $("#extNameModal").val(),
+                status: $("#editStat_drop").dropdown("get value"),
+                statusDate: $("#editStat_date").val(),
+                dateIPCR: $("#editStat_dateIPCR").val(),
+                gender: $("#genderModal").val(),
+                employmentStatus: $("#employmentStatusModal").dropdown("get value"),
+                natureOfAssignment: $("#natureOfAssignmentModal").val(),
+                department_id: $("#departmentModal").val(),
+                position_id: $("#positionModal").val()
+            }, function(data, textStatus, xhr) {
+                // console.log(data);
+                /*optional stuff to do after success */
+                $(load);
+            });
+
+        }
+    </script>
 
     <!-- styles -->
     <style>

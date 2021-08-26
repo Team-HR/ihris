@@ -1,7 +1,8 @@
 <?php
 require_once "_connect.db.php";
-// Initialize the session
 session_start();
+// echo json_encode(session_id());
+
 // SET $_SERVER["DOCUMENT_ROOT"] START
 $dirs = explode(DIRECTORY_SEPARATOR, __DIR__);
 $file = "_connect.db.php";
@@ -18,26 +19,29 @@ $_SERVER["DOCUMENT_ROOT"] = $file_location;
 // Check if the user is logged in, if not then redirect him to login page
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
   header("location: login.php");
-  exit;
-} else {
-  $adminDoc = (basename(dirname(__FILE__))== "ihris")?true:false;
-  if (!$_SESSION["is_admin"] && $adminDoc) 
-  {
-    header("location: ".$app_uri_public);
-    exit;
-  } elseif ($_SESSION["is_admin"] && !$adminDoc) 
-  {
-    header("location: ".$app_uri_admin);
-    exit;
-  }
+  die();
+
 }
+// else {
+//   $adminDoc = (basename(dirname(__FILE__))== "ihris")?true:false;
+//   if (!$_SESSION["is_admin"] && $adminDoc) 
+//   {
+//     header("location: ".$app_uri_public);
+//     exit;
+//   } elseif ($_SESSION["is_admin"] && !$adminDoc) 
+//   {
+//     header("location: ".$app_uri_admin);
+//     exit;
+//   }
+// }
+
 ?>
 
 <!DOCTYPE html>
 <html>
 
 <head>
-  <title><?php echo $title ?></title>
+  <title><?php echo isset($title)?$title:"IHRIS"; ?></title>
   <!--  <meta charset="UTF-8" name="google" value="notranslate" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/> -->
   <meta name="viewport" content="width=device-width, height=device-height , initial-scale=1">
 
