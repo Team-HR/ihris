@@ -154,7 +154,7 @@ if (isset($_GET["spms"])) {
 </div>
 
 <div class="ui container" style="min-height: 600px; padding: 5px;">
-    <div class="ui borderless blue inverted mini menu">
+    <div id="name-bar" class="ui borderless blue inverted mini menu">
         <div class="left item" style="margin-right: 0px !important;">
 
         </div>
@@ -218,6 +218,12 @@ if (isset($_GET["spms"])) {
         <div class="ui segment grid">
             <div class="three wide column">
                 <div id="pim-menu" class="ui vertical pointing menu fluid">
+                    <a class="item" data-tab="announcements">
+                        HR Announcement
+                    </a>
+                    <a class="item" data-tab="calendar">
+                        Calendar
+                    </a>
                     <a class="item" data-tab="appointments">
                         Appointment
                     </a>
@@ -236,6 +242,13 @@ if (isset($_GET["spms"])) {
                 </div>
             </div>
             <div class="thirteen wide stretched column">
+
+                <div class="ui tab" data-tab="announcements">
+
+                </div>
+                <div class="ui tab" data-tab="calendar">
+
+                </div>
 
                 <div class="ui tab" data-tab="appointments" id="appointment-app">
                     <div class="ui pointing secondary blue menu fluid" id="pds">
@@ -491,6 +504,15 @@ if (isset($_GET["spms"])) {
     <!-- scripts -->
     <script src="pds/config.js"></script>
     <script src="appointments/config.js"></script>
+    <script>
+        var name_bar = new Vue({
+            el:"#name-bar",
+            data: {
+                full_name: ""
+            }
+        });
+
+    </script>
     <script type="text/javascript">
         $(document).ready(function() {
             $(load);
