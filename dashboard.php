@@ -154,65 +154,71 @@ if (isset($_GET["spms"])) {
 </div>
 
 <div class="ui container" style="min-height: 600px; padding: 5px;">
-    <div class="ui borderless blue inverted mini menu">
-        <div class="left item" style="margin-right: 0px !important;">
+    <!-- auth user info start -->
+    <div id="auth_user_app">
+        <template>
+            <div class="ui borderless blue inverted mini menu">
+                <div class="left item" style="margin-right: 0px !important;">
 
-        </div>
-        <div class="item">
-            <h3 style="color: white;"><i class="user circle icon"></i> <i id="employeeName"></i></h3>
-        </div>
-        <div class="right item">
-            <!-- <button onclick="editModalFunc()" class="ui right floated blue button" style="padding: 10px 10px; font-size: 10px;"><i class="ui icon edit"></i> Edit</button> -->
-        </div>
+                </div>
+                <div class="item">
+                    <h3 style="color: white;"><i class="user circle icon"></i> <i id="employeeName"></i></h3>
+                </div>
+                <div class="right item">
+                    <!-- <button onclick="editModalFunc()" class="ui right floated blue button" style="padding: 10px 10px; font-size: 10px;"><i class="ui icon edit"></i> Edit</button> -->
+                </div>
+            </div>
+
+            <div class="ui container" style="padding: 5px; width: 1300px;">
+                <style type="text/css">
+                    .actives {
+                        background-color: #f2f2f2;
+                        color: #4075a9;
+                    }
+
+                    .ui.tab.segment {
+                        min-height: 300px;
+                    }
+                </style>
+                <table class="ui very compact small celled table" style="font-size: 12px;">
+                    <tr>
+                        <td class="actives">STATUS:</td>
+                        <td id="status">{{user.status}}</td>
+                        <td class="actives">SINCE:</td>
+                        <td id="statusDate">{{user.statusDateStr}}</td>
+                        <td class="actives">IPCR STARTS/STARTED IN:
+                        </td>
+                        <td id="dateIPCRView">{{user.dateIPCRView}}</td>
+                    </tr>
+                    <tr>
+                        <td class="actives">ID:</td>
+                        <td id="employees_idView">{{user.employees_id_padded}}</td>
+                        <td class="actives">ASSIGNED OFFICE:</td>
+                        <td id="departmentView">{{user.department}}</td>
+                        <td class="actives">LEVEL:</td>
+                        <td id="levelView">{{user.level}}</td>
+                    </tr>
+                    <tr>
+                        <td class="actives">GENDER:</td>
+                        <td id="genderView">{{user.gender}}</td>
+                        <td class="actives">POSITION:</td>
+                        <td id="positionView">{{user.position}}</td>
+                        <td class="actives">CATEGORY:</td>
+                        <td id="categoryView">{{user.category}}</td>
+                    </tr>
+                    <tr>
+                        <td class="actives">STATUS:</td>
+                        <td id="employmentStatusView">{{user.employmentStatus}}</td>
+                        <td class="actives">NATURE OF ASSIGNMENT:</td>
+                        <td id="natureOfAssignmentView">{{user.natureOfAssignment}}</td>
+                        <td class="actives">SALARY GRADE:</td>
+                        <td id="salaryGradeView">{{user.salaryGrade}}</td>
+                    </tr>
+                </table>
+            </div>
+        </template>
     </div>
-
-    <div class="ui container" style="padding: 5px; width: 1300px;">
-        <style type="text/css">
-            .actives {
-                background-color: #f2f2f2;
-                color: #4075a9;
-            }
-
-            .ui.tab.segment {
-                min-height: 300px;
-            }
-        </style>
-        <table class="ui very compact small celled table" style="font-size: 12px;">
-            <tr>
-                <td class="actives">STATUS:</td>
-                <td id="status"></td>
-                <td class="actives">SINCE:</td>
-                <td id="statusDate"></td>
-                <td class="actives">IPCR STARTS/STARTED IN:</td>
-                <td id="dateIPCRView"></td>
-            </tr>
-            <tr>
-                <td class="actives">ID:</td>
-                <td id="employees_idView"></td>
-                <td class="actives">ASSIGNED OFFICE:</td>
-                <td id="departmentView"></td>
-                <td class="actives">LEVEL:</td>
-                <td id="levelView"></td>
-            </tr>
-            <tr>
-                <td class="actives">GENDER:</td>
-                <td id="genderView"></td>
-                <td class="actives">POSITION:</td>
-                <td id="positionView"></td>
-                <td class="actives">CATEGORY:</td>
-                <td id="categoryView"></td>
-            </tr>
-            <tr>
-                <td class="actives">STATUS:</td>
-                <td id="employmentStatusView"></td>
-                <td class="actives">NATURE OF ASSIGNMENT:</td>
-                <td id="natureOfAssignmentView"></td>
-                <td class="actives">SALARY GRADE:</td>
-                <td id="salaryGradeView"></td>
-            </tr>
-        </table>
-    </div>
-
+    <!-- auth user info end -->
     <div class="ui container" style="padding: 5px; width: 1300px;">
 
         <div class="ui segment grid">
@@ -364,7 +370,7 @@ if (isset($_GET["spms"])) {
                                 </div>
                             </div>
                             <div class="ui pointing secondary blue menu">
-                                <a class="active item" data-tab="first/a">Competency Profile</a>
+                                <a class="activetest: "Male" item" data-tab="first/a">Competency Profile</a>
                                 <a class="item" data-tab="first/b">Learning Style</a>
                             </div>
                             <div class="ui active tab segment" data-tab="first/a">
@@ -405,10 +411,7 @@ if (isset($_GET["spms"])) {
 
                                 <?php
 
-                                $employees_id = $_GET["employees_id"];
-                                $sql = "SELECT * FROM `ldn_lsa` WHERE `employees_id` = '$employees_id'";
-                                $result = $mysqli->query($sql);
-                                $lsa_rows = $result->num_rows;
+                                $employees_id = $testingerlt->num_rows;
                                 if (!$lsa_rows) {
                                     # code...
                                 ?>
@@ -453,159 +456,154 @@ if (isset($_GET["spms"])) {
                             </div>
                             <div class="ui tab segment active" data-tab="third/a">
                                 Individual Development Plan will be implemented here...
-                            </div>
-                            <div class="ui tab segment" data-tab="third/b">
-                                <?php
-                                // for IPCR (Reccomendation Portion)
-                                require_once "umbra/IDP/idpTable.php";
-                                ?>
-                            </div>
-                            <div class="ui tab segment" data-tab="third/c">
-                                <!-- Coaching and Mentoring will be implemented here... -->
-                                <?php
-                                require_once "umbra/cmr/empCrmInfo.php";
-                                ?>
-                            </div>
-                            <div class="ui tab segment" data-tab="third/d">
-                                Feedback Mechanism will be implemented here...
-                            </div>
+                            </div>testinger
+                            // for IPCR (Reccomendation Portion)
+                            require_once "umbra/IDP/idpTable.php";
+                            ?>
                         </div>
-                        <div class="ui bottom attached tab segment" data-tab="fourth">
-                            <div class="ui pointing secondary blue menu">
-                                <a class="item active" data-tab="fourth/a">4A</a>
-                                <a class="item" data-tab="fourth/b">4B</a>
-                                <a class="item" data-tab="fourth/c">4C</a>
-                            </div>
-                            <div class="ui tab segment active" data-tab="fourth/a">4A</div>
-                            <div class="ui tab segment" data-tab="fourth/b">4B</div>
-                            <div class="ui tab segment" data-tab="fourth/c">4C</div>
+                        <div class="ui tab segment" data-tab="third/c">
+                            <!-- Coaching and Mentoring will be implemented here... -->
+                            <?php
+                            require_once "umbra/cmr/empCrmInfo.php";
+                            ?>
+                        </div>
+                        <div class="ui tab segment" data-tab="third/d">
+                            Feedback Mechanism will be implemented here...
                         </div>
                     </div>
-
-                    <!-- </div> -->
-
+                    <div class="ui bottom attached tab segment" data-tab="fourth">
+                        <div class="ui pointing secondary blue menu">
+                            <a class="item active" data-tab="fourth/a">4A</a>
+                            <a class="item" data-tab="fourth/b">4B</a>
+                            <a class="item" data-tab="fourth/c">4C</a>
+                        </div>
+                        <div class="ui tab segment active" data-tab="fourth/a">4A</div>
+                        <div class="ui tab segment" data-tab="fourth/b">4B</div>
+                        <div class="ui tab segment" data-tab="fourth/c">4C</div>
+                    </div>
                 </div>
+
+                <!-- </div> -->
+
             </div>
         </div>
     </div>
-    <!-- scripts -->
-    <script src="pds/config.js"></script>
-    <script src="appointments/config.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
+</div>
+<!-- scripts -->
+<!-- auth_user_app script -->
+<script src="dashboard.js"></script>
+<script src="pds/config.js"></script>
+<scriplogt src="appointments/config.js"></scriplogt>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(load);
+        $("#editStat_drop").dropdown();
+        $("#genderModal").dropdown();
+        $("#natureOfAssignmentModal").dropdown();
+        $("#departmentModal").dropdown();
+        $("#positionModal").dropdown({
+            fullTextSearch: true,
+        });
+        $('#context1 .menu .item').tab({
+            context: $('#context1')
+        })
+    });
+
+    function editModalFunc() {
+        $("#editModal").modal({
+            onDeny: function() {
+                $(load);
+            },
+            onApprove: function() {
+                $(update);
+                // save msg animation start
+                $("#saveMsg").transition({
+                    animation: 'fly down',
+                    onComplete: function() {
+                        setTimeout(function() {
+                            $("#saveMsg").transition('fly down');
+                        }, 1000);
+                    }
+                });
+                // save msg animation end
+            }
+        }).modal("show");
+    }
+
+    function load() {
+        $.post('employeeinfo.v2.ajax.php', {
+            loadProfile: true,
+            employees_id: <?php echo $employees_id; ?>
+        }, function(data, textStatus, xhr) {
+            var array = jQuery.parseJSON(data);
+            // alert(array.employees_id);
+            var full_name = array.fullname
+            $("#employeeName").html(full_name);
+            document.title = full_name
+            $("#firstNameModal").val(array.firstName);
+            $("#middleNameModal").val(array.middleName);
+            $("#lastNameModal").val(array.lastName);
+            $("#extNameModal").val(array.extName);
+            $("#genderModal").val(array.gender).change();
+            $("#employees_idModal").val(array.employees_id);
+            $("#editStat_drop").dropdown("set selected", array.status);
+            $("#editStat_date").val(array.statusDate);
+            $("#editStat_dateIPCR").val(array.dateIPCR);
+            $("#employmentStatusModal").dropdown("set selected", array.employmentStatus);
+            $("#natureOfAssignmentModal").val(array.natureOfAssignment).change();
+            $("#departmentModal").val(array.department_id).change();
+            $("#positionModal").val(array.position_id).change();
+            $("#categoryModal").val(array.category);
+            $("#levelModal").val(array.level);
+            $("#salaryGradeModal").val(array.salaryGrade);
+        });
+    }
+
+    function update() {
+        $.post('employeeinfo.v2.ajax.php', {
+            update: true,
+            employees_id: <?php echo $employees_id; ?>,
+            firstName: $("#firstNameModal").val(),
+            middleName: $("#middleNameModal").val(),
+            lastName: $("#lastNameModal").val(),
+            extName: $("#extNameModal").val(),
+            status: $("#editStat_drop").dropdown("get value"),
+            statusDate: $("#editStat_date").val(),
+            dateIPCR: $("#editStat_dateIPCR").val(),
+            gender: $("#genderModal").val(),
+            employmentStatus: $("#employmentStatusModal").dropdown("get value"),
+            natureOfAssignment: $("#natureOfAssignmentModal").val(),
+            department_id: $("#departmentModal").val(),
+            position_id: $("#positionModal").val()
+        }, function(data, textStatus, xhr) {
+            // console.log(data);
+            /*optional stuff to do after success */
             $(load);
-            $("#editStat_drop").dropdown();
-            $("#genderModal").dropdown();
-            $("#natureOfAssignmentModal").dropdown();
-            $("#departmentModal").dropdown();
-            $("#positionModal").dropdown({
-                fullTextSearch: true,
-            });
-            $('#context1 .menu .item').tab({
-                context: $('#context1')
-            })
         });
 
-        function editModalFunc() {
-            $("#editModal").modal({
-                onDeny: function() {
-                    $(load);
-                },
-                onApprove: function() {
-                    $(update);
-                    // save msg animation start
-                    $("#saveMsg").transition({
-                        animation: 'fly down',
-                        onComplete: function() {
-                            setTimeout(function() {
-                                $("#saveMsg").transition('fly down');
-                            }, 1000);
-                        }
-                    });
-                    // save msg animation end
-                }
-            }).modal("show");
-        }
+    }
+</script>
 
-        function load() {
-            $.post('employeeinfo.v2.ajax.php', {
-                loadProfile: true,
-                employees_id: <?php echo $employees_id; ?>
-            }, function(data, textStatus, xhr) {
-                var array = jQuery.parseJSON(data);
-                // alert(array.employees_id);
-                var full_name = array.fullname
-                $("#employeeName").html(full_name);
-                document.title = full_name
-                $("#firstNameModal").val(array.firstName);
-                $("#middleNameModal").val(array.middleName);
-                $("#lastNameModal").val(array.lastName);
-                $("#extNameModal").val(array.extName);
-                $("#genderModal").val(array.gender).change();
-                $("#employees_idModal").val(array.employees_id);
-                $("#editStat_drop").dropdown("set selected", array.status);
-                $("#editStat_date").val(array.statusDate);
-                $("#editStat_dateIPCR").val(array.dateIPCR);
-                $("#employmentStatusModal").dropdown("set selected", array.employmentStatus);
-                $("#natureOfAssignmentModal").val(array.natureOfAssignment).change();
-                $("#departmentModal").val(array.department_id).change();
-                $("#positionModal").val(array.position_id).change();
-                $("#categoryModal").val(array.category);
-                $("#levelModal").val(array.level);
-                $("#salaryGradeModal").val(array.salaryGrade);
+<!-- styles -->
+<style>
+    .actives {
+        background-color: #2185d0;
+        color: white;
+        text-align: right !important;
+    }
+    .readOnlyEdu {
+        border: 0px solid white !important;
+        padding: 0px !important;
+    }
 
-                // for table start
-                $("#status").html(array.status);
-                $("#statusDate").html(array.statusDateStr);
-                $("#dateIPCRView").html(array.dateIPCRView);
-                $("#employees_idView").html(array.employees_id_padded);
-                $("#departmentView").html(array.department);
-                $("#natureOfAssignmentView").html(array.natureOfAssignment);
-                $("#salaryGradeView").html(array.salaryGrade);
-                // for table end
-            });
-        }
+    .editState {
+        background-color: #ffffb05c !important;
+    }
 
-        function update() {
-            $.post('employeeinfo.v2.ajax.php', {
-                update: true,
-                employees_id: <?php echo $employees_id; ?>,
-                firstName: $("#firstNameModal").val(),
-                middleName: $("#middleNameModal").val(),
-                lastName: $("#lastNameModal").val(),
-                extName: $("#extNameModal").val(),
-                status: $("#editStat_drop").dropdown("get value"),
-                statusDate: $("#editStat_date").val(),
-                dateIPCR: $("#editStat_dateIPCR").val(),
-                gender: $("#genderModal").val(),
-                employmentStatus: $("#employmentStatusModal").dropdown("get value"),
-                natureOfAssignment: $("#natureOfAssignmentModal").val(),
-                department_id: $("#departmentModal").val(),
-                position_id: $("#positionModal").val()
-            }, function(data, textStatus, xhr) {
-                // console.log(data);
-                /*optional stuff to do after success */
-                $(load);
-            });
-
-        }
-    </script>
-
-    <!-- styles -->
-    <style>
-        .readOnlyEdu {
-            border: 0px solid white !important;
-            padding: 0px !important;
-        }
-
-        .editState {
-            background-color: #ffffb05c !important;
-        }
-
-        .readOnly {
-            border: 1px solid white !important;
-            border-bottom: 1px solid lightgrey !important;
-            border-radius: 0px !important;
-        }
-    </style>
-    <?php require_once "footer.php"; ?>
+    .readOnly {
+        border: 1px solid white !important;
+        border-bottom: 1px solid lightgrey !important;
+        border-radius: 0px !important;
+    }
+</style>
+<?php require_once "footer.php"; ?>
