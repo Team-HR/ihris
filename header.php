@@ -3,10 +3,12 @@ require_once "_connect.db.php";
 session_start();
 // echo json_encode(session_id());
 
+// echo json_encode($_SESSION);
 // SET $_SERVER["DOCUMENT_ROOT"] START
 $dirs = explode(DIRECTORY_SEPARATOR, __DIR__);
 $file = "_connect.db.php";
 $file_location = "";
+
 foreach ($dirs as $key => $dir) {
   if (file_exists($file_location . $file)) {
     $file = $file_location . $file;

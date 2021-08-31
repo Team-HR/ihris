@@ -29,16 +29,11 @@ if (isset($_POST["login"])) {
 
     // Validate credentials
     if (empty($username_err) && empty($password_err)) {
-        // Prepare a select statement
-        $sql = "SELECT `id`, `username`, `password`, `type` FROM users WHERE `username` = ?";
 
-        // if($stmt = $mysqli->prepare($sql)){
+        $sql = "SELECT `id`, `username`, `employees_id`, `password`, `type` FROM `users` WHERE `username` = ?";
         $stmt = $mysqli->prepare($sql);
         $stmt->bind_param("s", $param_username);
-
         $param_username = $username;
-
-        // Attempt to execute the prepared statement
         if ($stmt->execute()) {
             // Store result
             $stmt->store_result();
@@ -46,23 +41,24 @@ if (isset($_POST["login"])) {
             // Check if username exists, if yes then verify password
             if ($stmt->num_rows > 0) {
                 // Bind result variables
-                $stmt->bind_result($id, $username, $hashed_password, $type);
+                $stmt->bind_result($id, $username, $employees_id, $hashed_password, $type);
                 if ($stmt->fetch()) {
                     if (password_verify($password, $hashed_password)) {
                         // Password is correct, so start a new session
                         session_start();
-
                         // Store data in session variables
                         $_SESSION["loggedin"] = true;
                         $_SESSION["id"] = $id;
-                        $_SESSION["employee_id"] = "";
-                        $_SESSION["full_name"] = "HR ADMIN";
+                        $_SESSION["employee_id"] = $employees_id;
+                        $_SESSION["full_name"] = $emp->get_full_name_upper($_SESSION["employee_id"]);
                         $_SESSION["username"] = $username;
-                        $_SESSION["roles"] = explode(",",$type);
+                        $_SESSION["roles"] = explode(",", $type);
+                        // $_SESSION["is_admin"] = in_array("HR",);
                         // Redirect user to welcome page
                         // header("location: index.php");
                         if ($type === null) {
                             echo "6";
+                            // echo "2";
                         } elseif ($type === "denied") {
                             echo "7";
                         } else {
@@ -75,67 +71,14 @@ if (isset($_POST["login"])) {
                     }
                 }
             } else {
-
-                #========================================================
-                # Check account from spms_accounts start
-                #========================================================
-
-                $sql = "SELECT `acc_id` AS `id`, `username`, `employees_id`, `password`, `type` FROM `spms_accounts` WHERE `username` = ?";
-                $stmt = $mysqli->prepare($sql);
-                $stmt->bind_param("s", $param_username);
-
-                if ($stmt->execute()) {
-                    // Store result
-                    $stmt->store_result();
-
-                    // Check if username exists, if yes then verify password
-                    if ($stmt->num_rows > 0) {
-                        // Bind result variables
-                        $stmt->bind_result($id, $username, $employees_id, $hashed_password, $type);
-                        if ($stmt->fetch()) {
-                            if (password_verify($password, $hashed_password)) {
-                                // Password is correct, so start a new session
-                                session_start();
-
-                                // Store data in session variables
-                                $_SESSION["loggedin"] = true;
-                                $_SESSION["id"] = $id;
-                                $_SESSION["employee_id"] = $employees_id;
-                                $_SESSION["full_name"] = $emp->get_full_name_upper($_SESSION["employee_id"] );
-                                $_SESSION["username"] = $username;
-                                $_SESSION["roles"] = explode(",",$type);
-                                // $_SESSION["is_admin"] = in_array("HR",);
-                                // Redirect user to welcome page
-                                // header("location: index.php");
-                                if ($type === null) {
-                                    echo "6";
-                                    // echo "2";
-                                } elseif ($type === "denied") {
-                                    echo "7";
-                                } else {
-                                    echo "2";
-                                }
-                            } else {
-                                // Display an error message if password is not valid
-                                $password_err = "The password you entered was not valid.";
-                                echo "3";
-                            }
-                        }
-                    } else {
-                        // Display an error message if username doesn't exist
-                        $username_err = "No account found with that username.";
-                        echo "4";
-                    }
-                }
-                #========================================================
-                # Check account from spms_accounts end
-                #========================================================
+                // Display an error message if username doesn't exist
+                $username_err = "No account found with that username.";
+                echo "4";
             }
         } else {
             // echo "Oops! Something went wrong. Please try again later.";
             echo "5";
         }
-        // }
 
         // Close statement
         $stmt->close();
