@@ -39,7 +39,45 @@ if (isset($_POST['getTrainingRows'])) {
    
         echo json_encode($html);
     // echo json_encode(var_dump($_POST['getRows']));
-} elseif (isset($_POST['addTraining'])) {
+}
+
+elseif (isset($_POST['getTrainingRowsDash'])) {
+    
+    $employees_id = $_POST['employees_id'];
+    $trainings_arr = createTrainings($mysqli, $employees_id, "all");
+
+    $html = '';
+    $num = 1;
+    foreach ($trainings_arr as $training) {
+        $html .= '<tr>';
+            $html .= '<td>'.$num++.'</td>';
+            $html .= '<td>'.$training['training'].'</td>';
+            $numHours = $training['numHours'];
+            $startDate = $training['startDate'];
+            $endDate = $training['endDate'];
+
+            $html .= '<td>'.($numHours === "8" ? date("F d, Y", strtotime($startDate)):date("F d", strtotime($startDate))." - ".date("d, Y", strtotime($endDate))).'</td>';
+            $html .= '<td>'.$training['numHours'].'</td>';
+            $html .= '<td>'.$training['venue'].'</td>';
+            $html .= '</tr>';
+    }
+
+        // toto
+        $feedbacking = spms_feedBacking($num);
+            $html .= $feedbacking['HTML'];
+        $cmr = cmr($feedbacking['COUNT']);
+        
+        // end
+   
+   
+        echo json_encode($html);
+    // echo json_encode(var_dump($_POST['getRows']));
+}
+
+
+
+
+elseif (isset($_POST['addTraining'])) {
 
     $employees_id = $_POST['employees_id'];
     echo json_encode($employees_id);

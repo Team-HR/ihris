@@ -57,9 +57,9 @@ if (isset($_POST['get_salaries'])) {
             // if permanent
             $row["annual_salary"] = "";
             if ($row["sr_salary_rate"]) {
-                $row["annual_salary"] = format_salary($row["sr_salary_rate"]) . " /ANNUAL";
+                $row["annual_salary"] = format_salary($row["sr_salary_rate"]*12) . " /ANNUAL";
             } elseif ($row["sr_rate_on_schedule"]) {
-                $row["annual_salary"] = format_salary($row["sr_rate_on_schedule"]) . " /ANNUAL";
+                $row["annual_salary"] = format_salary($row["sr_rate_on_schedule"]*12) . " /ANNUAL";
             } else {
                 $row["annual_salary"] = "N/I";
             }

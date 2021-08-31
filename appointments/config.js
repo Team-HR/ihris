@@ -1,4 +1,4 @@
-new Vue({
+var appointment_app = new Vue({
     el: "#appointment-app",
     data() {
         return {
@@ -8,13 +8,14 @@ new Vue({
     },
     methods: {
         get_data() {
+            // console.log('get_appointments');
             $.post("appointments/config.php", {
                 get_data: true,
                 employee_id: this.employee_id
             },
                 (data, textStatus, jqXHR) => {
                     this.appointments = Object.assign([],data)
-                    // console.log(data);
+                    // console.log('appointments:', data);
                 },
                 "json"
             );
@@ -22,9 +23,9 @@ new Vue({
     },
     created() {
         // this.employee_id = new URLSearchParams(window.location.search).get("employees_id")
-        this.get_data()
+        // this.get_data()
     },
     mounted() {
-        
+        this.get_data()
     },
 })

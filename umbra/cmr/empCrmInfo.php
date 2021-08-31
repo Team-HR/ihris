@@ -4,17 +4,25 @@ $sql = "SELECT * FROM `cmremp` right join `cmrempdata` on `cmremp`.`cmrEmp_id`=`
 $sql = $mysqli->query($sql);
 echo $mysqli->error;
 $tableRow = "";
-while ($cath = $sql->fetch_assoc()) {
+if ($sql->num_rows) {
+  while ($cath = $sql->fetch_assoc()) {
+    $tableRow.= "
+      <tr>
+        <td>$cath[date]</td>
+        <td>$cath[content]</td>
+        <td>$cath[note]</td>
+      </tr>
+    ";
+  }
+} else {
   $tableRow.= "
-    <tr>
-      <td>$cath[date]</td>
-      <td>$cath[content]</td>
-      <td>$cath[note]</td>
-    </tr>
-  ";
+      <tr>
+        <td colspan='3' style='color:grey; text-align: center;'>No Data</td>
+      </tr>
+    ";
 }
 ?>
-<table class="ui celled table">
+<table class="ui very basic celled table compact">
   <thead>
     <tr>
       <th style="width:100px">Date</th>

@@ -4,8 +4,9 @@ $sql = "SELECT * FROM `prrlist` LEFT JOIN `prr` on `prrlist`.`prr_id` = `prr`.`p
 $sql = $mysqli->query($sql);
 echo $mysqli->error;
 $view = "";
-while ($row = $sql->fetch_assoc()) {
-  $view .= "
+if ($sql->num_rows) {
+  while ($row = $sql->fetch_assoc()) {
+    $view .= "
   <tr>
   <td>$row[year]</td>
   <td>$row[period]</td>
@@ -14,9 +15,16 @@ while ($row = $sql->fetch_assoc()) {
   <td>$row[comments]</td>
   </tr>
   ";
+  }
+} else {
+  $tableRow .= "
+      <tr>
+        <td colspan='3' style='color:grey; text-align: center;'>No Data</td>
+      </tr>
+    ";
 }
 ?>
-<table class="ui celled table" style="text-align:center">
+<table class="ui very basic celled table compact" style="text-align:center">
   <thead>
     <tr>
       <th>Year</th>

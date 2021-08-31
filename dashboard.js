@@ -13,7 +13,7 @@ var auth_user_app = new Vue({
                 employees_id: this.employees_id,
             }, (data, textStatus, jqXHR) => {
                 this.user = JSON.parse(JSON.stringify(data))
-                console.log(data);
+                // console.log(data);
             },
                 "json"
             );
