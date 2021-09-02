@@ -254,8 +254,8 @@ if (isset($_GET["spms"])) {
             <div class="thirteen wide stretched column">
                 <div class="ui tab active" data-tab="calendar">
                     <div class="ui segment">
-                        <h2>Calendar</h2>
-                        <hr>
+                        <!-- <h2>Calendar</h2>
+                        <hr> -->
                         <!-- calendar start -->
                         <?php
                         require "dashboard_calendar.php"
