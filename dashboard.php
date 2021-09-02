@@ -231,6 +231,9 @@ if (isset($_GET["spms"])) {
         <div class="ui segment grid">
             <div class="three wide column">
                 <div id="pim-menu" class="ui vertical pointing menu fluid">
+                    <a class="item active" data-tab="calendar">
+                        Calendar
+                    </a>
                     <a class="item" data-tab="appointments">
                         Appointment
                     </a>
@@ -243,13 +246,24 @@ if (isset($_GET["spms"])) {
                     <a class="item" data-tab="leave_records">
                         Leave Records
                     </a>
-                    <a class="item active" data-tab="hr_cores">
+                    <a class="item" data-tab="hr_cores">
                         HR CORES
                     </a>
                 </div>
             </div>
             <div class="thirteen wide stretched column">
+                <div class="ui tab active" data-tab="calendar">
+                    <div class="ui segment">
+                        <h2>Calendar</h2>
+                        <hr>
+                        <!-- calendar start -->
+                        <?php
+                        require "dashboard_calendar.php"
+                        ?>
+                        <!-- calendar end -->
+                    </div>
 
+                </div>
                 <div class="ui tab" data-tab="appointments" id="appointment-app">
                     <div class="ui pointing secondary blue menu fluid" id="pds">
                         <a class="item active" data-tab="appointment_history">Appointment History</a>
@@ -338,14 +352,14 @@ if (isset($_GET["spms"])) {
                         <div style="clear:both"></div>
                         <hr>
                         <!-- <div class="ui fluid segment"> -->
-                            <div style="text-align: center;">
-                                <p style="padding: 20px; background-color: lightgrey; color: white;">No Data</p>
-                            </div>
+                        <div style="text-align: center;">
+                            <p style="padding: 20px; background-color: lightgrey; color: white;">No Data</p>
+                        </div>
                         <!-- </div> -->
                     </div>
 
                 </div>
-                <div class="ui tab active" data-tab="hr_cores">
+                <div class="ui tab" data-tab="hr_cores">
 
 
                     <!-- <div class="ui container segment" style="min-height: 500px;"> -->
