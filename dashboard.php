@@ -337,34 +337,41 @@ if (isset($_GET["spms"])) {
                     </div>
                 </div>
                 <div class="ui tab" data-tab="service_records">
-                    <?php require_once "service_record_dash.php"; ?>
+
+                    <div class="ui pointing secondary blue menu fluid" id="">
+                        <a class="item active" data-tab="service_recs">Service Records</a>
+                    </div>
+                    <div class="ui tab segment active" data-tab="service_recs">
+                        <?php require_once "service_record_dash.php"; ?>
+                    </div>
+
                 </div>
                 <div class="ui tab" data-tab="leave_records">
 
-                    <div class="ui segment">
 
-                        <div style="float:left">
-                            <h2>Leave Record</h2>
-                        </div>
-                        <div style="float:right">
-
-                        </div>
-                        <div style="clear:both"></div>
-                        <hr>
-                        <!-- <div class="ui fluid segment"> -->
+                    <div class="ui pointing secondary blue menu fluid" id="">
+                        <a class="item active" data-tab="leave_recs">Leave Records</a>
+                    </div>
+                    <div class="ui tab segment active" data-tab="leave_recs">
                         <div style="text-align: center;">
                             <p style="padding: 20px; background-color: lightgrey; color: white;">No Data</p>
                         </div>
-                        <!-- </div> -->
                     </div>
 
                 </div>
                 <div class="ui tab" data-tab="hr_cores">
+                    
+                    <!-- <div class="ui pointing secondary blue menu fluid">
+                        <a class="item active" data-tab="leave_recs">Leave Records</a>
+                    </div>
+                    <div class="ui tab segment active" data-tab="leave_recs">
+                        <div style="text-align: center;">
+                            <p style="padding: 20px; background-color: lightgrey; color: white;">No Data</p>
+                        </div>
+                    </div> -->
 
-
-                    <!-- <div class="ui container segment" style="min-height: 500px;"> -->
                     <div id="context1">
-                        <div class="ui top attached pointing blue inverted menu">
+                        <div class="ui pointing secondary blue menu fluid">
                             <a id="rsp" class="item active" data-tab="first">RSP</a>
                             <a class="item" data-tab="second">L&D</a>
                             <a id="spms" class="item" data-tab="third">SPMS</a>

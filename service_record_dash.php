@@ -1,13 +1,13 @@
 <div id="app_sr">
         <template>
-            <div class="ui segment">
-                <div>
+            <!-- <div class="ui segment"> -->
+                <!-- <div>
                 </div>
                 <div style="float:left">
                     <h2>Service Record</h2>
                 </div>
                 <div style="clear:both"></div>
-                <hr>
+                <hr> -->
                 <table class="ui very compact small celled structured striped table" style="font-size:11px" id="srTable" data-id="<?= $_GET['employees_id'] ?>">
                     <thead style="text-align:center">
                         <tr>
@@ -42,7 +42,7 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            <!-- </div> -->
         </template>
     </div>
     <script src="umbra/service_record/config_dash.js"></script>
