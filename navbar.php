@@ -41,10 +41,11 @@ $auth = new Auth;
   <a class="item" href="dashboard.php?employees_id=<?= $_SESSION["employee_id"] ?>"><i class="user icon"></i>
     Dashboard
   </a>
+  
   <?php if ($auth->is_hr) { ?>
     <a class="item" href="employeelist.v2.php"><i class="users icon"></i>Employee List</a>
+    <a class="item" onclick="_calendar()"><i class="calendar outline icon"></i>Calendar</a>
   <?php } ?>
-  <a class="item" onclick="_calendar()"><i class="calendar outline icon"></i>Calendar</a>
 
   <?php if ($auth->is_hr) { ?>
     <div id="setup_dropdown" class="ui pointing dropdown link item">

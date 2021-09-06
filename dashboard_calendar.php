@@ -1,19 +1,33 @@
 <div id="calendaryo"></div>
+<div id="newEvent" class="ui mini modal"></div>
 <script>
-    $(document).ready(function() {
-        var events = [];
-        var calendarEl = document.getElementById('calendaryo');
+    // $(document).ready(function() {
+    const events = [{
+        "groupId": 1,
+        "title": "Testing",
+        "start": "2021-09-03",
+        "end": "2021-09-05",
+        "color": "red",
+        "url": "test.php"
+    }];
 
-        calendar = new FullCalendar.Calendar(calendarEl, {
+
+    $(document).ready(function() {
+        calendario(events);
+    });
+
+    function calendario(events) {
+        var events = events.length > 0 ? events : [];
+        var calendar = new FullCalendar.Calendar(document.getElementById('calendaryo'), {
             // aspectRatio: 3.2,
             // width: 1000,
             height: "auto",
-            plugins: ['interaction', 'dayGrid'],
+            plugins: ['interaction', 'dayGrid', 'timeGrid', 'list'],
             // plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'list' ],
             header: {
-                left: 'prev,next today',
+                left: 'prev, today',
                 center: 'title',
-                right: ''
+                right: 'next',
                 // right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
             },
 
@@ -21,16 +35,17 @@
             views: {
                 dayGrid: {
                     eventLimit: 2 // adjust to 6 only for timeGridWeek/timeGridDay
-                }
+                },
             },
 
             selectable: true,
             select: function(info) {
-                dateStart = info.startStr;
-                endDate = new Date(info.endStr);
-                endDate.setDate(endDate.getDate() - 1);
-                dateEnd = endDate.toISOString().split("T")[0];
-                console.log(dateStart + " to " + dateEnd);
+                start = info.startStr;
+                end = new Date(info.endStr);
+                end.setDate(end.getDate() - 1);
+                dateEnd = end.toISOString().split("T")[0];
+                console.log(start + " to " + dateEnd);
+                // console.log(info.endStr);
             },
             navLinks: false,
             editable: false,
@@ -38,35 +53,7 @@
             displayEventTime: true,
             displayEventEnd: true,
             eventLimit: true, // allow "more" link when too many events
-            events: [
-                {
-                    "groupId": 1,
-                    "title": "Testing",
-                    "start": "2021-09-03",
-                    "end": "2021-09-03",
-                    "color": "red",
-                    "url": "test.php"
-                },
-                {
-                    "groupId": 2,
-                    "title": "Birthday",
-                    "start": "2021-09-06",
-                    "end": "2021-09-12",
-                    "color": "red",
-                    "url": "test.php"
-                },
-            ],
-            // {
-            //     url: 'calendar_proc.php',
-            //     method: 'POST',
-            //     extraParams: {
-            //         getCalendarData: true
-            //     },
-            //     failure: function() {
-            //         alert('there was an error while fetching events!');
-            //     },
-            // },
-
+            events: events,
             eventClick: function(info) {
                 info.jsEvent.preventDefault();
 
@@ -78,7 +65,6 @@
                 }
             }
         });
-
         calendar.render();
-    });
+    }
 </script>

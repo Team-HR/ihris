@@ -1,16 +1,16 @@
 <?php
 
+require "_connect.db.php";
 
-// require "libs/models/Employee.php";
+$arrayName = array(
+    "test1" => "989123asd's &intl'''s",
+    "test2" => 100213,
+    "test3" => 123816,
+);
 
-// session_start();
 
-// echo "<br>";
-// echo json_encode($_SESSION);
-// echo "<br><br>";
-// $emp = new Employee();
-// echo json_encode($emp->get_full_name_upper($_SESSION["employee_id"]));
-
-// echo json_encode(session_status());
-?>
-<!-- <a href="logout.php">Logout</a> -->
+$arr[0] = $mysqli->real_escape_string(json_encode($arrayName));
+$arr[1] = $mysqli->real_escape_string(serialize($arrayName));
+echo $arr[0];
+echo "<br>";
+echo $arr[1];
