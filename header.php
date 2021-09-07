@@ -64,9 +64,13 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
   <!-- fullcalendar4.js -->
   <link href='fullcalendar4/packages/core/main.css' rel='stylesheet' />
   <link href='fullcalendar4/packages/daygrid/main.css' rel='stylesheet' />
+  <link href='fullcalendar4/packages/timegrid/main.css' rel='stylesheet' />
+  <link href='fullcalendar4/packages/list/main.css' rel='stylesheet' />
   <script src='fullcalendar4/packages/core/main.min.js'></script>
   <script src='fullcalendar4/packages/interaction/main.min.js'></script>
   <script src='fullcalendar4/packages/daygrid/main.min.js'></script>
+  <script src='fullcalendar4/packages/timegrid/main.min.js'></script>
+  <script src='fullcalendar4/packages/list/main.min.js'></script>
   <!-- autocompleter -->
   <link rel="stylesheet" type="text/css" href="node_modules/autocompleter/autocomplete.min.css">
   <script src='node_modules/autocompleter/autocomplete.min.js'></script>
