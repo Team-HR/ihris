@@ -1461,11 +1461,55 @@ class Competency
     );
 
     private $mysqli;
+    private $mysqli2;
     function __construct()
     {
         require __DIR__ . '/../../_connect.db.php';
         $this->mysqli = $mysqli;
+        $this->mysqli2 = $mysqli2;
     }
+
+
+// competency assessments start
+    public function generate_report_by_dept_id($department_id)
+    {
+        if (!$department_id) return null;
+        $mysqli2 = $this->mysqli2;
+        $data = [];
+        $department_id = $mysqli2->real_escape_string($department_id);
+        $sql = "SELECT * FROM `departments` WHERE `id` = '$department_id'";
+        $res = $mysqli2->query($sql);
+        $row = $res->fetch_assoc();
+
+        $data = [
+            'department_id' => $row['id'],
+            'department' => $row['department'],
+            'offices' => $this->get_offices($department_id),
+        ];
+        return $data;
+    }
+
+    public function get_offices($department_id)
+    {
+        if (!$department_id) return null;
+        $mysqli2 = $this->mysqli2;
+        $data = [];
+        $department_id = $mysqli2->real_escape_string($department_id);
+        $sql = "SELECT * FROM `offices` WHERE `department_id` = '$department_id'";
+        $res = $mysqli2->query($sql);
+        
+        while ($row = $res->fetch_assoc()) {
+            $data [] = [
+                'office_id' => $row['id'],
+                'office' => $row['office'],
+                'supervisors' => null //$this->get_supervisors($department_id),
+            ];
+        }
+        return $data;
+    }
+
+
+// competency assessments end
 
     /**
      * Generates report about competency

@@ -1,16 +1,10 @@
 <?php
 
-require "_connect.db.php";
+require "libs/models/Competency.php";
 
-$arrayName = array(
-    "test1" => "989123asd's &intl'''s",
-    "test2" => 100213,
-    "test3" => 123816,
-);
+$comp = new Competency;
+
+$array_data = $comp->generate_report_by_dept_id(2);
+print("<pre>".print_r($array_data,true)."</pre>");
 
 
-$arr[0] = $mysqli->real_escape_string(json_encode($arrayName));
-$arr[1] = $mysqli->real_escape_string(serialize($arrayName));
-echo $arr[0];
-echo "<br>";
-echo $arr[1];
