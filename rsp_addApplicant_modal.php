@@ -29,13 +29,7 @@
 			},
 		};
 
-
-
-
-	// experience = ["Programmer",	"Permanent", "LGU Bayawan City","2019-07-22","2089-07-22"]
 	$(document).ready(function() {
-
-
 		$("#training").html(training.render());
 		$("#eligibility").html(eligibility.render());
 		$("#awards").html(awards.render());
@@ -52,9 +46,7 @@
 		});
 	});
 
-
 	function editApplicant(applicant_id) {
-
 		header = '<i class="icon blue edit"></i> Edit Applicant';
 		$("#addNewModalheader").html(header);
 		$(resetForm);
@@ -62,9 +54,9 @@
 			getApplicantData: true,
 			applicant_id: applicant_id
 		}, function(data, textStatus, xhr) {
-			/*optional stuff to do after success */
+			
 			arr = JSON.parse(data);
-			// console.log('get_data: ', arr);
+			console.log('arr:',arr);
 			var dates = [];
 			$.each(arr[10], function(i, val) {
 
@@ -72,22 +64,27 @@
 				day2 = val[4] ? val[4].split("-") : "";
 
 				var date = [
-					val[3] ? day1[0] + '-' + day1[1] : "",
-					val[3] && day1[2] != '00' ? day1[2] : "",
-					val[4] ? day2[0] + '-' + day2[1] : "",
-					val[4] && day2[2] != '00' ? day2[2] : "",
+					// val[3] ? day1[0] + '-' + day1[1] : "",
+					// val[3] && day1[2] != '00' ? day1[2] : "",
+					// val[4] ? day2[0] + '-' + day2[1] : "",
+					// val[4] && day2[2] != '00' ? day2[2] : "",
+					day1[0] ? day1[0] : "",
+					day1[1] ? day1[1] : "",
+					day1[2] ? day1[2] : "",
+					day2[0] ? day2[0] : "",
+					day2[1] ? day2[1] : "",
+					day2[2] ? day2[2] : ""
 				]
-				// dates.push(date);
-
-				// arr[10][i].slice(0,-1);
 				arr[10][i] = arr[10][i].slice(0, -2)
 				$.each(date, function(k, dat) {
 					arr[10][i].push(dat);
 				});
-				// arr[10][i].push(date);
-
 			});
+
+
+			console.log('get_arr:',arr);
 			$(setInputs(arr));
+
 			$("#applicantForm").form({
 				on: "submit",
 				inline: true,
@@ -101,7 +98,7 @@
 						data: data,
 						applicant_id: applicant_id
 					}, function(data, textStatus, xhr) {
-					/*optional stuff to do after success */
+						/*optional stuff to do after success */
 						$(resetForm);
 						$(load);
 						$("#addNewModal").modal("hide");
@@ -120,13 +117,10 @@
 					$(resetForm);
 				}
 			}).modal("show");
-
-
 		});
-
-
-
 	}
+
+
 
 	function setInputs(arr) {
 		// console.log(arr);
@@ -183,34 +177,32 @@
 		$.each(experience, function(i, val) {
 
 			date1 = "";
-
-
 			if (val[3]) {
-				date1 = val[3] + '-' + (val[4] ? val[4] : "00");
-				if (date1 == "-") {
-					date1 = "";
-				} else if (date1 == "-00") {
-					date1 = "";
-				}
+				date1 = val[3] + '-' + (val[4] ? val[4] : "00") + '-' + (val[5] ? val[5] : "00");
+				// if (date1 == "-") {
+				// 	date1 = "";
+				// } else if (date1 == "-00-00") {
+				// 	date1 = "";
+				// }
 			}
 
 			date2 = "";
-			if (val[5]) {
-				date2 = val[5] + '-' + (val[6] ? val[6] : "00");
-				if (date2 == "-") {
-					date2 = "";
-				} else if (date2 == "-00") {
-					date2 = "";
-				}
+			if (val[6]) {
+				date2 = val[6] + '-' + (val[7] ? val[7] : "00") + '-' + (val[8] ? val[8] : "00");
+				// if (date2 == "-") {
+				// 	date2 = "";
+				// } else if (date2 == "-00-00") {
+				// 	date2 = "";
+				// }
 
 			}
 
-			exp[i] = experience[i].slice(0, -4);
+			exp[i] = experience[i].slice(0, -6);
 			exp[i].push(date1);
 			exp[i].push(date2);
 		});
 
-		console.log('after_slice:', exp);
+		console.log('exp_after_slice:', exp);
 
 
 
@@ -237,7 +229,7 @@
 				isEmpty = true;
 			}
 		});
-		console.log('insideExperience:',insideExp);
+		console.log('insideExperience:', insideExp);
 		// console.log('dateMonth1:', $('#dateMonth1').val());
 		// console.log(isEmpty);
 		if (!isEmpty) {
@@ -246,12 +238,13 @@
 			$("#experienceAdd input").each(function(index, el) {
 				$(el).val("");
 			});
-			console.log('experience after add:',experience);
+			console.log('experience after add:', experience);
 		}
 
 	}
 
 	function createExperienceList() {
+			console.log('experience: ',experience);
 		if (experience) {
 			var view = "";
 			$("#experienceList").html("");
@@ -275,45 +268,82 @@
 				// onkeyup="onChangeSave(' + index + ',2,$(this).val())"
 				view += '<label>From:</label>';
 				view += '<div class="ui labeled mini input" style="margin-bottom: 5px;">';
-				view += '	<input type="month" value="' + val[3] + '" onchange="onChangeSave(' + index + ',3,$(this).val())">';
+				view += '	<div class="ui label">Year:</div>';
+				view += '	<input type="number" value="' + val[3] + '" onchange="onChangeSave(' + index + ',3,$(this).val())" placeholder="Year" min="1950">';
+				view += '</div>';
+				view += '<div class="ui labeled mini input" style="margin-bottom: 5px;">';
+				view += '	<div class="ui label">Month:</div>';
+				view += '	<input type="number" value="' + val[4] + '" onchange="onChangeSave(' + index + ',4,$(this).val())" placeholder="1-12 (or Leave Blank)" min="1" max="12">';
 				view += '</div>';
 				view += '<div class="ui labeled mini input">';
 				view += '	<div class="ui label">Day:</div>';
-				view += '	<input type="number" min="1" max="31" placeholder="1-31 (or Leave Blank)" value="' + val[4] + '" onchange="onChangeSave(' + index + ',4,$(this).val())">';
+				view += '	<input type="number" min="1" max="31" placeholder="1-31 (or Leave Blank)" value="' + val[5] + '" onchange="onChangeSave(' + index + ',5,$(this).val())">';
 				view += '</div>';
-
-
-
-
-				// view += '<input onchange="onChangeSave(' + index + ',3,$(this).val())" type="date" value="' + val[3] + '">';
-
-
-
 				view += '</div>';
 				view += '<div class="three wide field">';
-
-
-
-
 				view += '<label>To:</label>';
+				view += '	<div class="ui labeled mini input" style="margin-bottom: 5px;">';
+				view += '	<div class="ui label">Year:</div>';
+				view += '<input type="number" value="' + val[6] + '" onchange="onChangeSave(' + index + ',6,$(this).val())" placeholder="Year" min="1950">';
+				view += '</div>';
 				view += '<div class="ui labeled mini input" style="margin-bottom: 5px;">';
-				view += '	<input type="month" value="' + val[5] + '" onchange="onChangeSave(' + index + ',5,$(this).val())">';
+				view += '	<div class="ui label">Month:</div>';
+				view += '	<input type="number" value="' + val[7] + '" onchange="onChangeSave(' + index + ',7,$(this).val())" placeholder="1-12 (or Leave Blank)" min="1" max="12">';
 				view += '</div>';
 				view += '<div class="ui labeled mini input">';
 				view += '	<div class="ui label">Day:</div>';
-				view += '	<input type="number" min="1" max="31" placeholder="1-31 (or Leave Blank)" value="' + val[6] + '" onchange="onChangeSave(' + index + ',6,$(this).val())">';
+				view += '	<input type="number" min="1" max="31" placeholder="1-31 (or Leave Blank)" value="' + val[8] + '" onchange="onChangeSave(' + index + ',8,$(this).val())">';
 				view += '</div>';
 
-
-
-				// view += '<input onchange="onChangeSave(' + index + ',4,$(this).val())" type="date" value="' + val[4] + '">';
-
-
-
-
-
-
 				view += '</div>	';
+
+
+
+				// <div class="three wide field">
+				// 	<label>From:</label>
+				// 	<div class="ui labeled mini input" style="margin-bottom: 5px;">
+				// 		<div class="ui label">
+				// 			Year:
+				// 		</div>
+				// 		<input type="number" placeholder="Year" min="1950">
+				// 	</div>
+				// 	<div class="ui labeled mini input" style="margin-bottom: 5px;">
+				// 		<div class="ui label">
+				// 			Month:
+				// 		</div>
+				// 		<input type="number" placeholder="1-12 (or Leave Blank)" min="1" max="12">
+				// 	</div>
+				// 	<div class="ui labeled mini input">
+				// 		<div class="ui label">
+				// 			Day:
+				// 		</div>
+				// 		<input type="number" min="1" max="31" placeholder="1-31 (or Leave Blank)">
+				// 	</div>
+				// </div>
+				// <div class="three wide field">
+				// 	<label>To:</label>
+				// 	<div class="ui labeled mini input" style="margin-bottom: 5px;">
+				// 		<div class="ui label">
+				// 			Year:
+				// 		</div>
+				// 		<input type="number" placeholder="Year" min="1950">
+				// 	</div>
+				// 	<div class="ui labeled mini input" style="margin-bottom: 5px;">
+				// 		<div class="ui label">
+				// 			Month:
+				// 		</div>
+				// 		<input type="number" placeholder="1-12 (or Leave Blank)" min="1" max="12">
+				// 	</div>
+				// 	<div class="ui labeled mini input">
+				// 		<div class="ui label">
+				// 			Day:
+				// 		</div>
+				// 		<input id="day2" type="number" min="1" max="31" placeholder="1-31 (or Leave Blank)">
+				// 	</div>
+				// </div>
+
+
+
 				view += '<div class="one wide field">';
 				view += '<button type="button" onclick="removeExperience(' + index + ')" class="ui small icon basic button"><i class="icon trash"></i></button>';
 				view += '</div>';
@@ -519,11 +549,12 @@
 	</div>
 </div>
 
+
+
+
 <div class="ui large modal" id="addNewModal" style="background-color: lightgrey !important;">
 	<div class="ui blue header" id="addNewModalheader"></div>
 	<div class="scrolling content">
-
-
 		<form class="ui small form" id="applicantForm" method="POST">
 			<!-- personal information start -->
 			<h3 class="ui dividing blue header">Personal Information</h3>
@@ -600,7 +631,6 @@
 					options = '<option selected="" value="">Select status</option>';
 					counter = 0;
 					$.each(yosArr, function(index, val) {
-						/* iterate through array or object */
 						if (!val) {
 							options += '<option value="' + index + '">' + index + '</option>';
 						}
@@ -611,18 +641,12 @@
 				}
 
 				function addYearsOfService() {
-					// $(createYosDropdown);
 					selected = $("#yearsOfService").dropdown("get value");
-					// $("#yearsOfService").dropdown("get value");
-					// console.log("dropdown: ",selected);
 					if (selected) {
 						yosArr[selected] = $("#inputAdder").val();
 						$("#inputAdder").val("");
 					}
-					// $("option[value='"+selected+"']").remove();
 					selected = $("#yearsOfService").dropdown("get value");
-					// $("#yearsOfService").dropdown("remove selected","JOW");
-					// console.log(yosArr);
 					$(createYosField);
 				}
 
@@ -636,20 +660,15 @@
 					if (!val) {
 						$(createYosField);
 					}
-					// console.log(yosArr);
 				}
 
 				function createYosField() {
 					$(createYosDropdown);
-					// console.log(yosArr);
 					html = "";
 					$.each(yosArr, function(index, val) {
-						/* iterate through array or object */
-						// console.log(index);
 						if (val) {
 							html += '<div class="three wide field" id="jowField" style="display: inline-block;">';
 							html += '<label>' + index + ': <i class="icon right link times" onclick="removeField(\'' + index + '\')"></i></label>';
-							// html += '<input name="'+index+'" type="text" placeholder="No of.." value="'+val+'" onkeyup="yosOnChangeSave(\''+index+'\',$(this).val());">';
 							html += '<input name="' + index + '" type="text" placeholder="No of.." value="' + val + '" onkeyup="yosOnChangeSave(\'' + index + '\',$(this).val());">';
 							html += '</div>';
 						}
@@ -670,6 +689,23 @@
 				</div>
 				<div style="width: 100%;" id="yosContainer"></div>
 			</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 			<div class="fields" id="experienceAdd">
 				<div class="three wide field">
 					<label>Position:</label>
@@ -686,20 +722,37 @@
 				<div class="three wide field">
 					<label>From:</label>
 					<div class="ui labeled mini input" style="margin-bottom: 5px;">
-						<input id="dateMonth1" type="month">
+						<div class="ui label">
+							Year:
+						</div>
+						<input type="number" placeholder="Year" min="1950">
+					</div>
+					<div class="ui labeled mini input" style="margin-bottom: 5px;">
+						<div class="ui label">
+							Month:
+						</div>
+						<input type="number" placeholder="1-12 (or Leave Blank)" min="1" max="12">
 					</div>
 					<div class="ui labeled mini input">
 						<div class="ui label">
 							Day:
 						</div>
-						<input id="day1" type="number" min="1" max="31" placeholder="1-31 (or Leave Blank)">
+						<input type="number" min="1" max="31" placeholder="1-31 (or Leave Blank)">
 					</div>
-					<!-- <input class="inputListerExp" type="date" name="date1Add"> -->
 				</div>
 				<div class="three wide field">
 					<label>To:</label>
 					<div class="ui labeled mini input" style="margin-bottom: 5px;">
-						<input id="dateMonth2" type="month">
+						<div class="ui label">
+							Year:
+						</div>
+						<input type="number" placeholder="Year" min="1950">
+					</div>
+					<div class="ui labeled mini input" style="margin-bottom: 5px;">
+						<div class="ui label">
+							Month:
+						</div>
+						<input type="number" placeholder="1-12 (or Leave Blank)" min="1" max="12">
 					</div>
 					<div class="ui labeled mini input">
 						<div class="ui label">
@@ -707,22 +760,34 @@
 						</div>
 						<input id="day2" type="number" min="1" max="31" placeholder="1-31 (or Leave Blank)">
 					</div>
-					<!-- <input class="inputListerExp" type="date" name="date2Add"> -->
 				</div>
 				<div class="one wide field">
 					<label><i class="icon arrow down"></i></label>
-					<!-- 				<button type="button" class="ui icon small basic button" onclick="addExperience()"><i class="icon add"></i></button> -->
 					<button type="button" class="ui icon small basic button inputListerExpBtn" onclick="addExperience()"><i class="icon add"></i></button>
 
 				</div>
 			</div>
 
-			<!-- 	<div style="border:	1px solid lightgrey; border-radius: 3px; padding: 5px;"><i style="padding-left: 20px; text-align: center; color: lightgrey;">n/a</i> </div> -->
-			<!-- <div style="margin-top: 5px; border: 1px solid lightgrey; border-radius: 3px; padding: 5px;"> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 			<div class="ui list" id="experienceList" style="border: 1px solid lightgrey; border-radius: 3px; padding: 5px; padding-bottom: 0px;">
-
 			</div>
-
 			<h3 class="ui dividing blue header">Eligibility</h3>
 			<div class="field" id="eligibility"></div>
 			<h3 class="ui dividing blue header">Awards, Citations Received</h3>
@@ -738,15 +803,12 @@
 
 			<div class="ui error message"></div>
 		</form>
-
-
 	</div>
 	<div class="actions">
 		<button type="button" onclick="$('#'+this.form.id).form('submit');" form="applicantForm" class="ui tiny basic blue button approve"><i class="icon save"></i> Save</button>
 		<button class="ui tiny basic button deny"><i class="icon cancel"></i> Cancel</button>
 	</div>
 </div>
-
 <!-- ui form end -->
 
 

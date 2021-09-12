@@ -15,18 +15,10 @@ if ($rspvac_id = $_GET["rspvac_id"]) {
   $stmt->fetch();
   $stmt->close();
 }
-
-
-
 ?>
-
-<!-- <script type="text/javascript" src="scripts/Departments.js"></script> -->
 
 <script type="text/javascript">
  $(document).ready(function() {
-  // $.each($(".inputLister"), function(index, val) {
-     /* iterate through array or object */
-  // });
     $("#table_search").on("keyup", function() {
       var value = $(this).val().toLowerCase();
       $("#tableBody tr").filter(function() {
@@ -35,14 +27,8 @@ if ($rspvac_id = $_GET["rspvac_id"]) {
     });
 
     $(load);
-    // $("#office").html(office.render());
     $("#sortYear").dropdown();
-
-
     $('#officeDropdown').dropdown();
-
-
-
  });
 
 function load(){
@@ -155,17 +141,9 @@ require "rsp_addApplicant_modal.php";
 
     <div class="right item noprint">
 
-<!-- <a href="comparativeDataInfoPrint.php?rspvac_id=<?php echo $rspvac_id?>&compData=<?php echo $positiontitle?>" target="_blank" class="blue ui icon button" title="Print" style="margin-right: 5px;">
-  <i class="icon print"></i> Print
-</a> -->
-
-
       <button onclick="print()" class="blue ui icon button" title="Print" style="margin-right: 5px;">
         <i class="icon print"></i> Print
       </button>
-<!--      <a class="ui blue icon button" title="Evaluation Report" style="margin-right: 5px;">
-        <i class="icon chart bar"></i> Evaluation Report
-      </a> -->
     </div>
 </div>
 
@@ -214,21 +192,7 @@ require "rsp_addApplicant_modal.php";
       padding: 2px !important;
     }
   </style>
-<!--   <div class="ui modal" id="addApplicant">
-    <div class="header">Testing Transitions</div>
-    <div class="content" id="addApplicantContainer">
-      <div class="ui form">
-        <div class="field">
-          <label>Name:</label>
-          <input type="text" name="">
-        </div>
-      </div>
-    </div>
-    <div class="actions">
-      <button class="ui tiny basic blue approve button">Save</button>
-      <button class="ui tiny basic deny button">Close</button>
-    </div>
-  </div> -->
+
 
   <button onclick="addApplicant()" class="ui tiny green button noprint" title="Add applicant to the list"><i class="icon add"></i> Add Applicant</button>
   <table id="trTable" class="ui blue selectable structured celled very compact table printCompactText" style="font-size: 12px;">
