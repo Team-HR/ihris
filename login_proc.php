@@ -30,7 +30,7 @@ if (isset($_POST["login"])) {
     // Validate credentials
     if (empty($username_err) && empty($password_err)) {
 
-        $sql = "SELECT `id`, `username`, `employees_id`, `password`, `type` FROM `users` WHERE `username` = ?";
+        $sql = "SELECT `acc_id` AS `id`, `username`, `employees_id`, `password`, `type` FROM `spms_accounts` WHERE `username` = ?";
         $stmt = $mysqli->prepare($sql);
         $stmt->bind_param("s", $param_username);
         $param_username = $username;
