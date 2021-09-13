@@ -1,6 +1,6 @@
 <?php
-require_once 'Model.php';
-class PlantillaPermanent extends Model
+require_once 'Controller.php';
+class PlantillaPermanent extends Controller
 {
     private $dat = array();
     public $monthly_salary;

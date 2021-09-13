@@ -1,7 +1,8 @@
 <?php
-class Model
+class Controller
 {
 	protected $mysqli;
+	protected $mysqli2;
 
 	function __construct()
 	{
@@ -17,6 +18,7 @@ class Model
 		}
 		require $config_file;
 		$this->mysqli = $mysqli;
+		$this->mysqli2 = $mysqli2;
 
 		// CLASS LOADER
 		$arr = [];

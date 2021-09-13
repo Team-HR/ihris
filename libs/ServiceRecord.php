@@ -1,7 +1,7 @@
 <?php
-require_once "Model.php";
+require_once "Controller.php";
 
-class ServiceRecord extends Model
+class ServiceRecord extends Controller
 {
     function __construct()
     {

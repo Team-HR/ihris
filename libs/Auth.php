@@ -1,6 +1,6 @@
 <?php
-require_once 'Model.php';
-class Auth extends Model
+require_once 'Controller.php';
+class Auth extends Controller
 {
     private $session = array();
     public $full_name = "";
