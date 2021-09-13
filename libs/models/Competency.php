@@ -1502,8 +1502,73 @@ class Competency
             $data [] = [
                 'office_id' => $row['id'],
                 'office' => $row['office'],
-                'supervisors' => null //$this->get_supervisors($department_id),
+                'supervisors' => $this->get_supervisors($row['id'])
             ];
+        }
+
+        usort($data, function($a, $b) {return strcmp($a["office"], $b["office"]);});
+
+        return $data;
+    }
+
+    public function get_supervisors($office_id)
+    {
+        require_once "Employee.php";
+        $emp = new Employee;
+
+        $data = array();
+        if (!$office_id) return null;
+        $mysqli2 = $this->mysqli2;
+        $data = [];
+        $sql = "SELECT * FROM `superiors` WHERE `office_id` = '$office_id'";
+        $res = $mysqli2->query($sql);
+        
+        while ($row = $res->fetch_assoc()) {
+            $data [] = [
+                'superior_id' => $row['id'],
+                'employee_id' => $row['employee_id'],
+                'full_name' => $emp->get_full_name_upper($row['employee_id']),
+                'subordinates' => $this->get_subordinates($row['id'])
+            ];
+        }
+        return $data;
+    }
+
+    public function get_subordinates($superior_id)
+    {
+        require_once "Employee.php";
+        $emp = new Employee;
+
+        $data = array();
+        if (!$superior_id) return null;
+        $mysqli2 = $this->mysqli2;
+        $data = [];
+        $sql = "SELECT * FROM `superiors_records` WHERE `superior_id` = '$superior_id'";
+        $res = $mysqli2->query($sql);
+        
+        while ($row = $res->fetch_assoc()) {
+            $data [] = [
+                'superiors_record_id' => $row['id'],
+                'employee_id' => $row['employee_id'],
+                'full_name' => $emp->get_full_name_upper($row['employee_id']),
+                'is_complete' => $row['is_complete']==1?true:false,
+                'competency_scores' => $this->get_competency_scores($row['id'])
+            ];
+        }
+
+        usort($data, function($a, $b) {return strcmp($a["full_name"], $b["full_name"]);});
+        return $data;
+    }
+
+    public function get_competency_scores($superiors_record_id)
+    {
+        if (!$superiors_record_id) return null;
+        $mysqli2 = $this->mysqli2;
+        $data = [];
+        $sql = "SELECT * FROM `questionnaire_records` WHERE `superiors_record_id` = '$superiors_record_id' ORDER BY `questionnaire_option_id` ASC";
+        $res = $mysqli2->query($sql);
+        while ($row = $res->fetch_assoc()) {
+            $data [] = $row['questionnaire_option_id']%5?$row['questionnaire_option_id']%5:5;
         }
         return $data;
     }
