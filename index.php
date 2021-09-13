@@ -148,7 +148,7 @@ if ($auth->is_hr) {
 										<!-- <a class="item" href="tna.php">L&D Training Needs Assessment</a> -->
 										<a class="item" href="dna.php">Development Needs Assessment</a>
 										<a class="item" href="trainingreport.php">Training Report</a>
-										<a class="item" href="">Supervisor Assessment Reports</a>
+										<a class="item" href="supervisor_assessment_reports.php">Supervisor Assessment Reports</a>
 										<!-- <a class="item" href="">System Review</a> -->
 									</div>
 								</div>

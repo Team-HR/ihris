@@ -1,5 +1,5 @@
 <?php
-    require_once "libs/models/Competency.php";
+    require_once "libs/Competency.php";
     $comp = new Competency;
 
 if (isset($_GET["get_records"])) {
