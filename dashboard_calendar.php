@@ -2,10 +2,10 @@
     <div id="calendaryo"></div>
     <div id="create-event-modal" class="ui mini modal">
         <div class="ui basic segment">
-            <form @submit.prevent="submit_create_event" class="ui form">
+            <form id="event_form" @submit.prevent="submit_create_event" class="ui form">
                 <div class="field">
                     <label>Event Title</label>
-                    <input class="ui input" type="text" v-model="event.title" placeholder="Title of the event">
+                    <input class="ui input" type="text" v-model="event.title" placeholder="Title of the event" required>
                 </div>
                 <div class="field">
                     <label>Description</label>
@@ -14,11 +14,11 @@
                 <div class="two fields">
                     <div class="field">
                         <label>Start Date</label>
-                        <input type="date" v-model="event.start">
+                        <input type="date" v-model="event.start_date">
                     </div>
                     <div class="field">
                         <label>End Date</label>
-                        <input type="date" v-model="event.end">
+                        <input type="date" v-model="event.end_date">
                     </div>
                 </div>
 
@@ -28,14 +28,14 @@
                         <label>All Day</label>
                     </div>
                 </div>
-                <div class="two fields">
+                <div class="two fields" v-if="!event.allDay">
                     <div class="field">
                         <label>Start Time</label>
-                        <input type="time" v-model="event.startTime">
+                        <input type="time" v-model="event.start_time">
                     </div>
                     <div class="field">
                         <label>End Time</label>
-                        <input type="time" v-model="event.endTime">
+                        <input type="time" v-model="event.end_time">
                     </div>
                 </div>
                 <div class="grouped fields">
@@ -64,8 +64,8 @@
             </form>
         </div>
         <div class="actions">
-            <button class="ui small approve primary button">Submit</button>
-            <button class="ui small deny button">Cancel</button>
+            <button form="event_form" type="submit" class="ui small approve primary button">Submit</button>
+            <button form="event_form" type="button" class="ui small deny button">Cancel</button>
         </div>
     </div>
 </div>
@@ -74,18 +74,19 @@
         el: "#calendar-vue",
         data() {
             return {
+                event_form: null,
                 events: [],
                 calendar: null,
                 employees_id: new URLSearchParams(window.location.search).get("employees_id"),
                 event: {
-                    groupId: 0,
+                    id: null,
                     title: "",
                     description: "",
-                    start: "",
-                    end: "",
-                    allDay: true,
-                    startTime: "08:00",
-                    endTime: "17:00",
+                    start_date: "",
+                    end_date: "",
+                    allDay: false,
+                    start_time: "08:00",
+                    end_time: "17:00",
                     privacy: "onlyme"
                 },
                 create_event_modal: null
@@ -93,34 +94,26 @@
         },
         methods: {
             fetch_events() {
-                if (!this.calendar) return false
-                this.calendar.getEventSources().forEach(element => {
-                    element.remove()
-                });
-                // this.events.push({
-                //     groupId: 0,
-                //     title: "TEST",
-                //     description: "",
-                //     start: "2021-09-01T08:00:00",
-                //     end: "2021-09-02T17:00:00",
-                //     allDay: false,
-                //     startTime: "",
-                //     endTime: "",
-                //     privacy: ""
-                // })
-                // $.post("dashboard_calendar_proc", {
-                //     fetch_events: true,
-                //     employees_id: this.employees_id
-                // }, (data, textStatus, jqXHR) => {
-                //         console.log(data);
-                //         this.calendar.addEventSource(this.events)      
-                //     },
-                //     "json"
-                // );
-                this.calendar.addEventSource(this.events)      
-                    
-            },
 
+                $.get("dashboard_calendar_proc.php", {
+                        fetch_events: true,
+                        employees_id: this.employees_id
+                    }, (data, textStatus, jqXHR) => {
+                        // console.log(data);
+                        this.events = JSON.parse(JSON.stringify(data))
+                        if (!this.calendar) return null
+                        this.calendar.getEventSources().forEach(element => {
+                            element.remove()
+                        });
+                        this.calendar.addEventSource(this.events)
+                    },
+                    "json"
+                );
+
+
+
+
+            },
             init_event_modal() {
                 $("#create-event-modal").modal({
                     closable: false,
@@ -128,34 +121,75 @@
                         CalendarVue.reset_create_event_form()
                     },
                     onApprove($element) {
-                        CalendarVue.submit_create_event()
+                        // CalendarVue.submit_create_event()
+                        return false
                     }
                 }).modal("show");
             },
-            submit_create_event() {
-                this.events.push(this.event)
-                this.fetch_events()
-                $("#create-event-modal").modal("hide")
+            parse_event_for_view(event) {
+                var start = event.start_date
+                var end = event.end_date
+                var color = ""
+
+                if (event.privacy == 'onlyme') {
+                    color = "green"
+                } else if (event.privacy == 'mydepartment') {
+                    color = "orange"
+                } else if (event.privacy == 'everyone') {
+                    color = ""
+                }
+
+                if (event.allDay) {
+                    end = new Date(end)
+                    end.setDate(end.getDate() + 1)
+                    end = end.toISOString().split("T")[0]
+                } else {
+                    start = event.start_date + 'T' + event.start_time
+                    end = event.end_date + 'T' + event.end_time
+                }
+
+                const data = {
+                    title: event.title,
+                    start: start,
+                    end: end,
+                    allDay: event.allDay,
+                    color: color
+                }
+
+                return data
             },
-            // cancel_create_event() {
-            //     $("#create-event-modal").modal("hide")
-            // },
+            submit_create_event() {
+                $.post("dashboard_calendar_proc.php", {
+                        submit_create_event: true,
+                        employees_id: this.employees_id,
+                        event: this.event
+                    }, (data, textStatus, jqXHR) => {
+                        console.log('submitted:',data);
+                        console.log('submit:', this.event)
+                        this.fetch_events()
+                        $("#create-event-modal").modal("hide")
+                    },
+                    "json"
+                );
+            },
+
             reset_create_event_form() {
                 this.event = {
-                    groupId: 0,
+                    id: null,
                     title: "",
                     description: "",
-                    start: "",
-                    end: "",
-                    allDay: true,
-                    startTime: "08:00",
-                    endTime: "17:00",
+                    start_date: "",
+                    end_date: "",
+                    allDay: false,
+                    start_time: "08:00",
+                    end_time: "17:00",
                     privacy: "onlyme"
                 }
             },
             init_calendar() {}
         },
         mounted() {
+            // console.log(this.calendar)
             this.fetch_events()
             // this.init_calendar()
             // var events = this.events.length > 0 ? this.events : [];
@@ -181,34 +215,52 @@
                 },
                 selectable: true,
                 select: (info) => {
-                    // start = info.startStr;
-                    end = new Date(info.endStr);
-                    end.setDate(end.getDate() - 1);
-                    dateEnd = end.toISOString().split("T")[0];
-                    // console.log(start + " to " + dateEnd);
-                    // this.event.title = ""
-                    this.event.start = info.startStr
-                    this.event.end = dateEnd
-                    // console.log(info.endStr);
-                    // this.create_modal = true
+                    allDay = info.allDay
+                    start_date = info.startStr
+                    end_date = info.endStr
+                    start_time = this.event.start_time
+                    end_time = this.event.end_time
+
+                    if (allDay) {
+                        end_date = new Date(end_date)
+                        end_date.setDate(end_date.getDate() - 1)
+                        end_date = end_date.toISOString().split("T")[0]
+                    } else {
+                        startStr = start_date.split("+")[0]
+                        endStr = end_date.split("+")[0]
+                        startStr = startStr.split("T")
+                        endStr = endStr.split("T")
+                        start_date = startStr[0]
+                        end_date = endStr[0]
+                        start_time = startStr[1]
+                        end_time = endStr[1]
+                    }
+
+                    this.event.allDay = allDay
+                    this.event.start_date = start_date
+                    this.event.end_date = end_date
+                    this.event.start_time = start_time
+                    this.event.end_time = end_time
+
                     this.init_event_modal()
+                    // console.log(this.event);
                 },
                 navLinks: false,
                 editable: false,
-                allDay: true,
+                // allDay: true,
                 displayEventTime: true,
-                displayEventEnd: true,
+                displayEventend_date: true,
                 eventLimit: true, // allow "more" link when too many events
-                events: this.events,
-                eventClick: function(info) {
+                // events: this.events,
+                eventClick: (info) => {
                     info.jsEvent.preventDefault();
-
-                    if (info.event.url) {
-                        // window.open(info.event.url+"&start="+info.event.start.toISOString(),"_blank");
-                        // window.open(info.event.url+"&start="+info.event.start.toISOString(),"_blank");
-                        window.location.replace(info.event.url + "&start=" + info.event.start.toISOString());
-                        // alert(info.event.start.toISOString());
-                    }
+                    console.log(info.event);
+                    // if (info.event.url) {
+                    //     // window.open(info.event.url+"&start="+info.event.start.toISOString(),"_blank");
+                    //     // window.open(info.event.url+"&start="+info.event.start.toISOString(),"_blank");
+                    //     window.location.replace(info.event.url + "&start=" + info.event.start.toISOString());
+                    //     // alert(info.event.start.toISOString());
+                    // }
                 }
             });
             this.calendar.render();
