@@ -66,7 +66,7 @@ require_once "_connect.db.php"; ?>
             <!-- <div class="ui bottom attached tab active" data-tab="report"> -->
             <div>
 
-                <div id="depts_dropdown" class="ui search selection dropdown" style="margin-top: 10px;">
+                <div id="depts_dropdown" class="ui search selection dropdown" :class="is_loading?'disabled':''" style="margin-top: 10px;">
                     <input type="hidden" name="department">
                     <div class="default text">Select Department</div>
                     <i class="dropdown icon"></i>
@@ -76,31 +76,26 @@ require_once "_connect.db.php"; ?>
                     </div>
                 </div>
 
-                <!-- <div id="snum_rows" class="ui basic segment" style="font-size: 24px;">
-                <i class="icon info blue tiny circle"></i><span id="num_rows" style="font-size: 13px; color: grey; font-style: italic;">
-                    <div class="ui active mini inline loader"></div> Loading...
-                </span>
-            </div> -->
 
-                <!-- <div class="ui grid center aligned" style="margin-bottom: 100px;">
-        <div class="eight wide column" height="">
-          <canvas id="overall_chart"></canvas>
-        </div>
-        <div class="eight wide column" height="">
-          <canvas id="gender_chart"></canvas>
-        </div>
-      </div>-->
+                <div class="ui segment" v-if="is_loading">
+                    <div class="ui active inverted dimmer">
+                        <div class="ui large text loader">Loading</div>
+                    </div>
+                    <p style="height: 500px;"></p>
+                </div>
+
+
                 <ol type="I">
-                    <div class="ui segment" v-for="(comp,i) in competencies" :key="i" style="margin-top: 20px;">
+                    <div class="ui basic segment" v-for="(comp,i) in competencies" :key="i" style="margin-top: 20px;">
 
-                        <h2 class="ui primary header block">
+                        <h2 class="ui primary header">
                             <li style="margin-left: 20px;">
                                 {{comp.department}}
                             </li>
                         </h2>
 
-                        <div class="ui segment" v-for="(office,off_ind) in comp.offices" :key="office.office_id">
-                            <h4 class="ui primary header block">{{(off_ind+1)+".) "+ office.office}}</h4>
+                        <div class="ui basic segment" v-for="(office,off_ind) in comp.offices" :key="office.office_id">
+                            <h4 class="ui primary header">{{(off_ind+1)+".) "+ office.office}}</h4>
 
                             <div class="ui basic segment" v-for="(sup,sup_ind) in office.supervisors" :key="sup.superior_id">
                                 <h5 class="ui primary header">{{"SUPERVISOR: "+ sup.full_name}} <span style="color: white; font-size: 10px;">SUPERIOR_ID:{{sup.superior_id}}</span></h5>
@@ -198,7 +193,7 @@ require_once "_connect.db.php"; ?>
                                         </tr>
                                     </tbody>
                                 </table>
-                                <button class="ui small primary button" style="margin-top: 10px;" @click="view_in_depth_report(sup.superior_id)">View In-Depth Report</button>
+                                <button v-if="sup.num_completed" class="ui small primary button" style="margin-top: 10px;" @click="show_indepth_report(sup.superior_id)">View In-Depth Report</button>
                             </div>
 
                         </div>
@@ -207,6 +202,68 @@ require_once "_connect.db.php"; ?>
 
             </div>
         </div>
+
+
+        <!-- fullscreen modal start -->
+        <div id="in_depth_modal" class="ui fullscreen modal">
+            <!-- <div class="header">Header</div> -->
+            <div class="ui basic segment" style="min-height: 500px;">
+                <!-- competency dropdown start -->
+                <div id="comps_dropdown" class="ui search selection dropdown" :class="is_loading?'disabled':''" style="margin-top: 10px;" tabindex="">
+                    <input type="hidden" name="competency">
+                    <div class="default text">Select Competency</div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <div v-for="(comp,k) in competency_dictionary" :key="k" class="item" :data-value="k">{{comp.name}}</div>
+                    </div>
+                </div>
+                <!-- <button class="ui small deny button">Close</button> -->
+                <!-- competency dropdown end -->
+                <!-- competency definition card start  -->
+                <div class="ui segment">
+                    <h3 class="ui primary header">{{competency_selected.name}}</h3>
+                    <p>{{competency_selected.description}}</p>
+                </div>
+                <!-- competency definition card end  -->
+                <!-- chart start -->
+                <!-- <div style="max-width: 800px;">
+                <canvas id="competency_in_depth_chart"></canvas>
+                </div> -->
+                <div class="ui grid">
+                    <div class="eight wide column"><canvas id="number_bar_chart"></canvas></div>
+                    <div class="eight wide column"><canvas id="percent_doughnut_chart"></canvas></div>
+                </div>
+                <!-- chart end -->
+                <!-- competency definition table start -->
+                <table class="ui structured compact table">
+                    <thead>
+                        <tr class="center aligned">
+                            <th v-for="(lvl,l) in competency_selected.levels" :key="l">
+                                Level {{l+1}}
+                                <br>
+                                <cite style="font-weight: normal;">{{lvl.proficiency}}</cite>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- competency definition table end -->
+            </div>
+            <div class="actions">
+                <button class="ui small deny button">Close</button>
+            </div>
+        </div>
+        <!-- fullscreen modal end -->
+
+
     </template>
 </div>
 <script>
@@ -216,16 +273,52 @@ require_once "_connect.db.php"; ?>
             return {
                 department_id: null,
                 departments: [],
-                competencies: []
+                competencies: [],
+                competency_dictionary: [],
+                competency_selected: {},
+                is_loading: true,
+                in_depth_data: [],
+                in_depth_data_selected: {},
+                bar_chart: null,
+                doughnut_chart: null
+
             }
         },
         methods: {
+            async show_indepth_report(superior_id) {
+                await $("#in_depth_modal").modal("show")
+                this.get_in_depth_data(superior_id).then((res) => {
+                    // console.log(res);
+                    this.in_depth_data = JSON.parse(JSON.stringify(res))
+                    // this.competencies = JSON.parse(JSON.stringify(data))
+                })
+            },
+
+            async get_in_depth_data(superior_id) {
+                let result
+                try {
+                    result = await $.get("supervisor_assessment_reports_proc.php", {
+                            get_in_depth_data: true,
+                            superior_id: superior_id
+                        }, (data, textStatus, jqXHR) => {
+                            result = data
+                        },
+                        "json"
+                    );
+                    return result
+                } catch (error) {
+                    console.log(error);
+                }
+            },
+
             async get_data() {
+                this.is_loading = true
                 await $.get("supervisor_assessment_reports_proc.php", {
                         get_data: true,
                         department_id: this.department_id
                     }, (data, textStatus, jqXHR) => {
                         this.competencies = JSON.parse(JSON.stringify(data))
+                        this.is_loading = false
                     },
                     "json"
                 );
@@ -244,11 +337,171 @@ require_once "_connect.db.php"; ?>
                 else if (score == 4) return "background-color: #016dd8c4; color: white;"
                 else if (score == 5) return "background-color: #016dd8; color: white;"
             },
-            view_in_depth_report(superiors_record_id) {
-                alert(superiors_record_id)
+            async get_competency_dictionary() {
+                await $.get("supervisor_assessment_reports_proc.php", {
+                        get_competency_dictionary: true
+                    }, (data, textStatus, jqXHR) => {
+                        // console.log('competencies:',data);
+                        this.competency_dictionary = JSON.parse(JSON.stringify(data))
+                    },
+                    "json"
+                );
+            },
+            create_charts() {
+                if (this.bar_chart && this.doughnut_chart) {
+                    this.bar_chart.destroy()
+                    this.doughnut_chart.destroy()   
+                }
+
+                const bar_data = this.in_depth_data_selected.bar
+                const pie_data = this.in_depth_data_selected.pie
+
+                var config = {
+                    type: 'bar',
+                    data: {
+                        labels: ["Level 1", "Level 2", "Level 3", "Level 4", "Level 5"],
+                        datasets: [{
+                            label: '# of personnel',
+                            data: bar_data,
+                            backgroundColor: [
+                                "#acf0f2",
+                                "#00d1fd",
+                                "#00aaff",
+                                "#0079ff",
+                                "#2c1dff"
+                            ],
+                            fill: false,
+                            borderWidth: 1,
+                            lineTension: 0,
+                        }]
+                    },
+                    options: {
+                        tooltips: {
+                            callbacks: {
+                                // label: function(tooltipItem, data) {
+                                //     var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                                //     if (label) {
+                                //         label += 'Level ';
+                                //     }
+                                //     label += tooltipItem.yLabel;
+                                //     return label;
+                                // }
+                            }
+                        },
+                        responsive: true,
+                        title: {
+                            display: true,
+                            text: "Number of Personnel / Level"
+                        },
+                        legend: {
+                            display: true,
+                        },
+                        scales: {
+                            xAxes: [{
+                                ticks: {
+                                    // fontSize:14,
+                                    // min: 0,
+                                    // max: 25,
+                                    // beginAtZero: true,
+                                    // stepSize:1
+                                    autoSkip: false,
+                                }
+                            }],
+                            yAxes: [{
+                                display: true,
+                                ticks: {
+                                    beginAtZero: true,
+                                    stepSize: 1,
+                                    autoSkip: false,
+                                    // max: 5
+                                }
+                            }],
+                        },
+                        onClick: function(evt, items) {
+
+                            //   var firstPoint = this.getElementAtEvent(evt)[0];
+                            //   if (firstPoint) {
+                            //     var label = this.data.labels[firstPoint._index];
+                            //     var value = this.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+                            //     showCompInfo(label, value);
+                            //   }
+
+                        }
+
+                    }
+                };
+                var config2 = {
+                    type: 'pie',
+                    data: {
+                        labels: [
+                            "Level 1",
+                            "Level 2",
+                            "Level 3",
+                            "Level 4",
+                            "Level 5",
+                        ],
+                        datasets: [{
+                            label: 'Percentage',
+                            data: pie_data,
+                            backgroundColor: [
+                                "#acf0f2",
+                                "#00d1fd",
+                                "#00aaff",
+                                "#0079ff",
+                                "#2c1dff",
+                            ],
+                            fill: true,
+                            borderWidth: 2,
+                        }]
+                    },
+                    options: {
+
+                        // scales: {
+                        //     yAxes: [{
+                        //         scaleLabel: {
+                        //             display: false,
+                        //             labelString: 'Number of Personnels'
+                        //         },
+                        //         ticks: {
+                        //             display:false,
+                        //             beginAtZero:true,
+                        //             // max: 100,
+                        //             stepSize: 20
+                        //         }
+                        //     }]
+                        // },//end of scales
+
+                        title: {
+                            display: true,
+                            text: "Percentage of Personnels per Level"
+                        },
+                        legend: {
+                            display: true,
+                        },
+                    }
+                };
+
+                var number_bar_chart = $("#number_bar_chart")
+                var percent_doughnut_chart = $("#percent_doughnut_chart")
+
+                this.bar_chart = new Chart(number_bar_chart, config)
+                this.doughnut_chart = new Chart(percent_doughnut_chart, config2)
             }
         },
         mounted() {
+            this.get_competency_dictionary().then(() => {
+                $("#comps_dropdown").dropdown({
+                    autofocus: false,
+                    fullTextSearch: true,
+                    forceSelection: false,
+                    onChange: (value, text, $choice) => {
+                        this.competency_selected = JSON.parse(JSON.stringify(this.competency_dictionary[value]))
+                        this.in_depth_data_selected = JSON.parse(JSON.stringify(this.in_depth_data[value]))
+                        this.create_charts()
+                    }
+                })
+            })
             this.get_data()
             this.get_departments().then(() => {
                 $("#depts_dropdown").dropdown({
@@ -260,6 +513,8 @@ require_once "_connect.db.php"; ?>
                     }
                 })
             })
+
+
         }
     });
 </script>

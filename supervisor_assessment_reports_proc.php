@@ -12,4 +12,13 @@ if (isset($_GET["get_departments"])) {
     $data = [];
     $data = $comp->generate_report_by_dept_id($department_id);
     echo json_encode($data);
+} elseif (isset($_GET["get_competency_dictionary"])) {
+    $data = $comp->competencies;
+    echo json_encode($data);
+} elseif (isset($_GET["get_in_depth_data"])) {
+    $superior_id = $_GET["superior_id"];
+    $data = [];
+    // get superiors_records with superior_id
+    $data = $comp->get_in_depth_data($superior_id);
+    echo json_encode($data);
 }

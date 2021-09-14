@@ -1492,7 +1492,7 @@ class Competency extends Controller
 			$res = $mysqli2->query($sql);
 			$row = $res->fetch_assoc();
 
-			$data [] = [
+			$data[] = [
 				'department_id' => $row['id'],
 				'department' => $row['department'],
 				'offices' => $this->get_offices($department_id),
@@ -1551,11 +1551,17 @@ class Competency extends Controller
 		$res = $mysqli2->query($sql);
 
 		while ($row = $res->fetch_assoc()) {
+			$subordinates = $this->get_subordinates($row['id']);
+			$num_completed = 0;
+			foreach ($subordinates as $sub) {
+				$num_completed += $sub["is_complete"] ? 1 : 0;
+			}
 			$data[] = [
 				'superior_id' => $row['id'],
 				'employee_id' => $row['employee_id'],
 				'full_name' => $emp->get_full_name_upper($row['employee_id']),
-				'subordinates' => $this->get_subordinates($row['id'])
+				'subordinates' => $subordinates,
+				'num_completed' => $num_completed
 			];
 		}
 		return $data;
@@ -1599,6 +1605,47 @@ class Competency extends Controller
 		while ($row = $res->fetch_assoc()) {
 			$data[] = $row['questionnaire_option_id'] % 5 ? $row['questionnaire_option_id'] % 5 : 5;
 		}
+		return $data;
+	}
+
+	public function get_in_depth_data($superior_id)
+	{
+		if (!$superior_id) return null;
+		$emp = new EmployeeController;
+		$data = [];
+		$subordinates = $this->get_subordinates($superior_id);
+
+
+		// get personnel start
+		foreach ($subordinates as $key => $sub) {
+			foreach ($sub["competency_scores"] as $i => $comp) {
+				if (!isset($data[$i])) {
+					for ($k = 0; $k < 5; $k++) {
+						$data[$i]["personnel"][] = [];
+					}
+				}
+				$data[$i]["personnel"][$comp - 1][] = [
+					"superiors_record_id" => $sub["superiors_record_id"],
+					"employee_id" => $sub["employee_id"],
+					"full_name" => $sub["full_name"]
+				];
+			}
+		}
+		// get personnel end
+		// get chart data start
+		foreach ($data as $i => $datum) {
+			$total_personnel = 0;
+			foreach ($datum["personnel"] as $personnel) {
+				$count = count($personnel);
+				$total_personnel += $count;
+				$data[$i]["bar"][] = $count;
+			}
+			foreach ($data[$i]["bar"] as $dat) {
+				$data[$i]["pie"][] = round(($dat / $total_personnel) * 100);
+			}
+		}
+		// get chart data end
+		// $data = $subordinates;
 		return $data;
 	}
 

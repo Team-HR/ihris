@@ -58,9 +58,10 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
   <!-- fomantic-ui -->
   <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
   <script src="semantic/dist/semantic.min.js"></script>
-  <!-- chart.js -->
+  <!-- chart.js ^2.9.3 start -->
   <script src="node_modules/chart.js/dist/Chart.js"></script>
   <script src="node_modules/chart.js/dist/Chart.min.js"></script>
+  <!-- chart.js ^2.9.3 end -->
   <!-- fullcalendar4.js -->
   <link href='fullcalendar4/packages/core/main.css' rel='stylesheet' />
   <link href='fullcalendar4/packages/daygrid/main.css' rel='stylesheet' />
