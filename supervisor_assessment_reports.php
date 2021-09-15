@@ -221,8 +221,8 @@ require_once "_connect.db.php"; ?>
                 <!-- competency dropdown end -->
                 <!-- competency definition card start  -->
                 <div class="ui segment">
-                    <h3 class="ui primary header">{{competency_selected.name}}</h3>
-                    <p>{{competency_selected.description}}</p>
+                    <h3 class="ui primary header">{{competency_dictionary_selected.name}}</h3>
+                    <p>{{competency_dictionary_selected.description}}</p>
                 </div>
                 <!-- competency definition card end  -->
                 <!-- chart start -->
@@ -238,7 +238,7 @@ require_once "_connect.db.php"; ?>
                 <table class="ui structured compact table">
                     <thead>
                         <tr class="center aligned">
-                            <th v-for="(lvl,l) in competency_selected.levels" :key="l">
+                            <th v-for="(lvl,l) in competency_dictionary_selected.levels" :key="l">
                                 Level {{l+1}}
                                 <br>
                                 <cite style="font-weight: normal;">{{lvl.proficiency}}</cite>
@@ -275,7 +275,7 @@ require_once "_connect.db.php"; ?>
                 departments: [],
                 competencies: [],
                 competency_dictionary: [],
-                competency_selected: {},
+                competency_dictionary_selected: {},
                 is_loading: true,
                 in_depth_data: [],
                 in_depth_data_selected: {},
@@ -286,11 +286,19 @@ require_once "_connect.db.php"; ?>
         },
         methods: {
             async show_indepth_report(superior_id) {
-                await $("#in_depth_modal").modal("show")
-                this.get_in_depth_data(superior_id).then((res) => {
-                    // console.log(res);
+                // this.set_in_depth_competency(0)
+                // $("#comps_dropdown").dropdown("set value", "0")
+                await this.get_in_depth_data(superior_id).then((res) => {
                     this.in_depth_data = JSON.parse(JSON.stringify(res))
-                    // this.competencies = JSON.parse(JSON.stringify(data))
+                    $("#in_depth_modal").modal({
+                        onHide: ($el) => {
+                            this.bar_chart.destroy()
+                            this.doughnut_chart.destroy()
+                            this.competency_dictionary_selected = {}
+                        }
+                    }).modal("show")
+                    $("#comps_dropdown").dropdown("set selected", 0)
+
                 })
             },
 
@@ -350,7 +358,7 @@ require_once "_connect.db.php"; ?>
             create_charts() {
                 if (this.bar_chart && this.doughnut_chart) {
                     this.bar_chart.destroy()
-                    this.doughnut_chart.destroy()   
+                    this.doughnut_chart.destroy()
                 }
 
                 const bar_data = this.in_depth_data_selected.bar
@@ -487,6 +495,11 @@ require_once "_connect.db.php"; ?>
 
                 this.bar_chart = new Chart(number_bar_chart, config)
                 this.doughnut_chart = new Chart(percent_doughnut_chart, config2)
+            },
+            set_in_depth_competency(index) {
+                this.competency_dictionary_selected = JSON.parse(JSON.stringify(this.competency_dictionary[index]))
+                this.in_depth_data_selected = JSON.parse(JSON.stringify(this.in_depth_data[index]))
+                this.create_charts()
             }
         },
         mounted() {
@@ -496,9 +509,7 @@ require_once "_connect.db.php"; ?>
                     fullTextSearch: true,
                     forceSelection: false,
                     onChange: (value, text, $choice) => {
-                        this.competency_selected = JSON.parse(JSON.stringify(this.competency_dictionary[value]))
-                        this.in_depth_data_selected = JSON.parse(JSON.stringify(this.in_depth_data[value]))
-                        this.create_charts()
+                        this.set_in_depth_competency(value)
                     }
                 })
             })
