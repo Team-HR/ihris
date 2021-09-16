@@ -99,7 +99,7 @@
                         fetch_events: true,
                         employees_id: this.employees_id
                     }, (data, textStatus, jqXHR) => {
-                        // console.log(data);
+                        console.log(data);
                         this.events = JSON.parse(JSON.stringify(data))
                         if (!this.calendar) return null
                         this.calendar.getEventSources().forEach(element => {
@@ -121,7 +121,6 @@
                         CalendarVue.reset_create_event_form()
                     },
                     onApprove($element) {
-                        // CalendarVue.submit_create_event()
                         return false
                     }
                 }).modal("show");
@@ -158,14 +157,14 @@
 
                 return data
             },
-            submit_create_event() {
-                $.post("dashboard_calendar_proc.php", {
+            async submit_create_event() {
+                await $.post("dashboard_calendar_proc.php", {
                         submit_create_event: true,
                         employees_id: this.employees_id,
                         event: this.event
                     }, (data, textStatus, jqXHR) => {
                         console.log('submitted:',data);
-                        console.log('submit:', this.event)
+                        // console.log('submit:', this.event)
                         this.fetch_events()
                         $("#create-event-modal").modal("hide")
                     },
