@@ -104,8 +104,7 @@ p{
 
       $(inputName).keyup(function(event) {
         var name_on_field = inputName.val();
-        // employees_id = 0;
-        if ( inputName_val.trim() !== name_on_field.trim()) {
+        if ( inputName_val !== name_on_field) {
           employees_id = 0;
         } else if (inputName.val() == "") {
           inputDept.val("");
