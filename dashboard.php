@@ -346,21 +346,42 @@ if (isset($_GET["spms"])) {
                     </div>
 
                 </div>
-                <div class="ui tab" data-tab="leave_records">
-
-
-                    <div class="ui pointing secondary blue menu fluid" id="">
-                        <a class="item active" data-tab="leave_recs">Leave Records</a>
-                    </div>
-                    <div class="ui tab segment active" data-tab="leave_recs">
-                        <div style="text-align: center;">
-                            <p style="padding: 20px; background-color: lightgrey; color: white;">No Data</p>
+                <div id="dashboard_leave_records" class="ui tab" data-tab="leave_records">
+                    <template>
+                        <div class="ui pointing secondary blue menu fluid" id="">
+                            <a class="item active" data-tab="attendance_report">Attendance Report</a>
                         </div>
-                    </div>
-
+                        <div class="ui tab segment active" data-tab="attendance_report">
+                            <div style="text-align: center;">
+                                <table class="ui celled compact structured table">
+                                    <thead>
+                                        <tr class="center aligned">
+                                            <th>Month - Year</th>
+                                            <th>Tardy<br>(min)</th>
+                                            <th>Undertime<br>(min)</th>
+                                            <th>Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(rec, k) in leave_records" :key="k">
+                                            <td>{{rec.month}}</td>
+                                            <td class="center aligned">{{rec.totalMinsTardy}}</td>
+                                            <td class="center aligned">{{rec.totalMinsUndertime}}</td>
+                                            <td>{{rec.remarks}}</td>
+                                        </tr>
+                                        <tr v-if="!leave_records.length">
+                                            <td colspan="4" class="center aligned">
+                                                <p style="padding: 20px; background-color: lightgrey; color: white;">No Data</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </template>
                 </div>
                 <div class="ui tab" data-tab="hr_cores">
-                    
+
                     <!-- <div class="ui pointing secondary blue menu fluid">
                         <a class="item active" data-tab="leave_recs">Leave Records</a>
                     </div>
@@ -529,6 +550,7 @@ if (isset($_GET["spms"])) {
     <!-- scripts -->
     <!-- auth_user_app script -->
     <script src="dashboard.js"></script>
+    <script src="dashboard_leave_records.js"></script>
     <script src="pds/config.js"></script>
     <script src="appointments/config.js"></script>
     <script type="text/javascript">

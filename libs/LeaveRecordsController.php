@@ -74,7 +74,6 @@ class LeaveRecordsController extends Controller
     public function get_summary()
     {
         return $this->summary;
-        return json_encode($this->summary);
     }
     #############################################
     // private functions
@@ -130,6 +129,13 @@ class LeaveRecordsController extends Controller
         $sql = $this->mysqli->query($sql);
         $a = [];
         while ($dat = $sql->fetch_assoc()) {
+            $dateString = $dat["month"];
+            $dat["month"] = "";
+            if ($dateString) {
+                $myDateTime = DateTime::createFromFormat('Y-m', $dateString);
+                $newDateString = $myDateTime->format('F Y');
+                $dat["month"] = $newDateString;
+            }
             $a[] = $dat;
         }
         $this->summary = $a;
