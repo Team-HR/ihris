@@ -65,7 +65,7 @@ require_once "_connect.db.php"; ?>
             </div> -->
             <!-- <div class="ui bottom attached tab active" data-tab="report"> -->
             <div>
-
+                <label> Select Department: </label>
                 <div id="depts_dropdown" class="ui search selection dropdown" :class="is_loading?'disabled':''" style="margin-top: 10px;">
                     <input type="hidden" name="department">
                     <div class="default text">Select Department</div>
@@ -207,8 +207,9 @@ require_once "_connect.db.php"; ?>
         <!-- fullscreen modal start -->
         <div id="in_depth_modal" class="ui fullscreen modal">
             <!-- <div class="header">Header</div> -->
-            <div class="ui basic segment" style="min-height: 500px;">
+            <div class="ui basic segment scrolling content" style="min-height: 1000px;">
                 <!-- competency dropdown start -->
+                <label>Select Competency: </label>
                 <div id="comps_dropdown" class="ui search selection dropdown" :class="is_loading?'disabled':''" style="margin-top: 10px;" tabindex="">
                     <input type="hidden" name="competency">
                     <div class="default text">Select Competency</div>
@@ -235,23 +236,26 @@ require_once "_connect.db.php"; ?>
                 </div>
                 <!-- chart end -->
                 <!-- competency definition table start -->
-                <table class="ui structured compact table">
+                <table class="ui structured celled compact large table">
                     <thead>
-                        <tr class="center aligned">
-                            <th v-for="(lvl,l) in competency_dictionary_selected.levels" :key="l">
+                        <!-- <tr class="center aligned"> -->
+                        <tr>
+                            <th v-for="(lvl,l) in competency_dictionary_selected.levels" :key="l" style="font-size: 14px;">
                                 Level {{l+1}}
                                 <br>
                                 <cite style="font-weight: normal;">{{lvl.proficiency}}</cite>
+                                <br>
+                                <p style="font-weight: normal;">{{in_depth_data_selected.bar[l]+" in "+in_depth_data_selected.total}} ({{in_depth_data_selected.pie[l]+"%"}}) personnel</p>
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td v-for="(employees, emps) in in_depth_data_selected.personnel" :key="emps" style="vertical-align: top; font-size: 14px;">
+                                <ol>
+                                    <li v-for="(employee,e) in employees" :key="e">{{employee.full_name}}</li>
+                                </ol>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -286,7 +290,6 @@ require_once "_connect.db.php"; ?>
         },
         methods: {
             async show_indepth_report(superior_id) {
-                // this.set_in_depth_competency(0)
                 // $("#comps_dropdown").dropdown("set value", "0")
                 await this.get_in_depth_data(superior_id).then((res) => {
                     this.in_depth_data = JSON.parse(JSON.stringify(res))
@@ -298,7 +301,7 @@ require_once "_connect.db.php"; ?>
                         }
                     }).modal("show")
                     $("#comps_dropdown").dropdown("set selected", 0)
-
+                    this.set_in_depth_competency(0)
                 })
             },
 
@@ -464,22 +467,20 @@ require_once "_connect.db.php"; ?>
                         }]
                     },
                     options: {
-
-                        // scales: {
-                        //     yAxes: [{
-                        //         scaleLabel: {
-                        //             display: false,
-                        //             labelString: 'Number of Personnels'
-                        //         },
-                        //         ticks: {
-                        //             display:false,
-                        //             beginAtZero:true,
-                        //             // max: 100,
-                        //             stepSize: 20
-                        //         }
-                        //     }]
-                        // },//end of scales
-
+                        // multiTooltipTemplate: "<%%=datasetLabel%%> : <%%= value %%>",
+                        tooltips: {
+                            callbacks: {
+                                label: function(tooltipItem, data) {
+                                    var datasetIndex = tooltipItem.datasetIndex
+                                    var dataIndex = tooltipItem.index
+                                    var tooltip = ""
+                                    var value = data.datasets[datasetIndex].data[dataIndex]
+                                    var label = data.labels[dataIndex]
+                                    tooltip += label + ": " + value + "%";
+                                    return tooltip;
+                                }
+                            }
+                        },
                         title: {
                             display: true,
                             text: "Percentage of Personnels per Level"

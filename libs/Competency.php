@@ -1643,6 +1643,7 @@ class Competency extends Controller
 			foreach ($data[$i]["bar"] as $dat) {
 				$data[$i]["pie"][] = round(($dat / $total_personnel) * 100);
 			}
+			$data[$i]["total"] = $total_personnel;
 		}
 		// get chart data end
 		// $data = $subordinates;
