@@ -24,7 +24,7 @@
 
                 <div class="field">
                     <div class="ui checkbox checked">
-                        <input type="checkbox" name="allday" :checked="event.allDay?true:false" tabindex="0" class="hidden" v-model="event.allDay">
+                        <input type="checkbox" name="allday" value="true" :checked="event.allDay?true:false" tabindex="0" class="hidden" v-model="event.allDay">
                         <label>All Day</label>
                     </div>
                 </div>
@@ -93,9 +93,8 @@
             }
         },
         methods: {
-            fetch_events() {
-
-                $.get("dashboard_calendar_proc.php", {
+            async fetch_events() {
+                await $.get("dashboard_calendar_proc.php", {
                         fetch_events: true,
                         employees_id: this.employees_id
                     }, (data, textStatus, jqXHR) => {
@@ -109,10 +108,6 @@
                     },
                     "json"
                 );
-
-
-
-
             },
             init_event_modal() {
                 $("#create-event-modal").modal({
@@ -125,45 +120,14 @@
                     }
                 }).modal("show");
             },
-            parse_event_for_view(event) {
-                var start = event.start_date
-                var end = event.end_date
-                var color = ""
 
-                if (event.privacy == 'onlyme') {
-                    color = "green"
-                } else if (event.privacy == 'mydepartment') {
-                    color = "orange"
-                } else if (event.privacy == 'everyone') {
-                    color = ""
-                }
-
-                if (event.allDay) {
-                    end = new Date(end)
-                    end.setDate(end.getDate() + 1)
-                    end = end.toISOString().split("T")[0]
-                } else {
-                    start = event.start_date + 'T' + event.start_time
-                    end = event.end_date + 'T' + event.end_time
-                }
-
-                const data = {
-                    title: event.title,
-                    start: start,
-                    end: end,
-                    allDay: event.allDay,
-                    color: color
-                }
-
-                return data
-            },
             async submit_create_event() {
                 await $.post("dashboard_calendar_proc.php", {
                         submit_create_event: true,
                         employees_id: this.employees_id,
                         event: this.event
                     }, (data, textStatus, jqXHR) => {
-                        console.log('submitted:',data);
+                        console.log('submitted:', data);
                         // console.log('submit:', this.event)
                         this.fetch_events()
                         $("#create-event-modal").modal("hide")
@@ -253,7 +217,8 @@
                 // events: this.events,
                 eventClick: (info) => {
                     info.jsEvent.preventDefault();
-                    console.log(info.event);
+                    var event_id = info.event.id;
+                    console.log(event_id);
                     // if (info.event.url) {
                     //     // window.open(info.event.url+"&start="+info.event.start.toISOString(),"_blank");
                     //     // window.open(info.event.url+"&start="+info.event.start.toISOString(),"_blank");

@@ -22,13 +22,45 @@ class CalendarController extends Controller
 		$employee_id = $this->employee_id;
 		if (!$employee_id) return null;
 		$this->get_onlyme_events();
+		$this->get_mydepartment_events();
+		$this->get_everyone_events();
 		return $this->events;
 	}
 
 	private function get_onlyme_events()
 	{
 		$employee_id = $this->employee_id;
-		$sql = "SELECT * FROM `calendar` WHERE `employee_id` = '$employee_id'";
+		$sql = "SELECT * FROM `calendar` WHERE `employee_id` = '$employee_id' AND `privacy` = 'onlyme'";
+		$this->get_events_query($sql);
+	}
+
+	private function get_mydepartment_events()
+	{
+		$employee_id = $this->employee_id;
+		$department_id = null;
+		// get department_id start
+		$sql = "SELECT `department_id` FROM `employees` WHERE `employees_id` = '$employee_id'";
+		$result = $this->mysqli->query($sql);
+		if ($row = $result->fetch_assoc()) {
+			$department_id = $row['department_id'];
+		}
+		// get department_id end
+		if (!$department_id) return null;
+
+		$sql = "SELECT * FROM `calendar` WHERE `department_id` = '$department_id' AND `privacy` = 'mydepartment'";
+		$this->get_events_query($sql);
+
+	}
+
+	private function get_everyone_events()
+	{
+		$sql = "SELECT * FROM `calendar` WHERE `privacy` = 'everyone' AND `is_confirmed` = '1'";
+		$this->get_events_query($sql);
+	}
+
+	private function get_events_query($sql)
+	{
+		if (!$sql) return null;
 		$result = $this->mysqli->query($sql);
 		while ($row = $result->fetch_assoc()) {
 			$id = $row["id"];
@@ -67,24 +99,13 @@ class CalendarController extends Controller
 				"allDay" => $allDay,
 				"start" =>  $start,
 				"end" =>  $end,
+				"employee_id" => $row["employee_id"],
 				"privacy" => $privacy,
-				"color" => $color
+				"color" => $color,
+				"url" => " "
 			];
 		}
 	}
 
-	private function get_department_events()
-	{
-		$employee_id = $this->employee_id;
-		$department_id = null;
-		// get department_id start
-		$sql = "SELECT `department_id` FROM `employees` WHERE `employees_id` = '$employee_id'";
-		$result = $this->mysqli->query($sql);
-		if ($row = $result->fetch_assoc()) {
-			$department_id = $row['department_id'];
-		}
-		// get department_id end
-
-	}
 
 }

@@ -24,7 +24,7 @@ if (isset($_GET['fetch_events'])) {
     $end_time = $mysqli->real_escape_string($event["end_time"]);
     $privacy = $mysqli->real_escape_string($event["privacy"]);
 
-    $allDay = $allDay ? 1 : 0;
+    $allDay = $allDay == "true" ? 1 : 0;
     $department_id = null;
     // if privacy == department
     // get department_id start
