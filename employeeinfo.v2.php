@@ -380,15 +380,15 @@ if (isset($_GET["spms"])) {
                                         <td>{{appointment.date_of_appointment}}</td>
                                         <td>{{appointment.nature_of_appointment}}</td>
                                         <td>
-                                        <a :href="'form_CS_form33B.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon button">
-                                            <i class="icon print"></i>
-                                        </a>
+                                            <a :href="'form_CS_form33B.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon button">
+                                                <i class="icon print"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 </template>
                                 <template>
                                     <tr v-if="!appointments.length" class="center aligned">
-                                        <td colspan="6" style="color: grey"> -- Not Appointed --</td>
+                                        <td colspan="6" style="color: grey"> -- No Data --</td>
                                     </tr>
                                 </template>
                             </tbody>
@@ -432,31 +432,56 @@ if (isset($_GET["spms"])) {
                     </div>
                 </div>
                 <div class="ui tab" data-tab="service_records">
-                    <?php require_once "service_record.php"; ?>
-                </div>
-                <div class="ui tab" data-tab="leave_records">
 
-                    <div class="ui segment">
-
-                        <div style="float:left">
-                            <h2>Leave Record</h2>
-                        </div>
-                        <div style="float:right">
-                            <!-- <button class="ui button tiny icon primary" @click="init_add()" style="width: 100px;">
-                                <i class="angle up icon"></i> Build-up
-                            </button>
-                            <a class="ui button tiny icon green" :class="{disabled:records.length>0?false:true}" style="width: 100px;" href="service_record_print.php?employee_id=<?= $employees_id ?>" target="_blank">
-                                <i class="print icon"></i> Print
-                            </a> -->
-                        </div>
-                        <div style="clear:both"></div>
-                        <hr>
+                    <div class="ui pointing secondary blue menu fluid">
+                        <a class="item active" data-tab="service_recs">Service Records</a>
+                    </div>
+                    <div class="ui tab segment active" data-tab="service_recs">
                         <table class="ui very compact small celled structured striped table" style="font-size:11px">
-
+                            <?php require_once "service_record.php"; ?>
                         </table>
                     </div>
-
+                    
                 </div>
+                <!-- leave records start -->
+                <div id="dashboard_leave_records" class="ui tab" data-tab="leave_records">
+                    <template>
+                        <div class="ui pointing secondary blue menu fluid" id="">
+                            <a class="item active" data-tab="attendance_report">Attendance Report</a>
+                        </div>
+                        <div class="ui tab segment active" data-tab="attendance_report">
+                            <div style="text-align: center;">
+                                <table class="ui celled compact structured table">
+                                    <thead>
+                                        <tr class="center aligned">
+                                            <th>Month - Year</th>
+                                            <th>Tardy<br>(min)</th>
+                                            <th>Undertime<br>(min)</th>
+                                            <th>Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(rec, k) in leave_records" :key="k">
+                                            <td>{{rec.month}}</td>
+                                            <td class="center aligned">{{rec.totalMinsTardy}}</td>
+                                            <td class="center aligned">{{rec.totalMinsUndertime}}</td>
+                                            <td>{{rec.remarks}}</td>
+                                        </tr>
+                                        <tr v-if="!leave_records.length">
+                                            <td colspan="4" class="center aligned">
+                                                <p style="padding: 20px; background-color: lightgrey; color: white;">No Data</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <script src="dashboard_leave_records.js"></script>
+                <!-- leave records end -->
+
+
                 <div class="ui tab active" data-tab="hr_cores">
 
 
@@ -507,8 +532,11 @@ if (isset($_GET["spms"])) {
                                 if (empty($serializedComptScore)) {
                                 ?>
                                     <div style="text-align: center;">
-                                        <p style="padding: 20px; background-color: lightgrey; color: white;">Personnel has not yet
-                                            taken the survey.</p>
+                                        <!-- <p style="padding: 20px; background-color: lightgrey; color: white;">Personnel has not yet
+                                            taken the survey.</p> -->
+                                        <div class="ui segment inverted grey">
+                                            Personnel has not yet taken the assessment.
+                                        </div>
                                     </div>
                                 <?php
                                 }
@@ -529,8 +557,11 @@ if (isset($_GET["spms"])) {
                                     # code...
                                 ?>
                                     <div style="text-align: center;">
-                                        <p style="padding: 20px; background-color: lightgrey; color: white;">Personnel has not yet
-                                            taken the survey.</p>
+                                        <!-- <p style="padding: 20px; background-color: lightgrey; color: white;">Personnel has not yet
+                                            taken the survey.</p> -->
+                                        <div class="ui segment inverted grey">
+                                            Personnel has not yet taken the assessment.
+                                        </div>
                                     </div>
                                 <?php
                                     $activist = 0;
@@ -562,15 +593,15 @@ if (isset($_GET["spms"])) {
                         </div>
                         <div id="spms0" class="ui bottom attached tab segment" data-tab="third">
                             <div class="ui pointing secondary blue menu">
-                                <a id="spms01" class="item active" data-tab="third/a">Individual Development Plan</a>
-                                <a id="spms02" class="item" data-tab="third/b">IPCR(Recommendation Portion)</a>
+                                <!-- <a id="spms01" class="item " data-tab="third/a">Individual Development Plan</a> -->
+                                <a id="spms02" class="item active" data-tab="third/b">IPCR(Recommendation Portion)</a>
                                 <a class="item" data-tab="third/c">Coaching and Mentoring</a>
-                                <a class="item" data-tab="third/d">Feedback Mechanism</a>
+                                <!-- <a class="item" data-tab="third/d">Feedback Mechanism</a> -->
                             </div>
-                            <div class="ui tab segment active" data-tab="third/a">
+                            <div class="ui tab segment" data-tab="third/a">
                                 Individual Development Plan will be implemented here...
                             </div>
-                            <div class="ui tab segment" data-tab="third/b">
+                            <div class="ui tab segment active" data-tab="third/b">
                                 <?php
                                 // for IPCR (Reccomendation Portion)
                                 require_once "umbra/IDP/idpTable.php";
@@ -588,13 +619,34 @@ if (isset($_GET["spms"])) {
                         </div>
                         <div class="ui bottom attached tab segment" data-tab="fourth">
                             <div class="ui pointing secondary blue menu">
-                                <a class="item active" data-tab="fourth/a">4A</a>
-                                <a class="item" data-tab="fourth/b">4B</a>
-                                <a class="item" data-tab="fourth/c">4C</a>
+                                <a class="item active" data-tab="awards_and_recognitions">Awards and Recognitions</a>
                             </div>
-                            <div class="ui tab segment active" data-tab="fourth/a">4A</div>
-                            <div class="ui tab segment" data-tab="fourth/b">4B</div>
-                            <div class="ui tab segment" data-tab="fourth/c">4C</div>
+                            <div class="ui tab segment active" data-tab="awards_and_recognitions">
+                                <table class="ui table compact structured celled">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Award/Recognition
+                                            </th>
+                                            <th>
+                                                Year
+                                            </th>
+                                            <th>
+                                                Department
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="center aligned">
+                                            <td colspan="3">
+                                                <div class="ui segment inverted grey">
+                                                    No Data
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 

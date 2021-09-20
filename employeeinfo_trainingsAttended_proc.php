@@ -35,7 +35,18 @@ if (isset($_POST['getTrainingRows'])) {
         $cmr = cmr($feedbacking['COUNT']);
         
         // end
-   
+    
+    if (!count($trainings_arr)) {
+        $html = "
+        <tr>
+            <td colspan='5' style='color:grey; text-align: center;'>
+            <div class='ui segment inverted grey'>
+                No Data
+            </div>
+            </td>
+        </tr>
+        ";
+    }
    
         echo json_encode($html);
     // echo json_encode(var_dump($_POST['getRows']));
@@ -230,6 +241,3 @@ function dateToStr1($numeric_date){
       
     return $strDate;
 }
-
-
-?>

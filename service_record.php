@@ -113,11 +113,10 @@
                     <button class="ui mini button deny red" @click="clear_form()"><i class="times icon"></i> Cancel</button>
                 </div>
             </div>
-            <div class="ui segment">
+            <div class="ui basic segment">
                 <div>
                 </div>
                 <div style="float:left">
-                    <h2>Service Record</h2>
                 </div>
                 <div style="float:right">
                     <button class="ui button tiny icon primary" @click="init_add()" style="width: 100px;">
@@ -150,8 +149,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-if="records.length < 1">
-                            <td colspan="10" style="font-size:20px;text-align:center;color:#5555557a;padding:20px">EMPTY</td>
+                        <tr v-if="records.length < 1" class="center aligned">
+                            <td colspan="10" style="color:grey;">-- No Data --</td>
                         </tr>
                         <tr v-for="(srDat,index) in records" :key="index">
                             <td class="center aligned">

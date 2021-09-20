@@ -19,7 +19,11 @@ if ($sql->num_rows) {
 } else {
   $tableRow .= "
       <tr>
-        <td colspan='3' style='color:grey; text-align: center;'>No Data</td>
+        <td colspan='3' style='color:grey; text-align: center;'>
+          <div class='ui segment inverted grey'>
+            No Data
+          </div>
+        </td>
       </tr>
     ";
 }
