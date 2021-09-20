@@ -319,10 +319,13 @@ elseif (isset($_POST['load_functions'])) {
   $position = $_POST['position'];
   $sql = "SELECT DISTINCT `functional` FROM `positiontitles` WHERE `position` = '$position'";
   $result = $mysqli->query($sql);
+
+?>
+  <div class="item" data-value="">All</div>
+<?php
   while ($row = $result->fetch_assoc()) {
       $functional = $row["functional"];
 ?>
-
 <div class="item" data-value="<?php echo $functional; ?>"><?php echo $functional; ?></div>
 
 <?php
@@ -358,13 +361,16 @@ elseif (isset($_POST['getResults'])) {
   $position = $_POST['position'];
   $function = $_POST['function'];
 
-  $sql = "SELECT * FROM `positiontitles` WHERE `position` = '$position' AND `functional` = '$function'";
+  $function_sql = $function?" AND `functional` = '$function'":"";
+  $sql = "SELECT * FROM `positiontitles` WHERE `position` = '$position'".$function_sql;
   $result = $mysqli->query($sql);
-  $row = $result->fetch_assoc();
-  $position_id = $row["position_id"];
-  // echo json_encode($position_id);
+  $position_ids = [];
 
-  $sql = "SELECT * FROM `competency` WHERE `employees_id` IN (SELECT `employees_id` FROM `employees` WHERE `position_id` = '$position_id')";
+  while ($row = $result->fetch_assoc()) {
+    $position_ids [] = $row["position_id"];
+  }
+  
+  $sql = "SELECT * FROM `competency` WHERE `employees_id` IN (SELECT `employees_id` FROM `employees` WHERE `position_id` IN (" . implode(',', $position_ids) . "))";
   $result = $mysqli->query($sql);
   $counter = 0;
   $num_rows = $result->num_rows;
@@ -378,8 +384,10 @@ elseif (isset($_POST['getResults'])) {
 </tr>
 
     <?php
+    return null;
   }
 
+$total_score_per_comp = [];
 while ($row = $result->fetch_array(MYSQLI_NUM)) {
     $counter++;
     $competency_id = $row[0];
@@ -405,32 +413,33 @@ while ($row = $result->fetch_array(MYSQLI_NUM)) {
       $fullName = "Unidentified! Please see input in db...";
     }
 
+    $comp = [];
     $datetime = $row[2];
-    $comp0 = $row[3];
-    $comp1 = $row[4];
-    $comp2 = $row[5];
-    $comp3 = $row[6];
-    $comp4 = $row[7];
-    $comp5 = $row[8];
-    $comp6 = $row[9];
-    $comp7 = $row[10];
-    $comp8 = $row[11];
-    $comp9 = $row[12];
-    $comp10 = $row[13];
-    $comp11 = $row[14];
-    $comp12 = $row[15];
-    $comp13 = $row[16];
-    $comp14 = $row[17];
-    $comp15 = $row[18];
-    $comp16 = $row[19];
-    $comp17 = $row[20];
-    $comp18 = $row[21];
-    $comp19 = $row[22];
-    $comp20 = $row[23];
-    $comp21 = $row[24];
-    $comp22 = $row[25];
-    $comp23 = $row[26];
-    $total  = $row[27];
+    $comp [] = $row[3];
+    $comp [] = $row[4];
+    $comp [] = $row[5];
+    $comp [] = $row[6];
+    $comp [] = $row[7];
+    $comp [] = $row[8];
+    $comp [] = $row[9];
+    $comp [] = $row[10];
+    $comp [] = $row[11];
+    $comp [] = $row[12];
+    $comp [] = $row[13];
+    $comp [] = $row[14];
+    $comp [] = $row[15];
+    $comp [] = $row[16];
+    $comp [] = $row[17];
+    $comp [] = $row[18];
+    $comp [] = $row[19];
+    $comp [] = $row[20];
+    $comp [] = $row[21];
+    $comp [] = $row[22];
+    $comp [] = $row[23];
+    $comp [] = $row[24];
+    $comp [] = $row[25];
+    $comp [] = $row[26];
+    
 
     ?>
     <tr class="datatr">
@@ -445,27 +454,8 @@ while ($row = $result->fetch_array(MYSQLI_NUM)) {
 </script>
 
       <?php
-      // for ($i=0; $i < 24 ; $i++) {
-      //   $data = ${"comp".$i};
-      //   if ($data == 3) {
-      //     echo "<td style=\"background-color: #ef7ca8; color: white;\">$data</td>";
-      //   }
-      //   elseif ($data == 4) {
-      //     echo "<td style=\"background-color: #d500ff; color: white;\">$data</td>";
-      //   }
-      //   elseif ($data == 5) {
-      //     echo "<td style=\"background-color: #6a226f; color: white;\">$data</td>";
-      //   }
-      //   else {
-      //     echo "<td>$data</td>"; 
-      //   }
-
-      //   ${"total".$i} += $data;
-
-      // }
-      
       for ($i=0; $i < 24 ; $i++) {
-        $data = ${"comp".$i};
+        $data = $comp[$i];
           if ($data == 3) { 
             echo "<td style=\"background-color: #88baecd1; color: white;\">$data</td>";
           }
@@ -478,10 +468,12 @@ while ($row = $result->fetch_array(MYSQLI_NUM)) {
           else {
               echo "<td>$data</td>"; 
           }
-          ${"total".$i} += $data;
+
+          if (!isset($total_score_per_comp[$i])) {
+            $total_score_per_comp[$i] = 0;
+          }
+          $total_score_per_comp[$i] += $data;
       }
-
-
       ?>
     </tr>
     <?php
@@ -493,9 +485,7 @@ while ($row = $result->fetch_array(MYSQLI_NUM)) {
   <td colspan="3" style="font-weight: bold; color: green;">AVERAGE</td>
 <?php
   for ($i=0; $i < 24 ; $i++) {
-      $average = round((${"total".$i})/$num_rows);
-      // for ($i=0; $i < 24 ; $i++) {
-        // $data = ${"comp".$i};
+      $average = round(($total_score_per_comp[$i])/$num_rows);
           if ($average == 3) { 
             echo "<td style=\"background-color: #88baecd1; color: black;\">$average</td>";
           }
@@ -508,16 +498,6 @@ while ($row = $result->fetch_array(MYSQLI_NUM)) {
           else {
               echo "<td>$average</td>"; 
           }
-          // ${"total".$i} += $data;
-      // }
-
-
-?>
-<!--   <td style="font-weight: bold; color: green;"><?php
-    echo round((${"total".$i})/$num_rows);
-    ?>
-  </td> -->
-<?php
   }
 ?>
 </tr>

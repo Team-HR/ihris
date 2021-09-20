@@ -349,6 +349,7 @@ require_once "_connect.db.php"; ?>
     //   alert('Please select a function to start search.');
     // }
     else {
+      // console.log(position+" "+functional);
       $.post('personnelCompetenciesReport_proc.php', {
         getResults: true,
         position: position,
