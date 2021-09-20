@@ -163,7 +163,7 @@
                                 yAxes: [{
                                     scaleLabel: {
                                         display: true,
-                                        labelString: 'Number of Personnels'
+                                        labelString: 'Number of Personnel'
                                     },
                                     ticks: {
                                         beginAtZero:true,
@@ -193,7 +193,7 @@ var config2 = {
                             "Level 5",
                             ],
                             datasets: [{
-                                label: 'Personnels',
+                                label: 'Personnel',
                                 data: arr[1],
                                 backgroundColor: [
                                   '#39e600',
@@ -219,7 +219,7 @@ var config2 = {
                             //     yAxes: [{
                             //         scaleLabel: {
                             //             display: false,
-                            //             labelString: 'Number of Personnels'
+                            //             labelString: 'Number of Personnel'
                             //         },
                             //         ticks: {
                             //             display:false,
@@ -232,7 +232,7 @@ var config2 = {
 
                                 title: {
                                     display: true,
-                                    text: "Percentage of Personnels per Level"
+                                    text: "Percentage of Personnel per Level"
                                 },
                                 legend: {
                                     display: true,  
