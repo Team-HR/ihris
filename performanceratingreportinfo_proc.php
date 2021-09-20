@@ -24,11 +24,11 @@ function view($mysqli,$counter,$prr_id){
   $tr="";
   while ($row1 = $result1->fetch_assoc()) {
     $employees_id = $row1['employees_id'];
-    $lastName = $row1['lastName'];
-    $firstName = $row1['firstName'];
-    $middleName = $row1['middleName'];
-    $extName = $row1['extName'];
-    $gender = $row1['gender'];
+    $lastName = $row1['lastName']?$row1['lastName']:"";
+    $firstName = $row1['firstName']?$row1['firstName']:"";
+    $middleName = $row1['middleName']?$row1['middleName']:"";
+    $extName = $row1['extName']?$row1['extName']:"";
+    $gender = $row1['gender']?$row1['gender']:" ";
     if ($result1->num_rows==0) {
       $i = 0;
     }else{
