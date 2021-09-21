@@ -37,11 +37,11 @@ $auth = new Auth;
   <a title="Home" href="index.php" class="item" style="padding: 7px;">
     <img src="favicon.ico" style="width: 36px; height: 36px;" title="Integrated Human Resource System">
   </a>
-  <!-- <a class="item ui green segment" style="margin: 5px;"><?=$auth->full_name?></a> -->
+  <!-- <a class="item ui green segment" style="margin: 5px;"><?= $auth->full_name ?></a> -->
   <a class="item" href="dashboard.php?employees_id=<?= $_SESSION["employee_id"] ?>"><i class="user icon"></i>
     Dashboard
   </a>
-  
+
   <?php if ($auth->is_hr) { ?>
     <a class="item" href="employeelist.v2.php"><i class="users icon"></i>Employee List</a>
     <a class="item" onclick="_calendar()"><i class="calendar outline icon"></i>Calendar</a>
@@ -102,7 +102,9 @@ $auth = new Auth;
       </a>
     <?php } ?>
 
-
+    <a class="ui item" href="update_password.php"><i class="icon key alternate"></i>
+      Change Password
+    </a>
     <a class="ui item" href="logout.php"><i class="icon sign out alternate"></i> Logout</a>
   </div>
 </div>
