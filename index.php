@@ -78,17 +78,6 @@ if ($auth->is_hr) {
 										<a class="item" target="_blank" href="personnelCompetenciesSurvey.php">Personnel Competency Form</a>
 										<a class="item" href="personnelCompetenciesReport.php">Personnel Competency Report</a> -->
 
-										<div class="dropdown item">
-											<a class="item">Personnel Competency <i class="caret down icon"></i></a>
-											<div class="dropdown-content">
-												<div class="ui animated list">
-													<a class="item" href="personnelCompetenciesSurveyEncoder.php">- Encoder's Tool</a>
-													<a class="item" target="_blank" href="personnelCompetenciesSurvey.php">- Survey Form</a>
-													<a class="item" href="personnelCompetenciesReport.php">- Summary Report</a>
-												</div>
-											</div>
-										</div>
-
 									</div>
 								</div>
 							</div>
@@ -148,7 +137,20 @@ if ($auth->is_hr) {
 										<!-- <a class="item" href="tna.php">L&D Training Needs Assessment</a> -->
 										<a class="item" href="dna.php">Development Needs Assessment</a>
 										<a class="item" href="trainingreport.php">Training Report</a>
-										<a class="item" href="supervisor_assessment_reports.php">Supervisor Assessment Reports</a>
+										<a class="item" href="personnelCompetenciesReport.php">Supervisor's Competencies</a>
+										<a class="item" href="supervisor_assessment_reports.php">Subordinate's Competencies</a>
+																				<!-- competency start -->
+									<!-- <div class="dropdown item">
+											<a class="item">Personnel Competency <i class="caret down icon"></i></a>
+											<div class="dropdown-content">
+												<div class="ui animated list">
+													<a class="item" href="personnelCompetenciesSurveyEncoder.php">- Encoder's Tool</a>
+													<a class="item" target="_blank" href="personnelCompetenciesSurvey.php">- Survey Form</a>
+													<a class="item" href="personnelCompetenciesReport.php">- Summary Report</a>
+												</div>
+											</div>
+										</div> -->
+										<!-- competency ends -->
 										<!-- <a class="item" href="">System Review</a> -->
 									</div>
 								</div>
