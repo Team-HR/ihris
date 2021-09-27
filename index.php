@@ -89,13 +89,13 @@ if ($auth->is_hr) {
 				<div style="width: 360px; height: 250px; background-color: green;">
 					<div class="ui move up reveal">
 						<div class="visible content" style="height: 250px; width: 360px;">
-							<!-- <p style="padding: 20px;">STRATEGIC PERFORMANCE MANAGEMENT SYSTEM</p> -->
+							<!-- <p style="padding: 20px;">PERFORMANCE MANAGEMENT SYSTEM</p> -->
 							<img src="assets/images/pms-cover.png" style="height: 250px; width: 360px;">
 						</div>
 						<div class="hidden content">
 							<div class="ui green segment" style="height: 250px; width: 360px;">
 								<div class="content" style="color: green; font-weight: bold; font-style: italic;">
-									STRATEGIC PERFORMANCE MANAGEMENT SYSTEM (SPMS)
+									PERFORMANCE MANAGEMENT SYSTEM (SPMS)
 								</div>
 								<hr>
 								<div class="content">
