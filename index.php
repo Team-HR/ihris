@@ -95,7 +95,7 @@ if ($auth->is_hr) {
 						<div class="hidden content">
 							<div class="ui green segment" style="height: 250px; width: 360px;">
 								<div class="content" style="color: green; font-weight: bold; font-style: italic;">
-									PERFORMANCE MANAGEMENT SYSTEM (SPMS)
+									PERFORMANCE MANAGEMENT SYSTEM (PMS)
 								</div>
 								<hr>
 								<div class="content">
