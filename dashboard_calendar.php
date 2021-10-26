@@ -68,6 +68,43 @@
             <button form="event_form" type="button" class="ui small deny button">Cancel</button>
         </div>
     </div>
+    <div class="ui mini modal" id="event_details_modal">
+        <div class="header">
+            <h3>{{event_detail.title}}</h3>
+        </div>
+        <div class="content">
+            <table class="ui mini very compact celled structured table">
+                <tr>
+                    <td>
+                        <b>Start:</b>
+                    </td>
+                    <td>
+                        {{format_date(event_detail.start)}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>End:</b>
+                    </td>
+                    <td>
+                        {{format_date(event_detail.end_actual)}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Time:</b>
+                    </td>
+                    <td>
+                        {{event_detail.allDay?'TBA':'TBA'}}
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+        <div class="actions">
+            <button class="ui small button deny">Close</button>
+        </div>
+    </div>
 </div>
 <script>
     var CalendarVue = new Vue({
@@ -89,6 +126,7 @@
                     end_time: "17:00",
                     privacy: "onlyme"
                 },
+                event_detail: {},
                 create_event_modal: null
             }
         },
@@ -98,7 +136,7 @@
                         fetch_events: true,
                         employees_id: this.employees_id
                     }, (data, textStatus, jqXHR) => {
-                        console.log(data);
+                        // console.log('events:', data)
                         this.events = JSON.parse(JSON.stringify(data))
                         if (!this.calendar) return null
                         this.calendar.getEventSources().forEach(element => {
@@ -127,13 +165,18 @@
                         employees_id: this.employees_id,
                         event: this.event
                     }, (data, textStatus, jqXHR) => {
-                        console.log('submitted:', data);
+                        // console.log('submitted:', data);
                         // console.log('submit:', this.event)
                         this.fetch_events()
                         $("#create-event-modal").modal("hide")
                     },
                     "json"
                 );
+            },
+
+            format_date(date) {
+                var date = new Date(date)
+                return moment(date).format('dddd, LL');
             },
 
             reset_create_event_form() {
@@ -218,7 +261,19 @@
                 eventClick: (info) => {
                     info.jsEvent.preventDefault();
                     var event_id = info.event.id;
-                    console.log(event_id);
+                    // console.log("eventClick():",event_id);
+
+                    // var events_index = this.events.findIndex(x => x.id === event_id)
+                    var event = this.events.find(x => x.id === event_id);
+                    // console.log('event:', event);
+                    // var end_date = new Date (event.end) -1;
+                    var end_actual = new Date (event.end)
+                    end_actual = moment(end_actual.setDate(end_actual.getDate()-1)).format()
+                    event['end_actual'] = end_actual
+                    this.event_detail = JSON.parse(JSON.stringify(event))
+                    // console.log('event:', event);
+                    $("#event_details_modal").modal("show")
+
                     // if (info.event.url) {
                     //     // window.open(info.event.url+"&start="+info.event.start.toISOString(),"_blank");
                     //     // window.open(info.event.url+"&start="+info.event.start.toISOString(),"_blank");
