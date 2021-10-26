@@ -75,7 +75,7 @@ $rspvac_id = $_GET["rspvac_id"];
           <td class="actives">TRAINING:</td>
           <td colspan="3">
             <!-- {{position.training}} -->
-            <p v-for="(tr,i) in position.training" :key="i">{{tr}}</p>
+            <p v-for="(tr,i) in position.training" :key="i">{{`${tr.training} (${tr.training?tr.training+' hrs':''})`}}</p>
             <i v-if="!position.training" style="color: grey;">n/a</i>
           </td>
         </tr>
@@ -177,7 +177,13 @@ $rspvac_id = $_GET["rspvac_id"];
           <div class="fields">
             <div class="eleven wide field">
               <label>Name:</label>
-              <input type="text" v-model="applicant.name" placeholder="Last Name, First Name MI., ext">
+              <!-- <input type="text" v-model="applicant.name" placeholder="Last Name, First Name MI., ext"> -->
+              <div class="ui search">
+                <div class="ui left icon input">
+                  <input class="prompt" type="text" placeholder="Enter name (or Search existing name)" v-model="applicant.name">
+                  <i class="user icon"></i>
+                </div>
+              </div>
             </div>
             <div class="two wide field">
               <label>Age:</label>
@@ -185,7 +191,7 @@ $rspvac_id = $_GET["rspvac_id"];
             </div>
             <div class="three wide field">
               <label>Gender:</label>
-              <select class="ui compact dropdown" v-model="applicant.gender">
+              <select class="ui compact dropdown gender" v-model="applicant.gender">
                 <option value="">Gender</option>
                 <option value="Female">Female</option>
                 <option value="Male">Male</option>
@@ -195,7 +201,7 @@ $rspvac_id = $_GET["rspvac_id"];
           <div class="fields">
             <div class="three wide field">
               <label>Civil Status:</label>
-              <select class="ui compact dropdown" v-model="applicant.civil_status">
+              <select class="ui compact dropdown civil_status" v-model="applicant.civil_status">
                 <option value="">Civil Status</option>
                 <option value="Single">Single</option>
                 <option value="Married">Married</option>
@@ -230,24 +236,58 @@ $rspvac_id = $_GET["rspvac_id"];
 
           <!-- trainings start -->
           <h3 class="ui dividing blue header">Trainings</h3>
-          <div class="field">
-            <label>Add Training:</label>
-            <div class="ui action input">
-              <input type="text" v-model="form_training_input" @keyup.enter="add_applicant_training" placeholder="Enter training attended (no. of hours)...">
-              <button class="ui mini primary button" @click="add_applicant_training">
-                <i class="icon add"></i>
-                Add
-              </button>
+          <!-- <div class="fields">
+            <div class="eight wide field">
+              <label>Title of Training:</label>
+              <input type="text" v-model="form_training_input.training" @keyup.enter="add_applicant_training" placeholder="Enter training attended (no. of hours)...">
             </div>
-            <div class="ui left action input" style="margin-top: 2px;" v-for="(training,t) in applicant.trainings" :key="t">
-              <button class="ui mini red button" @click="applicant.trainings.splice(t, 1)">
-                <i class="icon times"></i>
-                Remove
-              </button>
-              <input type="text" v-model="applicant.trainings[t]">
+            <div class="field">
+              <label># of Hours:</label>
+              <input type="text" v-model="form_training_input.hrs" @keyup.enter="add_applicant_training" placeholder="(no. of hours)...">
             </div>
           </div>
+          <button class="ui small green button" @click="add_applicant_training">
+            <i class="icon add"></i>
+            Add
+          </button> -->
+
+          <table class="ui mini very compact structured celled table">
+            <thead>
+              <tr>
+                <th style="width: 10px;">
+                  <i class="ui icon circular times" style="color: white; box-shadow: none;"></i>
+                </th>
+                <th>TITLE OF TRAINING</th>
+                <th># OF HOURS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(training,t) in applicant.trainings" :key="t" style="text-align: center;">
+                <td>
+                  <i class="ui icon link circular times red" @click="applicant.trainings.splice(t, 1)"></i>
+                </td>
+                <td>
+                  <input type="text" v-model="applicant.trainings[t].training" placeholder="Title of training...">
+                </td>
+                <td>
+                  <input type="text" v-model="applicant.trainings[t].hrs" placeholder="Total number of hours...">
+                </td>
+              </tr>
+              <tr v-if="applicant.trainings.length < 1">
+                <td colspan="3" style="text-align: center; color: grey;">NO TRAININGS</td>
+              </tr>
+              <tr>
+                <td colspan="3">
+                  <button class="ui mini green button" @click="add_applicant_training">
+                    <i class="icon add"></i>
+                    Add Training
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
           <!-- trainings end -->
+
 
 
 
@@ -268,107 +308,141 @@ $rspvac_id = $_GET["rspvac_id"];
           <!-- experience start -->
           <h3 class="ui dividing blue header">Experience</h3>
 
-          <div class="four wide fields">
-            <div class="field">
-              <label>Sector:</label>
-              <select class="ui compact dropdown" v-model="form_experience.sector">
-                <option value="">Sector</option>
-                <option value="PRIVATE">PRIVATE</option>
-                <option value="GOVERNMENT">GOVERNMENT</option>
-                <option value="SELF-EMPLOYED">SELF-EMPLOYED</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>Company/Agency:</label>
-              <input type="text" v-model="form_experience.company" placeholder="Company/Agency">
-            </div>
-            <div class="field">
-              <label>Position:</label>
-              <input type="text" v-model="form_experience.position" placeholder="Position...">
-            </div>
-            <div class="field">
-              <label>Job Description:</label>
-              <input type="text" v-model="form_experience.description" placeholder="Job Description...">
-            </div>
-          </div>
-          <div class="four wide fields">
-            <div class="field">
-              <label>Status:</label>
-              <select class="ui compact dropdown" v-model="form_experience.status">
-                <option value="">Status</option>
-                <option value="REGULAR">REGULAR</option>
-                <option value="CASUAL">CASUAL</option>
-                <option value="JOW">JOW</option>
-                <option value="CONTRACTUAL">CONTRACTUAL</option>
-                <option value="TEMPORARY">TEMPORARY</option>
-                <option value="ELECTIVE">ELECTIVE</option>
-              </select>
-            </div>
-            <div class="fields" style="padding-left: 8px;">
-              <!-- <label>From:</label> -->
-              <!-- <input type="text" placeholder="Started from..." v-model="form_experience.date_from"> -->
-              <div class="field" style="padding-right: 0px;">
-                <label>From:</label>
-                <input type="text" placeholder="mm" v-model="form_experience.date_from.mm">
-              </div>
-              <div class="field" style="padding-left: 2px; padding-right: 0px;">
-                <label><br /></label>
-                <input type="text" placeholder="dd" v-model="form_experience.date_from.dd">
-              </div>
-              <div class="field" style="padding-left: 2px;">
-                <label><br /></label>
-                <input type="text" placeholder="yyyy" v-model="form_experience.date_from.yyyy">
-              </div>
-            </div>
-            <div class="fields" style="padding-left: 18px;">
-              <!-- <label>To:</label> -->
-              <!-- <input type="text" placeholder="Started to..." v-model="form_experience.date_to"> -->
-              <div class="field" style="padding-right: 0px;">
-                <label>To:</label>
-                <input type="text" placeholder="mm" v-model="form_experience.date_to.mm">
-              </div>
-              <div class="field" style="padding-left: 2px; padding-right: 0px;">
-                <label><br /></label>
-                <input type="text" placeholder="dd" v-model="form_experience.date_to.dd">
-              </div>
-              <div class="field" style="padding-left: 2px;">
-                <label><br /></label>
-                <input type="text" placeholder="yyyy" v-model="form_experience.date_to.yyyy">
-              </div>
-            </div>
-            <div class="field" style="padding-left: 32px;">
-              <label>Years of Service:</label>
-              <!-- <input type="text" placeholder="Years of Service"> -->
-              <div class="ui left action input" style="margin-top: 2px;">
-                <button class="ui mini button" @click="get_yos">
-                  <!-- <i class="icon times"></i> -->
-                  Get
-                </button>
-                <input type="text" v-model="form_experience.years_of_service" placeholder="Years of Service">
-              </div>
+          <table class="ui mini very compact structured celled table">
+            <thead>
+              <tr style="text-align: center;">
+                <th style="color: white;">
+                  <i class="ui icon edit"></i>
+                  <i class="ui icon times"></i>
+                </th>
+                <th>SECTOR</th>
+                <th>COMPANY</th>
+                <th>POSITION</th>
+                <th>DESCRIPTION</th>
+                <th>STATUS</th>
+                <th>FROM</th>
+                <th>TO</th>
+                <th>YEARS OF SERVICE</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(xp, x) in applicant.experiences" :key="x" style="text-align: center;">
+                <td>
+                  <i class="ui green icon link circular edit" @click="edit_applicant_experience(x)"></i>
+                  <i class="ui red icon link circular times" @click="applicant.experiences.splice(x,1)"></i>
+                </td>
+                <td>{{xp.sector}}</td>
+                <td>{{xp.company}}</td>
+                <td>{{xp.position}}</td>
+                <td>{{xp.description}}</td>
+                <td>{{xp.status}}</td>
+                <td>{{format_date_to_str(xp.date_from.mm,xp.date_from.dd,xp.date_from.yyyy)}}</td>
+                <td>{{format_date_to_str(xp.date_to.mm,xp.date_to.dd,xp.date_to.yyyy)}}</td>
+                <td>{{`Years: ${xp.years_of_service.years} Months: ${xp.years_of_service.months}`}}</td>
+              </tr>
+              <tr v-if="!applicant_experience_has_data(applicant.experiences)" centered>
+                <td colspan="9" style="text-align: center; color:grey;">NO EXPERIENCE</td>
+              </tr>
+              <tr>
+                <td colspan="9">
+                  <button class="ui mini green button" @click="applicant_experience_editor"><i class="ui icon add"></i> Add Experience</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
-            </div>
+          <!-- experience editor start -->
+          <div class="ui modal" id="applicant_experience_editor_modal" style="margin-top: 100px;">
+            <div class="ui blue header">Experience Editor</div>
+            <div class="content">
+              <div class="ui form">
+                <div class="four wide fields">
+                  <div class="field">
+                    <label>Sector:</label>
+                    <select class="ui compact dropdown" id="form_experience_sector" v-model="form_experience.sector">
+                      <option value="">Sector</option>
+                      <option value="PRIVATE">PRIVATE</option>
+                      <option value="GOVERNMENT">GOVERNMENT</option>
+                      <option value="SELF-EMPLOYED">SELF-EMPLOYED</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label>Company/Agency:</label>
+                    <input type="text" v-model="form_experience.company" placeholder="Company/Agency">
+                  </div>
+                  <div class="field">
+                    <label>Position:</label>
+                    <input type="text" v-model="form_experience.position" placeholder="Position...">
+                  </div>
+                  <div class="field">
+                    <label>Job Description:</label>
+                    <input type="text" v-model="form_experience.description" placeholder="Job Description...">
+                  </div>
+                </div>
+                <div class="four wide fields">
+                  <div class="field">
+                    <label>Status:</label>
+                    <select class="ui compact dropdown" id="form_experience_status" v-model="form_experience.status">
+                      <option value="">Status</option>
+                      <option value="REGULAR">REGULAR</option>
+                      <option value="CASUAL">CASUAL</option>
+                      <option value="JOW">JOW</option>
+                      <option value="CONTRACTUAL">CONTRACTUAL</option>
+                      <option value="TEMPORARY">TEMPORARY</option>
+                      <option value="ELECTIVE">ELECTIVE</option>
+                    </select>
+                  </div>
+                  <div class="fields" style="padding-left: 8px;">
+                    <!-- <label>From:</label> -->
+                    <!-- <input type="text" placeholder="Started from..." v-model="form_experience.date_from"> -->
+                    <div class="field" style="padding-right: 0px;">
+                      <label>From:</label>
+                      <input @keyup="get_yos" type="text" placeholder="mm" v-model="form_experience.date_from.mm">
+                    </div>
+                    <div class="field" style="padding-left: 2px; padding-right: 0px;">
+                      <label><br /></label>
+                      <input @keyup="get_yos" type="text" placeholder="dd" v-model="form_experience.date_from.dd">
+                    </div>
+                    <div class="field" style="padding-left: 2px;">
+                      <label><br /></label>
+                      <input @keyup="get_yos" type="text" placeholder="yyyy" v-model="form_experience.date_from.yyyy">
+                    </div>
+                  </div>
+                  <div class="fields" style="padding-left: 18px;">
+                    <!-- <label>To:</label> -->
+                    <!-- <input type="text" placeholder="Started to..." v-model="form_experience.date_to"> -->
+                    <div class="field" style="padding-right: 0px;">
+                      <label>To:</label>
+                      <input @keyup="get_yos" type="text" placeholder="mm" v-model="form_experience.date_to.mm">
+                    </div>
+                    <div class="field" style="padding-left: 2px; padding-right: 0px;">
+                      <label><br /></label>
+                      <input @keyup="get_yos" type="text" placeholder="dd" v-model="form_experience.date_to.dd">
+                    </div>
+                    <div class="field" style="padding-left: 2px;">
+                      <label><br /></label>
+                      <input @keyup="get_yos" type="text" placeholder="yyyy" v-model="form_experience.date_to.yyyy">
+                    </div>
+                  </div>
+                  <div class="field" style="padding-left: 32px;">
+                    <label>Years of Service:</label>
+                    <input readonly type="text" :value="`Years: ${form_experience.years_of_service.years} Months: ${form_experience.years_of_service.months}`">
+                  </div>
+                </div>
+                <!-- <button @click="add_applicant_experience()" class="ui mini green button"><i class="add icon"></i> Add</button> -->
 
+
+              </div>
+            </div>
+            <div class="actions">
+              <button class="ui mini button green approve" @click="add_applicant_experience()">Save</button>
+              <button class="ui mini button deny" @click="reset_applicant_experience()">Cancel</button>
+            </div>
           </div>
-          <div class="field">
-            <label><br /></label>
-            <button class="ui small primary button"><i class="add icon"></i> Add</button>
-          </div>
+
+          <!-- experience editor end -->
+
           <!-- experience end -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -379,63 +453,115 @@ $rspvac_id = $_GET["rspvac_id"];
 
           <!-- eligibility start -->
           <h3 class="ui dividing blue header">Eligibility</h3>
-          <div class="field">
+          <!-- <div class="field">
             <label>Add Eligibility:</label>
-            <div class="ui action input">
-              <input type="text" v-model="form_eligibility_input" @keyup.enter="add_applicant_eligibility" placeholder="Enter eligibility...">
-              <button class="ui mini primary button" @click="add_applicant_eligibility">
-                <i class="icon add"></i>
-                Add
-              </button>
-            </div>
-            <div class="ui left action input" style="margin-top: 2px;" v-for="(eligibility,e) in applicant.eligibilities" :key="e">
-              <button class="ui mini red button" @click="applicant.eligibilities.splice(e, 1)">
-                <i class="icon times"></i>
-                Remove
-              </button>
-              <input type="text" v-model="applicant.eligibilities[e]">
-            </div>
+            <input type="text" v-model="form_eligibility_input" @keyup.enter="add_applicant_eligibility" placeholder="Enter eligibility...">
           </div>
+          <button class="ui mini green button" @click="add_applicant_eligibility">
+            <i class="icon add"></i>
+            Add
+          </button> -->
+          <table class="ui mini very compact structured celled table">
+            <thead>
+              <tr>
+                <th style="width: 10px;">
+                  <i class="ui icon circular times" style="color: white; box-shadow: none;"></i>
+                </th>
+                <th>ELIGIBILITY</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(eligibility,e) in applicant.eligibilities" :key="e" style="text-align: center;">
+                <td>
+                  <i class="ui icon link circular times red" @click="applicant.eligibilities.splice(e, 1)"></i>
+                </td>
+                <td>
+                  <input type="text" v-model="applicant.eligibilities[e]" placeholder="Title of eligibility...">
+                </td>
+              </tr>
+              <tr v-if="applicant.eligibilities.length < 1">
+                <td colspan="2" style="text-align: center; color: grey;">NO ELIGIBILITIES</td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <button class="ui mini green button" @click="add_applicant_eligibility">
+                    <i class="icon add"></i>
+                    Add Eligibility
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
           <!-- eligibility end -->
           <!-- awards start -->
           <h3 class="ui dividing blue header">Awards, Citations Received</h3>
-          <div class="field">
-            <label>Add Award:</label>
-            <div class="ui action input">
-              <input type="text" v-model="form_award_input" @keyup.enter="add_applicant_award" placeholder="Enter award...">
-              <button class="ui mini primary button" @click="add_applicant_award">
-                <i class="icon add"></i>
-                Add
-              </button>
-            </div>
-            <div class="ui left action input" style="margin-top: 2px;" v-for="(award,a) in applicant.awards" :key="a">
-              <button class="ui mini red button" @click="applicant.awards.splice(a, 1)">
-                <i class="icon times"></i>
-                Remove
-              </button>
-              <input type="text" v-model="applicant.awards[a]">
-            </div>
-          </div>
+          <table class="ui mini very compact structured celled table">
+            <thead>
+              <tr>
+                <th style="width: 10px;">
+                  <i class="ui icon circular times" style="color: white; box-shadow: none;"></i>
+                </th>
+                <th>TITLE OF AWARD/CITATION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(award,a) in applicant.awards" :key="a" style="text-align: center;">
+                <td>
+                  <i class="ui icon link circular times red" @click="applicant.awards.splice(a, 1)"></i>
+                </td>
+                <td>
+                  <input type="text" v-model="applicant.awards[a]" placeholder="Title of award/citation...">
+                </td>
+              </tr>
+              <tr v-if="applicant.awards.length < 1">
+                <td colspan="2" style="text-align: center; color: grey;">NO AWARDS/CITATIONS</td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <button class="ui mini green button" @click="add_applicant_award">
+                    <i class="icon add"></i>
+                    Add Award/Citation
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
           <!-- awards end -->
           <!-- records of infraction start -->
           <h3 class="ui dividing blue header">Records of Infractions</h3>
-          <div class="field">
-            <label>Add Records of Infractions:</label>
-            <div class="ui action input">
-              <input type="text" v-model="form_records_infraction_input" @keyup.enter="add_applicant_records_infraction" placeholder="Enter records of infractions...">
-              <button class="ui mini primary button" @click="add_applicant_records_infraction">
-                <i class="icon add"></i>
-                Add
-              </button>
-            </div>
-            <div class="ui left action input" style="margin-top: 2px;" v-for="(rec,r) in applicant.records_infractions" :key="r">
-              <button class="ui mini red button" @click="applicant.records_infractions.splice(r, 1)">
-                <i class="icon times"></i>
-                Remove
-              </button>
-              <input type="text" v-model="applicant.records_infractions[r]">
-            </div>
-          </div>
+          <table class="ui mini very compact structured celled table">
+            <thead>
+              <tr>
+                <th style="width: 10px;">
+                  <i class="ui icon circular times" style="color: white; box-shadow: none;"></i>
+                </th>
+                <th>TITLE OF RECORD OF INFRACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(rec,r) in applicant.records_infractions" :key="r" style="text-align: center;">
+                <td>
+                  <i class="ui icon link circular times red" @click="applicant.records_infractions.splice(r, 1)"></i>
+                </td>
+                <td>
+                  <input type="text" v-model="applicant.records_infractions[r]" placeholder="Title of record of infraction...">
+                </td>
+              </tr>
+              <tr v-if="applicant.records_infractions.length < 1">
+                <td colspan="2" style="text-align: center; color: grey;">NO RECORDS OF INFRACTIONS</td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <button class="ui mini green button" @click="add_applicant_records_infraction">
+                    <i class="icon add"></i>
+                    Add Record of Infraction
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
           <!-- records of infraction end -->
           <h3 class="ui dividing blue header">Remarks</h3>
           <div class="field">

@@ -70,6 +70,18 @@ class ComparativeDataController extends Controller
     }
 
 
+    public function search_applicants_where_name_like($name){
+        $items = [];
+        $sql = "SELECT * FROM `rsp_applicants` WHERE `name` LIKE '%$name%'";
+        $result = $this->mysqli->query($sql);
+        while ($row = $result->fetch_assoc()) {
+            $items [] = $row;
+        }
+
+        return $items;
+    }
+
+
 }
 
 
