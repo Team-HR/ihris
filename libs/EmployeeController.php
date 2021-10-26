@@ -7,9 +7,9 @@ class EmployeeController extends Controller
     private $exts = array('JR', 'SR');
 
     function __construct()
-	{
-		parent::__construct();
-	}
+    {
+        parent::__construct();
+    }
 
     public function addNewEmployee($last_name, $first_name, $middle_name, $ext_name)
     {
@@ -92,7 +92,7 @@ class EmployeeController extends Controller
     {
         if (!$id) return "";
         $employee = $this->get_data($id);
-        
+
         $firstName = $employee['firstName'];
         $lastName = $employee['lastName'];
         $middleName = $employee['middleName'];
@@ -119,5 +119,15 @@ class EmployeeController extends Controller
         $full_name =  mb_convert_case("$lastName, $firstName $middleName", MB_CASE_UPPER, "UTF-8") . $extName;
 
         return $full_name;
+    }
+
+    public function get_department_name($employee_id)
+    {
+        if (!$employee_id) return false;
+        $data = "";
+        $sql = "SELECT `department`.`department` FROM `employees` LEFT JOIN `department` ON `employees`.`department_id` = `department`.`department_id` WHERE `employees`.`employees_id` = '$employee_id';
+        ";
+        $res = $this->mysqli->query($sql);
+        return $res->fetch_assoc()["department"];
     }
 }

@@ -40,3 +40,9 @@ if (isset($_GET['fetch_events'])) {
     $res = $mysqli->query($sql);
     echo json_encode($res);
 }
+
+elseif (isset($_GET["get_event_details"])) {
+    $id = $_GET["id"];
+    $data = $calendar->get_event_details($id);
+    echo json_encode($data);
+}

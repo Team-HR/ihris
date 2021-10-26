@@ -49,7 +49,6 @@ class CalendarController extends Controller
 
 		$sql = "SELECT * FROM `calendar` WHERE `department_id` = '$department_id' AND `privacy` = 'mydepartment'";
 		$this->get_events_query($sql);
-
 	}
 
 	private function get_everyone_events()
@@ -107,5 +106,16 @@ class CalendarController extends Controller
 		}
 	}
 
+	public function get_event_details($id)
+	{
+		$employee = new EmployeeController();
+		if (!$id) return false;
+		$sql = "SELECT * FROM `calendar` WHERE `id` = '$id'";
+		$result = $this->mysqli->query($sql);
+		$data = $result->fetch_assoc();
 
+		$data ['name'] = $employee->get_full_name_upper($data['employee_id']);
+		$data ['department'] = $employee->get_department_name($data['employee_id']);
+		return $data;
+	}
 }
