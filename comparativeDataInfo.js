@@ -24,6 +24,23 @@ var comparative_data_vue = new Vue({
         records_infractions: [],
         remarks: ''
       },
+      applicant_cleared: {
+        applicant_id: null,
+        name: '',
+        age: '',
+        gender: '',
+        civil_status: '',
+        mobile_no: '',
+        address: '',
+        education: '',
+        school: '',
+        trainings: [],
+        experiences: [],
+        eligibilities: [],
+        awards: [],
+        records_infractions: [],
+        remarks: ''
+      },
       form_training_input: {
         training: '',
         hrs: ''
@@ -127,7 +144,7 @@ var comparative_data_vue = new Vue({
       }
     },
 
-    applicant_experience_editor(){
+    applicant_experience_editor() {
       $("#applicant_experience_editor_modal").modal({
         allowMultiple: true,
         closable: false
@@ -151,7 +168,7 @@ var comparative_data_vue = new Vue({
       $("#form_experience_sector").dropdown("set selected", this.form_experience.sector)
       $("#form_experience_status").dropdown("set selected", this.form_experience.status)
     },
-    reset_applicant_experience(){
+    reset_applicant_experience() {
       // reset form_experience start
       this.form_experience = JSON.parse(JSON.stringify(this.form_experience_cleared))
       $("#form_experience_sector").dropdown("clear")
@@ -171,17 +188,33 @@ var comparative_data_vue = new Vue({
       this.form_records_infraction_input = ''
     },
     add_new_applicant() {
+      // reset form initially start
+      this.applicant = JSON.parse(JSON.stringify(this.applicant_cleared))
+      $(".ui.compact.dropdown.gender").dropdown("restore defaults")
+      $(".ui.compact.dropdown.civil_status").dropdown("restore defaults")
+      // reset form initially end
       $("#add_new_applicant_modal").modal({
         allowMultiple: true,
         closable: false,
         onApprove: () => {
-          this.add_new_applicant_submit()
-          return false
+          this.save_new_applicant_submit()
+          // return false
         }
       }).modal("show")
     },
-    add_new_applicant_submit() {
-      console.log(this.applicant);
+    save_new_applicant_submit() {
+      console.log("Before ajax: ", this.applicant);
+      $.post("comparativeDataInfo.ajax.php", {
+        save_new_applicant_submit: true,
+        rspvac_id: this.rspvac_id,
+        applicant: this.applicant
+      },
+        (data, textStatus, jqXHR) => {
+          console.log("save_new_applicant_submit(): ", data);
+        },
+        "json"
+      );
+
     },
     add_edit_applicant(applicant_id) {
       if (!applicant_id) return this.add_new_applicant()
@@ -191,11 +224,9 @@ var comparative_data_vue = new Vue({
       // console.log(applicant_id);
       // alert()
     },
-
     delete_entry(rspvac_id) {
       console.log(rspvac_id);
     },
-
     get_yos() {
       this.form_experience.date_from
       this.form_experience.date_to
@@ -332,11 +363,11 @@ var comparative_data_vue = new Vue({
       this.applicant.address = res.address
       this.applicant.education = res.education
       this.applicant.school = res.school
-      // this.applicant.trainings = res.trainings
-      // this.applicant.experiences = res.experiences
-      // this.applicant.eligibilities = res.eligibilities
-      // this.applicant.awards = res.awards
-      // this.applicant.records_infractions = res.records_infractions
+      this.applicant.trainings = res.trainings
+      this.applicant.experiences = res.experiences
+      this.applicant.eligibilities = res.eligibilities
+      this.applicant.awards = res.awards
+      this.applicant.records_infractions = res.records_infractions
       this.applicant.remarks = res.remarks
       console.log(res);
     },
@@ -378,7 +409,7 @@ var comparative_data_vue = new Vue({
         },
         minCharacters: 3,
         onSelect: (result) => {
-          // console.log("result: ", result)
+          console.log("result: ", result)
           // console.log("response: ",response);
           this.set_applicant(result)
         },
