@@ -90,7 +90,8 @@ class EmployeeController extends Controller
 
     public function get_full_name_upper($id)
     {
-        if (!$id) return "";
+        // if (!$id) return "";
+        if (!$id || $id == 0) return "";
         $employee = $this->get_data($id);
         
         $firstName = $employee['firstName'];
