@@ -369,7 +369,7 @@ var comparative_data_vue = new Vue({
       this.applicant.awards = res.awards
       this.applicant.records_infractions = res.records_infractions
       this.applicant.remarks = res.remarks
-      console.log(res);
+      // console.log(res);
     },
     reset_applicant() {
       this.applicant.applicant_id = null
@@ -383,11 +383,6 @@ var comparative_data_vue = new Vue({
       this.applicant.address = ''
       this.applicant.education = ''
       this.applicant.school = ''
-      // this.applicant.trainings = res.trainings
-      // this.applicant.experiences = res.experiences
-      // this.applicant.eligibilities = res.eligibilities
-      // this.applicant.awards = res.awards
-      // this.applicant.records_infractions = res.records_infractions
       this.applicant.remarks = ''
     }
   },
@@ -409,19 +404,16 @@ var comparative_data_vue = new Vue({
         },
         minCharacters: 3,
         onSelect: (result) => {
-          console.log("result: ", result)
-          // console.log("response: ",response);
+          console.log("ui search, on select",result);
           this.set_applicant(result)
         },
         onResultsOpen: () => {
-          // console.log("opened");
           this.reset_applicant()
         }
       })
       ;
     this.load()
     this.get_list_of_applicants()
-    // for testing only below
     this.add_new_applicant()
   }
 });

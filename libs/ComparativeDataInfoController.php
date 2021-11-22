@@ -79,7 +79,33 @@ class ComparativeDataInfoController extends Controller
         $sql = "SELECT * FROM `rsp_applicants` WHERE `name` LIKE '%$name%'";
         $result = $this->mysqli->query($sql);
         while ($row = $result->fetch_assoc()) {
-            $items[] = $row;
+            // $items[] = $row;
+            $items[] = [
+                "applicant_id" =>  $row["applicant_id"],
+                "name" =>  $row["name"],
+                "age" =>  $row["age"],
+                "gender" =>  $row["gender"],
+                "civil_status" =>  $row["civil_status"],
+                "mobile_no" =>  $row["mobile_no"],
+                "address" =>  $row["address"],
+                "education" =>  $row["education"],
+                "school" =>  $row["school"],
+                "trainings" =>  $row["trainings"],
+                "experiences" =>  $row["experiences"],
+                "eligibilities" =>  $row["eligibilities"],
+                "awards" =>  $row["awards"],
+                "records_infractions" =>  $row["records_infractions"],
+                "remarks" =>  $row["remarks"]
+            ];
+        }
+
+
+        foreach ($items as $key => $item) {
+            $items[$key]["trainings"] = $item["trainings"]?unserialize($item["trainings"]):[];
+            $items[$key]["experiences"] = $item["experiences"]?unserialize($item["experiences"]):[];
+            $items[$key]["eligibilities"] = $item["eligibilities"]?unserialize($item["eligibilities"]):[];
+            $items[$key]["awards"] = $item["awards"]?unserialize($item["awards"]):[];
+            $items[$key]["records_infractions"] = $item["records_infractions"]?unserialize($item["records_infractions"]):[];
         }
 
         return $items;
@@ -109,18 +135,18 @@ class ComparativeDataInfoController extends Controller
         // $experience = ""; // $arr["experience"]; //##### deprecated
         // $eligibility = ""; //$arr["eligibility"]; //##### deprecated
         $remarks = $arr["remarks"];
-        $awards = isset($arr["awards"])? serialize($arr["awards"]): "[]";
-        $records_infractions = isset($arr["records_infractions"])? serialize($arr["records_infractions"]): "[]";
-        $trainings = isset($arr["trainings"])? serialize($arr["trainings"]): "[]";
-        $experiences = isset($arr["experiences"])? serialize($arr["experiences"]): "[]";
-        $eligibilities = isset($arr["eligibilities"])? serialize($arr["eligibilities"]): "[]";
+        $awards = isset($arr["awards"]) ? serialize($arr["awards"]) : "[]";
+        $records_infractions = isset($arr["records_infractions"]) ? serialize($arr["records_infractions"]) : "[]";
+        $trainings = isset($arr["trainings"]) ? serialize($arr["trainings"]) : "[]";
+        $experiences = isset($arr["experiences"]) ? serialize($arr["experiences"]) : "[]";
+        $eligibilities = isset($arr["eligibilities"]) ? serialize($arr["eligibilities"]) : "[]";
 
         $sql = "INSERT INTO `rsp_applicants` (`name`, `age`, `gender`, `civil_status`, `mobile_no`, `address`, `education`, `school`, `awards`, `records_infractions`, `remarks`, `trainings`, `experiences`, `eligibilities`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        
+
         $stmt = $this->mysqli->prepare($sql);
-        
-        $stmt->bind_param("sissssssssssss", $name,$age,$gender,$civil_status,$mobile_no,$address,$education,$school,$awards,$records_infractions,$remarks,$trainings,$experiences,$eligibilities);
-        
+
+        $stmt->bind_param("sissssssssssss", $name, $age, $gender, $civil_status, $mobile_no, $address, $education, $school, $awards, $records_infractions, $remarks, $trainings, $experiences, $eligibilities);
+
         $stmt->execute();
 
         $insert_id = $stmt->insert_id;
@@ -130,11 +156,11 @@ class ComparativeDataInfoController extends Controller
         return $insert_id;
     }
 
-    public function add_applicant_to_vacant_post($applicant_id, $rspvac_id) 
+    public function add_applicant_to_vacant_post($applicant_id, $rspvac_id)
     {
         $sql = "INSERT INTO `rsp_comparative` (`rspvac_id`, `applicant_id`) VALUES (?,?)";
         $stmt = $this->mysqli->prepare($sql);
-        $stmt->bind_param("ii",$applicant_id, $rspvac_id);
+        $stmt->bind_param("ii", $applicant_id, $rspvac_id);
         $result = $stmt->execute();
         $stmt->close();
 

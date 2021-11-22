@@ -426,7 +426,7 @@ $rspvac_id = $_GET["rspvac_id"];
                   </div>
                   <div class="field" style="padding-left: 32px;">
                     <label>Years of Service:</label>
-                    <input readonly type="text" :value="`Years: ${form_experience.years_of_service.years} Months: ${form_experience.years_of_service.months}`">
+                    <input readonly type="text" :value="`${form_experience.years_of_service.years} Years & ${form_experience.years_of_service.months} Months`">
                   </div>
                 </div>
                 <!-- <button @click="add_applicant_experience()" class="ui mini green button"><i class="add icon"></i> Add</button> -->
