@@ -101,11 +101,11 @@ class ComparativeDataInfoController extends Controller
 
 
         foreach ($items as $key => $item) {
-            $items[$key]["trainings"] = $item["trainings"]?unserialize($item["trainings"]):[];
-            $items[$key]["experiences"] = $item["experiences"]?unserialize($item["experiences"]):[];
-            $items[$key]["eligibilities"] = $item["eligibilities"]?unserialize($item["eligibilities"]):[];
-            $items[$key]["awards"] = $item["awards"]?unserialize($item["awards"]):[];
-            $items[$key]["records_infractions"] = $item["records_infractions"]?unserialize($item["records_infractions"]):[];
+            $items[$key]["trainings"] = $item["trainings"] ? unserialize($item["trainings"]) : [];
+            $items[$key]["experiences"] = $item["experiences"] ? unserialize($item["experiences"]) : [];
+            $items[$key]["eligibilities"] = $item["eligibilities"] ? unserialize($item["eligibilities"]) : [];
+            $items[$key]["awards"] = $item["awards"] ? unserialize($item["awards"]) : [];
+            $items[$key]["records_infractions"] = $item["records_infractions"] ? unserialize($item["records_infractions"]) : [];
         }
 
         return $items;
@@ -156,11 +156,64 @@ class ComparativeDataInfoController extends Controller
         return $insert_id;
     }
 
-    public function add_applicant_to_vacant_post($applicant_id, $rspvac_id)
+    public function update_existing_applicant_submit($arr)
+    {
+        if (!$arr) return false;
+
+        $applicant_id = $arr["applicant_id"];
+        $name = $arr["name"];
+        $age = $arr["age"];
+        $gender = $arr["gender"];
+        $civil_status = $arr["civil_status"];
+        $mobile_no = $arr["mobile_no"];
+        $address = $arr["address"];
+        $education = $arr["education"];
+        $school = $arr["school"];
+        // $training = ""; //$arr["training"]; //##### deprecated
+        // $num_years_in_gov = ""; //$arr["num_years_in_gov"]; //#### deprecated
+        // $experience = ""; // $arr["experience"]; //##### deprecated
+        // $eligibility = ""; //$arr["eligibility"]; //##### deprecated
+        $remarks = $arr["remarks"];
+        $awards = isset($arr["awards"]) ? serialize($arr["awards"]) : "[]";
+        $records_infractions = isset($arr["records_infractions"]) ? serialize($arr["records_infractions"]) : "[]";
+        $trainings = isset($arr["trainings"]) ? serialize($arr["trainings"]) : "[]";
+        $experiences = isset($arr["experiences"]) ? serialize($arr["experiences"]) : "[]";
+        $eligibilities = isset($arr["eligibilities"]) ? serialize($arr["eligibilities"]) : "[]";
+
+        $sql = "UPDATE `rsp_applicants` SET 
+        `name`= ?,
+        `age`= ?,
+        `gender`= ?,
+        `civil_status`= ?,
+        `mobile_no`= ?,
+        `address`= ?,
+        `education`= ?,
+        `school`= ?,
+        -- `training`= ?,
+        -- `num_years_in_gov`=?,
+        -- `experience`= ?,
+        -- `eligibility`= ?,
+        `awards`= ?,
+        `records_infractions`=?,
+        `remarks`=?,
+        `trainings`=?,
+        `experiences`=?,
+        `eligibilities`=? 
+        WHERE `applicant_id` = ?";
+
+        $stmt = $this->mysqli->prepare($sql);
+        $stmt->bind_param("sissssssssssssi", $name, $age, $gender, $civil_status, $mobile_no, $address, $education, $school, $awards, $records_infractions, $remarks, $trainings, $experiences, $eligibilities,$applicant_id);
+        $stmt->execute();
+        $stmt->close();
+
+        return true;
+    }
+
+    public function add_applicant_to_vacant_post($rspvac_id,$applicant_id)
     {
         $sql = "INSERT INTO `rsp_comparative` (`rspvac_id`, `applicant_id`) VALUES (?,?)";
         $stmt = $this->mysqli->prepare($sql);
-        $stmt->bind_param("ii", $applicant_id, $rspvac_id);
+        $stmt->bind_param("ii", $rspvac_id, $applicant_id);
         $result = $stmt->execute();
         $stmt->close();
 

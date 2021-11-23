@@ -211,6 +211,7 @@ var comparative_data_vue = new Vue({
       },
         (data, textStatus, jqXHR) => {
           console.log("save_new_applicant_submit(): ", data);
+          this.get_list_of_applicants()
         },
         "json"
       );
