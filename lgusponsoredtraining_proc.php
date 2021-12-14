@@ -163,29 +163,41 @@ if (isset($_POST["load"])) {
 
 function add_sortable_date($data)
 {
-	if (!$data) return [];
-	$data = $data;
-	foreach ($data as $key => $value) {
-		$date = $value["date"];
-		// $data[$key]["date_arr"] = preg_split('/[\s\,\-]+/', $date);
-		$data[$key]["sortable_date"] = create_time($date);
-	}
-	// parse string date to sortable date end
-	return $data;
+    if (!$data) return [];
+    $data = $data;
+    foreach ($data as $key => $value) {
+        $date = $value["date"];
+        $data[$key]["date_arr"] = preg_split('/[\s\,\-\/]+/', $date);
+        $data[$key]["sortable_date"] = create_time($date);
+    }
+    // parse string date to sortable date end
+    return $data;
 }
 
 function create_time($date)
 {
-	$err = 9999999999;
-	if (!$date) return $err;
-	$arr = preg_split('/[\s\,\-]+/', $date);
-	$month = $arr[0] ? substr($arr[0], 0, 3) : '01';
-	$day = $arr[1] ? substr($arr[1], 0, 2) : '01';
-	// get length of arr
-	$length = count($arr);
-	$year = $length > 0 ? $arr[$length - 1] : 9999;
-	$date_str = $month . $day . "," . $year;
-	return strtotime($date_str);
+    $err = 9999999999;
+    if (!$date) return $err;
+    $arr = preg_split('/[\s\,\-\/]+/', $date);
+
+
+    if (is_numeric($arr[0])) {
+        $monthNum  = $arr[0];
+        $dateObj   = DateTime::createFromFormat('!m', $monthNum);
+        $month = $dateObj->format('F'); // March
+        $month = substr($month,0,3);
+    } else {
+        $month = isset($arr[0])?substr($arr[0],0,3):'Dec';
+    }
+
+
+    $day = isset($arr[1]) ? substr($arr[1], 0, 2) : '01';
+    // get length of arr
+    $length = count($arr);
+    $year = $length > 0 ? $arr[$length - 1] : 9999;
+    $date_str = $month . $day . "," . $year;
+    return strtotime($date_str);
+    // return $month;
 }
 
 
