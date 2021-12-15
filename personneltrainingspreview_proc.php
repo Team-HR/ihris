@@ -179,7 +179,7 @@ if (isset($_POST["load"])) {
 	$personneltrainings_id =$_POST["personneltrainings_id"];
 ?>
 			<div class="field">
-				<label>1.) What was the high point of the whole learning experience?</label>
+				<h2>1.) What was the high point of the whole learning experience?</h2>
 
 <div class="ui tiny middle aligned selection list">
 					<?php
@@ -195,7 +195,7 @@ if (isset($_POST["load"])) {
 							$personneltrainingseval_id = $row["personneltrainingseval_id"];
 							${"assessment_".$index} = $row["assessment_".$index];
 							if (${"assessment_".$index} != null) {
-								echo "<div onclick=\"editAssFunc('$personneltrainingseval_id','$index')\" class=\"item\"><div class=\"content\"><div id=\"assessment_$index$personneltrainingseval_id\" style=\"color: black; font-size: 12px;\">${"assessment_".$index}</div></div></div>";
+								echo "<div onclick=\"editAssFunc('$personneltrainingseval_id','$index')\" class=\"item\"><div class=\"content\"><div id=\"assessment_$index$personneltrainingseval_id\" style=\"color: black; font-size: 18px;\">${"assessment_".$index}</div></div></div>";
 							} else {
 								$nulls++;
 							}
@@ -210,7 +210,7 @@ if (isset($_POST["load"])) {
 </div>
 			</div>
 			<div class="field">
-				<label>2.) What major benefit/s you received from this training/workshop?</label>
+				<h2>2.) What major benefit/s you received from this training/workshop?</h2>
 					<div class="ui tiny middle aligned selection list">
 					<?php
 						getAssessments(2,$personneltrainings_id);
@@ -218,7 +218,7 @@ if (isset($_POST["load"])) {
 				</div>
 			</div>
 			<div class="field">
-				<label>3.) In what specific ways this training/workshop can be improved?</label>
+				<h2>3.) In what specific ways this training/workshop can be improved?</h2>
 					<div class="ui tiny middle aligned selection list">
 					<?php
 						getAssessments(3,$personneltrainings_id);
@@ -226,7 +226,7 @@ if (isset($_POST["load"])) {
 				</div>
 			</div>
 			<div class="field">
-				<label>4.) What other trainings you want HRMO to conduct to make you become more competent in your job?</label>
+				<h2>4.) What other trainings you want HRMO to conduct to make you become more competent in your job?</h2>
 					<div class="ui tiny middle aligned selection list">
 					<?php
 						getAssessments(4,$personneltrainings_id);
@@ -234,7 +234,7 @@ if (isset($_POST["load"])) {
 				</div>
 			</div>
 			<div class="field">
-				<label>5.) Other comments and suggestions:</label>
+				<h2>5.) Other comments and suggestions:</h2>
 					<div class="ui tiny middle aligned selection list">
 					<?php
 						getAssessments(5,$personneltrainings_id);
