@@ -397,20 +397,23 @@ $personneltrainings_id = $_GET["personneltrainings_id"];
 		<div class="item">
 			<h1><i class="certificate icon"></i><i id="trainingTitle"></i></h1>
 		</div>
-		<div class="right item noprint">
-			<button onclick="editFunc()" class="blue ui icon button" title="Edit Training" style="margin-right: 5px;">
-				<i class="icon edit outline"></i> Edit
-			</button>
-			<button onclick="print()" class="blue ui icon button" title="Print" style="margin-right: 5px;">
-				<i class="icon print"></i> Print
-			</button>
-			<button onclick="deleteFunc()" class="blue ui icon button" title="Delete" style="margin-right: 5px;">
-				<i class="icon trash"></i> Delete
-			</button>
+		<div class="right item">
+
 			<!-- 			<a class="ui blue icon button" title="Evaluation Report" style="margin-right: 5px;">
 				<i class="icon chart bar"></i> Evaluation Report
 			</a> -->
 		</div>
+	</div>
+	<div class="ui basic compact segment noprint">
+		<button onclick="editFunc()" class="blue ui icon button" title="Edit Training" style="margin-right: 5px;">
+			<i class="icon edit outline"></i> Edit
+		</button>
+		<button onclick="print()" class="blue ui icon button" title="Print" style="margin-right: 5px;">
+			<i class="icon print"></i> Print
+		</button>
+		<button onclick="deleteFunc()" class="blue ui icon button" title="Delete" style="margin-right: 5px;">
+			<i class="icon trash"></i> Delete
+		</button>
 	</div>
 	<div class="ui container">
 		<div class="ui segment blue">
