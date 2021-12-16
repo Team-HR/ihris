@@ -1,76 +1,124 @@
-<?php
-require_once "_connect.db.php";
-$date = "Feb20,2021";
-echo strtotime($date);
-echo "<br>";
-$date = "Feb21,2021";
-echo strtotime($date);
-echo "<br>";
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 
-$sql = "SELECT * FROM `ldactivitieslist` WHERE `act_id` = '2'";
-$result = $mysqli->query($sql);
-
-$data = array();
-
-while ($row = $result->fetch_assoc()) {
-    $data[] = array(
-        "date" => $row["date"]
-    );
-}
-
-// parse string date to sortable date start
-
-
-
-$data = add_sortable_date($data);
-
-usort($data, function ($item1, $item2) {
-    return $item2['sortable_date'] <=> $item1['sortable_date'];
-});
-
-print("<pre>" . print_r($data, true) . "</pre>");
-
-
-// 1613836800
-// 9999999999
-
-
-
-function add_sortable_date($data)
-{
-    if (!$data) return [];
-    $data = $data;
-    foreach ($data as $key => $value) {
-        $date = $value["date"];
-        $data[$key]["date_arr"] = preg_split('/[\s\,\-\/]+/', $date);
-        $data[$key]["sortable_date"] = create_time($date);
+<style>
+    tr {
+        text-align: center;
     }
-    // parse string date to sortable date end
-    return $data;
-}
+</style>
 
-function create_time($date)
-{
-    $err = 9999999999;
-    if (!$date) return $err;
-    $arr = preg_split('/[\s\,\-\/]+/', $date);
+<div id="app">
+    <template>
+        <div v-for="(page,p) in num_pages" style="_page-break-inside:avoid; display: _block; _height: 297mm;">
 
+            <table :key="p" border="1" style="table-layout:fixed; border-collapse: collapse; height: 100%; page-break-inside:avoid;">
+                <tr v-for="(row,i) in num_rows" :key="i">
+                    <td style="width:105mm; height: 32mm">{{employees[((num_rows*p)+i)*2]}}</td>
+                    <td style="width:105mm; height: 32mm">{{employees[(((num_rows*p)+i)*2)+1]}}</td>
+                </tr>
+            </table>
 
-    if (is_numeric($arr[0])) {
-        $monthNum  = $arr[0];
-        $dateObj   = DateTime::createFromFormat('!m', $monthNum);
-        $month = $dateObj->format('F'); // March
-        $month = substr($month,0,3);
-    } else {
-        $month = isset($arr[0])?substr($arr[0],0,3):'Dec';
-    }
+        </div>
+    </template>
+</div>
 
-
-    $day = isset($arr[1]) ? substr($arr[1], 0, 2) : '01';
-    // get length of arr
-    $length = count($arr);
-    $year = $length > 0 ? $arr[$length - 1] : 9999;
-    $date_str = $month . $day . "," . $year;
-    return strtotime($date_str);
-    // return $month;
-}
+<script>
+    new Vue({
+        el: "#app",
+        data: {
+            num_pages: 0,
+            num_rows: 8,
+            num_employees_per_page: 0,
+            department: "CITY TREASURER'S OFFICE",
+            employees: [
+                "SUMALPONG, GEMMA G.",
+                "ACABAL, BERNARDO  A.",
+                "AMADEO, ROVILLA V.",
+                "ADAPON, SHERYL G.",
+                "ALVIOLA, EDGARDO A.",
+                "ASPAREN, SARITA ALICIA N.",
+                "ATAY, SUSAN V.",
+                "BALASABAS, MA. CLARETTE T.",
+                "BARRON, EMERALD A.",
+                "BAYNOSA, LODEBER T.",
+                "CORDEVILLA, CHUCHO V.",
+                "DUHAYLUNGSOD, WILLIAM P., JR.",
+                "ESTIÑOSO, MA. JEZEBEL G.",
+                "GANTALAO, MARICON C.",
+                "GERONA, HENELYN D.",
+                "GOTLADERA, ARNEL ANTONIO Q.",
+                "GOTLADERA, GREMAR Y.",
+                "GRACIADAS, SYLVIA S.",
+                "HOYOHOY, JENETTE B.",
+                "JAMANDRON, JOHNJAY F.",
+                "JOSEPH, FE JANET B.",
+                "LACSON, VICTORIO S.",
+                "MAPUTY, WILDE G.",
+                "MARTINEZ, ELENITA M.",
+                "MELENDRES, RUSSEL IRA B.",
+                "MONCAL, RACHEL B.",
+                "OCCEÑA, DEMETRIO S.",
+                "OJEÑOS, IAN A.",
+                "GALABAY, EMMEROSE O.",
+                "PIÑERO, ARGEL JOSEPH L.",
+                "PIÑERO, NOVA V.",
+                "QUINDO, NOEL T.",
+                "RUSIANA, JONATHAN T.",
+                "SENIEL, FRETCHIE",
+                "TABILON, ROSALINDA A.",
+                "TATON, DIOSAN T.",
+                "TIGMO, ELVIE CARMEL A.",
+                "TORALDE, MENCHU V.",
+                "TUBESA, JUVY D.",
+                "VILLARIN, MA. RAYZA E.",
+                "YURONG, CHRISTOPHER S.",
+                "VECENTE M. BERONIO",
+                "REY V. CORDOVA",
+                "JUDITH T. DUKA",
+                "VILMA G. RENDON",
+                "TALEON, GALILEO T.",
+                "TRIAS, JOAN",
+                "YAP, DEEVI COREN S.",
+                "ABADIANO, BEATRIZ",
+                "ABRASALDO, JUN EARL T.",
+                "ARROYO, ESTELA",
+                "BACARAT, AMERSHAD M.",
+                "BALUCOS, NOEMIE P.",
+                "BAWEGA,  RONEL L.",
+                "CADALSO, JUNERALLEN Y.",
+                "CANCIO, RESELITO D.",
+                "CATID, NOVALIE",
+                "DILOY, MAYRIE JOY",
+                "DUHAYLUNGSOD, GEMMA",
+                "ENRIQUEZ, GODOFREDO ANTHONY II, M.",
+                "ESNARDO, RYAN",
+                "MASAYON, MARC ERIC E.",
+                "MEMIS, MARLON S.",
+                "PABRO, PAUL XERZIES Y.",
+                "PALAMOS, LESLIE A.",
+                "PAMILAGA, ALLEN JOHN",
+                "PAPASIN, NOEL Q. JR.",
+                "SANOY, ARNIEL",
+                "SAYSON, JUDITO",
+                "SUMALPONG, IAN",
+                "TABAY, KERR A.",
+                "TIGLE, OLIVER JR., M.",
+                "TULAYBA, ARIANNE G.",
+                "VILLAMIL, LILY H.",
+            ]
+        },
+        methods: {
+            get_num_pages() {
+                var employees = this.employees
+                var length = 0
+                length = this.employees.length
+                this.num_employees_per_page = this.num_rows * 2
+                this.num_pages = Math.ceil(length / (this.num_rows * 2))
+                console.log(this.num_pages)
+            }
+        },
+        mounted() {
+            this.get_num_pages()
+            console.log(Math.ceil(74 / this.num_rows));
+        }
+    })
+</script>
