@@ -6,82 +6,58 @@ require_once('_connect.db.php');
 
 $num_rows = 8;
 $num_employees_per_page = 0;
-$department = "CITY TREASURER'S OFFICE";
+$department = "CITY ENVIRONMENT AND NATURAL RESOURCES OFFICE";
 $employees = array(
-    "SUMALPONG, GEMMA G.",
-    "ACABAL, BERNARDO  A.",
-    "AMADEO, ROVILLA V.",
-    "ADAPON, SHERYL G.",
-    "ALVIOLA, EDGARDO A.",
-    "ASPAREN, SARITA ALICIA N.",
-    "ATAY, SUSAN V.",
-    "BALASABAS, MA. CLARETTE T.",
-    "BARRON, EMERALD A.",
-    "BAYNOSA, LODEBER T.",
-    "CORDEVILLA, CHUCHO V.",
-    "DUHAYLUNGSOD, WILLIAM P., JR.",
-    "ESTIÑOSO, MA. JEZEBEL G.",
-    "GANTALAO, MARICON C.",
-    "GERONA, HENELYN D.",
-    "GOTLADERA, ARNEL ANTONIO Q.",
-    "GOTLADERA, GREMAR Y.",
-    "GRACIADAS, SYLVIA S.",
-    "HOYOHOY, JENETTE B.",
-    "JAMANDRON, JOHNJAY F.",
-    "JOSEPH, FE JANET B.",
-    "LACSON, VICTORIO S.",
-    "MAPUTY, WILDE G.",
-    "MARTINEZ, ELENITA M.",
-    "MELENDRES, RUSSEL IRA B.",
-    "MONCAL, RACHEL B.",
-    "OCCEÑA, DEMETRIO S.",
-    "OJEÑOS, IAN A.",
-    "GALABAY, EMMEROSE O.",
-    "PIÑERO, ARGEL JOSEPH L.",
-    "PIÑERO, NOVA V.",
-    "QUINDO, NOEL T.",
-    "RUSIANA, JONATHAN T.",
-    "SENIEL, FRETCHIE",
-    "TABILON, ROSALINDA A.",
-    "TATON, DIOSAN T.",
-    "TIGMO, ELVIE CARMEL A.",
-    "TORALDE, MENCHU V.",
-    "TUBESA, JUVY D.",
-    "VILLARIN, MA. RAYZA E.",
-    "YURONG, CHRISTOPHER S.",
-    "VECENTE M. BERONIO",
-    "REY V. CORDOVA",
-    "JUDITH T. DUKA",
-    "VILMA G. RENDON",
-    "TALEON, GALILEO T.",
-    "TRIAS, JOAN",
-    "YAP, DEEVI COREN S.",
-    "ABADIANO, BEATRIZ",
-    "ABRASALDO, JUN EARL T.",
-    "ARROYO, ESTELA",
-    "BACARAT, AMERSHAD M.",
-    "BALUCOS, NOEMIE P.",
-    "BAWEGA,  RONEL L.",
-    "CADALSO, JUNERALLEN Y.",
-    "CANCIO, RESELITO D.",
-    "CATID, NOVALIE",
-    "DILOY, MAYRIE JOY",
-    "DUHAYLUNGSOD, GEMMA",
-    "ENRIQUEZ, GODOFREDO ANTHONY II, M.",
-    "ESNARDO, RYAN",
-    "MASAYON, MARC ERIC E.",
-    "MEMIS, MARLON S.",
-    "PABRO, PAUL XERZIES Y.",
-    "PALAMOS, LESLIE A.",
-    "PAMILAGA, ALLEN JOHN",
-    "PAPASIN, NOEL Q. JR.",
-    "SANOY, ARNIEL",
-    "SAYSON, JUDITO",
-    "SUMALPONG, IAN",
-    "TABAY, KERR A.",
-    "TIGLE, OLIVER JR., M.",
-    "TULAYBA, ARIANNE G.",
-    "VILLAMIL, LILY H.",
+    "VILLARUBIA, NEFREDO A.",
+    "AGUILAR, ANTONIO JR., S",
+    "BOLLOS,  ION JOSEPH T. ",
+    "TORRENTO, EUGENE RUSTICO T.",
+    "PATIGAYON, AMELYN T.",
+    "STELLA DWAYNE P. BETANIA",
+    "MONTES, JULIETA M. ",
+    "CRISOSTOMO, JOEMAR E.",
+    "HOYOHOY, ARTHUR S.",
+    "VILLAMIL, KAREN THERESE",
+    "AWAS, ABUNDIO P. JR.",
+    "BAGARINAO, TITA M.",
+    "BISABIS, RAUL Z.",
+    "BOLLOS, MONICO GALEN E. JR.",
+    "BOLTIADOR, GEOFREY V.",
+    "DELA CRUZ, CARLITO D.",
+    "EGANG, MARIA FLORA C.",
+    "EMPERADO, NARDITO S.",
+    "HOBRO, REBECCA L. ",
+    "JAMIN, RENIE R.",
+    "MARCELINO, JOEL B.",
+    "OLORES, LEONARDO M.",
+    "OMOYON, ELIZABETH L.",
+    "PALMA, JUANITA A.",
+    "PAO, CEASAR",
+    "PASCO, LUCY P.",
+    "PICANTE,PETER",
+    "PRAC, DEDITO E.",
+    "QUIO, DAISY D.",
+    "RENDON, JERRY C.",
+    "SARAÑA, BRENDO F.",
+    "VALENCIA,EUGENE ",
+    "VALOR, JOVELYN V.",
+    "LORINAMAE CARLON",
+    "ALLAN MANINANTAN JR.",
+    "JOSEPHINE PANDAGANI",
+    "JASON BARANGGAN",
+    "EVA TABOGUILDE",
+    "GEDA TIZON",
+    "MARK ANTHONY BARO",
+    "STEPHINE SAYCON",
+    "ERVING MOSICO",
+    "ESTER BAYLON",
+    "REX QUINIQUITO",
+    "WARREN GASENDO",
+    "RUBEN BANDOQUILLO",
+    "EDWARD CORDOVA",
+    "DARLENE TENEFRANCIA",
+    "ROLAND TOLENTIN",
+    "ESTEB LUI CHIEFE",
 );
 
 $num_pages = get_num_pages($employees, $num_rows);
@@ -95,13 +71,6 @@ $pdf->SetAuthor('Franz Joshua Valencia');
 $tab_title = $pdf->SetTitle("TEST_TITLE");
 $pdf->SetSubject('TCPDF');
 $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
-
-// // set default header data
-// $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, 'TEST_HEADER');
-
-// // set header and footer fonts
-// $pdf->setHeaderFont(Array('times', 'I', 9));
-// $pdf->setFooterFont(Array('times','',9));
 
 // set default monospaced font
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
@@ -124,12 +93,6 @@ if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
     // $pdf->setLanguageArray($l);
 }
 
-// set font
-// $pdf->SetFont('helvetica', 'I', 20);
-// add a page
-
-
-
 // start of for ($i=0; $i < $num_pages; $i++) { 
 for ($p = 0; $p < $num_pages; $p++) {
     $pdf->AddPage();
@@ -140,10 +103,10 @@ for ($p = 0; $p < $num_pages; $p++) {
     <table border="1" style="table-layout:fixed; border-collapse: collapse; font-size:18px; text-align: center;">
 EOD;
     for ($i = 0; $i < $num_rows; $i++) {
-        $emp1 = $employees[((($num_rows*$p)+$i)*2)];
-        $emp2 = $employees[((($num_rows*$p)+$i)*2)+1];
-        $department1 = $emp1?$department:'';
-        $department2 = $emp2?$department:'';
+        $emp1 = $employees[((($num_rows * $p) + $i) * 2)];
+        $emp2 = $employees[((($num_rows * $p) + $i) * 2) + 1];
+        $department1 = $emp1 ? $department : '';
+        $department2 = $emp2 ? $department : '';
         $tbl .= <<< EOD
     <tr>
         <td style="width:101mm; height: 36.3mm;">
