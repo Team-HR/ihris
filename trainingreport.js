@@ -1,4 +1,29 @@
 var json = [], ldnLsaCharts, ldnLsaCharts2, ldnLsaCharts_total, ldnLsaCharts2_total, performanceChart;
+var vue_app = new Vue({
+    el: "#vue_app",
+    data: {
+        showDisplayTable: false,
+        items_permanent_with_trainings: [],
+        items_permanent_without_trainings: [],
+        items_casual_with_trainings: [],
+        items_casual_without_trainings: [],
+    },
+    methods: {
+        set_items(data) {
+            this.items_permanent_with_trainings = JSON.parse(JSON.stringify(data.items_permanent_with_trainings))
+            this.items_permanent_without_trainings = JSON.parse(JSON.stringify(data.items_permanent_without_trainings))
+            this.items_casual_with_trainings = JSON.parse(JSON.stringify(data.items_casual_with_trainings))
+            this.items_casual_without_trainings = JSON.parse(JSON.stringify(data.items_casual_without_trainings))
+            $("#loading_el").hide();
+
+        },
+        countEmployees(arr) {
+            if (!arr) return 0
+            return arr.length
+        }
+    },
+
+});
 
 $(document).ready(function () {
 
@@ -60,65 +85,68 @@ $(document).ready(function () {
     });
 
     var ctxPerformance = $("#performance_chart");
-    $.post("trainingreport_proc.php",{fetchPerfData:true},
-    function (jsonData, textStatus, jqXHR) {
-        // console.log('jsonData',jsonData);
-        var datasets = [];
-        var bgColors = ['#ff000070', '#00800075', '#0000ff70', '#ffa50070', '#ffff0070'];
-        var colors = ['red', 'green', 'blue', 'orange', 'yellow'];
-        var counter = 0;
-        $.each(jsonData, function (i, val) {
-            data = [];
-            for (let index = 0; index < 12; index++) {
-                data[index] = (val.months[index+1]?val.months[index+1].num_trainings:'');
-            }
-            set = {
-                label: val.year,
-                // steppedLine: 'middle',
-                backgroundColor: bgColors[counter],
-                borderColor: colors[counter],
-                borderWidth: 1,
-                fill: true,
-                data: data
-            }
-            datasets.push(set);
-            counter++;
-        });
-        // console.log('dataset',datasets);
-        var pfChartCfg = {
-            type: 'line',
-
-            data: {
-                labels: ['January','February','March','April','May','June','July','August','September','October','November','December'],
-                datasets: datasets
-            },
-            options: {
-                responsive: true,
-                title: {
-                    display: true,
-                    text: 'Trainings & Feedbackings Conducted Performance'
-                },
-                scales: {
-                    xAxes: [{
-                        display: true,
-                        autoSkip: false
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            stepSize: 1,
-                            beginAtZero: true
-                        },
-                        display: true
-                    }]
+    $.post("trainingreport_proc.php", { fetchPerfData: true },
+        function (jsonData, textStatus, jqXHR) {
+            // console.log('jsonData',jsonData);
+            var datasets = [];
+            var bgColors = ['#ff000070', '#00800075', '#0000ff70', '#ffa50070', '#ffff0070'];
+            var colors = ['red', 'green', 'blue', 'orange', 'yellow'];
+            var counter = 0;
+            $.each(jsonData, function (i, val) {
+                data = [];
+                for (let index = 0; index < 12; index++) {
+                    data[index] = (val.months[index + 1] ? val.months[index + 1].num_trainings : '');
                 }
-            }
-        };
+                set = {
+                    label: val.year,
+                    // steppedLine: 'middle',
+                    backgroundColor: bgColors[counter],
+                    borderColor: colors[counter],
+                    borderWidth: 1,
+                    fill: true,
+                    data: data
+                }
+                datasets.push(set);
+                counter++;
+            });
+            // console.log('dataset',datasets);
+            var pfChartCfg = {
+                type: 'line',
 
-        performanceChart = new Chart(ctxPerformance, pfChartCfg);
-        
-    },
-    "json"
-);
+                data: {
+                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Trainings & Feedbackings Conducted Performance'
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            autoSkip: false
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                stepSize: 1,
+                                beginAtZero: true
+                            },
+                            display: true
+                        }]
+                    }
+                }
+            };
+
+            performanceChart = new Chart(ctxPerformance, pfChartCfg);
+
+        },
+        "json"
+    );
+
+
+
 
 
 });
@@ -234,8 +262,8 @@ function load(department_id, year) {
         config2_total.data.datasets[0].data = [json[1][0] + json[1][1]];
         config2_total.data.datasets[1].data = [json[1][2] + json[1][3]];
         config2_total.options.title.text = "Casual Employees With vs Without Trainings";
-//TODO:
-        
+        //TODO:
+
         ldnLsaCharts = new Chart(ctx, config);
         ldnLsaCharts_total = new Chart(ctx_total, config_total);
         ldnLsaCharts2 = new Chart(ctx2, config2);
@@ -243,24 +271,29 @@ function load(department_id, year) {
     });
 
 
-    $("#tbody").load('trainingreport_proc.php', {
-        load: true,
-        department_id: department_id,
-        year: year
-    },
-        function () {
-            /* Stuff to do after the page is loaded */
-            $(load2(department_id));
-        });
-}
-
-function load2(department_id) {
-    $("#load2Container").load('trainingreport_proc.php', {
-        load2: true,
-        department_id: department_id
-    },
-        function () {
-            /* Stuff to do after the page is loaded */
-        });
+    // $("#tbody").load('trainingreport_proc.php', {
+    //     load: true,
+    //     department_id: department_id,
+    //     year: year
+    // },
+    //     function () {
+    //         /* Stuff to do after the page is loaded */
+    //         // $(load2(department_id));
+    //     });
+    this.vue_app.showDisplayTable = false
+    $.ajax({
+        type: "post",
+        url: "trainingreport_proc.php",
+        data: {
+            fetch_data: true,
+            department_id: department_id,
+            year: year
+        },
+        dataType: "json",
+        success: (response) => {
+            this.vue_app.set_items(response)
+            this.vue_app.showDisplayTable = true
+        }
+    });
 
 }
