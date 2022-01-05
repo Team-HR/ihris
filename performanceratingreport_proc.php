@@ -43,11 +43,12 @@ elseif (isset($_POST["addNew"])) {
 			$i = $mysqli->insert_id;
 			if($sql1){
 				if(strtoupper($dropdown_type_add)=="PERMANENT"){
-					$empStatus = "employmentStatus='PERMANENT' or employmentStatus='COTERMINUS'";
+					$empStatus = "AND `employmentStatus`='PERMANENT' or `employmentStatus`='COTERMINUS'";
 				}else{	
-					$empStatus = "employmentStatus='$dropdown_type_add'";
+					$empStatus = "AND `employmentStatus`='$dropdown_type_add'";
 				}
-				$getEmp = "SELECT * FROM `employees` where $empStatus AND status='ACTIVE' ORDER BY gender ASC , lastName ASC ";
+				// $getEmp = "SELECT * FROM `employees` where $empStatus AND status='ACTIVE' ORDER BY gender ASC , lastName ASC ";
+				$getEmp = "SELECT * FROM `employees` WHERE `status`='ACTIVE' $empStatus ORDER BY `employees`.`lastName` ASC;";
 				// $getEmp = "SELECT * FROM `employees` where employmentStatus='$dropdown_type_add' AND status='ACTIVE' ORDER BY gender ASC , lastName ASC ";
 				$getEmp = $mysqli->query($getEmp);
 				while ($addEmp = $getEmp->fetch_assoc()) {
