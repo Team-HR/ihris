@@ -1,6 +1,8 @@
 var vue_prr = new Vue({
     el: "#vue_prr",
     data: {
+        sort_by: "lastName",
+        is_asc: true,
         myChart: null,
         items: [],
         emps: [],
@@ -9,8 +11,40 @@ var vue_prr = new Vue({
         type: new URL(window.location.href).searchParams.get("type"),
         is_loading: false
     },
+    watch: {
+        sort_by(nVal, oVal) {
+            this.do_sort()
+        },
+        is_asc(nVal, oVal) {
+            this.do_sort()
+        }
+    },
     methods: {
+        do_sort() {
+            console.log("do sort:", this.sort_by + " " + this.is_asc);
+            // this.items = []
+            var sort_by = this.sort_by
+            if (!this.is_asc) {
+                sort_by = "-" + sort_by
+            }
+            this.items.sort(this.dynamicSort(sort_by))
+        },
+        dynamicSort(property) {
+            var sortOrder = 1;
+            if(property[0] === "-") {
+                sortOrder = -1;
+                property = property.substr(1);
+            }
+            return function (a,b) {
+                /* next line works with strings and numbers, 
+                 * and you may want to customize it to your needs
+                 */
+                var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+                return result * sortOrder;
+            }
+        },
         get_items() {
+            this.items = []
             this.is_loading = true
             $.post("performanceratingreportinfo_proc.v2.php", {
                 load: true,
@@ -20,18 +54,24 @@ var vue_prr = new Vue({
                 (data, textStatus, jqXHR) => {
                     // console.log(data);
                     // this.items = []
+                    this.items = JSON.parse(JSON.stringify(data))
+                    this.do_sort()
+                    this.is_loading = false
+
                     this.get_emps()
-                    this.get_ova_rates().then(()=>{
-                        if(this.myChart){
+                    this.get_ova_rates().then(() => {
+                        if (this.myChart) {
                             this.myChart.destroy()
                         }
                         this.load_chart()
                     })
-                    this.is_loading = false
-                    this.items = JSON.parse(JSON.stringify(data))
+                    
                 },
                 "json"
             );
+            // if (this.items.length > 0) {
+            //    this.do_sort() 
+            // }
         },
         format_date(date) {
             if (date == '0000-00-00') return ""

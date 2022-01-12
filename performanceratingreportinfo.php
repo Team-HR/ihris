@@ -88,7 +88,7 @@ $title = title($mysqli);
             <br>
             <h1 style="text-align: center">Add Employee</h1>
             <div class="ui fluid action input">
-              <div class="ui fluid search selection dropdown">
+              <div class="ui fluid search selection employee_to_add dropdown">
                 <input type="hidden" id="empidprr">
                 <i class="dropdown icon"></i>
                 <div class="default text">Select Employee To add</div>
@@ -100,16 +100,17 @@ $title = title($mysqli);
             </div>
           </div>
           <div class="ui noprint" style="background:white;padding: 10px">
-            <select class="ui selection dropdown">
-              <option value="">Sort By:</option>
-              <option value="lastName">Last Name</option>
-              <option value="date_submitted">Date Submitted</option>
-            </select>
-            <select class="ui selection dropdown">
-              <option value="">Order:</option>
-              <option value="ASC">Ascending</option>
-              <option value="DESC">Descending</option>
-            </select>
+              <label for="">Sort by:</label>
+              <select v-model="sort_by" class="ui compact selection sort_by dropdown">
+                <option selected value="lastName">Last Name</option>
+                <option value="date_submitted">Date Submitted</option>
+              </select>
+              <div class="ui basic button" @click="is_asc = !is_asc">
+                <i v-if="is_asc" class="ui icon angle double up"></i>
+                <i v-else class="ui icon angle double down"></i>
+                {{is_asc?'Asc':'Desc'}}
+              </div>
+            <!-- </div> -->
           </div>
           <table class="ui mini very compact celled structured table">
             <thead class="center-align">
@@ -127,7 +128,7 @@ $title = title($mysqli);
               </tr>
               <tr>
                 <th>Last Name</th>
-                <th>Given Name</th>
+                <th>First Name</th>
                 <th>Middle Name</th>
                 <th>Name Ext.</th>
                 <th>Numerical</th>
@@ -136,7 +137,7 @@ $title = title($mysqli);
             </thead>
             <tbody id="tableBody">
               <tr style="text-align: center" v-if="is_loading">
-                <td colspan="14"><img style="transform: scale(0.1); margin-top: -200px;" src="assets/images/loading.gif"></td>
+                <td colspan="18"><img style="transform: scale(0.1); margin-top: -200px;" src="assets/images/loading.gif"></td>
               </tr>
               <tr v-for="item in items" :key="item.id" class="center-align" :style="'background:'+stage_color(item.stages)">
                 <td class="noprint">
@@ -284,7 +285,11 @@ function title($mysqli)
     // $('.ui.sticky').sticky({
     //   context: "#tableDiv"
     // });
-    $(".dropdown").dropdown({
+    $(".sort_by.dropdown").dropdown({
+      // fullTextSearch: true,
+      // forceSelection: false,
+    });
+    $(".employee_to_add.dropdown").dropdown({
       fullTextSearch: true,
       forceSelection: false,
       clearable: true
