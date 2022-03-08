@@ -130,11 +130,11 @@ if ($auth->is_hr) {
 								<div class="content">
 									<div class="ui animated list">
 										<a class="item" href="reqsandcoms.php">Training/Seminar Invitation/Communication</a>
+										<a class="item" href="tna.php">Training Needs Analysis (TNA)</a>
 										<a class="item" href="personneltrainings.php">Training Schedule/Evaluation</a>
 										<a class="item" href="ldprofile.php">L&D Profile</a>
 										<a class="item" href="ldplan.php">L&D Plan</a>
 										<a class="item" href="ldactivities.php">L&D Activities</a>
-										<!-- <a class="item" href="tna.php">L&D Training Needs Assessment</a> -->
 										<a class="item" href="dna.php">Development Needs Assessment</a>
 										<a class="item" href="trainingreport.php">Training Report</a>
 										<a class="item" href="personnelCompetenciesReport.php">Supervisor's Competencies</a>
