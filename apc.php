@@ -442,7 +442,7 @@ $tbl = <<<EOD
         </b></td>
         <td width="30%" border="1">
         <b>Approved/Signed by:<br><br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTY. GINA A. CRUCIO &nbsp;&nbsp;&nbsp;&nbsp;Date:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DIR. MERLINDA F. QUILLANO &nbsp;&nbsp;&nbsp;&nbsp;Date:<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<cite>Director II</cite>
         </b></td>
     </tr>

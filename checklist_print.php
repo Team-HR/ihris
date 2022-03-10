@@ -452,14 +452,14 @@ $tbl = <<<EOD
         <td width="30%" borderbottom="1" colspan="3"><b>Reasons:</b>_________________________________</td>
     </tr>
     <tr>
-        <td width="70%" border="1"><b>Evaluated by:<br><br>
+        <td width="60%" border="1"><b>Evaluated by:<br><br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PHOEBE P. TUPAS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date:<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<cite>Supervising HR Specialist</cite>
         </b></td>
-        <td width="30%" border="1">
+        <td width="40%" border="1">
         <b>Approved/Signed by:<br><br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTY. GINA A. CRUCIO &nbsp;&nbsp;&nbsp;&nbsp;Date:<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<cite>Director II</cite>
+        DIR. MERLINDA F. QUILLANO&nbsp;&nbsp;&nbsp;&nbsp;Date:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<cite>Director II</cite>
         </b></td>
     </tr>
 </table>

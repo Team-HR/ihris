@@ -14,7 +14,7 @@ var app = new Vue({
     employees_id: "",
     plantilla_id: "",
     status_of_appointment: "",
-    csc_authorized_official: "Gina Crucio",
+    csc_authorized_official: "Dir. Merlinda F. Quillano",
     date_signed_by_csc: "",
     committee_chair: 42214,
     date_of_appointment: "",
