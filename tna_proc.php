@@ -24,7 +24,6 @@ if (isset($_POST["getAddedScheduledTrainings"])) {
     $data[] = $row;
   }
 
-
   foreach ($data as $key => $training) {
     $exists = checkIfExist($mysqli, $training['personneltrainings_id']);
     $data[$key]['isExisting'] = $exists;

@@ -356,75 +356,81 @@ if (isset($_GET["scrollTo"])) {
 			</div>
 		</div>
 	</div>
-	<div>
-		<div class="ui multiple dropdown green button" id="mulitipleFilters" style="padding-right: 20px; padding-left: 20px;">
-			<input type="hidden" name="filters">
-			<button id="clearFilter" style="display: none;" class="ui mini button">Clear</button>
-			<i class="filter icon"></i>
-			<span class="text">Filter Table</span>
-			<div class="menu">
-				<div class="ui icon search input">
-					<i class="search icon"></i>
-					<input type="text" placeholder="Search tags...">
-				</div>
-				<div class="divider"></div>
-				<div class="header">
-					<i class="tags icon"></i>
-					Tag Label
-				</div>
-				<div class="scrolling menu">
 
-					<div class="item" data-value="status=ACTIVE">
+	<div class="ui multiple dropdown" id="mulitipleFilters" style="color: white;">
+		<input type="hidden" name="filters">
+		<button id="clearFilter" style="display: none;" class="ui mini button">Clear</button>
+		<i class="filter icon"></i>
+		<span class="text">Filter Table</span>
+		<div class="menu">
+			<div class="ui icon search input">
+				<i class="search icon"></i>
+				<input type="text" placeholder="Search tags...">
+			</div>
+			<div class="divider"></div>
+			<div class="header">
+				<i class="tags icon"></i>
+				Tag Label
+			</div>
+			<div class="scrolling menu">
+
+				<div class="item" data-value="status=ACTIVE">
+					<div class="ui green empty circular label"></div>
+					Active
+				</div>
+				<div class="item" data-value="status=INACTIVE">
+					<div class="ui black empty circular label"></div>
+					Inactive
+				</div>
+				<div class="item" data-value="gender=MALE">
+					<div class="ui blue empty circular label"></div>
+					Male
+				</div>
+				<div class="item" data-value="gender=FEMALE">
+					<div class="ui pink empty circular label"></div>
+					Female
+				</div>
+				<div class="item" data-value="type=PERMANENT">
+					<div class="ui yellow empty circular label"></div>
+					Permanent
+				</div>
+				<div class="item" data-value="type=CASUAL">
+					<div class="ui orange empty circular label"></div>
+					Casual
+				</div>
+				<div class="item" data-value="nature=RANK & FILE">
+					<div class="ui green empty circular label"></div>
+					Rank & File
+				</div>
+				<div class="item" data-value="nature=SUPERVISORY">
+					<div class="ui purple empty circular label"></div>
+					Supervisory
+				</div>
+
+
+				<?php
+
+				require '_connect.db.php';
+				$sql = "SELECT * FROM `department` ORDER BY `department` ASC";
+				$result = $mysqli->query($sql);
+				while ($row = $result->fetch_assoc()) {
+				?>
+
+					<div class="item" data-value="<?= "dept_id=" . $row['department_id'] ?>">
 						<div class="ui green empty circular label"></div>
-						Active
-					</div>
-					<div class="item" data-value="status=INACTIVE">
-						<div class="ui black empty circular label"></div>
-						Inactive
-					</div>
-					<div class="item" data-value="gender=MALE">
-						<div class="ui blue empty circular label"></div>
-						Male
-					</div>
-					<div class="item" data-value="gender=FEMALE">
-						<div class="ui pink empty circular label"></div>
-						Female
-					</div>
-					<div class="item" data-value="type=PERMANENT">
-						<div class="ui yellow empty circular label"></div>
-						Permanent
-					</div>
-					<div class="item" data-value="type=CASUAL">
-						<div class="ui orange empty circular label"></div>
-						Casual
-					</div>
-					<div class="item" data-value="nature=RANK & FILE">
-						<div class="ui green empty circular label"></div>
-						Rank & File
-					</div>
-					<div class="item" data-value="nature=SUPERVISORY">
-						<div class="ui purple empty circular label"></div>
-						Supervisory
+						<?= $row['department'] ?>
 					</div>
 
-					<?php
-					require '_connect.db.php';
-					$sql = "SELECT * FROM `department` ORDER BY `department` ASC";
-					$result = $mysqli->query($sql);
-					while ($row = $result->fetch_assoc()) {
-					?>
+				<?php	}
 
-						<div class="item" data-value="<?= "dept_id=" . $row['department_id'] ?>">
-							<div class="ui green empty circular label"></div>
-							<?= $row['department'] ?>
-						</div>
 
-					<?php	}
-					?>
-				</div>
+				?>
+
+
 			</div>
 		</div>
 	</div>
+
 	<table id="employees_table" class="ui small very compact celled selectable striped blue table" style="font-size: 12px;">
 		<thead>
 			<tr>

@@ -74,7 +74,8 @@ require_once "header.php"; ?>
                         </div>
                         <div class="content">
                             <span>{{item.highlights}}</span><br>
-                            <span>{{item.performance_issues}}</span> <span>{{item.others}}</span><br>
+                            <span>{{item.performance_issues}}</span>
+                            <span>{{item.others}}</span><br>
                             <span>{{item.areas_of_improvement}}</span>
                         </div>
                     </div>
@@ -121,7 +122,7 @@ require_once "header.php"; ?>
         },
         methods: {
             async deleteEntry(id) {
-                await $.post("tna_entries_proc.php", {
+                await $.post("tna_report_proc.php", {
                         deleteEntry: true,
                         id: id
                     },
@@ -132,7 +133,7 @@ require_once "header.php"; ?>
                 );
             },
             async getEntries() {
-                await $.post("tna_entries_proc.php", {
+                await $.post("tna_report_proc.php", {
                         getEntries: true,
                         personneltrainings_id: this.id
                     },
@@ -149,7 +150,7 @@ require_once "header.php"; ?>
                 })
             },
             async addNewEntry() {
-                await $.post("tna_entries_proc.php", {
+                await $.post("tna_report_proc.php", {
                         addNewEntry: true,
                         personneltrainings_id: this.id,
                         formData: this.formData
@@ -161,7 +162,7 @@ require_once "header.php"; ?>
                 );
             },
             getPersonnelTraining() {
-                $.post("tna_entries_proc.php", {
+                $.post("tna_report_proc.php", {
                         getPersonnelTraining: true,
                         personneltrainings_id: this.id
                     },

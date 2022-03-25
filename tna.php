@@ -21,9 +21,10 @@ require_once "header.php"; ?>
       <!-- content start -->
 
 
+
       <table class="ui very small compact structured table blue">
         <thead>
-          <tr class="center aligned">
+          <tr class="center aligned" >
             <th width="10"></th>
             <th width="10"></th>
             <th>Training</th>
@@ -181,3 +182,6 @@ require_once "header.php"; ?>
 
 
 <?php require_once "footer.php"; ?>
+
+
+
