@@ -45,6 +45,127 @@ if (isset($_POST["getEntries"])) {
 
     echo json_encode('success');
 }
+// tna entry report starts here
+
+elseif (isset($_POST["getPerformanceIssues"])) {
+
+    $performanceIssues = [
+        [
+            'performanceIssue' => 'Initiative',
+            'count' => 0
+        ],
+        [
+            'performanceIssue' => 'Resourcefulness',
+            'count' => 0
+        ],
+        [
+            'performanceIssue' => 'Efficiency',
+            'count' => 0
+        ],
+        [
+            'performanceIssue' => 'Teamwork',
+            'count' => 0
+        ],
+        [
+            'performanceIssue' => 'Attitude Towards Colleagues',
+            'count' => 0
+        ],
+        [
+            'performanceIssue' => 'Time and Cost consciousness in Delivery of Service',
+            'count' => 0
+        ],
+        [
+            'performanceIssue' => 'Professionalism in Delivery of Service',
+            'count' => 0
+        ],
+        [
+            'performanceIssue' => 'Customer-Friendliness',
+            'count' => 0
+        ],
+        [
+            'performanceIssue' => 'Responsiveness',
+            'count' => 0
+        ],
+        [
+            'performanceIssue' => 'Panctuality',
+            'count' => 0
+        ]
+
+    ];
+
+    if (!isset($_POST["personneltrainings_id"])) {
+        echo json_encode($performanceIssues);
+        return null;
+    }
+
+    $personneltrainings_id = $_POST["personneltrainings_id"];
+    $sql = "SELECT * FROM `training_needs_analysis_entries` WHERE `personneltrainings_id` = '$personneltrainings_id'";
+    $res = $mysqli->query($sql);
+
+    $data = [];
+    while ($row = $res->fetch_assoc()) {
+        $data[] = $row["performance_issues"];
+    }
+
+    foreach ($data as $key => $arr) {
+        $data[$key] = json_decode($arr);
+    }
+
+    foreach ($data as $arr) {
+        foreach ($arr as $perfIssue) {
+            foreach ($performanceIssues as $key => $performanceIssue) {
+                if ($perfIssue === $performanceIssue['performanceIssue']) {
+                    $performanceIssues[$key]['count'] += 1;
+                    continue;
+                }
+            }
+        }
+    }
+
+    $chartData = [
+        'labels' => [],
+        'data' => []
+    ];
+
+    foreach ($performanceIssues as $performanceIssue) {
+        $chartData['labels'][] = $performanceIssue['performanceIssue'];
+        $chartData['data'][] = $performanceIssue['count'];
+    }
+
+    echo json_encode($chartData);
+} elseif (isset($_POST["getHiglightsAndAreasNeedsImprovement"])) {
+
+    $data = [
+        'performance_issues_others' => [],
+        'highlights' => [],
+        'areas_of_improvement' => []
+    ];
+
+    if (!isset($_POST["personneltrainings_id"])) {
+        echo json_encode($data);
+        return null;
+    }
+
+    $personneltrainings_id = $_POST["personneltrainings_id"];
+    $sql = "SELECT * FROM `training_needs_analysis_entries` WHERE `personneltrainings_id` = '$personneltrainings_id'";
+    $res = $mysqli->query($sql);
+
+    while ($row = $res->fetch_assoc()) {
+        if (!empty($row['performance_issues_others'])) {
+            $data['performance_issues_others'][] = $row['performance_issues_others'];
+        }
+        if (!empty($row['highlights'])) {
+            $data['highlights'][] = $row['highlights'];
+        }
+        if (!empty($row['areas_of_improvement'])) {
+            $data['areas_of_improvement'][] = $row['areas_of_improvement'];
+        }
+    }
+
+    echo json_encode($data);
+}
+// tna entry report ends here
+
 
 function formatDate($numeric_date)
 {
