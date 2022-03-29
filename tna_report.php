@@ -168,7 +168,7 @@ require_once "header.php"; ?>
                     'Professionalism in Delivery of Service',
                     'Customer-Friendliness',
                     'Responsiveness',
-                    'Panctuality',
+                    'Punctuality',
                 ],
                 formData: {
                     highlights: '',

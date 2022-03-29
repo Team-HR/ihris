@@ -87,7 +87,7 @@ elseif (isset($_POST["getPerformanceIssues"])) {
             'count' => 0
         ],
         [
-            'performanceIssue' => 'Panctuality',
+            'performanceIssue' => 'Punctuality',
             'count' => 0
         ]
 
