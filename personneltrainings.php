@@ -331,7 +331,6 @@ require_once "header.php";
       </div>
       <div class="content">
 
-
         <div class="ui form">
           <div class="field">
             <label>Training Title:</label>
@@ -411,7 +410,6 @@ require_once "header.php";
       <div class="content">
         <p>Are you sure you want to delete this training entry?</p>
       </div>
-      <div class="actions">
         <div class="ui deny button mini">
           No
         </div>
