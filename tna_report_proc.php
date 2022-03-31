@@ -35,8 +35,34 @@ elseif (isset($_GET["pull_data"])) {
     $sql = "SELECT * FROM `training_needs_analysis_entries` WHERE `id` = '$id' "; 
     $res = $mysqli->query($sql);
     $row = $res->fetch_assoc();
-    $row['performance_issues'] = json_decode($row['performance_issues']);
+    $row['performance_issues'] = ($row['performance_issues']?json_decode($row['performance_issues']):[]) ;
     echo json_encode($row);
+
+    
+}
+
+elseif (isset($_POST["update_data"])) {
+    // $data = [];
+    $training_needs_analysis_entries_id = $_POST['training_needs_analysis_entries_id'];
+
+    $formData = $_POST['formData'];
+    $highlights = $formData["highlights"];
+    $performance_issues = ($formData['performance_issues']?json_encode($formData["performance_issues"]):NULL);
+    $performance_issues_others =$formData["performance_issues_others"];
+    $areas_of_improvement = $formData["areas_of_improvement"];
+
+    $sql = "UPDATE `training_needs_analysis_entries` SET `highlights`='$highlights',`performance_issues`='$performance_issues',`performance_issues_others`='$performance_issues_others',`areas_of_improvement`='$areas_of_improvement' WHERE `training_needs_analysis_entries`.`id` = $training_needs_analysis_entries_id"; 
+    $mysqli->query($sql);
+    echo json_encode('success');
+}
+
+elseif (isset($_POST["deleteEntry"])) {
+    // $data = [];
+    $id = $_POST['id'];
+
+    $sql = "DELETE FROM `training_needs_analysis_entries` WHERE `training_needs_analysis_entries`.`id` = '$id'";
+    $mysqli->query($sql);
+    echo json_encode('success');
 }
 
 elseif (isset($_POST["deleteEntry"])) {
@@ -61,11 +87,9 @@ elseif (isset($_POST["addNewEntry"])) {
     $performance_issues_others = $_POST['others'];
     $areas_of_improvement = $_POST['areas_of_improvement'];
 
-    $sql = "UPDATE `training_needs_analysis_entries` SET `personneltrainings_id`='$personneltrainings_id', `highlights` = '$highlights'WHERE `training_needs_analysis_entries`.`training_needs_analysis_entries_id` = '$personneltrainings_id'"; 
+    $sql = "UPDATE `training_needs_analysis_entries` SET `personneltrainings_id`='$personneltrainings_id', `highlights` = '$highlights',`performance_issues` = '$performance_issues' ,`performance_issues_others`= '$performance_issues_others' WHERE `training_needs_analysis_entries`.`training_needs_analysis_entries_id` = '$personneltrainings_id'"; 
 
     $mysqli->query($sql);
-
-
 }
 function formatDate($numeric_date)
 {
@@ -74,4 +98,5 @@ function formatDate($numeric_date)
     $strDate = $date->format('M d, Y');
     return $strDate;
 }
+
 

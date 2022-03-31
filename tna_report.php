@@ -48,7 +48,8 @@ require_once "header.php"; ?>
                                     <td>
                                         <div class="center aligned column w-50px">
                                             <!-- {{ item }} -->
-                                            <div class="ui basic icon button" @click="openModal(item.id)" title="Quick">
+                                            <div class="ui basic icon button" @click="openModal(item.id)"
+                                                title="Quick Edit">
                                                 <i class="ui green icon edit outline"></i>
                                             </div>
                                             <div class="ui basic icon button" @click="deleteEntry(item.id)"><i
@@ -66,14 +67,14 @@ require_once "header.php"; ?>
                 </div>
 
                 <!-- Modal form -->
-                <div class="active" id="editModal">
-                    <div class="ui fullscreen modal">
+                <div class="active">
+                    <div class="ui fullscreen modal" id="editModal">
                         <i class="close icon"></i>
                         <div class="header" style="text-align:center">
                             Update Form
                         </div>
                         <div class="ui segment">
-                            <form class="ui form" @submit.prevent="submitEntry()">
+                            <form class="ui form" @submit.prevent="">
 
                                 <div class="field">
                                     <label>1.) What are the highlights of your accomplishment as a team / unit /
@@ -98,8 +99,8 @@ require_once "header.php"; ?>
                                     <label>
                                         Others:
                                     </label>
-                                    <input id="inputOthersEdit" type="text" v-model="formData.others" name="others"
-                                        placeholder="Type here...">
+                                    <input id="inputOthersEdit" type="text" v-model="formData.performance_issues_others"
+                                        name="others" placeholder="Type here...">
                                 </div>
                                 <div class="field">
                                     <label> 3.) Areas for improvement that you wish to address in the strategic planning
@@ -110,12 +111,16 @@ require_once "header.php"; ?>
                                 </div>
 
                                 <!-- <input type="hidden" name="edit_modal" id="edit_modal" />   -->
-                                <button class="ui button green" type="submit">
-                                    Submit
-                                </button>
+
                             </form>
                         </div>
+                        <div class="actions">
+                            <button class="ui approve button green" type="button">
+                                Submit
+                            </button>
+                        </div>
                     </div>
+
                 </div>
                 <!-- End Modal Form -->
                 <!-- end content report -->
@@ -145,7 +150,7 @@ var tnaentries = new Vue({
             formData: {
                 highlights: '',
                 performance_issues: [],
-                others: '',
+                performance_issues_others: '',
                 areas_of_improvement: ''
             },
             formDataCleared: {
@@ -156,7 +161,6 @@ var tnaentries = new Vue({
             }
         }
     },
-
 
     methods: {
         async deleteEntry(id) {
@@ -182,6 +186,7 @@ var tnaentries = new Vue({
             );
         },
         submitEntry() {
+            // console.log(this);
             this.addNewEntry().then(() => {
                 this.getEntries()
                 this.formData = JSON.parse(JSON.stringify(this))
@@ -210,8 +215,11 @@ var tnaentries = new Vue({
                 "json"
             );
         },
+
+        
+       
+
         openModal(id) {
-            $('.fullscreen.modal').modal('show');
             $.ajax({
                 url: "tna_report_proc.php",
                 method: "GET",
@@ -226,29 +234,23 @@ var tnaentries = new Vue({
                 }
             })
 
+    
+            $("#editModal").modal({
+                onApprove: () => {
+                    // console.log(this.formData);
+                    $.post('tna_report_proc.php' , {
+                        update_data: true,
+                        training_needs_analysis_entries_id: id,
+                        formData: this.formData
+                    }, (data ,textStatus, xhr) => {
+                        // this.data();
+                        // console.log('test:',data);
+                        this.getEntries()
+                    });
+                }
+            }).modal("show")
+
         },
-
-        // submitForm() {
-
-        //     var personneltrainings_id = this.id;
-        //     console.log(this.formData);
-        //     // $.ajax({
-        //     //     url:"tna_report_proc.php",
-        //     //     method:"POST",
-        //     //     data:{
-        //     //         personneltrainings_id : personneltraining_id,
-        //     //         formData: this.formData
-        //     //     },
-        //     //     dataType:"JSON",
-        //     //     success:(item)=>{
-        //     //         $('#highlights').val(item.highlights);
-        //     //         $('#highlights').val(item.performance_issue);
-        //     //         $('#highlights').val(item.highlights);
-
-        //     //     }
-        //     // })
-        // }
-
     },
     mounted() {
         this.getPersonnelTraining()
