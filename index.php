@@ -25,14 +25,14 @@ if ($auth->is_hr) {
 		<div class="row">
 			<div class="five wide column" style="padding: 0px; margin: 5px;">
 				<!-- REWARDS AND RECOGNITION START -->
-				<div style="width: 360px; height: 250px; background-color: green;">
+				<div style="width: 360px; height: 280px; background-color: green;">
 					<div class="ui move up reveal" style="width: 360px;">
-						<div class="visible content" style="height: 250px; width: 360px;">
+						<div class="visible content" style="height: 280px; width: 360px;">
 							<!-- <p style="padding: 20px;">REWARDS AND RECOGNITION</p> -->
-							<img src="assets/images/r&r-cover.png" style="height: 250px; width: 360px;">
+							<img src="assets/images/r&r-cover.png" style="height: 280px; width: 360px;">
 						</div>
 						<div class="hidden content">
-							<div class="ui green segment" style="height: 250px; width: 360px;">
+							<div class="ui green segment" style="height: 280px; width: 360px;">
 								<div class="content" style="color: green; font-weight: bold; font-style: italic;">
 									REWARDS AND RECOGNITION (R&R)
 								</div>
@@ -115,14 +115,14 @@ if ($auth->is_hr) {
 			</div>
 			<div class="five wide column" style="padding: 0px; margin: 5px;">
 				<!-- LEARNING AND DEVELOPMENT START -->
-				<div style="width: 360px; height: 250px; background-color: green;">
+				<div style="width: 360px; height: 280px; background-color: green;">
 					<div class="ui move up reveal" style="width: 360px;">
-						<div class="visible content" style="height: 250px; width: 360px;">
+						<div class="visible content" style="height: 280px; width: 360px;">
 							<!-- <p style="padding: 20px;">LEARNING AND DEVELOPMENT</p> -->
-							<img src="assets/images/l&d-cover.png" style="height: 250px; width: 360px;">
+							<img src="assets/images/l&d-cover.png" style="height: 280px; width: 360px;">
 						</div>
 						<div class="hidden content">
-							<div class="ui green segment" style="height: 250px; width: 360px;">
+							<div class="ui green segment" style="height: 280px; width: 360px;">
 								<div class="content" style="color: green; font-weight: bold; font-style: italic;">
 									LEARNING AND DEVELOPMENT (L&D)
 								</div>
