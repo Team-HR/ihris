@@ -10,10 +10,10 @@ class NameFormatter
 	function __construct($firstName, $lastName, $middleName, $extName)
 	
 	{
-		$this->firstName = $firstName;
-		$this->lastName = $lastName;
-		$this->middleName = $middleName;
-		$this->extName = $extName;
+		$this->firstName = $firstName?$firstName:'';
+		$this->lastName = $lastName?$lastName:'';
+		$this->middleName = $middleName?$middleName:'';
+		$this->extName = $extName?$extName:'';
 	}
 
 	public function getFullName()

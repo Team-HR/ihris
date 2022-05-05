@@ -95,8 +95,8 @@ class EmployeeController extends Controller
 
         $firstName = $employee['firstName'];
         $lastName = $employee['lastName'];
-        $middleName = $employee['middleName'];
-        $extName = $employee['extName'];
+        $middleName = $employee['middleName']?$employee['middleName']:'';
+        $extName = $employee['extName']?$employee['extName']:'';
         if ($middleName == ".") {
             $middleName = "";
         } else {
