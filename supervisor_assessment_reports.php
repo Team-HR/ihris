@@ -1,4 +1,4 @@
-<?php $title = "Subordinate's Competencies";
+<?php $title = "Supervisor Assessed Competencies";
 require_once "header.php";
 require_once "_connect.db.php"; ?>
 <script src="js/competencies_array.js"></script>
@@ -48,7 +48,7 @@ require_once "_connect.db.php"; ?>
             </button>
         </div>
         <div class="item">
-            <h3><i class="icon chart line"></i>Subordinate's Competencies</h3>
+            <h3><i class="icon chart line"></i>Supervisor Assessed Competencies</h3>
         </div>
         <div class="right item">
             <!-- <a href="personnelCompetenciesReport_gen_report.php" class="ui small green button"><i class="ui icon print"></i> Generate Report</a> -->

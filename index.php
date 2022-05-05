@@ -137,8 +137,8 @@ if ($auth->is_hr) {
 										<a class="item" href="ldactivities.php">L&D Activities</a>
 										<a class="item" href="dna.php">Development Needs Assessment</a>
 										<a class="item" href="trainingreport.php">Training Report</a>
-										<a class="item" href="personnelCompetenciesReport.php">Supervisor's Competencies</a>
-										<a class="item" href="supervisor_assessment_reports.php">Subordinate's Competencies</a>
+										<a class="item" href="personnelCompetenciesReport.php">Self Assessed Competencies</a>
+										<a class="item" href="supervisor_assessment_reports.php">Supervisor Assessed Competencies</a>
 																				<!-- competency start -->
 									<!-- <div class="dropdown item">
 											<a class="item">Personnel Competency <i class="caret down icon"></i></a>
