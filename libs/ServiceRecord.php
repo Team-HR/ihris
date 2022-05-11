@@ -18,6 +18,7 @@ class ServiceRecord extends Controller
         ) return false;
 
         array_walk($data, function (&$item1) {
+            if (!$item1) return '';
             $item1 = strtoupper($item1);
         });
 

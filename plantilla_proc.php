@@ -105,13 +105,14 @@ if (isset($_POST["load"])) {
 		$plantilla_id = $row["id"];
 		$schedule = $row["schedule"];
 		$item_no = $row["item_no"];
-		$position = addslashes($row["position"]);
+		$position = $row["position"]?$mysqli->real_escape_string($row["position"]):'';
 
-		$reason_of_vacancy = addslashes($sql4["reason_of_vacancy"]);
+		$reason_of_vacancy = $sql4["reason_of_vacancy"]?$mysqli->real_escape_string($sql4["reason_of_vacancy"]):'';
 		if ($reason_of_vacancy == '') {
 			$reason_of_vacancy = "<i style='color:grey'>N/A</i>";
 		}
-		$functional_title = addslashes($row["functional"]);
+					
+		$functional_title = $row["functional"]?$mysqli->real_escape_string($row["functional"]):'';
 		if (!$functional_title) {
 			$functional_title = "<i style='color:grey'>N/A</i>";
 		}
@@ -183,11 +184,7 @@ if (isset($_POST["load"])) {
 
 					VALUES (NULL, '$item_no', '$department', '$position', '$step', '$schedule', 0,NULL, '$abolish')";
 			$mysqli->query($sql);
-		}
-
-
-		// deleteRow Start
-		elseif (isset($_POST["deleteData"])) {
+		} elseif (isset($_POST["deleteData"])) {
 			$id = $_POST["id"];
 			$sql = "DELETE FROM `plantillas` WHERE `plantillas`.`id` = '$id'";
 			$sql2 = "DELETE `reason_of_vacancy` FROM `appointments` WHERE `appointments`.`plantilla_id` = '$id'";
