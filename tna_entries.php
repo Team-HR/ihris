@@ -19,7 +19,7 @@ require_once "header.php"; ?>
                 </div>
             </div>
             <!-- content start -->
-
+test
             <div class="ui segment">
                 <h1>{{personneltraining.training}}</h1>
                 <p>
@@ -29,7 +29,6 @@ require_once "header.php"; ?>
                     <strong>Remarks:</strong> {{personneltraining.remarks}}
                 </p>
             </div>
-
             <div class="ui segment">
                 <form class="ui form" @submit.prevent="submitEntry()">
                     <div class="field">
