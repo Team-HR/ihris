@@ -8,12 +8,12 @@ class NameFormatter
 	private $exts = array('JR', 'SR');
 
 	function __construct($firstName, $lastName, $middleName, $extName)
-	
+
 	{
-		$this->firstName = $firstName?$firstName:'';
-		$this->lastName = $lastName?$lastName:'';
-		$this->middleName = $middleName?$middleName:'';
-		$this->extName = $extName?$extName:'';
+		$this->firstName = $firstName ? $firstName : '';
+		$this->lastName = $lastName ? $lastName : '';
+		$this->middleName = $middleName ? $middleName : '';
+		$this->extName = $extName ? $extName : '';
 	}
 
 	public function getFullName()
@@ -27,20 +27,21 @@ class NameFormatter
 		} else {
 			$middleName	= $this->middleName;
 			// $middleName = $this->middleName[0].".";
-			if (strlen($middleName)>0) {
-				$middleName = " ".$this->middleName[0].". ";
-			} else $middleName = " ".$this->middleName.". ";
-
-
+			if (strlen($middleName) > 0) {
+				$middleName = " " . $this->middleName[0] . ".";
+			} else $middleName = " " . $this->middleName . ".";
 		}
 
-		$extName	=	strtoupper($this->extName);
-		$exts = $this->exts;
+		$extName	=	"";
+		if ($this->extName) {
+			$extName = strtoupper($this->extName);
+			$exts = $this->exts;
 
-		if (in_array(substr($extName, 0, 2), $exts)) {
-			$extName = " " . mb_convert_case($extName, MB_CASE_TITLE, "UTF-8");
-		} else {
-			$extName = " " . $extName;
+			if (in_array(substr($extName, 0, 2), $exts)) {
+				$extName = " " . mb_convert_case($extName, MB_CASE_UPPER, "UTF-8");
+			} else {
+				$extName = " " . $extName;
+			}
 		}
 
 		$fullname =  mb_convert_case("$lastName, $firstName $middleName", MB_CASE_TITLE, "UTF-8") . $extName;
@@ -58,18 +59,21 @@ class NameFormatter
 			$middleName = "";
 		} else {
 			$middleName	= $this->middleName;
-			if (strlen($middleName)>0) {
-				$middleName = " ".$this->middleName[0].". ";
-			} else $middleName = " ".$this->middleName.". ";
+			if (strlen($middleName) > 0) {
+				$middleName = " " . $this->middleName[0] . ". ";
+			} else $middleName = " " . $this->middleName . ". ";
 		}
 
-		$extName	=	strtoupper($this->extName);
-		$exts = $this->exts;
+		$extName	=	"";
+		if ($this->extName) {
+			$extName = strtoupper($this->extName);
+			$exts = $this->exts;
 
-		if (in_array(substr($extName, 0, 2), $exts)) {
-			$extName = " " . mb_convert_case($extName, MB_CASE_UPPER, "UTF-8");
-		} else {
-			$extName = " " . $extName;
+			if (in_array(substr($extName, 0, 2), $exts)) {
+				$extName = " " . mb_convert_case($extName, MB_CASE_UPPER, "UTF-8");
+			} else {
+				$extName = " " . $extName;
+			}
 		}
 
 		$fullname =  mb_convert_case("$firstName$middleName$lastName", MB_CASE_UPPER, "UTF-8") . $extName;

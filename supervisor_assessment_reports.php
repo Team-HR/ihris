@@ -328,6 +328,7 @@ require_once "_connect.db.php"; ?>
                         get_data: true,
                         department_id: this.department_id
                     }, (data, textStatus, jqXHR) => {
+                        console.log(data);
                         this.competencies = JSON.parse(JSON.stringify(data))
                         this.is_loading = false
                     },

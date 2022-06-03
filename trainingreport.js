@@ -109,7 +109,7 @@ $(document).ready(function () {
                 datasets.push(set);
                 counter++;
             });
-            // console.log('dataset',datasets);
+            console.log('dataset',datasets);
             var pfChartCfg = {
                 type: 'line',
 

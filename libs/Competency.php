@@ -1468,12 +1468,9 @@ class Competency extends Controller
 
 	function __construct()
 	{
-
 		// require '_connect.db.php';
 		parent::__construct();
-
 		// $this->mysqli = $mysqli;
-
 		$this->competencies_ = $this->queryData("");
 		$this->competenciesMale = $this->queryData("AND `employees`.`gender` = 'MALE'");
 		$this->competenciesFemale = $this->queryData("AND `employees`.`gender` = 'FEMALE'");
@@ -1585,13 +1582,51 @@ class Competency extends Controller
 				'employee_id' => $row['employee_id'],
 				'full_name' => $emp->get_full_name_upper($row['employee_id']),
 				'is_complete' => $row['is_complete'] == 1 ? true : false,
-				'competency_scores' => $this->get_competency_scores($row['id'])
+				'competency_scores' => $this->get_competency_scores($row['id']),
+				'competency_scores_self_assessed' => $this->get_competency_scores_self_assessed($row['employee_id']),
 			];
 		}
 
 		usort($data, function ($a, $b) {
 			return strcmp($a["full_name"], $b["full_name"]);
 		});
+		return $data;
+	}
+
+	public function get_competency_scores_self_assessed($employees_id)
+	{
+		$year = '2019';
+		if (!$employees_id) return null;
+		$mysqli = $this->mysqli;
+		$data = [];
+		$sql = "SELECT * FROM `competency` WHERE `employees_id` = '$employees_id'"; // AND YEAR(`datetime`) = '$year';"; //To be implemented puhon
+		$res = $mysqli->query($sql);
+		while ($row = $res->fetch_assoc()) {
+			$data[] = intval($row['Adaptability']);
+			$data[] = intval($row['ContinousLearning']);
+			$data[] = intval($row['Communication']);
+			$data[] = intval($row['OrganizationalAwareness']);
+			$data[] = intval($row['CreativeThinking']);
+			$data[] = intval($row['NetworkingRelationshipBuilding']);
+			$data[] = intval($row['ConflictManagement']);
+			$data[] = intval($row['StewardshipofResources']);
+			$data[] = intval($row['RiskManagement']);
+			$data[] = intval($row['StressManagement']);
+			$data[] = intval($row['Influence']);
+			$data[] = intval($row['Initiative']);
+			$data[] = intval($row['TeamLeadership']);
+			$data[] = intval($row['ChangeLeadership']);
+			$data[] = intval($row['ClientFocus']);
+			$data[] = intval($row['Partnering']);
+			$data[] = intval($row['DevelopingOthers']);
+			$data[] = intval($row['PlanningandOrganizing']);
+			$data[] = intval($row['DecisionMaking']);
+			$data[] = intval($row['AnalyticalThinking']);
+			$data[] = intval($row['ResultsOrientation']);
+			$data[] = intval($row['Teamwork']);
+			$data[] = intval($row['ValuesandEthics']);
+			$data[] = intval($row['VisioningandStrategicDirection']);
+		}
 		return $data;
 	}
 

@@ -222,16 +222,14 @@ if (isset($_GET["spms"])) {
         </template>
     </div>
     <!-- auth user info end -->
-
-
-
-
     <div class="ui container" style="padding: 5px; width: 1300px;">
-
         <div class="ui segment grid">
             <div class="three wide column">
                 <div id="pim-menu" class="ui vertical pointing menu fluid">
-                    <a class="item active" data-tab="calendar">
+                    <a class="item active" data-tab="competencies">
+                        Competencies
+                    </a>
+                    <a class="item" data-tab="calendar">
                         Calendar
                     </a>
                     <a class="item" data-tab="appointments">
@@ -252,7 +250,30 @@ if (isset($_GET["spms"])) {
                 </div>
             </div>
             <div class="thirteen wide stretched column">
-                <div class="ui tab active" data-tab="calendar">
+                <div class="ui tab active" data-tab="competencies">
+                    <div class="ui pointing secondary blue menu fluid" id="competencies">
+                        <a class="item active" data-tab="self_assessed">
+                            Self Assessment
+                        </a>
+                        <?php if ($_SESSION['supervisory']) { ?>
+                            <a class="item" data-tab="subordinates">
+                                Subordinates
+                            </a>
+                        <?php } ?>
+                    </div>
+                    <div class="ui tab segment active" data-tab="self_assessed">
+                        <?php
+                            require_once "dashboard_competencies_self_assessment.php";
+                        ?>
+                    </div>
+                    <div class="ui tab segment" data-tab="subordinates">
+                        <?php
+                            require_once "dashboard_competencies_subordinates.php";
+                        ?>
+                    </div>
+                </div>
+
+                <div class="ui tab" data-tab="calendar">
                     <div class="ui segment">
                         <!-- <h2>Calendar</h2>
                         <hr> -->
