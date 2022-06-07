@@ -1,7 +1,5 @@
 <?php
 require "_connect.db.php";
-
-
 if (isset($_POST["getEntries"])) {
     $data = [];
     $personneltrainings_id = $_POST['personneltrainings_id'];
@@ -35,7 +33,6 @@ if (isset($_POST["getEntries"])) {
         ];
     }
     echo json_encode($data);
-
 } elseif (isset($_GET["get_department_data"])) {
     $department_id = $_GET['department_id'];
 
@@ -45,8 +42,6 @@ if (isset($_POST["getEntries"])) {
     }else{
         $sql = "SELECT * FROM `training_needs_analysis_entries` WHERE `department_id` = '$department_id'";
     }
-
-    // $sql = "SELECT * FROM `training_needs_analysis_entries` WHERE `department_id` = '$department_id'";
     $result = $mysqli->query($sql);
     while ($row = $result->fetch_assoc()) {
         $data[] = [ 
@@ -54,21 +49,9 @@ if (isset($_POST["getEntries"])) {
             'performance_issues_others' => $row['performance_issues_others'],
             'areas_of_improvement' => $row['areas_of_improvement']
         ];
-
     }
     echo json_encode($data);
 }
-// elseif(isset($_GET['load'])){
-//     $data = $_POST['data'];
-
-    // if($data =="all"){
-    //     $sql = "SELECT * FROM `training_needs_analysis_entries` WHERE ";
-    // }else{
-    //     return null;
-    // }
-//     $res = $mysqli->query($sql);
-//     $data = $res->fetch_assoc();
-// }
 
 function formatDate($numeric_date)
 {

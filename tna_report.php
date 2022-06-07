@@ -48,39 +48,6 @@ require_once "header.php"; ?>
                 </div>
             </div>
 
-            <!-- content report -->
-            <!-- <div class="ui basic segment "> -->
-            <!-- <div class="ui middle aligned divided list">
-                    <table class="ui fixed table">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>Highlights of Accomplishments as a team /unit / section</th>
-                                <th>Employee performance issue within the department</th>
-                                <th>Others</th>
-                                <th>Improvement planning on workshop</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <div class="left floated content">
-                                <tr class="item" v-for="(item,i) in items" :key="i" style="vertical-align: middle !important;">
-                                    <td>
-                                        <div class="center aligned column">
-                                            <div class="ui basic icon button" onclick="openModal()">
-                                                <i class="ui green icon edit outline"></i>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>{{item.highlights}}</td>
-                                    <td>{{item.performance_issues}}</td>
-                                    <td>{{item.performance_issues_others}} </td>
-                                    <td>{{item.areas_of_improvement}}</td>
-                                </tr>
-                            </div>
-                        </tbody>
-                    </table>
-                </div> -->
-
             <div class="ui segment">
                 <h4>I. Other performance issues within the department:</h4>
                 <ol v-if="performance_issues_others.length > 0">
@@ -99,58 +66,6 @@ require_once "header.php"; ?>
                 <span v-else style="margin-left: 25px;">None</span>
             </div>
 
-
-
-
-            <!-- Modal form
-                <div class="active">
-                    <div class="ui fullscreen modal">
-                        <i class="close icon"></i>
-                        <div class="header" style="text-align:center">
-                            Update Form
-                        </div>
-                        <div class="ui segment">
-                            <form class="ui form" @submit.prevent="submitEntry()">
-                                <div class="field">
-                                    <label>1.) What are the highlights of your accomplishment as a team / unit /
-                                        section?</label>
-                                    <textarea type="text" v-model="formData.highlights" name="highlights" placeholder="Type here..."></textarea>
-                                </div>
-
-                                <div class="field">
-                                    <label>2.) Please identify three employee performance issues within your
-                                        department?</label>
-
-                                    <div v-for="(issue, i) in performance_issues_options" :key="i">
-                                        <div class="ui checkbox" style="padding:2px">
-                                            <input v-model="formData.performance_issues" type="checkbox" :value="issue" tabindex="0" class="hidden">
-                                            <label>{{issue}}</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="field">
-                                    <label>
-                                        Others:
-                                    </label>
-                                    <input v-model="formData.others" type="text" name="others" placeholder="Type here...">
-                                </div>
-                                <div class="field">
-                                    <label> 3.) Areas for improvement that you wish to address in the strategic planning
-                                        workshop?
-                                    </label>
-                                    <input v-model="formData.areas_of_improvement" type="text" name="areas_of_improvement" placeholder="Type here...">
-                                </div>
-
-                                <button class="ui button green" type="submit">
-                                    Submit
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div> -->
-            <!-- End Modal Form -->
-            <!-- end content report -->
-            <!-- </div> -->
     </template>
 </div>
 <script>
@@ -183,7 +98,6 @@ require_once "header.php"; ?>
                     'Responsiveness',
                     'Punctuality',
                 ],
-                all_value: [],
                 data: {
                     highlight: [],
                     performance_issues_other: [],
@@ -218,14 +132,12 @@ require_once "header.php"; ?>
                     method: "GET",
                     data: {
                         get_department_data: true,
-                        // all: this.formData.department_id,
                         department_id: this.formData.department_id
                     },
                     dataType: "JSON",
                     success: (report) => {
                         this.data = report
                         console.log(report);
-                        // $("#fetch").html(report);
                     }
                 });
                 // console.log('test')
@@ -271,8 +183,6 @@ require_once "header.php"; ?>
                 );
             },
 
-
-
             getDepartments() {
                 $.post("tna_report_proc.php", {
                         getDepartments: true,
@@ -317,7 +227,6 @@ require_once "header.php"; ?>
                 );
             },
 
-
             getPersonnelTraining() {
                 $.post("tna_report_proc.php", {
                         getPersonnelTraining: true,
@@ -330,9 +239,6 @@ require_once "header.php"; ?>
                     "json"
                 );
             },
-
-
-
 
         },
         mounted() {
