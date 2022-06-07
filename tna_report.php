@@ -21,6 +21,7 @@ require_once "header.php"; ?>
             <!-- content start -->
 
             <div class="ui segment">
+
                 <h1>{{personneltraining.training}}</h1>
                 <p>
                     <strong>Start:</strong> {{personneltraining.startDate}} <br />
@@ -28,6 +29,14 @@ require_once "header.php"; ?>
                     <strong>Venue:</strong> {{personneltraining.venue}} <br />
                     <strong>Remarks:</strong> {{personneltraining.remarks}}
                 </p>
+                <br>
+                <strong>Filter By Department:</strong>
+              
+                <select class="ui search dropdown" v-model="formData.department_id" name="departments" @change="select()" id="filter">
+                    <option value="">Filter by Department</option>
+                    <option value="all">All</option>
+                    <option v-for="data in departments" :value="data.id">{{ data.name }}</option>
+                </select>
             </div>
             <!-- content end -->
 
@@ -40,8 +49,8 @@ require_once "header.php"; ?>
             </div>
 
             <!-- content report -->
-            <div class="ui basic segment ">
-                <!-- <div class="ui middle aligned divided list">
+            <!-- <div class="ui basic segment "> -->
+            <!-- <div class="ui middle aligned divided list">
                     <table class="ui fixed table">
                         <thead>
                             <tr>
@@ -71,25 +80,29 @@ require_once "header.php"; ?>
                         </tbody>
                     </table>
                 </div> -->
-                <div class="ui segment">
-                    <h4>I. Other performance issues within the department:</h4>
-                    <ol v-if="performance_issues_others.length > 0">
-                        <li v-for="(performance_issues_other,i) in performance_issues_others" :key="i">{{performance_issues_other}}</li>
-                    </ol>
-                    <span v-else style="margin-left: 25px;">None</span>
-                    <h4>II. Highlights of accomplishment as a team / unit / section according to trainees:</h4>
-                    <ol v-if="highlights.length > 0">
-                        <li v-for="(highlight,i) in highlights" :key="i">{{highlight}}</li>
-                    </ol>
-                    <span v-else style="margin-left: 25px;">None</span>
-                    <h4>III. Areas for improvement needs to be addressed in the strategic planning workshop according to trainees:</h4>
-                    <ol v-if="areas_of_improvement.length > 0">
-                        <li v-for="(area_of_improvement,i) in areas_of_improvement" :key="i">{{area_of_improvement}}</li>
-                    </ol>
-                    <span v-else style="margin-left: 25px;">None</span>
-                </div>
 
-                <!-- Modal form -->
+            <div class="ui segment">
+                <h4>I. Other performance issues within the department:</h4>
+                <ol v-if="performance_issues_others.length > 0">
+                    <li v-for="(performance_issues_other,i)  in data" :key="i">{{performance_issues_other.performance_issues_others}}</li>
+                </ol>
+                <span v-else style="margin-left: 25px;">None</span>
+                <h4>II. Highlights of accomplishment as a team / unit / section according to trainees:</h4>
+                <ol v-if="highlights.length > 0">
+                    <li v-for="(highlight,i) in data" :key="i">{{ highlight.highlights}}</li>
+                </ol>
+                <span v-else style="margin-left: 25px;">None</span>
+                <h4>III. Areas for improvement needs to be addressed in the strategic planning workshop according to trainees:</h4>
+                <ol v-if="areas_of_improvement.length > 0">
+                    <li v-for="(area_of_improvement,i) in data" :key="i">{{area_of_improvement.areas_of_improvement}}</li>
+                </ol>
+                <span v-else style="margin-left: 25px;">None</span>
+            </div>
+
+
+
+
+            <!-- Modal form
                 <div class="active">
                     <div class="ui fullscreen modal">
                         <i class="close icon"></i>
@@ -134,10 +147,10 @@ require_once "header.php"; ?>
                             </form>
                         </div>
                     </div>
-                </div>
-                <!-- End Modal Form -->
-                <!-- end content report -->
-            </div>
+                </div> -->
+            <!-- End Modal Form -->
+            <!-- end content report -->
+            <!-- </div> -->
     </template>
 </div>
 <script>
@@ -170,7 +183,15 @@ require_once "header.php"; ?>
                     'Responsiveness',
                     'Punctuality',
                 ],
+                all_value: [],
+                data: {
+                    highlight: [],
+                    performance_issues_other: [],
+                    area_of_improvement: []
+                },
+                departments: [],
                 formData: {
+                    department_id: '',
                     highlights: '',
                     performance_issues: [],
                     others: '',
@@ -185,6 +206,31 @@ require_once "header.php"; ?>
             }
         },
         methods: {
+            allRecords: function() {
+                $.get('tna_report_proc.php')
+                    .then(function(response) {
+                        all_value = this.response.data;
+                    })
+            },
+            select() {
+                $.ajax({
+                    url: "tna_report_proc.php",
+                    method: "GET",
+                    data: {
+                        get_department_data: true,
+                        // all: this.formData.department_id,
+                        department_id: this.formData.department_id
+                    },
+                    dataType: "JSON",
+                    success: (report) => {
+                        this.data = report
+                        console.log(report);
+                        // $("#fetch").html(report);
+                    }
+                });
+                // console.log('test')
+            },
+
             //######################## chart methods start
             async getPerformanceIssues() {
                 const personneltrainings_id = this.id
@@ -224,13 +270,30 @@ require_once "header.php"; ?>
                     "json"
                 );
             },
+
+
+
+            getDepartments() {
+                $.post("tna_report_proc.php", {
+                        getDepartments: true,
+                        personneltrainings_id: this.id
+                    },
+                    (data, textStatus, jqXHR) => {
+                        this.departments = data
+                        console.log(data);
+                    },
+                    "json"
+                );
+            },
+
             async getEntries() {
                 await $.post("tna_report_proc.php", {
                         getEntries: true,
                         personneltrainings_id: this.id
                     },
                     (data, textStatus, jqXHR) => {
-                        this.items = data
+                        this.data = data
+
                     },
                     "json"
                 );
@@ -253,6 +316,8 @@ require_once "header.php"; ?>
                     "json"
                 );
             },
+
+
             getPersonnelTraining() {
                 $.post("tna_report_proc.php", {
                         getPersonnelTraining: true,
@@ -260,15 +325,21 @@ require_once "header.php"; ?>
                     },
                     (data, textStatus, jqXHR) => {
                         this.personneltraining = data
+                        // console.log(data);
                     },
                     "json"
                 );
-            }
+            },
+
+
+
 
         },
         mounted() {
+
             this.getPersonnelTraining()
             this.getEntries()
+            this.getDepartments()
             $('.ui.checkbox').checkbox();
 
             //############################### chart init starts
@@ -346,18 +417,19 @@ require_once "header.php"; ?>
                                 console.log(label, value);
 
                             }
-
                         }
-
                     }
                 };
-
                 new Chart(performanceIssuesChart, config);
             })
-
             //############################### chart init ends
         }
     })
+
+    $('select.dropdown')
+        .dropdown({
+            fullTextSearch: 'exact'
+        });
 </script>
 
 <?php require_once "footer.php"; ?>

@@ -47,10 +47,10 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
   <!--  <meta charset="UTF-8" name="google" value="notranslate" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/> -->
   <meta name="viewport" content="width=device-width, height=device-height , initial-scale=1">
 
-  <?php
-  // Auto switch vue from dev to production vice versa depends on basename.
-  echo '<script src="node_modules\vue\dist\vue' . (basename(dirname(__FILE__)) === "ihris" ? '.min' : '') . '.js"></script>';
-  ?>
+  <script  src="node_modules/vue/dist/vue.min.js"></script>
+  <!-- // Auto switch vue from dev to production vice versa depends on basename.
+  // echo '<script src="node_modules\vue\dist\vue' . (basename(dirname(__FILE__)) === "ihris" ? '.min' : '') . '.js"></script>';
+  //  -->
   <!-- moment -->
   <script src="node_modules/moment/min/moment.min.js"></script>
   <!-- jquery -->
