@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "autocompleter": "^6.1.0",
+    "chart.js": "^2.9.3",
+    "composer": "^4.1.0",
+    "fomantic-ui": "^2.8.5",
+    "jquery": "^3.5.1",
+    "moment": "^2.24.0",
+    "vue": "^2.6.11"
+  },
+  "devDependencies": {
+    "gulp-build": "^0.5.3"
+  }
+}
