@@ -20,89 +20,137 @@ require_once "header.php"; ?>
       </div>
       <!-- content start -->
 
-
-
-      <table class="ui very small compact structured table blue">
-        <thead>
-          <tr class="center aligned" >
-            <th width="10"></th>
-            <th width="10"></th>
-            <th>Training</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Venue</th>
-            <th>Remarks</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-
-          <tr v-for="(item,i) in addedScheduledTrainings" :key="i">
-            <td>({{i+1}})</td>
-            <td>
-              <a :href="'tna_entries.php?id='+item.personneltrainings_id" title="Open" class="ui basic mini icon button"><i class="folder open outline primary icon"></i></a>
-            </td>
-            <td>{{item.training}}</td>
-            <td>{{item.startDate}}</td>
-            <td>{{item.endDate}}</td>
-            <td>{{item.venue}}</td>
-            <td>{{item.remarks}}</td>
-            <td class="center aligned">
-              <div class="ui icon basic mini buttons">
-                <!-- <button @click="" title="Quick Edit" class="ui button"><i class="edit outline icon"></i></button> -->
-                <!-- <button @click="" title="Delete" class="ui button"><i class="red trash alternate outline icon"></i></button> -->
-              </div>
-            </td>
-          </tr>
-
-        </tbody>
-      </table>
-
-
-
-      <!-- add new modal start -->
-      <div class="ui modal" id="addNewModal">
-        <div class="header">
-          Add a Scheduled Training
+      <div class="ui fluid container segment" style="min-height: 100%;">
+        <div class="ui top attached tabular tna menu">
+          <a class="item active" data-tab="first"> For Strategic</a>
+          <a class="item" data-tab="second">For Employee Engagement</a>
         </div>
-        <div class="content">
-
-          <form @submit.prevent="">
-            <div class="ui clearable input">
-              <input name="search" type="text" placeholder="Search..." v-model="training" @keyup="getScheduledTrainings()">
-            </div>
-          </form>
-
-          <table id="scheduledTrainingsTable" class="ui table very comapct small">
-            <tbody>
-              <tr v-for="(scheduledTraining, s) in scheduledTrainings" :key="s">
-                <!-- <td>{{scheduledTraining.personneltrainings_id}}</td> -->
-                <td class="center aligned">
-                  <button v-if="!scheduledTraining.isExisting" class="ui mini button" @click="addScheduledTraining(scheduledTraining.personneltrainings_id)"> Add </button>
-                  <button v-else class="ui mini button disabled"> Added </button>
-                </td>
-                <td>{{ scheduledTraining.training }}</td>
-                <td>{{ scheduledTraining.startDate }}</td>
-                <td>{{ scheduledTraining.endDate }}</td>
-                <td>{{ scheduledTraining.venue }}</td>
-                <td>{{ scheduledTraining.remarks }}</td>
+        <!-- <div class="ui bottom attached tab segment active" data-tab="first">
+          <table class="ui very small compact structured table blue">
+            <thead>
+              <tr class="center aligned">
+                <th width="10"></th>
+                <th width="10"></th>
+                <th>Training</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Venue</th>
+                <th>Remarks</th>
+                <th></th>
               </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item,i) in addedScheduledTrainings" :key="i">
+                <td>({{i+1}})</td>
+                <td>
+                  <a :href="'tna_entries.php?id='+item.personneltrainings_id" title="Open" class="ui basic mini icon button"><i class="folder open outline primary icon"></i></a>
+                </td>
+                <td>{{item.training}}</td>
+                <td>{{item.startDate}}</td>
+                <td>{{item.endDate}}</td>
+                <td>{{item.venue}}</td>
+                <td>{{item.remarks}}</td>
+                <td class="center aligned">
+                  <div class="ui icon basic mini buttons">
+                    
+                  </div>
+                </td>
+              </tr>
+
             </tbody>
           </table>
+        </div> -->
+        <div class="ui bottom attached tab segment" data-tab="second">
 
+          <form class="ui form" @submit.prevent="submitEntry()">
+            <div class="ui segment">
+              <div class="field">
+                <label>1.) What challenes are you confronted with?</label><br>
+                <label>COMMUNICATION:</label>
+                <input type="text" name="Challenges Confronted With" placeholder="Type here..." size="10"><br><br>
+
+                <label>LOGISTICS:</label>
+                <input type="text" name="Logistics" placeholder="Type here..." size="20"><br><br>
+
+                <label>RELATIONSHIPS:</label>
+                <input type="text" name="relationship" placeholder="Type here..." size="10"><br><br>
+
+                <label>SUPPORT:</label>
+                <input type="text" name="relationship" placeholder="Type here..." size="10"><br><br>
+              </div>
+              <div class="field">
+                <label>2.)Are you aware of what you need to do in order to be successful in your role?</label>
+
+                <div class="inline field" style="padding-left:2em">
+                  <div class="ui checkbox">
+                    <input type="checkbox" name="check">
+                    <label>Yes</label>
+                  </div>
+                  <div class="ui checkbox" style="padding-left:10em">
+                    <input type="checkbox" name="check">
+                    <label>No</label>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="field"><br>
+                <label>3.) What tools do you need to consistently do your job well?</label>
+                <input type="text" name="consistently" placeholder="Type here..." size="10"><br>
+              </div>
+              <div class="field"><br>
+                <label>4.) Areas for improvement that you wish to address in this workshop?</label>
+                <input type="text" name="consistently" placeholder="Type here..." size="10"><br>
+              </div>
+            </div>
+            <button class="ui button" type="submit" id="myBtn">Submit</button>
+          </form>
 
         </div>
-        <div class="actions">
-          <div class="ui deny button">
-            Cancel
+
+
+        <!-- add new modal start -->
+        <div class="ui modal" id="addNewModal">
+          <div class="header">
+            Add a Scheduled Training
+          </div>
+          <div class="content">
+
+            <form @submit.prevent="">
+              <div class="ui clearable input">
+                <input name="search" type="text" placeholder="Search..." v-model="training" @keyup="getScheduledTrainings()">
+              </div>
+            </form>
+
+            <table id="scheduledTrainingsTable" class="ui table very comapct small">
+              <tbody>
+                <tr v-for="(scheduledTraining, s) in scheduledTrainings" :key="s">
+                  <!-- <td>{{scheduledTraining.personneltrainings_id}}</td> -->
+                  <td class="center aligned">
+                    <button v-if="!scheduledTraining.isExisting" class="ui mini button" @click="addScheduledTraining(scheduledTraining.personneltrainings_id)"> Add </button>
+                    <button v-else class="ui mini button disabled"> Added </button>
+                  </td>
+                  <td>{{ scheduledTraining.training }}</td>
+                  <td>{{ scheduledTraining.startDate }}</td>
+                  <td>{{ scheduledTraining.endDate }}</td>
+                  <td>{{ scheduledTraining.venue }}</td>
+                  <td>{{ scheduledTraining.remarks }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="actions">
+            <div class="ui deny button">
+              Cancel
+            </div>
           </div>
         </div>
+        <!-- add new modal end -->
+
+
+
+        <!-- content end -->
       </div>
-      <!-- add new modal end -->
-
-
-
-      <!-- content end -->
     </div>
   </template>
 </div>
@@ -111,9 +159,34 @@ require_once "header.php"; ?>
     el: "#tna-app",
     data() {
       return {
+        id: new URLSearchParams(window.location.search).get("id"),
         addedScheduledTrainings: [],
+        items:[],
         training: '',
         scheduledTrainings: [],
+
+        form_entry: {
+          communication: '',
+          logistics: '',
+          relationships: '',
+          support: '',
+          successful_role: [],
+          consistently: '',
+          improvement: '',
+        },
+
+        form_entry_cleared: {
+          communication: '',
+          logistics: '',
+          relationships: '',
+          support: '',
+          successful_role: [],
+          consistently: '',
+          improvement: '',
+
+        }
+
+
       }
     },
     methods: {
@@ -143,6 +216,26 @@ require_once "header.php"; ?>
           "json"
         );
       },
+
+      // For engagement
+      submitEntry() {
+        this.addNewEntry().then(() => {
+          this.form_entry = JSON.parse(JSON.stringify(this.form_entry_cleared))
+        })
+        console.log(this.form_entry);
+      },
+      async addNewEntry() {
+        await $.post("tna_proc.php", {
+            addNewEntry: true,
+            form_entry: this.form_entry
+          },
+          (data, textStatus, jqXHR) => {
+            // console.log(data);
+          },
+          "json"
+        );
+      },
+
       getScheduledTrainings() {
         $.post("tna_proc.php", {
             getScheduledTrainings: true,
@@ -159,6 +252,9 @@ require_once "header.php"; ?>
         $("#addNewModal").modal('show')
       },
     },
+
+
+
     mounted() {
       this.getAddedScheduledTrainings()
       $("#addNewModal").modal({
@@ -172,9 +268,26 @@ require_once "header.php"; ?>
       })
 
 
+      // var last;
+      // document.addEventListener('input', (e) => {
+      //   if (e.target.getAttribute('name') == "check") {
+      //     if (last)
+      //       last.checked = false;
+      //   }
+      //   e.target.checked = true;
+      //   last = e.target;
+      // })
+
       // test starts
       // $("#addNewModal").modal("show")
       // test end
+
+
+
+      $('.menu .item')
+        .tab();
+      $('.ui.checkbox')
+        .checkbox();
 
     }
   })
@@ -182,6 +295,3 @@ require_once "header.php"; ?>
 
 
 <?php require_once "footer.php"; ?>
-
-
-

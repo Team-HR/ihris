@@ -70,7 +70,7 @@ require_once "header.php"; ?>
                     <button class="ui button" type="submit" id="myBtn">Submit</button>
                 </div>
             </form>
-            <button class="ui button" disabled id="dis_myBtn" @click="update()" style="position:relative;top:-51px;left:8rem"s>Update</button>
+            <button class="ui button" disabled id="dis_myBtn" @click="update()" style="position:relative;top:-51px;left:8rem" onclick="enableBtn2();enableBtn1()">Update</button>
         <div class="ui segment container">
             <div class="ui middle aligned divided list">
                 <div class="item" v-for="(item,i) in items" :key="i" style="vertical-align: middle !important;">

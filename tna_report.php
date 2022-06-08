@@ -332,7 +332,7 @@ require_once "header.php"; ?>
         }
     })
 
-    $('select.dropdown')
+    $('.category.ui.dropdown')
         .dropdown({
             fullTextSearch: 'exact'
         });

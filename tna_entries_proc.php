@@ -61,7 +61,8 @@ elseif (isset($_POST["update_data"])) {
     echo json_encode($data);
 
 
-} elseif (isset($_POST["addNewEntry"])) {
+} 
+elseif (isset($_POST["addNewEntry"])) {
     // $data = [];
     $personneltrainings_id = $_POST['personneltrainings_id'];
     $formData = $_POST['formData'];
@@ -75,7 +76,7 @@ elseif (isset($_POST["update_data"])) {
 
     $sql = "INSERT INTO `training_needs_analysis_entries` (`id`, `personneltrainings_id`,`department_id`, `highlights`, `performance_issues`, `performance_issues_others`, `areas_of_improvement`, `created_at`) VALUES (NULL, '$personneltrainings_id', '$department_id' ,'$highlights', '$performance_issues', '$performance_issues_others', '$areas_of_improvement', current_timestamp())";
     $mysqli->query($sql);
-    echo json_encode('success');
+    echo json_encode($formData);
     
 }elseif (isset($_POST["deleteEntry"])) {
     // $data = [];
