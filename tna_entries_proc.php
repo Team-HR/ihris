@@ -29,7 +29,7 @@ elseif (isset($_POST["update_data"])) {
     $training_needs_analysis_entries_id = $_POST['training_needs_analysis_entries_id'];
 
     $formData = $_POST['formData']; 
-    $department_id = $_POST['department_id'];
+    $department_id = $formData['department_id'];
     $highlights = $formData["highlights"];
     $performance_issues = ($formData['performance_issues'] ? json_encode($formData["performance_issues"]) : NULL);
     $performance_issues_others = $formData["performance_issues_others"];
@@ -82,7 +82,6 @@ elseif (isset($_POST["addNewEntry"])) {
     // $data = [];
     $id = $_POST['id'];
     $sql = "DELETE FROM `training_needs_analysis_entries` WHERE `training_needs_analysis_entries`.`id` = '$id'";
-
     $mysqli->query($sql);
 
     echo json_encode('success');
@@ -196,12 +195,12 @@ elseif (isset($_POST["getPerformanceIssues"])) {
         if (!empty($row['performance_issues_others'])) {
             $data['performance_issues_others'][] = $row['performance_issues_others'];
         }
-        if (!empty($row['highlights'])) {
-            $data['highlights'][] = $row['highlights'];
-        }
-        if (!empty($row['areas_of_improvement'])) {
-            $data['areas_of_improvement'][] = $row['areas_of_improvement'];
-        }
+            if (!empty($row['highlights'])) {
+                $data['highlights'][] = $row['highlights'];
+            }
+            if (!empty($row['areas_of_improvement'])) {
+                $data['areas_of_improvement'][] = $row['areas_of_improvement'];
+            }
     }
 
     echo json_encode($data);

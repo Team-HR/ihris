@@ -31,7 +31,7 @@ require_once "header.php"; ?>
                 </p>
                 <br>
                 <strong>Filter By Department:</strong>
-              
+
                 <select class="ui search dropdown" v-model="formData.department_id" name="departments" @change="select()" id="filter">
                     <option value="">Filter by Department</option>
                     <option value="all">All</option>
@@ -65,7 +65,6 @@ require_once "header.php"; ?>
                 </ol>
                 <span v-else style="margin-left: 25px;">None</span>
             </div>
-
     </template>
 </div>
 <script>
@@ -120,12 +119,13 @@ require_once "header.php"; ?>
             }
         },
         methods: {
-            allRecords: function() {
-                $.get('tna_report_proc.php')
-                    .then(function(response) {
-                        all_value = this.response.data;
-                    })
-            },
+            // allRecords: function() {
+            //     $.get('tna_report_proc.php')
+            //         .then(function(response) {
+            //             all_value = this.response.data;
+            //         })
+            // },
+            
             select() {
                 $.ajax({
                     url: "tna_report_proc.php",
@@ -140,7 +140,6 @@ require_once "header.php"; ?>
                         console.log(report);
                     }
                 });
-                // console.log('test')
             },
 
             //######################## chart methods start
@@ -242,7 +241,6 @@ require_once "header.php"; ?>
 
         },
         mounted() {
-
             this.getPersonnelTraining()
             this.getEntries()
             this.getDepartments()
@@ -332,7 +330,7 @@ require_once "header.php"; ?>
         }
     })
 
-    $('.category.ui.dropdown')
+    $('.ui.dropdown')
         .dropdown({
             fullTextSearch: 'exact'
         });

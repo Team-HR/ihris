@@ -35,7 +35,7 @@ if (isset($_POST["getEntries"])) {
     echo json_encode($data);
 } elseif (isset($_GET["get_department_data"])) {
     $department_id = $_GET['department_id'];
-
+    
     $data = [];
     if($department_id =="all"){
         $sql = "SELECT * FROM `training_needs_analysis_entries`";

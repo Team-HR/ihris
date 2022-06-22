@@ -110,7 +110,6 @@ ORDER BY
 
 	// $data = [];
 	$res = $mysqli->query($sql);
-
 	while ($row = $res->fetch_assoc()) {
 		$year = $row['year'];
 		$months = [

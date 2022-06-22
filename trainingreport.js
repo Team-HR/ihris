@@ -1,4 +1,5 @@
-var json = [], ldnLsaCharts, ldnLsaCharts2, ldnLsaCharts_total, ldnLsaCharts2_total, performanceChart;
+var json = [],
+    ldnLsaCharts, ldnLsaCharts2, ldnLsaCharts_total, ldnLsaCharts2_total, performanceChart;
 var vue_app = new Vue({
     el: "#vue_app",
     data: {
@@ -25,7 +26,7 @@ var vue_app = new Vue({
 
 });
 
-$(document).ready(function () {
+$(document).ready(function() {
 
     var sortBbyDept = "all",
         departmentText = "All Departments",
@@ -38,7 +39,7 @@ $(document).ready(function () {
     $(load(sortBbyDept, sortBbyYear));
 
     $("#sortYear").dropdown({
-        onChange: function (value, text) {
+        onChange: function(value, text) {
             ldnLsaCharts.destroy();
             ldnLsaCharts_total.destroy();
             ldnLsaCharts2.destroy();
@@ -60,7 +61,7 @@ $(document).ready(function () {
         }
     });
     $("#sortDept").dropdown({
-        onChange: function (value, text) {
+        onChange: function(value, text) {
             ldnLsaCharts.destroy();
             ldnLsaCharts_total.destroy();
             ldnLsaCharts2.destroy();
@@ -86,13 +87,13 @@ $(document).ready(function () {
 
     var ctxPerformance = $("#performance_chart");
     $.post("trainingreport_proc.php", { fetchPerfData: true },
-        function (jsonData, textStatus, jqXHR) {
+        function(jsonData, textStatus, jqXHR) {
             // console.log('jsonData',jsonData);
             var datasets = [];
             var bgColors = ['#ff000070', '#00800075', '#0000ff70', '#ffa50070', '#ffff0070'];
             var colors = ['red', 'green', 'blue', 'orange', 'yellow'];
             var counter = 0;
-            $.each(jsonData, function (i, val) {
+            $.each(jsonData, function(i, val) {
                 data = [];
                 for (let index = 0; index < 12; index++) {
                     data[index] = (val.months[index + 1] ? val.months[index + 1].num_trainings : '');
@@ -109,7 +110,7 @@ $(document).ready(function () {
                 datasets.push(set);
                 counter++;
             });
-            console.log('dataset',datasets);
+            console.log('dataset', datasets);
             var pfChartCfg = {
                 type: 'line',
 
@@ -147,8 +148,6 @@ $(document).ready(function () {
 
 
 
-
-
 });
 
 function load(department_id, year) {
@@ -156,7 +155,7 @@ function load(department_id, year) {
         load_graph: true,
         department_id: department_id,
         year: year,
-    }, function (data, textStatus, xhr) {
+    }, function(data, textStatus, xhr) {
         /*optional stuff to do after success */
         json = $.parseJSON(data);
         var ctx = $("#graph_permanent");
@@ -221,23 +220,24 @@ function load(department_id, year) {
                     "Number of Employees",
                 ],
                 datasets: [{
-                    label: 'With Trainings and Feedbacks',
-                    data: [json[0][0] + json[0][1]],
-                    backgroundColor: [
-                        '#4075a9',
-                    ],
-                    fill: true,
-                    borderWidth: 2,
-                },
-                {
-                    label: 'No Trainings and Feedbacks',
-                    data: [json[0][2] + json[0][3]],
-                    backgroundColor: [
-                        '#4075a957',
-                    ],
-                    fill: true,
-                    borderWidth: 2,
-                }]
+                        label: 'With Trainings and Feedbacks',
+                        data: [json[0][0] + json[0][1]],
+                        backgroundColor: [
+                            '#4075a9',
+                        ],
+                        fill: true,
+                        borderWidth: 2,
+                    },
+                    {
+                        label: 'No Trainings and Feedbacks',
+                        data: [json[0][2] + json[0][3]],
+                        backgroundColor: [
+                            '#4075a957',
+                        ],
+                        fill: true,
+                        borderWidth: 2,
+                    }
+                ]
             },
             options: {
 

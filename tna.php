@@ -15,6 +15,7 @@ require_once "header.php"; ?>
         <div class="right item">
           <div class="ui right input">
             <button class="ui icon green mini button" style="margin-right: 5px;" @click="addNewModal()"><i class="icon plus"></i>Add New</button>
+            <a href="tna_view_report.php" class="ui icon green mini button" style="margin-right: 5px;"><i class="folder open outline icon"></i>View Report</a>
           </div>
         </div>
       </div>
@@ -25,7 +26,7 @@ require_once "header.php"; ?>
           <a class="item active" data-tab="first"> For Strategic</a>
           <a class="item" data-tab="second">For Employee Engagement</a>
         </div>
-        <!-- <div class="ui bottom attached tab segment active" data-tab="first">
+        <div class="ui bottom attached tab segment active" data-tab="first">
           <table class="ui very small compact structured table blue">
             <thead>
               <tr class="center aligned">
@@ -52,43 +53,44 @@ require_once "header.php"; ?>
                 <td>{{item.remarks}}</td>
                 <td class="center aligned">
                   <div class="ui icon basic mini buttons">
-                    
+
                   </div>
                 </td>
               </tr>
 
             </tbody>
           </table>
-        </div> -->
+        </div>
         <div class="ui bottom attached tab segment" data-tab="second">
-
-          <form class="ui form" @submit.prevent="submitEntry()">
+          <form class="ui form" @submit.prevent="submitEntry()" id="myForm">
             <div class="ui segment">
               <div class="field">
-                <label>1.) What challenes are you confronted with?</label><br>
+                <label for="department"> Department:</label>
+                <select id="department_select" class="ui search dropdown" name="departments" v-model="form_entry.department_id">
+                  <option value="department">Department</option>
+                  <option v-for="data in departments" :value="data.id">{{ data.name }}</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>1.) What challenges are you confronted with?</label><br>
                 <label>COMMUNICATION:</label>
-                <input type="text" name="Challenges Confronted With" placeholder="Type here..." size="10"><br><br>
+                <input type="text" name=" communication" placeholder="Type here..." size="10" v-model="form_entry.communication"><br><br>
 
                 <label>LOGISTICS:</label>
-                <input type="text" name="Logistics" placeholder="Type here..." size="20"><br><br>
+                <input type="text" name="logistics" placeholder="Type here..." size="20" v-model="form_entry.logistics"><br><br>
 
                 <label>RELATIONSHIPS:</label>
-                <input type="text" name="relationship" placeholder="Type here..." size="10"><br><br>
+                <input type="text" name="relationship" placeholder="Type here..." size="10" v-model='form_entry.relationships' name="relationships"><br><br>
 
                 <label>SUPPORT:</label>
-                <input type="text" name="relationship" placeholder="Type here..." size="10"><br><br>
+                <input type="text" name="support" placeholder="Type here..." size="10" v-model='form_entry.support'><br><br>
               </div>
               <div class="field">
                 <label>2.)Are you aware of what you need to do in order to be successful in your role?</label>
-
-                <div class="inline field" style="padding-left:2em">
+                <div class="inline field" style="padding-left:2em" v-for="(role, i) in successful_roles" :key="i">
                   <div class="ui checkbox">
-                    <input type="checkbox" name="check">
-                    <label>Yes</label>
-                  </div>
-                  <div class="ui checkbox" style="padding-left:10em">
-                    <input type="checkbox" name="check">
-                    <label>No</label>
+                    <input v-model="form_entry.successful_role" type="checkbox" :value="role" tabindex="0" class="hidden">
+                    <label>{{role}}</label>
                   </div>
 
                 </div>
@@ -96,21 +98,49 @@ require_once "header.php"; ?>
               </div>
               <div class="field"><br>
                 <label>3.) What tools do you need to consistently do your job well?</label>
-                <input type="text" name="consistently" placeholder="Type here..." size="10"><br>
+                <input type="text" name="consistently" placeholder="Type here..." size="10" v-model='form_entry.consistently'><br>
               </div>
               <div class="field"><br>
                 <label>4.) Areas for improvement that you wish to address in this workshop?</label>
-                <input type="text" name="consistently" placeholder="Type here..." size="10"><br>
+                <input type="text" name="improvement" placeholder="Type here..." size="10" v-model='form_entry.improvement'><br>
               </div>
             </div>
             <button class="ui button" type="submit" id="myBtn">Submit</button>
           </form>
+          <input type="button" class="ui button" id="dis_myBtn" @click="update_data()" style="position:relative;top: -36px;left:8rem" onclick="myFunction()" value="Update">
+          <!-- onclick="enableBtn2();enableBtn1()" -->
+          <div class="ui segment container">
+            <div class="ui middle aligned divided list">
+              <div class="item" v-for="(form,i) in forms" :key="i" style="vertical-align: middle !important;">
+                <div class="right floated content">
+                  <div class="ui basic icon button" @click="get_Entries(form.id) ">
+                    <i class="ui green icon edit outline"></i>
+                  </div>
+                  <div class="ui basic icon button" @click="deleteEntry(form.id)">
+                    <i class="ui icon trash alternate red o utline"></i>
+                  </div>
+                </div>
+                <div class="content">
+                  <span><strong>Department: </strong>{{form.department_id}}</span><br>
+                  <span><strong>Communication: </strong>{{form.communication}}</span><br>
+                  <span><strong>Logistics: </strong>{{form.logistics}}</span><br>
+                  <span><strong>Relationships: </strong>{{form.relationships}}</span><br>
+                  <span><strong>Support: </strong>{{form.support}}</span><br>
+                  <span><strong>Role: </strong>{{form.successful_role}}</span><br>
+                  <span><strong>Consistently: </strong>{{form.consistently}}</span><br>
+                  <span><strong>Improvement: </strong>{{form.improvement}}</span>
+                </div><br>
 
+              </div>
+            </div>
+          </div>
         </div>
 
 
+
+
         <!-- add new modal start -->
-        <div class="ui modal" id="addNewModal">
+        <!-- <div class="ui modal" id="addNewModal">
           <div class="header">
             Add a Scheduled Training
           </div>
@@ -125,7 +155,7 @@ require_once "header.php"; ?>
             <table id="scheduledTrainingsTable" class="ui table very comapct small">
               <tbody>
                 <tr v-for="(scheduledTraining, s) in scheduledTrainings" :key="s">
-                  <!-- <td>{{scheduledTraining.personneltrainings_id}}</td> -->
+                  <td>{{scheduledTraining.personneltrainings_id}}</td>
                   <td class="center aligned">
                     <button v-if="!scheduledTraining.isExisting" class="ui mini button" @click="addScheduledTraining(scheduledTraining.personneltrainings_id)"> Add </button>
                     <button v-else class="ui mini button disabled"> Added </button>
@@ -144,7 +174,7 @@ require_once "header.php"; ?>
               Cancel
             </div>
           </div>
-        </div>
+        </div> -->
         <!-- add new modal end -->
 
 
@@ -161,11 +191,17 @@ require_once "header.php"; ?>
       return {
         id: new URLSearchParams(window.location.search).get("id"),
         addedScheduledTrainings: [],
-        items:[],
+        forms: [],
         training: '',
         scheduledTrainings: [],
+        departments: [],
+        successful_roles: [
+          'yes',
+          'no'
+        ],
 
         form_entry: {
+          department_id: '',
           communication: '',
           logistics: '',
           relationships: '',
@@ -177,6 +213,7 @@ require_once "header.php"; ?>
 
         form_entry_cleared: {
           communication: '',
+          department_id: '',
           logistics: '',
           relationships: '',
           support: '',
@@ -185,11 +222,11 @@ require_once "header.php"; ?>
           improvement: '',
 
         }
-
-
       }
     },
+
     methods: {
+
 
       getAddedScheduledTrainings() {
         $.post("tna_proc.php", {
@@ -216,10 +253,46 @@ require_once "header.php"; ?>
           "json"
         );
       },
+      getDepartments() {
+        $.post("tna_proc.php", {
+            getDepartments: true,
+          },
+          (data, textStatus, jqXHR) => {
+            this.departments = data
+            // console.log(data);
+          },
+          "json"
+        );
+      },
 
       // For engagement
+      update_data() {
+        $.post('tna_proc.php', {
+          update: true,
+          department_id: this.id,
+          for_engagement_id: this.form_entry.id,
+          form_entry: this.form_entry
+        }, (data, textStatus, xhr) => {
+          this.getEntries()
+        });
+        console.log(this.form_entry);
+      },
+
+      async deleteEntry(id) {
+        await $.post('tna_proc.php', {
+            deleteEntry: true,
+            id: id
+          },
+          (data, textStatus, jqXHR) => {
+            this.getEntries()
+          },
+          'json'
+        );
+      },
+
       submitEntry() {
         this.addNewEntry().then(() => {
+          this.getEntries()
           this.form_entry = JSON.parse(JSON.stringify(this.form_entry_cleared))
         })
         console.log(this.form_entry);
@@ -248,12 +321,42 @@ require_once "header.php"; ?>
           "json"
         );
       },
+
+      async getEntries() {
+        await $.post("tna_proc.php", {
+            getEntries: true,
+          },
+          (data, textStatus, jqXHR) => {
+            this.forms = data
+
+          },
+          "json"
+        );
+      },
+
+      get_Entries(id) {
+        $.ajax({
+          url: "tna_proc.php",
+          method: "GET",
+          data: {
+            pull_data: true,
+            for_engagement_id: id
+          },
+          dataType: "JSON",
+          success: (form) => {
+            this.form_entry = form
+            console.log(form);
+            $('#department_select').dropdown('set selected', form.department_id)
+          }
+        })
+      },
+      //end for engagement
+
+
       addNewModal() {
         $("#addNewModal").modal('show')
       },
     },
-
-
 
     mounted() {
       this.getAddedScheduledTrainings()
@@ -283,15 +386,28 @@ require_once "header.php"; ?>
       // test end
 
 
+      $('select.dropdown')
+        .dropdown({
+          fullTextSearch: 'exact'
+        });
 
       $('.menu .item')
         .tab();
       $('.ui.checkbox')
         .checkbox();
+      this.getEntries()
+      this.getDepartments()
 
     }
   })
 </script>
+<script>
+  function myFunction() {
+    document.getElementById("myForm").reset();
+  }
+</script>
+
+
 
 
 <?php require_once "footer.php"; ?>
