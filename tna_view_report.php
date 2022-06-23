@@ -120,11 +120,9 @@ require_once "header.php"; ?>
             getDepartments() {
                 $.post("tna_view_report_proc.php", {
                         getDepartments: true,
-                        // department_id: this.id
                     },
                     (data, textStatus, jqXHR) => {
                         this.departments = data
-                        // console.log(data);
                     },
                     "json"
                 );
@@ -146,14 +144,12 @@ require_once "header.php"; ?>
                     method: "GET",
                     data: {
                         get_department_data: true,
-                        department_id: this.form_entry.department_id,
-                        // successful_role: this.form_entry.successful_role
-                        
+                        department_id: this.form_entry.department_id
                     },
                     dataType: "JSON",
-                    success: (report) => {  
+                    success: (report) => {
                         this.forms = report
-                        
+
                     }
                 });
                 // console.log('test')
@@ -161,16 +157,16 @@ require_once "header.php"; ?>
 
             //######################## chart methods start
             async getSuccessful_role() {
-                // const department_id = this.id
                 await $.post("tna_view_report_proc.php", {
                         getSuccessful_role: true,
-                        // department_id:this.department_id
-                    }, (data, textStatus, jqXHR) => {   
+                        department_id: this.form_entry.department_id
+                    }, (data, textStatus, jqXHR) => {
                         this.role = data
                     },
                     "json"
                 );
             },
+
             async get_for_engagement() {
                 await $.post("tna_view_report_proc.php", {
                         get_for_engagement: true,
@@ -188,6 +184,88 @@ require_once "header.php"; ?>
                     "json"
                 );
             },
+
+
+            newChart() {
+                this.get_for_engagement().then(() => {
+                    var roleChart = $("#roleChart");
+                    var config = {
+                        type: 'bar',
+                        data: {
+                            labels: this.role.labels,
+                            datasets: [{
+                                label: 'Counts: ',
+                                data: this.role.data,
+                                backgroundColor: '#055bc8',
+                                borderColor: [
+                                    // '#055bc8'
+                                ],
+                                fill: false,
+                                borderWidth: 1,
+                                lineTension: 0,
+                            }]
+                        },
+                        options: {
+                            tooltips: {
+                                callbacks: {
+                                    label: function(tooltipItem, data) {
+                                        var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                                        if (label) {
+                                            // label += 'Level ';
+                                        }
+                                        label += tooltipItem.yLabel;
+                                        return label;
+                                    }
+                                }
+                            },
+                            responsive: true,
+                            title: {
+                                display: true,
+                                text: "Number of Sucessful role:"
+                            },
+                            legend: {
+                                display: false,
+                            },
+                            scales: {
+                                xAxes: [{
+                                    ticks: {
+                                        // fontSize:14,
+                                        // min: 0,
+                                        // max: 25,
+                                        // beginAtZero: true,
+                                        // stepSize:1
+                                        autoSkip: false,
+                                    }
+                                }],
+                                yAxes: [{
+                                    display: true,
+                                    ticks: {
+                                        beginAtZero: true,
+                                        stepSize: 1,
+                                        autoSkip: false,
+                                        // max: 5
+                                    }
+                                }],
+                            },
+                            onClick: function(evt, items) {
+
+                                var firstPoint = this.getElementAtEvent(evt)[0];
+
+                                if (firstPoint) {
+                                    var label = this.data.labels[firstPoint._index];
+                                    var value = this.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+                                    // console.log(firstPoint);
+                                    // console.log(label+': '+value);
+                                    console.log(label, value);
+
+                                }
+                            }
+                        }
+                    };
+                    this.newChart = new Chart(roleChart, config);
+                })
+            }
             //################# chart methods end
 
         },
@@ -196,86 +274,9 @@ require_once "header.php"; ?>
             this.getEntries()
             $('.ui.checkbox').checkbox();
 
-
+            this.newChart()
             this.getSuccessful_role()
-            this.get_for_engagement().then(() => {
-                var roleChart = $("#roleChart");
-                var config = {
-                    type: 'bar',
-                    data: {
-                        labels: this.role.labels,
-                        datasets: [{
-                            label: 'Counts: ',
-                            data: this.role.data,
-                            backgroundColor: '#055bc8',
-                            borderColor: [
-                                // '#055bc8'
-                            ],
-                            fill: false,
-                            borderWidth: 1,
-                            lineTension: 0,
-                        }]
-                    },
-                    options: {
-                        tooltips: {
-                            callbacks: {
-                                label: function(tooltipItem, data) {
-                                    var label = data.datasets[tooltipItem.datasetIndex].label || '';
 
-                                    if (label) {
-                                        // label += 'Level ';
-                                    }
-                                    label += tooltipItem.yLabel;
-                                    return label;
-                                }
-                            }
-                        },
-                        responsive: true,
-                        title: {
-                            display: true,
-                            text: "Number of Sucessful role:"
-                        },
-                        legend: {
-                            display: false,
-                        },
-                        scales: {
-                            xAxes: [{
-                                ticks: {
-                                    // fontSize:14,
-                                    // min: 0,
-                                    // max: 25,
-                                    // beginAtZero: true,
-                                    // stepSize:1
-                                    autoSkip: false,
-                                }
-                            }],
-                            yAxes: [{
-                                display: true,
-                                ticks: {
-                                    beginAtZero: true,
-                                    stepSize: 1,
-                                    autoSkip: false,
-                                    // max: 5
-                                }
-                            }],
-                        },
-                        onClick: function(evt, items) {
-
-                            var firstPoint = this.getElementAtEvent(evt)[0];
-
-                            if (firstPoint) {
-                                var label = this.data.labels[firstPoint._index];
-                                var value = this.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
-                                // console.log(firstPoint);
-                                // console.log(label+': '+value);
-                                console.log(label, value);
-
-                            }
-                        }
-                    }
-                };
-                new Chart(roleChart, config);
-            })
         }
     })
 

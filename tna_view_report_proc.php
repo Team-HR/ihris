@@ -47,13 +47,13 @@ if (isset($_GET["get_department_data"])) {
             'count' => 0
         ]
     ];
-    // if (!isset($_POST["department_id"])) {
-    //     echo json_encode($roles);
-    //     return null;
-    // }
-    // $department_id = $_POST["department_id"];
-    // $sql = "SELECT * FROM `for_engagement` WHERE `department_id` = '$department_id'";
-    $sql = "SELECT * FROM `for_engagement`";
+    $department_id = $_POST["department_id"];
+    if ($department_id == "all") {
+        $sql = "SELECT * FROM `for_engagement`";
+    } else {
+        $sql = "SELECT * FROM `for_engagement` WHERE `department_id` = '$department_id'";
+    }
+    // $sql = "SELECT * FROM `for_engagement`";
     $res = $mysqli->query($sql);
 
     $data = [];

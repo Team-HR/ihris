@@ -107,7 +107,7 @@ require_once "header.php"; ?>
             </div>
             <button class="ui button" type="submit" id="myBtn">Submit</button>
           </form>
-          <input type="button" class="ui button" id="dis_myBtn" @click="update_data()" style="position:relative;top: -36px;left:8rem" onclick="myFunction()" value="Update">
+          <input type="button" class="ui button" id="dis_myBtn" @click="update_data()" style="position:relative;top: -36px;left:8rem" value="Update">
           <!-- onclick="enableBtn2();enableBtn1()" -->
           <div class="ui segment container">
             <div class="ui middle aligned divided list">
@@ -272,8 +272,10 @@ require_once "header.php"; ?>
           department_id: this.id,
           for_engagement_id: this.form_entry.id,
           form_entry: this.form_entry
+          
         }, (data, textStatus, xhr) => {
           this.getEntries()
+          this.form_entry = JSON.parse(JSON.stringify(this.form_entry_cleared))
         });
         console.log(this.form_entry);
       },
@@ -292,7 +294,7 @@ require_once "header.php"; ?>
 
       submitEntry() {
         this.addNewEntry().then(() => {
-          this.getEntries()
+          this.getEntries() 
           this.form_entry = JSON.parse(JSON.stringify(this.form_entry_cleared))
         })
         console.log(this.form_entry);
@@ -401,11 +403,7 @@ require_once "header.php"; ?>
     }
   })
 </script>
-<script>
-  function myFunction() {
-    document.getElementById("myForm").reset();
-  }
-</script>
+
 
 
 
