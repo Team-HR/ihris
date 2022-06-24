@@ -65,8 +65,8 @@ require_once "header.php"; ?>
           <form class="ui form" @submit.prevent="submitEntry()" id="myForm">
             <div class="ui segment">
               <div class="field">
-                <label for="department"> Department:</label>
-                <select id="department_select" class="ui search dropdown" name="departments" v-model="form_entry.department_id">
+                <label for="department">Department:</label>
+                <select id="department_select" class="ui dropdown" name="departments" v-model="form_entry.department_id">
                   <option value="department">Department</option>
                   <option v-for="data in departments" :value="data.id">{{ data.name }}</option>
                 </select>
@@ -92,7 +92,6 @@ require_once "header.php"; ?>
                     <input v-model="form_entry.successful_role" type="checkbox" :value="role" tabindex="0" class="hidden">
                     <label>{{role}}</label>
                   </div>
-
                 </div>
 
               </div>
@@ -272,7 +271,7 @@ require_once "header.php"; ?>
           department_id: this.id,
           for_engagement_id: this.form_entry.id,
           form_entry: this.form_entry
-          
+
         }, (data, textStatus, xhr) => {
           this.getEntries()
           this.form_entry = JSON.parse(JSON.stringify(this.form_entry_cleared))
@@ -294,7 +293,7 @@ require_once "header.php"; ?>
 
       submitEntry() {
         this.addNewEntry().then(() => {
-          this.getEntries() 
+          this.getEntries()
           this.form_entry = JSON.parse(JSON.stringify(this.form_entry_cleared))
         })
         console.log(this.form_entry);
@@ -372,7 +371,6 @@ require_once "header.php"; ?>
         },
       })
 
-
       // var last;
       // document.addEventListener('input', (e) => {
       //   if (e.target.getAttribute('name') == "check") {
@@ -386,7 +384,6 @@ require_once "header.php"; ?>
       // test starts
       // $("#addNewModal").modal("show")
       // test end
-
 
       $('select.dropdown')
         .dropdown({

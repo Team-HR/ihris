@@ -58,7 +58,6 @@ require_once "header.php";
     </div>
 </div>
 
-
 <div class="" style="padding: 20px;">
     <h2 class="ui header center aligned" id="reportDepartment" style="color: white;">All Departments of all years</h2>
 
@@ -234,3 +233,5 @@ require_once "header.php";
     <?php
     require_once "footer.php";
     ?>
+
+

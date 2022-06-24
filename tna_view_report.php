@@ -28,7 +28,7 @@ require_once "header.php"; ?>
                     </select>
                 </h4>
 
-                <table class="ui fixed table">
+                <table class="ui selectable celled table blue">
                     <thead>
                         <tr>
                             <th>COMMUNICATION</th>
@@ -75,6 +75,7 @@ require_once "header.php"; ?>
                 id: new URLSearchParams(window.location.search).get("id"),
                 addedScheduledTrainings: [],
                 forms: {},
+                chart: null,
                 role: {},
                 improvement: [],
                 training: '',
@@ -94,7 +95,7 @@ require_once "header.php"; ?>
                     improvements: []
                 },
                 form_entry: {
-                    department_id: '',
+                    department_id: 'all',
                     communication: '',
                     logistics: '',
                     relationships: '',
@@ -149,7 +150,87 @@ require_once "header.php"; ?>
                     dataType: "JSON",
                     success: (report) => {
                         this.forms = report
+                        this.getSuccessful_role().then(() => {
+                            if (this.chart) {
+                                this.chart.destroy()
+                            }
+                            var roleChart = $("#roleChart");
+                            var config = {
+                                type: 'bar',
+                                data: {
+                                    labels: this.role.labels,
+                                    datasets: [{
+                                        label: 'Counts: ',
+                                        data: this.role.data,
+                                        backgroundColor: '#055bc8',
+                                        borderColor: [
+                                            // '#055bc8'
+                                        ],
+                                        fill: false,
+                                        borderWidth: 1,
+                                        lineTension: 0,
+                                    }]
+                                },
+                                options: {
+                                    tooltips: {
+                                        callbacks: {
+                                            label: function(tooltipItem, data) {
+                                                var label = data.datasets[tooltipItem.datasetIndex].label || '';
 
+                                                if (label) {
+                                                    // label += 'Level ';
+                                                }
+                                                label += tooltipItem.yLabel;
+                                                return label;
+                                            }
+                                        }
+                                    },
+                                    responsive: true,
+                                    title: {
+                                        display: true,
+                                        text: "Number of Sucessful role:"
+                                    },
+                                    legend: {
+                                        display: false,
+                                    },
+                                    scales: {
+                                        xAxes: [{
+                                            ticks: {
+                                                // fontSize:14,
+                                                // min: 0,
+                                                // max: 25,
+                                                // beginAtZero: true,
+                                                // stepSize:1
+                                                autoSkip: false,
+                                            }
+                                        }],
+                                        yAxes: [{
+                                            display: true,
+                                            ticks: {
+                                                beginAtZero: true,
+                                                stepSize: 1,
+                                                autoSkip: false,
+                                                // max: 5
+                                            }
+                                        }],
+                                    },
+                                    onClick: function(evt, items) {
+                                        var firstPoint = this.getElementAtEvent(evt)[0];
+
+                                        if (firstPoint) {
+                                            var label = this.data.labels[firstPoint._index];
+                                            var value = this.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+                                            // console.log(firstPoint);
+                                            // console.log(label+': '+value);
+                                            console.log(label, value);
+
+                                        }
+                                    }
+                                }
+                            };
+                            this.chart = new Chart(roleChart, config);
+
+                        })
                     }
                 });
                 // console.log('test')
@@ -165,6 +246,7 @@ require_once "header.php"; ?>
                     },
                     "json"
                 );
+
             },
 
             async get_for_engagement() {
@@ -187,7 +269,7 @@ require_once "header.php"; ?>
 
 
             newChart() {
-                this.get_for_engagement().then(() => {
+                this.getSuccessful_role().then(() => {
                     var roleChart = $("#roleChart");
                     var config = {
                         type: 'bar',
@@ -249,7 +331,6 @@ require_once "header.php"; ?>
                                 }],
                             },
                             onClick: function(evt, items) {
-
                                 var firstPoint = this.getElementAtEvent(evt)[0];
 
                                 if (firstPoint) {
@@ -263,11 +344,10 @@ require_once "header.php"; ?>
                             }
                         }
                     };
-                    this.newChart = new Chart(roleChart, config);
+                    this.chart = new Chart(roleChart, config);
                 })
             }
             //################# chart methods end
-
         },
         mounted() {
             this.getDepartments()
@@ -276,7 +356,6 @@ require_once "header.php"; ?>
 
             this.newChart()
             this.getSuccessful_role()
-
         }
     })
 
