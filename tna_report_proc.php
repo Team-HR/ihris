@@ -35,10 +35,10 @@ if (isset($_POST["getEntries"])) {
     echo json_encode($data);
 } elseif (isset($_GET["get_department_data"])) {
     $department_id = $_GET['department_id'];
-    
+    $personneltrainings_id = $_GET['personneltrainings_id'];
     $data = [];
     if($department_id =="all"){
-        $sql = "SELECT * FROM `training_needs_analysis_entries`";
+        $sql = "SELECT * FROM `training_needs_analysis_entries` where `personneltrainings_id` = '$personneltrainings_id'";
     }else{
         $sql = "SELECT * FROM `training_needs_analysis_entries` WHERE `department_id` = '$department_id'";
     }
@@ -52,6 +52,95 @@ if (isset($_POST["getEntries"])) {
     }
     echo json_encode($data);
 }
+
+elseif (isset($_POST["getSuccessful_role"])) {
+    $roles = [
+        [
+            'role' => 'yes',
+            'count' => 0
+        ],
+        [
+            'role' => 'no',
+            'count' => 0
+        ]
+    ];
+    $department_id = $_POST["department_id"];
+    if ($department_id == "all") {
+        $sql = "SELECT * FROM `training_needs_analysis_entries`";
+    } else {
+        $sql = "SELECT * FROM `training_needs_analysis_entries` WHERE `department_id` = '$department_id'";
+    }
+    // $sql = "SELECT * FROM `for_engagement`";
+    $res = $mysqli->query($sql);
+
+    $data = [];
+    while ($row = $res->fetch_assoc()) {
+        $data[] = $row["successful_role"];
+    }
+    foreach ($data as $key => $arr) {
+        $data[$key] = json_decode($arr);
+    }
+    foreach ($data as $arr) {
+        foreach ($arr as $perfIssue) {
+            foreach ($roles as $key => $role) {
+                if ($perfIssue === $role['role']) {
+                    $roles[$key]['count'] += 1;
+                    continue;
+                }
+            }
+        }
+    }
+
+    $chartData = [
+        'labels' => [],
+        'data' => []
+    ]; 
+
+    foreach ($roles as $role) {
+        $chartData['labels'][] = $role['role'];
+        $chartData['data'][] = $role['count'];
+    }
+
+    echo json_encode($chartData);
+} elseif (isset($_POST["get_for_engagement"])) {
+    // $department_id = $_POST['department_id'];
+    $data = [
+        'highlights' => [],
+        'performance_issues' => [],
+        'performance_issues_others' => [],
+        'areas_of_improvement' => []
+    ];
+
+    $sql = "SELECT * FROM `for_engagement`";
+    $res = $mysqli->query($sql);
+
+    while ($row = $res->fetch_assoc()) {
+        if (!empty($row['communication'])) {
+            $data['communication'][] = $row['communication'];
+        }
+        if (!empty($row['logistics'])) {
+            $data['logistics'][] = $row['logistics'];
+        }
+        if (!empty($row['relationships'])) {
+            $data['relationships'][] = $row['relationships'];
+        }
+        if (!empty($row['support'])) {
+            $data['support'][] = $row['support'];
+        }
+        if (!empty($row['successful_role'])) {
+            $data['successful_role'][] = $row['successful_role'];
+        }
+        if (!empty($row['consistently'])) {
+            $data['consistently'][] = $row['consistently'];
+        }
+        if (!empty($row['improvement'])) {
+            $data['improvement'][] = $row['improvement'];
+        }
+    }
+
+    echo json_encode($data);
+}
+
 
 function formatDate($numeric_date)
 {

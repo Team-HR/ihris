@@ -33,7 +33,6 @@ require_once "header.php"; ?>
                 <strong>Filter By Department:</strong>
 
                 <select class="ui search dropdown" v-model="formData.department_id" name="departments" @change="select()" id="filter">
-                    <option value="">Filter by Department</option>
                     <option value="all">All</option>
                     <option v-for="data in departments" :value="data.id">{{ data.name }}</option>
                 </select>
@@ -81,6 +80,7 @@ require_once "header.php"; ?>
                 id: new URLSearchParams(window.location.search).get("id"),
                 personneltraining: {},
                 performanceIssuesData: {},
+                chart: null,
                 performance_issues_others: [],
                 highlights: [],
                 areas_of_improvement: [],
@@ -104,7 +104,7 @@ require_once "header.php"; ?>
                 },
                 departments: [],
                 formData: {
-                    department_id: '',
+                    department_id: 'all',
                     highlights: '',
                     performance_issues: [],
                     others: '',
@@ -119,35 +119,179 @@ require_once "header.php"; ?>
             }
         },
         methods: {
-            // allRecords: function() {
-            //     $.get('tna_report_proc.php')
-            //         .then(function(response) {
-            //             all_value = this.response.data;
-            //         })
-            // },
-            
             select() {
                 $.ajax({
                     url: "tna_report_proc.php",
                     method: "GET",
                     data: {
                         get_department_data: true,
-                        department_id: this.formData.department_id
+                        department_id: this.formData.department_id,
+                        personneltrainings_id: this.id
                     },
                     dataType: "JSON",
                     success: (report) => {
                         this.data = report
-                        console.log(report);
+                        this.getPerformanceIssues().then(() => {
+                            if (this.chart) {
+                                this.chart.destroy()
+                            }   
+                            var performanceIssuesChart = $("#performanceIssuesChart");
+                            var config = {
+                                type: 'bar',
+                                data: {
+                                    labels: this.performanceIssuesData.labels,
+                                    datasets: [{
+                                        label: 'Counts: ',
+                                        data: this.performanceIssuesData.data,
+                                        backgroundColor: '#055bc8',
+                                        borderColor: [
+                                            // '#055bc8'
+                                        ],
+                                        fill: false,
+                                        borderWidth: 1,
+                                        lineTension: 0,
+                                    }]
+                                },
+                                options: {
+                                    tooltips: {
+                                        callbacks: {
+                                            label: function(tooltipItem, data) {
+                                                var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                                                if (label) {
+                                                    // label += 'Level ';
+                                                }
+                                                label += tooltipItem.yLabel;
+                                                return label;
+                                            }
+                                        }
+                                    },
+                                    responsive: true,
+                                    title: {
+                                        display: true,
+                                        text: "Number of Performance Issues According to Trainees"
+                                    },
+                                    legend: {
+                                        display: false,
+                                    },
+                                    scales: {
+                                        xAxes: [{
+                                            ticks: {
+                                                // fontSize:14,
+                                                // min: 0,
+                                                // max: 25,
+                                                // beginAtZero: true,
+                                                // stepSize:1
+                                                autoSkip: false,
+                                            }
+                                        }],
+                                        yAxes: [{
+                                            display: true,
+                                            ticks: {
+                                                beginAtZero: true,
+                                                stepSize: 1,
+                                                autoSkip: false,
+                                                // max: 5
+                                            }
+                                        }],
+                                    },
+                                    onClick: function(evt, items) {
+                                        var firstPoint = this.getElementAtEvent(evt)[0];
+                                        if (firstPoint) {
+                                            var label = this.data.labels[firstPoint._index];
+                                            var value = this.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+                                            // console.log(firstPoint);
+                                            // console.log(label+': '+value);
+                                            console.log(label, value);
+                                        }
+                                    }
+                                }
+                            };
+                            this.chart = new Chart(performanceIssuesChart, config);
+                        })
                     }
                 });
             },
+
+            newChart() {
+                this.getPerformanceIssues().then(() => {
+                    var performanceIssuesChart = $("#performanceIssuesChart");
+                    var config = {
+                        type: 'bar',
+                        data: {
+                            labels: this.performanceIssuesData.labels,
+                            datasets: [{
+                                label: 'Counts: ',
+                                data: this.performanceIssuesData.data,
+                                backgroundColor: '#055bc8',
+                                borderColor: [
+                                    // '#055bc8'
+                                ],
+                                fill: false,
+                                borderWidth: 1,
+                                lineTension: 0,
+                            }]
+                        },
+                        options: {
+                            tooltips: {
+                                callbacks: {
+                                    label: function(tooltipItem, data) {
+                                        var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                                        if (label) {
+                                            // label += 'Level ';
+                                        }
+                                        label += tooltipItem.yLabel;
+                                        return label;
+                                    }
+                                }
+                            },
+                            responsive: true,
+                            title: {
+                                display: true,
+                                text: "Number of Performance Issues According to Trainees"
+                            },
+                            legend: {
+                                display: false,
+                            },
+                            scales: {
+                                xAxes: [{
+                                    ticks: {
+                                        autoSkip: false,
+                                    }
+                                }],
+                                yAxes: [{
+                                    display: true,
+                                    ticks: {
+                                        beginAtZero: true,
+                                        stepSize: 1,
+                                        autoSkip: false,
+                                        // max: 5
+                                    }
+                                }],
+                            },
+                            onClick: function(evt, items) {
+                                var firstPoint = this.getElementAtEvent(evt)[0];
+                                if (firstPoint) {
+                                    var label = this.data.labels[firstPoint._index];
+                                    var value = this.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+                                    console.log(label, value);
+                                }
+                            }
+                        }
+                    };
+                   this.chart = new Chart(performanceIssuesChart, config);
+                })
+            },
+
 
             //######################## chart methods start
             async getPerformanceIssues() {
                 const personneltrainings_id = this.id
                 await $.post("tna_entries_proc.php", {
                         getPerformanceIssues: true,
-                        personneltrainings_id: this.id
+                        personneltrainings_id: this.id,
+                        department_id: this.formData.department_id
                     }, (data, textStatus, jqXHR) => {
                         this.performanceIssuesData = data
                     },
@@ -202,7 +346,6 @@ require_once "header.php"; ?>
                     },
                     (data, textStatus, jqXHR) => {
                         this.data = data
-
                     },
                     "json"
                 );
@@ -239,94 +382,44 @@ require_once "header.php"; ?>
                 );
             },
 
+            async getSuccessful_role() {
+                await $.post("tna_view_report_proc.php", {
+                        getSuccessful_role: true,
+                        department_id: this.form_entry.department_id
+                    }, (data, textStatus, jqXHR) => {
+                        this.role = data
+                    },
+                    "json"
+                );
+            },
+
+            async get_for_engagement() {
+                await $.post("tna_view_report_proc.php", {
+                        get_for_engagement: true,
+                    },
+                    (data, textStatus, jqXHR) => {
+                        // console.log(data);
+                        this.commmunication = data.commmunication
+                        this.logistics = data.logistics
+                        this.relationships = data.relationships
+                        this.support = data.support
+                        // this.successful_role = data.successful_role
+                        this.consistently = data.consistently
+                        this.improvement = data.improvement
+                    },
+                    "json"
+                );
+            },
+
         },
         mounted() {
             this.getPersonnelTraining()
             this.getEntries()
+            this.newChart()
             this.getDepartments()
+            this.getHiglightsAndAreasNeedsImprovement()
             $('.ui.checkbox').checkbox();
 
-            //############################### chart init starts
-            this.getHiglightsAndAreasNeedsImprovement()
-            this.getPerformanceIssues().then(() => {
-                var performanceIssuesChart = $("#performanceIssuesChart");
-                var config = {
-                    type: 'bar',
-                    data: {
-                        labels: this.performanceIssuesData.labels,
-                        datasets: [{
-                            label: 'Counts: ',
-                            data: this.performanceIssuesData.data,
-                            backgroundColor: '#055bc8',
-                            borderColor: [
-                                // '#055bc8'
-                            ],
-                            fill: false,
-                            borderWidth: 1,
-                            lineTension: 0,
-                        }]
-                    },
-                    options: {
-                        tooltips: {
-                            callbacks: {
-                                label: function(tooltipItem, data) {
-                                    var label = data.datasets[tooltipItem.datasetIndex].label || '';
-
-                                    if (label) {
-                                        // label += 'Level ';
-                                    }
-                                    label += tooltipItem.yLabel;
-                                    return label;
-                                }
-                            }
-                        },
-                        responsive: true,
-                        title: {
-                            display: true,
-                            text: "Number of Performance Issues According to Trainees"
-                        },
-                        legend: {
-                            display: false,
-                        },
-                        scales: {
-                            xAxes: [{
-                                ticks: {
-                                    // fontSize:14,
-                                    // min: 0,
-                                    // max: 25,
-                                    // beginAtZero: true,
-                                    // stepSize:1
-                                    autoSkip: false,
-                                }
-                            }],
-                            yAxes: [{
-                                display: true,
-                                ticks: {
-                                    beginAtZero: true,
-                                    stepSize: 1,
-                                    autoSkip: false,
-                                    // max: 5
-                                }
-                            }],
-                        },
-                        onClick: function(evt, items) {
-
-                            var firstPoint = this.getElementAtEvent(evt)[0];
-
-                            if (firstPoint) {
-                                var label = this.data.labels[firstPoint._index];
-                                var value = this.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
-                                // console.log(firstPoint);
-                                // console.log(label+': '+value);
-                                console.log(label, value);
-
-                            }
-                        }
-                    }
-                };
-                new Chart(performanceIssuesChart, config);
-            })
-            //############################### chart init ends
         }
     })
 

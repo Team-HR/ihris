@@ -89,7 +89,6 @@ elseif (isset($_POST["addNewEntry"])) {
 // tna entry report starts here
 
 elseif (isset($_POST["getPerformanceIssues"])) {
-
     $performanceIssues = [
         [
             'performanceIssue' => 'Initiative',
@@ -138,11 +137,15 @@ elseif (isset($_POST["getPerformanceIssues"])) {
         echo json_encode($performanceIssues);
         return null;
     }
-
     $personneltrainings_id = $_POST["personneltrainings_id"];
-    $sql = "SELECT * FROM `training_needs_analysis_entries` WHERE `personneltrainings_id` = '$personneltrainings_id'";
-    $res = $mysqli->query($sql);
+    $department_id = $_POST['department_id'];
 
+    if ($department_id == "all") {
+        $sql = "SELECT * FROM `training_needs_analysis_entries`";
+    } else {
+        $sql = "SELECT * FROM `training_needs_analysis_entries` WHERE `department_id` = '$department_id'";
+    }
+    $res = $mysqli->query($sql);
     $data = [];
     while ($row = $res->fetch_assoc()) {
         $data[] = $row["performance_issues"];

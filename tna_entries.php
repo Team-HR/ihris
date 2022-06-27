@@ -68,10 +68,10 @@ require_once "header.php"; ?>
                         </div>
                     </div>
                     <button class="ui button" type="submit" id="myBtn">Submit</button>
-                    <button class="reset-btn ui button" type='button' value="submit" disabled id="dis_myBtn" @click="update()"  onclick="enableBtn2();enableBtn1();myFunction()">Update</button>
+                    <button class="reset-btn ui button one" type='button' value="submit" disabled id="dis_myBtn" @click="update()" onclick="enableBtn2();enableBtn1();myFunction()">Update</button>
                 </div>
             </form>
-            
+
             <div class="ui segment container">
                 <div class="ui middle aligned divided list">
                     <div class="item" v-for="(item,i) in items" :key="i" style="vertical-align: middle !important;">
@@ -166,7 +166,7 @@ require_once "header.php"; ?>
                 );
             },
 
-            async getEntries() {    
+            async getEntries() {
                 await $.post("tna_entries_proc.php", {
                         getEntries: true,
                         personneltrainings_id: this.id
@@ -235,6 +235,7 @@ require_once "header.php"; ?>
                     formData: this.formData
                 }, (data, textStatus, xhr) => {
                     this.getEntries()
+                    this.formData = JSON.parse(JSON.stringify(this.formDataCleared))
                 });
                 console.log(this.formData);
             },
@@ -247,6 +248,10 @@ require_once "header.php"; ?>
         },
     })
 
+    //JS functions
+    $('.button.one').on('click', function() {
+        $('.ui.dropdown').dropdown('restore defaults');
+    });
     $('select.dropdown')
         .dropdown({
             fullTextSearch: 'exact'
@@ -277,7 +282,6 @@ require_once "header.php"; ?>
     function myFunction() {
         document.getElementById("myForm").reset();
     }
-
 </script>
 
 <?php require_once "footer.php"; ?>

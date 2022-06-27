@@ -53,11 +53,9 @@ require_once "header.php"; ?>
                 <td>{{item.remarks}}</td>
                 <td class="center aligned">
                   <div class="ui icon basic mini buttons">
-
                   </div>
                 </td>
               </tr>
-
             </tbody>
           </table>
         </div>
@@ -67,7 +65,7 @@ require_once "header.php"; ?>
               <div class="field">
                 <label for="department"> Department:</label>
                 <select id="department_select" class="ui search dropdown" name="departments" v-model="form_entry.department_id">
-                  <option value="department">Department</option>
+                 
                   <option v-for="data in departments" :value="data.id">{{ data.name }}</option>
                 </select>
               </div>
@@ -92,7 +90,6 @@ require_once "header.php"; ?>
                     <input v-model="form_entry.successful_role" type="checkbox" :value="role" tabindex="0" class="hidden">
                     <label>{{role}}</label>
                   </div>
-
                 </div>
 
               </div>
@@ -107,13 +104,13 @@ require_once "header.php"; ?>
             </div>
             <button class="ui button" type="submit" id="myBtn">Submit</button>
           </form>
-          <input type="button" class="ui button" id="dis_myBtn" @click="update_data()" style="position:relative;top: -36px;left:8rem" onclick="myFunction()" value="Update">
+          <input type="button" class="ui button one" id="dis_myBtn" @click="update_data()" style="position:relative;top: -36px;left:8rem" onclick="enableBtn2();enableBtn1();myFunction()" value="Update">
           <!-- onclick="enableBtn2();enableBtn1()" -->
           <div class="ui segment container">
             <div class="ui middle aligned divided list">
               <div class="item" v-for="(form,i) in forms" :key="i" style="vertical-align: middle !important;">
                 <div class="right floated content">
-                  <div class="ui basic icon button" @click="get_Entries(form.id) ">
+                  <div class="ui basic icon button" @click="get_Entries(form.id)" onclick="scrollToTop();disableBtn();enableBtn()">
                     <i class="ui green icon edit outline"></i>
                   </div>
                   <div class="ui basic icon button" @click="deleteEntry(form.id)">
@@ -135,51 +132,6 @@ require_once "header.php"; ?>
             </div>
           </div>
         </div>
-
-
-
-
-        <!-- add new modal start -->
-        <!-- <div class="ui modal" id="addNewModal">
-          <div class="header">
-            Add a Scheduled Training
-          </div>
-          <div class="content">
-
-            <form @submit.prevent="">
-              <div class="ui clearable input">
-                <input name="search" type="text" placeholder="Search..." v-model="training" @keyup="getScheduledTrainings()">
-              </div>
-            </form>
-
-            <table id="scheduledTrainingsTable" class="ui table very comapct small">
-              <tbody>
-                <tr v-for="(scheduledTraining, s) in scheduledTrainings" :key="s">
-                  <td>{{scheduledTraining.personneltrainings_id}}</td>
-                  <td class="center aligned">
-                    <button v-if="!scheduledTraining.isExisting" class="ui mini button" @click="addScheduledTraining(scheduledTraining.personneltrainings_id)"> Add </button>
-                    <button v-else class="ui mini button disabled"> Added </button>
-                  </td>
-                  <td>{{ scheduledTraining.training }}</td>
-                  <td>{{ scheduledTraining.startDate }}</td>
-                  <td>{{ scheduledTraining.endDate }}</td>
-                  <td>{{ scheduledTraining.venue }}</td>
-                  <td>{{ scheduledTraining.remarks }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="actions">
-            <div class="ui deny button">
-              Cancel
-            </div>
-          </div>
-        </div> -->
-        <!-- add new modal end -->
-
-
-
-        <!-- content end -->
       </div>
     </div>
   </template>
@@ -274,6 +226,7 @@ require_once "header.php"; ?>
           form_entry: this.form_entry
         }, (data, textStatus, xhr) => {
           this.getEntries()
+          this.form_entry = JSON.parse(JSON.stringify(this.form_entry_cleared))
         });
         console.log(this.form_entry);
       },
@@ -391,6 +344,10 @@ require_once "header.php"; ?>
           fullTextSearch: 'exact'
         });
 
+      $('.button.one').on('click', function() {
+        $('.ui.dropdown').dropdown('restore defaults');
+      });
+
       $('.menu .item')
         .tab();
       $('.ui.checkbox')
@@ -405,9 +362,31 @@ require_once "header.php"; ?>
   function myFunction() {
     document.getElementById("myForm").reset();
   }
+
+  function scrollToTop() {
+    $(window).scrollTop(60);
+  }
+
+  function disableBtn() {
+    document.getElementById("myBtn").disabled = true;
+  }
+
+  function enableBtn() {
+    document.getElementById("dis_myBtn").disabled = false;
+  }
+
+  function enableBtn1() {
+    document.getElementById("dis_myBtn").disabled = true;
+    document.getElementById("myForm").reset();
+  }
+
+  function enableBtn2() {
+    document.getElementById("myBtn").disabled = false;
+    document.getElementById("myForm").reset();
+  }
+
+  function myFunction() {
+    document.getElementById("myForm").reset();
+  }
 </script>
-
-
-
-
 <?php require_once "footer.php"; ?>
