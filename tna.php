@@ -104,7 +104,7 @@ require_once "header.php"; ?>
             </div>
             <button class="ui button" type="submit" id="myBtn">Submit</button>
           </form>
-          <input type="button" class="ui button one" id="dis_myBtn" @click="update_data()" style="position:relative;top: -36px;left:8rem" onclick="enableBtn2();enableBtn1();myFunction()" value="Update">
+          <input type="button" class="ui button one" id="dis_myBtn" disabled  @click="update_data()" style="position:relative;top: -36px;left:8rem" onclick="enableBtn2();enableBtn1();myFunction()" value="Update">
           <!-- onclick="enableBtn2();enableBtn1()" -->
           <div class="ui segment container">
             <div class="ui middle aligned divided list">
