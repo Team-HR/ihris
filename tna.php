@@ -305,7 +305,6 @@ require_once "header.php"; ?>
       },
       //end for engagement
 
-
       addNewModal() {
         $("#addNewModal").modal('show')
       },
@@ -322,21 +321,6 @@ require_once "header.php"; ?>
           this.scheduledTrainings = []
         },
       })
-
-
-      // var last;
-      // document.addEventListener('input', (e) => {
-      //   if (e.target.getAttribute('name') == "check") {
-      //     if (last)
-      //       last.checked = false;
-      //   }
-      //   e.target.checked = true;
-      //   last = e.target;
-      // })
-
-      // test starts
-      // $("#addNewModal").modal("show")
-      // test end
 
 
       $('select.dropdown')
