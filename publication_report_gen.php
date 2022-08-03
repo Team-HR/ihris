@@ -55,7 +55,7 @@ $spreadsheet->getActiveSheet()->getStyle('A'.($aRow+7))->getFont()->setBold(true
 $spreadsheet->getActiveSheet()->setCellValue('B'.($aRow+9),'This is to request the publication of the following vacant positions, which are authorized to be filled, at the CGO Bayawan City in the CSC website:');
 $spreadsheet->getActiveSheet()->mergeCells('I'.($aRow+11).':K'.($aRow+11))->setCellValue('I'.($aRow+11),'VERONICA GRACE P. MIRAFLOR')->getStyle('I'.($aRow+11).':K'.($aRow+11))->getAlignment()->setHorizontal('center');
 $spreadsheet->getActiveSheet()->getStyle('I'.($aRow+11).':K'.($aRow+11))->getFont()->setBold(true);
-$spreadsheet->getActiveSheet()->mergeCells('I'.($aRow+12).':K'.($aRow+12))->setCellValue('I'.($aRow+12),'HRMO IV')->getStyle('I'.($aRow+12).':K'.($aRow+12))->getAlignment()->setHorizontal('center');
+$spreadsheet->getActiveSheet()->mergeCells('I'.($aRow+12).':K'.($aRow+12))->setCellValue('I'.($aRow+12),'CGDH-I')->getStyle('I'.($aRow+12).':K'.($aRow+12))->getAlignment()->setHorizontal('center');
 $spreadsheet->getActiveSheet()->getStyle('I'.($aRow+12).':K'.($aRow+12))->getBorders()->getTop()->setBorderStyle('thin');
 $spreadsheet->getActiveSheet()->setCellValue('I'.($aRow+14), 'Date:')->getStyle('I'.($aRow+14))->getAlignment()->setHorizontal('right');
 $spreadsheet->getActiveSheet()->mergeCells('J'.($aRow+14).':K'.($aRow+14))->setCellValue('J'.($aRow+14), date("F d, Y", strtotime($date_of_publication)));
@@ -266,7 +266,7 @@ $spreadsheet->getActiveSheet()->setCellValue('A'.$aRow, $richText);
 $spreadsheet->getActiveSheet()->setCellValue('B'.($aRow+2), 'VERONICA GRACE P. MIRAFLOR')->getStyle('B'.($aRow+2))->getAlignment()->setHorizontal('center')->setVertical('center')->setWrapText(true);
 $spreadsheet->getActiveSheet()->getStyle('B'.($aRow+2))->getBorders()->getBottom()->setBorderStyle('thin');
 $spreadsheet->getActiveSheet()->getStyle('B'.($aRow+2))->getFont()->setSize(11)->setBold(true);
-$spreadsheet->getActiveSheet()->setCellValue('B'.($aRow+3), 'HRMO IV')->getStyle('B'.($aRow+3))->getAlignment()->setHorizontal('center')->setVertical('center')->setWrapText(true);
+$spreadsheet->getActiveSheet()->setCellValue('B'.($aRow+3), 'CGDH-I')->getStyle('B'.($aRow+3))->getAlignment()->setHorizontal('center')->setVertical('center')->setWrapText(true);
 $spreadsheet->getActiveSheet()->getStyle('B'.($aRow+3))->getBorders()->getBottom()->setBorderStyle('thin');
 $spreadsheet->getActiveSheet()->setCellValue('B'.($aRow+4), 'Cabcabon, Brgy. Banga, Bayawan City')->getStyle('B'.($aRow+4))->getAlignment()->setHorizontal('center')->setVertical('center')->setWrapText(true);
 $spreadsheet->getActiveSheet()->getStyle('B'.($aRow+4))->getBorders()->getBottom()->setBorderStyle('thin');
