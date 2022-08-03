@@ -128,7 +128,7 @@ if (isset($_POST["load"])) {
 		$level = $row["level"];
 		$category = $row["category"];
 		$sg = $row["salaryGrade"];
-		$monthly_salary = isset($sql3['monthly_salary'])?$sql3['monthly_salary']:"";
+		$monthly_salary = isset($sql3['monthly_salary']) ? $sql3['monthly_salary'] : "";
 		$department = $row["department"];
 
 		$vacated_by = $sql4['firstName'] . " " . $sql4['middleName'] . " " . $sql4['lastName'] . " " . $sql4['extName'];
@@ -170,7 +170,7 @@ if (isset($_POST["load"])) {
 		</tr><?php
 			}
 
-// end of load
+			// end of load
 
 		} elseif (isset($_POST["addPlantilla"])) {
 			$position = $_POST["position"];
@@ -214,7 +214,7 @@ if (isset($_POST["load"])) {
 											 `abolish` = '$abolish'
 											 WHERE `id` = '$id' ";
 			$mysqli->query($sql);
-			if($mysqli->error){
+			if ($mysqli->error) {
 				die($mysqli->error);
 			}
 
@@ -223,10 +223,11 @@ if (isset($_POST["load"])) {
 												`date_of_last_promotion` = '$date_of_last_promotion'
 												where `appointment_id`='$incumbent'";
 			$mysqli->query($sql2);
-			if($mysqli->error){
+			if ($mysqli->error) {
 				die($mysqli->error);
 			}
 		} elseif (isset($_POST["vacatePos"])) {
+
 			$plantilla_id = $_POST['plantilla_id'];
 			$incumbent = $_POST["incumbent"];
 			$vacated_by = $_POST["incumbent"];
@@ -240,20 +241,20 @@ if (isset($_POST["load"])) {
 
 			$endService = $_POST["endService"];
 
-			$sql1 = "UPDATE `plantillas` SET `vacated_by` = '$incumbent', 
+			$set_plantilla_incumbent_to_zero = "UPDATE `plantillas` SET `vacated_by` = '$incumbent', 
 									`incumbent` = 0 
 									WHERE `id` = '$plantilla_id'";
 
 
 
-			$sql2 = "UPDATE `appointments`	SET `last_day_of_service` ='$endService',
+			$update_appointment_of_incumbent = "UPDATE `appointments`	SET `last_day_of_service` ='$endService',
 											`reason_of_vacancy` = '$reason_of_vacancy $other',
 											`predecessor` = '$incumbent'
 
 										WHERE `appointment_id` = '$incumbent'
 										";
 
-			$mysqli->query($sql1);
-			$mysqli->query($sql2);
+			$mysqli->query($set_plantilla_incumbent_to_zero);
+			$mysqli->query($update_appointment_of_incumbent);
 		}
 				?>
