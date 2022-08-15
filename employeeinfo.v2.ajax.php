@@ -63,30 +63,12 @@ if (isset($_POST["loadProfile"])) {
 	$sql3 = "SELECT * FROM `positiontitles` WHERE `position_id` = '$position_id'";
 	$result3 = $mysqli->query($sql3);
 	$row3 = $result3->fetch_assoc();
-	$position = $row3["position"];
-	if (!$position) {
-		$position = "<i style='color:grey'>N/A</i>";
-	} else {
-		$position = mb_convert_case($position, MB_CASE_UPPER, "UTF-8");
-	}
-	$functional = $row3["functional"];
-	if ($functional) {
-		$functional = mb_convert_case($functional, MB_CASE_UPPER, "UTF-8");
-	}
-	$level = $row3["level"];
-	if (!$level) {
-		$level = "<i style='color:grey'>N/A</i>";
-	} else {
-		$level = $level;
-	}
-	$category = strtoupper($row3["category"]);
-	if (!$category) {
-		$category = "<i style='color:grey'>N/A</i>";
-	}
-	$salaryGrade = $row3["salaryGrade"];
-	if (!$salaryGrade) {
-		$salaryGrade = "<i style='color:grey'>N/A</i>";
-	}
+
+	$position = isset($row3["position"]) ? mb_convert_case($row3["position"], MB_CASE_UPPER, "UTF-8") : "<i style='color:grey'>N/A</i>";
+	$functional = isset($row3["functional"]) ? mb_convert_case($row3["functional"], MB_CASE_UPPER, "UTF-8") : "<i style='color:grey'>N/A</i>";
+	$level = isset($row3["level"]) ? $row3["level"] : "<i style='color:grey'>N/A</i>";
+	$category = isset($row3["category"]) ? strtoupper($row3["category"]) : "<i style='color:grey'>N/A</i>";
+	$salaryGrade = isset($row3["salaryGrade"]) ? $row3["salaryGrade"] : "<i style='color:grey'>N/A</i>";
 	// get position name start
 
 	if ($row["dateIPCR"] !== '0000-00-00') {

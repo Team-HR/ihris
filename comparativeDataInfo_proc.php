@@ -105,6 +105,7 @@ if (isset($_POST["load"])) {
 
 function createList($arr, $bool = true)
 {
+	// return json_encode($arr);
 	$list = "";
 	if ($arr) {
 		if ($bool) {
@@ -165,28 +166,21 @@ function createYosList($serial)
 function formatDate($numeric_date)
 {
 	// return "test";
-	$date_exploded = explode("-",$numeric_date);
-	
-	if ($date_exploded[1] == "00" && $date_exploded[2]== "00") 
-	{
+	$date_exploded = explode("-", $numeric_date);
+
+	if ($date_exploded[1] == "00" && $date_exploded[2] == "00") {
 		return $date_exploded[0];
-	}
-	elseif ($date_exploded[2]== "00")
-	{
+	} elseif ($date_exploded[2] == "00") {
 		$date = new DateTime($numeric_date);
 		$date->modify('+1 day');
 		$strDate = $date->format('M Y');
 		return $strDate;
-	} 
-	else  
-	{
+	} else {
 		$date = new DateTime($numeric_date);
 		// $date->modify('+1 day');
 		$strDate = $date->format('M d, Y');
 		return $strDate;
 	}
-
-	
 }
 
 function check_if_exist($mysqli, $rspcomp_id)

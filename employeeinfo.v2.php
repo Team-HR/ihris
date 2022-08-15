@@ -441,7 +441,7 @@ if (isset($_GET["spms"])) {
                             <?php require_once "service_record.php"; ?>
                         </table>
                     </div>
-                    
+
                 </div>
                 <!-- leave records start -->
                 <div id="dashboard_leave_records" class="ui tab" data-tab="leave_records">
