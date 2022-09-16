@@ -11,6 +11,7 @@
 		records = new Lister("Records"),
 		experience = [],
 		yosArr = {
+			Private: "",
 			Temporary: "",
 			JOW: "",
 			Casual: "",
@@ -81,7 +82,7 @@
 				});
 			});
 
-
+			
 			console.log('get_arr:',arr);
 			$(setInputs(arr));
 
@@ -148,6 +149,7 @@
 		});
 
 		yosArr = arr[9];
+		console.log(arr[9]);
 		$(createYosField);
 		experience = arr[10];
 		$(createExperienceList);
@@ -381,6 +383,7 @@
 		$(".ui.dropdown").dropdown("restore defaults");
 		experience = [];
 		yosArr = {
+			Private: "",
 			Temporary: "",
 			JOW: "",
 			Casual: "",
@@ -424,6 +427,7 @@
 		// $("input [name='name']").val(name);
 		// console.log(name);
 		console.log($(setInputs([name, null, "", "", "", "", "", "", [], {
+				Private:"",
 				Temporary: "",
 				JOW: "",
 				Casual: "",
@@ -630,6 +634,7 @@
 
 					options = '<option selected="" value="">Select status</option>';
 					counter = 0;
+					console.log(yosArr);
 					$.each(yosArr, function(index, val) {
 						if (!val) {
 							options += '<option value="' + index + '">' + index + '</option>';
@@ -680,7 +685,7 @@
 
 			<div class="fields">
 				<div class="six wide field">
-					<label>Years of Gov't Service:</label>
+					<label>Years in Service:</label>
 					<div class="ui action input inputListerYos">
 						<input id="inputAdder" type="text" placeholder="No. of Years">
 						<select class="ui selection compact dropdown" id="yearsOfService"></select>

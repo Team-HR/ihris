@@ -206,7 +206,7 @@ require "rsp_addApplicant_modal.php";
         <th class="heads">Name</th>
         <th class="heads">Age</th>
         <th class="heads">Gender</th>
-        <th class="heads">Years in <br> Gov't</th>
+        <th class="heads">Years in Service</th>
         <th class="heads">Civil Status</th>
         <th class="heads">Education</th>
         <th class="heads">Training</th>
