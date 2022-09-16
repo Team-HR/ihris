@@ -15,9 +15,9 @@ while ($row = $res->fetch_assoc()) {
     ];
 }
 
-foreach ($data as $key => $row) {
-    $mysqli->query("UPDATE `rsp_applicants` SET `num_years_in_gov` = '$row[num_years_in_gov]' WHERE `rsp_applicants`.`applicant_id` = $row[applicant_id];");
-}
+// foreach ($data as $key => $row) {
+//     $mysqli->query("UPDATE `rsp_applicants` SET `num_years_in_gov` = '$row[num_years_in_gov]' WHERE `rsp_applicants`.`applicant_id` = $row[applicant_id];");
+// }
 
 
 ?>
