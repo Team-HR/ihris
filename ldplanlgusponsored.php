@@ -296,7 +296,7 @@ $year = $row["year"];
               </div>
 
               <button class="ui fluid mini button" @click="editBudget(plan)">
-               <i class="ui edit icon"></i> Edit
+                <i class="ui edit icon"></i> Edit
               </button>
             </div>
 

@@ -55,9 +55,9 @@
 			getApplicantData: true,
 			applicant_id: applicant_id
 		}, function(data, textStatus, xhr) {
-			
+
 			arr = JSON.parse(data);
-			console.log('arr:',arr);
+			console.log('arr:', arr);
 			var dates = [];
 			$.each(arr[10], function(i, val) {
 
@@ -82,8 +82,8 @@
 				});
 			});
 
-			
-			console.log('get_arr:',arr);
+
+			console.log('get_arr:', arr);
 			$(setInputs(arr));
 
 			$("#applicantForm").form({
@@ -246,7 +246,7 @@
 	}
 
 	function createExperienceList() {
-			console.log('experience: ',experience);
+		console.log('experience: ', experience);
 		if (experience) {
 			var view = "";
 			$("#experienceList").html("");
@@ -427,7 +427,7 @@
 		// $("input [name='name']").val(name);
 		// console.log(name);
 		console.log($(setInputs([name, null, "", "", "", "", "", "", [], {
-				Private:"",
+				Private: "",
 				Temporary: "",
 				JOW: "",
 				Casual: "",
@@ -536,6 +536,10 @@
 	}
 </script>
 
+
+
+
+
 <div class="ui tiny modal" id="addApplicant">
 	<div class="ui blue header" id="addApplicantHeader"></div>
 	<div class="content">
@@ -556,66 +560,117 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div class="ui large modal" id="addNewModal" style="background-color: lightgrey !important;">
 	<div class="ui blue header" id="addNewModalheader"></div>
 	<div class="scrolling content">
 		<form class="ui small form" id="applicantForm" method="POST">
 			<!-- personal information start -->
 			<h3 class="ui dividing blue header">Personal Information</h3>
-			<div class="fields">
-				<div class="eleven wide field">
-					<label>Name:</label>
-					<input class="dataInput" type="text" name="name" placeholder="Enter fullname of applicant...">
-				</div>
-				<div class="two wide field">
-					<label>Age:</label>
-					<input class="dataInput" type="text" name="age" placeholder="Enter age...">
-				</div>
-				<div class="three wide field">
-					<label>Gender:</label>
-					<!-- <input type="text" name="gender" placeholder="Enter gender..."> -->
-					<select class="dataInput" class="ui compact dropdown" id="gender">
-						<option value="">Gender</option>
-						<option value="Female">Female</option>
-						<option value="Male">Male</option>
-					</select>
-				</div>
+			<!-- <div class="fields"> -->
+			<div class="field">
+				<label>Name:</label>
+				<input class="dataInput" type="text" name="name" placeholder="Enter fullname of applicant...">
 			</div>
-			<div class="fields">
-				<div class="three wide field">
-					<label>Civil Status:</label>
-					<!-- <input type="text" name="" placeholder="Civil status..."> -->
-					<select class="dataInput" class="ui compact dropdown" id="civilStatus">
-						<option value="">Civil Status</option>
-						<option value="Single">Single</option>
-						<option value="Married">Married</option>
-						<option value="Annulled">Annulled</option>
-						<option value="Widowed">Widowed</option>
-					</select>
-				</div>
-				<div class="three wide field">
-					<label>Mobile No:</label>
-					<input class="dataInput" type="text" name="mobileNum" placeholder="Mobile number...">
-				</div>
-				<div class="ten wide field">
-					<label>Address:</label>
-					<input class="dataInput" type="text" name="address" placeholder="Enter full address...">
-				</div>
+			<div class="field">
+				<label>Age:</label>
+				<input class="dataInput" type="text" name="age" placeholder="Enter age...">
 			</div>
+			<div class="field">
+				<label>Gender:</label>
+				<!-- <input type="text" name="gender" placeholder="Enter gender..."> -->
+				<select class="dataInput" class="ui compact dropdown" id="gender">
+					<option value="">Gender</option>
+					<option value="Female">Female</option>
+					<option value="Male">Male</option>
+				</select>
+			</div>
+			<!-- </div> -->
+			<!-- <div class="fields"> -->
+			<div class="field">
+				<label>Civil Status:</label>
+				<!-- <input type="text" name="" placeholder="Civil status..."> -->
+				<select class="dataInput" class="ui compact dropdown" id="civilStatus">
+					<option value="">Civil Status</option>
+					<option value="Single">Single</option>
+					<option value="Married">Married</option>
+					<option value="Annulled">Annulled</option>
+					<option value="Widowed">Widowed</option>
+				</select>
+			</div>
+			<!-- <div class="three wide field">
+				<label>Mobile No:</label>
+				<input class="dataInput" type="text" name="mobileNum" placeholder="Mobile number...">
+			</div>
+			<div class="ten wide field">
+				<label>Address:</label>
+				<input class="dataInput" type="text" name="address" placeholder="Enter full address...">
+			</div> -->
+			<!-- </div> -->
 			<!-- personal information end -->
 
 			<!-- education start -->
 			<h3 class="ui dividing blue header">Education</h3>
-			<div class="fields">
-				<div class="eight wide field">
-					<label>Education:</label>
-					<input class="dataInput" type="text" name="education" placeholder="Enter the highest degree earned...">
-				</div>
-				<div class="eight wide field">
+			<!-- <div class="fields"> -->
+			<div class="field">
+				<label>Education:</label>
+				<input class="dataInput" type="text" name="education" placeholder="Enter the highest degree earned...">
+			</div>
+			<!-- <div class="eight wide field">
 					<label>School:</label>
 					<input class="dataInput" type="text" name="school" placeholder="Enter last school attended...">
-				</div>
-			</div>
+				</div> -->
+			<!-- </div> -->
 			<!-- education end -->
 			<!-- qualification start -->
 			<h3 class="ui dividing blue header">Trainings</h3>
@@ -791,6 +846,11 @@
 
 
 
+
+
+
+
+
 			<div class="ui list" id="experienceList" style="border: 1px solid lightgrey; border-radius: 3px; padding: 5px; padding-bottom: 0px;">
 			</div>
 			<h3 class="ui dividing blue header">Eligibility</h3>
@@ -815,9 +875,3 @@
 	</div>
 </div>
 <!-- ui form end -->
-
-
-
-<?php
-// require 'footer.php';
-?>

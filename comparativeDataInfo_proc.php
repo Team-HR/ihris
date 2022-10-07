@@ -30,7 +30,158 @@ if (isset($_POST["load"])) {
 	);
 	$stmt->close();
 	echo json_encode($data);
-} elseif (isset($_POST["loadList"])) {
+} elseif (isset($_POST["initload"])) {
+	$rspvac_id = $_POST["rspvac_id"];
+	$sql = "SELECT `rspcomp_id`, `rsp_comparative`.`applicant_id`, `name`,`age`,`gender`,`num_years_in_gov`,`years_of_service_gov`,`years_of_service_priv`,`civil_status`,`education`,`training`,`experience`,`eligibility`,`awards`,`records_infractions`, `remarks` FROM `rsp_applicants` LEFT JOIN `rsp_comparative`ON `rsp_comparative`.`applicant_id` = `rsp_applicants`.`applicant_id` WHERE `rspvac_id` = ?";
+	$stmt = $mysqli->prepare($sql);
+	$stmt->bind_param("i", $rspvac_id);
+	$stmt->execute();
+	$stmt->store_result();
+	$stmt->bind_result(
+		$rspcomp_id,
+		$applicant_id,
+		$name,
+		$age,
+		$gender,
+		$num_years_in_gov,
+		$years_of_service_gov,
+		$years_of_service_priv,
+		$civil_status,
+		$education,
+		$training,
+		$experience,
+		$eligibility,
+		$awards,
+		$records_infractions,
+		$remarks
+	);
+	$data = [];
+
+	while ($stmt->fetch()) {
+		$data[] = [
+			// "rspcomp_id" => $rspcomp_id,
+			"id" => $applicant_id,
+			"name" => $name,
+			"age" => $age,
+			"gender" => $gender,
+			"civil_status" => $civil_status,
+			"education" => $education,
+			"years_of_service_gov" => json_decode($years_of_service_gov) ? json_decode($years_of_service_gov) : [],
+			"years_of_service_priv" => json_decode($years_of_service_priv) ? json_decode($years_of_service_priv) : [],
+			"experiences" => json_decode($experience) ? json_decode($experience) : [],
+			"trainings" => json_decode($training) ? json_decode($training) : [],
+			"eligibilities" => json_decode($eligibility) ? json_decode($eligibility) : [],
+			"awards" => json_decode($awards) ? json_decode($awards) : [],
+			"record_of_infractions" => json_decode($records_infractions) ? json_decode($records_infractions) : [],
+			"remarks" => $remarks
+		];
+	}
+	echo json_encode($data);
+} elseif (isset($_POST["addEditApplicant"])) {
+	$rspvac_id = $_POST["rspvac_id"];
+	$applicant = $_POST["applicant"];
+
+	$applicant_id = $applicant["id"];
+	$name = $applicant["name"];
+
+	if (!$name) return false;
+	$name = $mysqli->real_escape_string($name);
+
+	$age = $applicant["age"];
+	$age = $mysqli->real_escape_string($age);
+
+	$gender = $applicant["gender"];
+	$gender = $mysqli->real_escape_string($gender);
+
+	$civil_status = $applicant["civil_status"];
+	$civil_status = $mysqli->real_escape_string($civil_status);
+
+	$education = $applicant["education"];
+	$education = $mysqli->real_escape_string($education);
+
+	$years_of_service_gov = $applicant["years_of_service_gov"];
+	$years_of_service_gov = removeEmptyElementfromYearsOfService($years_of_service_gov);
+
+	if (count($years_of_service_gov) > 0) {
+		$years_of_service_gov = $mysqli->real_escape_string(json_encode($years_of_service_gov));
+	} else {
+		$years_of_service_gov = NULL;
+	}
+
+	$years_of_service_priv = $applicant["years_of_service_priv"];
+	$years_of_service_priv = removeEmptyElementfromYearsOfService($years_of_service_priv);
+	if (count($years_of_service_priv) > 0) {
+		$years_of_service_priv = $mysqli->real_escape_string(json_encode($years_of_service_priv));
+	} else {
+		$years_of_service_priv = NULL;
+	}
+
+	$experiences = $applicant["experiences"];
+	$experiences = removeEmptyElementfromExperiences($experiences);
+	if (count($experiences) > 0) {
+		$experiences = $mysqli->real_escape_string(json_encode($experiences));
+	} else {
+		$experiences = NULL;
+	}
+
+	$trainings = $applicant["trainings"];
+	$trainings = removeEmptyElementfromArray($trainings);
+	if (count($trainings) > 0) {
+		$trainings = $mysqli->real_escape_string(json_encode($trainings));
+	} else {
+		$trainings = NULL;
+	}
+
+	$eligibilities = $applicant["eligibilities"];
+	$eligibilities = removeEmptyElementfromArray($eligibilities);
+	if (count($eligibilities) > 0) {
+		$eligibilities = $mysqli->real_escape_string(json_encode($eligibilities));
+	} else {
+		$eligibilities = NULL;
+	}
+
+	$awards = $applicant["awards"];
+	$awards = removeEmptyElementfromArray($awards);
+	if (count($awards) > 0) {
+		$awards = $mysqli->real_escape_string(json_encode($awards));
+	} else {
+		$awards = NULL;
+	}
+
+	$record_of_infractions = $applicant["record_of_infractions"];
+	$record_of_infractions = removeEmptyElementfromArray($record_of_infractions);
+	if (count($record_of_infractions) > 0) {
+		$record_of_infractions = $mysqli->real_escape_string(json_encode($record_of_infractions));
+	} else {
+		$record_of_infractions = NULL;
+	}
+
+	$remarks = $applicant["remarks"];
+	$remarks = $remarks ? $mysqli->real_escape_string($remarks) : NULL;
+
+	if (!$applicant_id) {
+		//add new applicant
+		$sql = "INSERT INTO `rsp_applicants`(`name`, `age`, `gender`, `civil_status`,`education`, `training`, `years_of_service_gov`, `years_of_service_priv`, `experience`, `eligibility`, `awards`, `records_infractions`, `remarks`) VALUES ('$name','$age','$gender','$civil_status','$education','$trainings','$years_of_service_gov','$years_of_service_priv','$experiences','$eligibilities','$awards','$record_of_infractions','$remarks')";
+		$mysqli->query($sql);
+		$applicant_id = $mysqli->insert_id;
+		$sql = "INSERT INTO `rsp_comparative`(`rspvac_id`, `applicant_id`) VALUES ('$rspvac_id','$applicant_id')";
+		$mysqli->query($sql);
+	} else {
+		//update applicant
+		$sql = "UPDATE `rsp_applicants` SET `name` = '$name', `age` = '$age', `gender` = '$gender', `civil_status` = '$civil_status',`education` = '$education', `training` = '$trainings', `years_of_service_gov` = '$years_of_service_gov', `years_of_service_priv` = '$years_of_service_priv', `experience` = '$experiences', `eligibility` = '$eligibilities', `awards` = '$awards', `records_infractions` = '$record_of_infractions', `remarks` = '$remarks' WHERE `applicant_id` = '$applicant_id';";
+		$mysqli->query($sql);
+	}
+
+	echo json_encode("success");
+} elseif (isset($_POST["unlistApplicant"])) {
+	$rspvac_id = $_POST["rspvac_id"];
+	$applicant_id = $_POST["applicant_id"];
+	$sql = "DELETE FROM `rsp_comparative` WHERE`rspvac_id` = ? AND `applicant_id` = ?";
+	$stmt = $mysqli->prepare($sql);
+	$stmt->bind_param("ii", $rspvac_id, $applicant_id);
+	$stmt->execute();
+	$stmt->close();
+} elseif (isset($_POST["loadList_DELETE"])) {
 	$rspvac_id = $_POST["rspvac_id"];
 	// $rspvac_id = 7;
 
@@ -94,14 +245,41 @@ if (isset($_POST["load"])) {
 <?php
 		}
 	}
-} elseif (isset($_POST["deleteEntry"])) {
-	$rspcomp_id = $_POST["rspcomp_id"];
-	$sql = "DELETE FROM `rsp_comparative` WHERE `rsp_comparative`.`rspcomp_id` = ?";
-	$stmt = $mysqli->prepare($sql);
-	$stmt->bind_param("i", $rspcomp_id);
-	$stmt->execute();
-	$stmt->close();
 }
+
+function removeEmptyElementfromArray($arr)
+{
+	foreach ($arr as $key => $value) {
+		if (empty($value)) {
+			array_splice($arr, $key, 1);
+		}
+	}
+
+	return $arr;
+}
+
+function removeEmptyElementfromYearsOfService($arr)
+{
+	foreach ($arr as $key => $value) {
+		if (empty($value["status"]) && empty($value["num_years"])) {
+			array_splice($arr, $key, 1);
+		}
+	}
+
+	return $arr;
+}
+
+function removeEmptyElementfromExperiences($arr)
+{
+	foreach ($arr as $key => $value) {
+		if (empty($value["title"]) && empty($value["company"])) {
+			array_splice($arr, $key, 1);
+		}
+	}
+
+	return $arr;
+}
+
 
 function createList($arr, $bool = true)
 {

@@ -458,5 +458,3 @@ function getTNAdata($mysqli)
   }
   return $data;
 }
-
-?>
