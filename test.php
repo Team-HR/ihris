@@ -40,20 +40,18 @@ while ($row = $res->fetch_assoc()) {
     Uncomment query iterator function from below to execute data alteration.
 */
 
-// foreach ($data as $key => $row) {
-//     $years_of_service_gov = $row['years_of_service_gov'] ? $row['years_of_service_gov'] : NULL;
-//     $mysqli->query("UPDATE `rsp_applicants` SET 
-//     `experience` = '$row[experience]',
-//     `training` = '$row[training]',
-//     `num_years_in_gov` = '$row[num_years_in_gov]',
-//     `years_of_service_gov` = '$years_of_service_gov',
-//     `eligibility` = '$row[eligibility]',
-//     `awards` = '$row[awards]',
-//     `records_infractions` = '$row[records_infractions]'
-//     WHERE `rsp_applicants`.`applicant_id` = $row[applicant_id];");
-// }
-
-
+foreach ($data as $key => $row) {
+    $years_of_service_gov = $row['years_of_service_gov'] ? $row['years_of_service_gov'] : NULL;
+    $mysqli->query("UPDATE `rsp_applicants` SET 
+    `experience` = '$row[experience]',
+    `training` = '$row[training]',
+    `num_years_in_gov` = '$row[num_years_in_gov]',
+    `years_of_service_gov` = '$years_of_service_gov',
+    `eligibility` = '$row[eligibility]',
+    `awards` = '$row[awards]',
+    `records_infractions` = '$row[records_infractions]'
+    WHERE `rsp_applicants`.`applicant_id` = $row[applicant_id];");
+}
 
 function parse_experience($arr)
 {
