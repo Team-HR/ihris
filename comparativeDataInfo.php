@@ -165,6 +165,7 @@ if ($rspvac_id = $_GET["rspvac_id"]) {
       <thead>
         <tr style="text-align: center;">
           <th class="heads">No.</th>
+          <th class="heads noprint"></th>
           <th class="heads">Name</th>
           <th class="heads">Age</th>
           <th class="heads">Gender</th>
@@ -182,6 +183,9 @@ if ($rspvac_id = $_GET["rspvac_id"]) {
       <tbody id="tableBody_">
         <tr v-for="(applicant, no) in applicants" :key="applicant.applicant_id">
           <td>{{no+1}}.</td>
+          <td class="noprint">
+            <a :href="`checklist.php?rspcomp_id=${applicant.rspcomp_id}`" class="ui button basic icon"><i class="icon list ol" :class="applicant.checklist_exist?'green':'red'"></i></a>
+          </td>
           <td class="text-valign-top">{{applicant.name}}</td>
           <td class="text-valign-top">{{applicant.age}}</td>
           <td class="text-valign-top">{{applicant.gender}}</td>

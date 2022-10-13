@@ -59,7 +59,8 @@ if (isset($_POST["load"])) {
 
 	while ($stmt->fetch()) {
 		$data[] = [
-			// "rspcomp_id" => $rspcomp_id,
+			"rspcomp_id" => $rspcomp_id,
+			"checklist_exist" => check_if_exist($mysqli, $rspcomp_id),
 			"id" => $applicant_id,
 			"name" => $name,
 			"age" => $age,
