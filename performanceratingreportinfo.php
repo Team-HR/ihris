@@ -100,22 +100,22 @@ $title = title($mysqli);
             </div>
           </div>
           <div class="ui noprint" style="background:white;padding: 10px">
-              <label for="">Sort by:</label>
-              <select v-model="sort_by" class="ui compact selection sort_by dropdown">
-                <option selected value="lastName">Last Name</option>
-                <option value="date_submitted">Date Submitted</option>
-              </select>
-              <div class="ui basic button" @click="is_asc = !is_asc">
-                <i v-if="is_asc" class="ui icon angle double up"></i>
-                <i v-else class="ui icon angle double down"></i>
-                {{is_asc?'Asc':'Desc'}}
-              </div>
+            <label for="">Sort by:</label>
+            <select v-model="sort_by" class="ui compact selection sort_by dropdown">
+              <option selected value="lastName">Last Name</option>
+              <option value="date_submitted">Date Submitted</option>
+            </select>
+            <div class="ui basic button" @click="is_asc = !is_asc">
+              <i v-if="is_asc" class="ui icon angle double up"></i>
+              <i v-else class="ui icon angle double down"></i>
+              {{is_asc?'Asc':'Desc'}}
+            </div>
             <!-- </div> -->
           </div>
           <table class="ui mini very compact celled structured table">
             <thead class="center-align">
               <tr>
-                <th class="noprint" rowspan="2"></th>
+                <th class="noprint" rowspan="2">{{items.length}}</th>
                 <th rowspan="2">CSID</th>
                 <th colspan="4">Employees Name</th>
                 <th rowspan="2">Gender</th>
@@ -139,7 +139,15 @@ $title = title($mysqli);
               <tr style="text-align: center" v-if="is_loading">
                 <td colspan="18"><img style="transform: scale(0.1); margin-top: -200px;" src="assets/images/loading.gif"></td>
               </tr>
-              <tr v-for="item in items" :key="item.id" class="center-align" :style="'background:'+stage_color(item.stages)">
+              <tr v-for="item in items" :key="item.id">
+                <td colspan="18">
+                  <pre>
+                  {{item}}
+                  </pre>
+                </td>
+              </tr>
+
+              <!-- <tr v-for="item in items_" :key="item.id" class="center-align" :style="'background:'+stage_color(item.stages)">
                 <td class="noprint">
                   <a :href="'employeeinfo.php?employees_id='+item.employees_id+'&spms'"><i class="icon link blue folder"></i></a>
                 </td>
@@ -159,7 +167,6 @@ $title = title($mysqli);
                   <i class="ui icon link green edit" @click="ratingModal(item.prrlist_id,item. employees_id,item.prr_id)"></i>
                 </td>
                 <td class="noprint">
-                  <!-- stateColor(prrlist_id, employees_id, prr_id, Scolor) -->
                   <i class="ui icon link blue square" @click="stateColor(item.prrlist_id, item.employees_id, item.prr_id, 'C')"></i>
                 </td>
                 <td class="noprint">
@@ -171,7 +178,7 @@ $title = title($mysqli);
                 <td class="noprint">
                   <i class="ui icon link red times" @click="removePerInfo(item.prrlist_id)"></i>
                 </td>
-              </tr>
+              </tr> -->
             </tbody>
           </table>
         </div>

@@ -12,16 +12,18 @@ var vue_prr = new Vue({
         is_loading: false
     },
     watch: {
+
         sort_by(nVal, oVal) {
             this.do_sort()
         },
+
         is_asc(nVal, oVal) {
             this.do_sort()
         }
     },
     methods: {
         do_sort() {
-            console.log("do sort:", this.sort_by + " " + this.is_asc);
+            // console.log("do sort:", this.sort_by + " " + this.is_asc);
             // this.items = []
             var sort_by = this.sort_by
             if (!this.is_asc) {
@@ -29,13 +31,14 @@ var vue_prr = new Vue({
             }
             this.items.sort(this.dynamicSort(sort_by))
         },
+
         dynamicSort(property) {
             var sortOrder = 1;
-            if(property[0] === "-") {
+            if (property[0] === "-") {
                 sortOrder = -1;
                 property = property.substr(1);
             }
-            return function (a,b) {
+            return function (a, b) {
                 /* next line works with strings and numbers, 
                  * and you may want to customize it to your needs
                  */
@@ -43,6 +46,7 @@ var vue_prr = new Vue({
                 return result * sortOrder;
             }
         },
+
         get_items() {
             this.items = []
             this.is_loading = true
@@ -52,12 +56,9 @@ var vue_prr = new Vue({
                 type: this.type
             },
                 (data, textStatus, jqXHR) => {
-                    // console.log(data);
-                    // this.items = []
                     this.items = JSON.parse(JSON.stringify(data))
                     this.do_sort()
                     this.is_loading = false
-
                     this.get_emps()
                     this.get_ova_rates().then(() => {
                         if (this.myChart) {
@@ -65,20 +66,18 @@ var vue_prr = new Vue({
                         }
                         this.load_chart()
                     })
-                    
                 },
                 "json"
             );
-            // if (this.items.length > 0) {
-            //    this.do_sort() 
-            // }
         },
+
         format_date(date) {
             if (date == '0000-00-00') return ""
             date = date.split("-")
             date = date[1] + "/" + date[2] + "/" + date[0]
             return date
         },
+
         stage_color(stages) {
             if (!stages || stages == "") return "blue"
             colors = {
@@ -86,9 +85,9 @@ var vue_prr = new Vue({
                 "C": "cyan",
                 "W": "white",
             }
-
             return colors[stages]
         },
+
         ratingModal(prrlist_id, employees_id, prr_id) {
             $('#rating_modal').modal('show');
             $("#rating_modal").html("<center><img style='transform: scale(0.1); margin-top: -200px;' src='assets/images/loading.gif'></center>");
@@ -105,6 +104,7 @@ var vue_prr = new Vue({
 
             });
         },
+
         stateColor(prrlist_id, employees_id, prr_id, Scolor) {
             eventColor = event;
             $.post('umbra/PrrSaveRate.php', {
@@ -113,7 +113,6 @@ var vue_prr = new Vue({
                 empId: employees_id,
                 Scolor: Scolor
             }, (data, textStatus, xhr) => {
-                // console.log("state:", data);
                 if (data == 1) {
                     if (Scolor == "C") {
                         back = "CYAN";
@@ -126,6 +125,7 @@ var vue_prr = new Vue({
                 }
             });
         },
+
         removePerInfo(i) {
             el = event.srcElement;
             con = confirm("Are you sure?");
@@ -139,6 +139,7 @@ var vue_prr = new Vue({
                 });
             }
         },
+
         get_emps() {
             $.post("performanceratingreportinfo_proc.v2.php", {
                 get_emps: true
@@ -149,6 +150,7 @@ var vue_prr = new Vue({
                 "json"
             );
         },
+
         async get_ova_rates() {
             await $.post("performanceratingreportinfo_proc.v2.php", {
                 get_ova_rates: true,
@@ -160,6 +162,7 @@ var vue_prr = new Vue({
                 "json"
             );
         },
+
         load_chart() {
             var ctx = document.getElementById('myChart');
             this.myChart = new Chart(ctx, {

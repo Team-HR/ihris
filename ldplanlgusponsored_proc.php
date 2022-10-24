@@ -60,7 +60,7 @@ elseif (isset($_POST["updateBudget"])) {
   $ldplgusponsoredtrainings_id = $_POST["ldplgusponsoredtrainings_id"];
   $budget = $_POST["budget"];
   $b = [];
-  if ($budget["allocated"] == "" || $budget["allocated"] == 0 ) {
+  if ($budget["allocated"] == "" || $budget["allocated"] == 0) {
     $b = NULL;
     $budget = NULL;
   } else {
@@ -102,16 +102,16 @@ elseif (isset($_POST["getTrainings"])) {
   $budgetReq = NULL;
   $partner = $mysqli->real_escape_string($_POST["partner"]);
   $currentDate = date('Y-m-d H:i:s');
-  
-  
+
+
   $budget = $_POST["budget"];
 
-  if ($budget["allocated"] == "" || $budget["allocated"] == 0 ) {
+  if ($budget["allocated"] == "" || $budget["allocated"] == 0) {
     $budget = NULL;
   } else {
     $budget = $mysqli->real_escape_string(json_encode($budget));
   }
-  
+
   $venue = $mysqli->real_escape_string($_POST["venue"]);
 
   $sql = "SELECT `training_id` FROM `trainings` WHERE `training` = '$training'";
@@ -347,7 +347,7 @@ function getParticipants($mysqli, $training_id, $departments)
     }
 
 
-
+    // get manager personnel
     if ($haveManagerTraining && $haveAllTraining != true) {
       $sql3 = "SELECT * FROM `employees` WHERE `natureOfAssignment` = 'SUPERVISORY' AND `status`='ACTIVE' AND `department_id` = '$department_id' AND `employees_id` NOT IN (SELECT `employees_id` FROM `personneltrainingslist` WHERE `personneltrainings_id` IN (SELECT `personneltrainings_id` FROM `personneltrainings` WHERE `training_id` = '$training_id'))";
       $result3 = $mysqli->query($sql3);
@@ -356,13 +356,14 @@ function getParticipants($mysqli, $training_id, $departments)
         $middleName = $row3["middleName"];
         $lastName = $row3["lastName"];
         $extName = $row3["extName"];
-        $employee_fullName = "$lastName, $firstName $middleName $extName";
+        $employmentStatus = $row3["employmentStatus"];
+        $employee_fullName = "$lastName, $firstName $middleName $extName" . " <i>(".mb_convert_case($employmentStatus, MB_CASE_TITLE).")</i>";
         $managers[] = $employee_fullName;
       }
     }
 
 
-
+    //  get staff personnel
     if ($haveStaffTraining && $haveAllTraining != true) {
       $sql3 = "SELECT * FROM `employees` WHERE `natureOfAssignment` != 'SUPERVISORY' AND `status`='ACTIVE' AND `department_id` = '$department_id' AND `employees_id` NOT IN (SELECT `employees_id` FROM `personneltrainingslist` WHERE `personneltrainings_id` IN (SELECT `personneltrainings_id` FROM `personneltrainings` WHERE `training_id` = '$training_id'))";
       $result3 = $mysqli->query($sql3);
@@ -371,8 +372,8 @@ function getParticipants($mysqli, $training_id, $departments)
         $middleName = $row3["middleName"];
         $lastName = $row3["lastName"];
         $extName = $row3["extName"];
-
-        $employee_fullName = "$lastName, $firstName $middleName $extName";
+        $employmentStatus = $row3["employmentStatus"];
+        $employee_fullName = "$lastName, $firstName $middleName $extName" . " <i>(".mb_convert_case($employmentStatus, MB_CASE_TITLE).")</i>";
         $staffs[] = $employee_fullName;
       }
     }
@@ -391,7 +392,8 @@ function getParticipants($mysqli, $training_id, $departments)
         $lastName = $row3["lastName"];
         $extName = $row3["extName"];
 
-        $employee_fullName = "$lastName, $firstName $middleName $extName";
+        $employmentStatus = $row3["employmentStatus"];
+        $employee_fullName = "$lastName, $firstName $middleName $extName" . " <i>(".mb_convert_case($employmentStatus, MB_CASE_TITLE).")</i>";
         $all[] = $employee_fullName;
       }
     }

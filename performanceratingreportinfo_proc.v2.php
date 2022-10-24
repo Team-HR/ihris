@@ -1,6 +1,9 @@
 <?php
 
 require_once "_connect.db.php";
+require_once "./libs/Pms.php";
+
+
 
 if (isset($_POST["load"])) {
     $prr_id = $_POST["prr_id"];
@@ -8,15 +11,95 @@ if (isset($_POST["load"])) {
     $year = "SELECT * from prr where prr_id='$prr_id'";
     $year = $mysqli->query($year);
     $year = $year->fetch_assoc();
+
+    $period = $year['period'];
     $year = $year['year'];
+
+    $fetch_data_online_pms = fetch_data_online_pms($mysqli, $period, $year, $type);
+
+    # perform check from online pms
+    # get list of `employee_id` from `spms_performancereviewstatus` that are casual and active
+    # SELECT * FROM `spms_performancereviewstatus` LEFT JOIN `employees` ON `spms_performancereviewstatus`.`employees_id` = `employees`.`employees_id` WHERE `employees`.`status` = 'ACTIVE' AND `employees`.`employmentStatus` = 'CASUAL' AND `spms_performancereviewstatus`.`period_id` = '2';
+    # get row data: `date_submitted`, `date_appraised`, `numerical`, `adjectival` and `comments`
+    # get `stages`
+    # get `prr_id` using `period` and `year`
+    # using `prr_id` and `employee_id` check if personnel has entry in `prrlist`
+    # if none insert row
+    # if existing always update row 
+
     $data = get_employees($mysqli, $prr_id);
-    echo json_encode($data);
+    // echo json_encode($data);
+    echo json_encode($fetch_data_online_pms);
 } elseif (isset($_POST["get_emps"])) {
     echo json_encode(emp($mysqli));
 } elseif (isset($_POST["get_ova_rates"])) {
     $prr_id = $_POST["prr_id"];
     echo json_encode(Ov_rates($mysqli, $prr_id));
 }
+
+
+function fetch_data_online_pms($mysqli, $period, $year, $type)
+{
+
+    $data = [];
+    if (!$period || !$year || !$type) return false;
+    # get period id
+    $sql = "SELECT `mfoperiod_id` FROM `spms_mfo_period` WHERE `month_mfo` = '$period' AND `year_mfo` = '$year';";
+    $res = $mysqli->query($sql);
+    # mfoperiod_id
+    $period_id = $res->fetch_assoc()["mfoperiod_id"];
+
+    if (!$period_id) return false;
+
+
+    $pms = new Pms();
+    $pms->set_period_id($period_id);
+
+    $sql = "SELECT * FROM `spms_performancereviewstatus` LEFT JOIN `employees` ON `spms_performancereviewstatus`.`employees_id` = `employees`.`employees_id` WHERE `employees`.`status` = 'ACTIVE' AND `employees`.`employmentStatus` = '$type' AND `spms_performancereviewstatus`.`period_id` = '$period_id' LIMIT 1";
+    // remove LIMIT 1 after test
+
+    $res = $mysqli->query($sql);
+
+    while ($row = $res->fetch_assoc()) {
+
+        $employee_id = $row["employees_id"];
+        $department_id = $row["department_id"];
+
+        $datum = [
+            "employees_id" => 9, //$employee_id, // remove 9 after test
+            // "date_submitted" => $row["dateAccomplished"],
+            // "date_appraised" => $row["panelApproved"],
+            "numerical" => [],
+            "adjectival" => "",
+            // "comments" => "",
+            // "stages" => "",
+            // "period_id" => $period_id,
+            "department_id" => 32 //$department_id, // remove 32 after test
+        ];
+
+        $data[] = $datum;
+    }
+
+    if (count($data) < 1) return false;
+
+    foreach ($data as $key => $pcr) {
+        $employee_id = $pcr["employees_id"];
+        $department_id = $pcr["department_id"];
+
+        $pms->set_employee_id($employee_id);
+        $pms->set_department_id($department_id);
+        $data[$key]["numerical"] = $pms->get_numerical_rating();
+        $data[$key]["adjectival"] = $pms->get_adjectival_rating();
+    }
+
+    # get row data: `date_submitted`, `date_appraised`, `numerical`, `adjectival` and `comments`
+
+    return $data;
+}
+
+# perform check from online pms
+# get list of `employee_id` from `spms_performancereviewstatus` that are casual and active
+# SELECT * FROM `spms_performancereviewstatus` LEFT JOIN `employees` ON `spms_performancereviewstatus`.`employees_id` = `employees`.`employees_id` WHERE `employees`.`status` = 'ACTIVE' AND `employees`.`employmentStatus` = 'CASUAL' AND `spms_performancereviewstatus`.`period_id` = '2';
 
 function get_employees($mysqli, $prr_id)
 {

@@ -356,17 +356,17 @@ $year = $row["year"];
                 <tr>
                   <td>
                     <ol>
-                      <li v-for="(mgr, m) in item.managers" :key="m">{{mgr}}</li>
+                      <li v-for="(mgr, m) in item.managers" :key="m" v-html="mgr"></li>
                     </ol>
                   </td>
                   <td>
                     <ol>
-                      <li v-for="(staff, s) in item.staffs" :key="s">{{staff}}</li>
+                      <li v-for="(staff, s) in item.staffs" :key="s" v-html="staff"></li>
                     </ol>
                   </td>
                   <td>
                     <ol>
-                      <li v-for="(al, a) in item.all" :key="a">{{al}}</li>
+                      <li v-for="(all, a) in item.all" :key="a" v-html="all"></li>
                     </ol>
                   </td>
                 </tr>

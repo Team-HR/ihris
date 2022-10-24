@@ -1,157 +1,463 @@
 <?php
-/*
-    Add two new columns after num_years_in_gov namely: 
-    years_of_service_gov and years_of_service_priv with text as dataype and nullable
-    Uncomment iterator function below to alter format of data
-*/
 require_once "_connect.db.php";
 
-$sql = "SELECT * FROM `rsp_applicants`";
 
-$res = $mysqli->query($sql);
-$data = [];
-while ($row = $res->fetch_assoc()) {
-    $data[] = [
-        "applicant_id" => $row["applicant_id"],
-        "name" => $row["name"],
-        // "age" => $row["age"],
-        // "gender" => $row["gender"],
-        // "civil_status" => $row["civil_status"],
-        // "mobile_no" => $row["mobile_no"],
-        // "address" => $row["address"],
-        // "education" => $row["education"],
-        // "school" => $row["school"],
-        ########################################
-        "experience" => $mysqli->real_escape_string(parse_experience($row["experience"])),
-        // "experience" => parse_experience($row["experience"]),
-        "training" => unserialize($row["training"]) ? $mysqli->real_escape_string(json_encode(unserialize($row["training"]))) : NULL,
-        "num_years_in_gov" => $mysqli->real_escape_string(parse_years_in_service($row["num_years_in_gov"])),
-        "years_of_service_gov" =>  $mysqli->real_escape_string(years_of_service($row["num_years_in_gov"])),
-        // "years_of_service_priv" => NULL,
-        "eligibility" => $row["eligibility"] && unserialize($row["eligibility"]) ? $mysqli->real_escape_string(json_encode(unserialize($row["eligibility"]))) : NULL,
-        "awards" => $row["awards"] && unserialize($row["awards"]) ? $mysqli->real_escape_string(json_encode(unserialize($row["awards"]))) : NULL,
-        "records_infractions" => $row["records_infractions"] && unserialize($row["records_infractions"]) ?  $mysqli->real_escape_string(json_encode(unserialize($row["records_infractions"]))) : NULL
-        // "remarks" => $row["remarks"],
-    ];
+// vueing start
+if (isset($_GET["getItems"])) {
+    $data = array();
+    $ldplan_id = $_GET["ldplan_id"];
+    $sql = "SELECT * FROM `ldplgusponsoredtrainings` WHERE `ldplan_id` = '$ldplan_id'";
+    $result = $mysqli->query($sql);
+
+    while ($row = $result->fetch_assoc()) {
+        $ldplgusponsoredtrainings_id = $row["ldplgusponsoredtrainings_id"];
+        $ldplan_id = $row["ldplan_id"];
+        $training_id = $row["training_id"];
+
+        $sql1 = "SELECT `training` FROM `trainings` WHERE `training_id` = '$training_id'";
+        $result1 = $mysqli->query($sql1);
+        $row1 = $result1->fetch_assoc();
+        $training = $row1["training"];
+
+        $goal = $row["goal"];
+        $numHours = $row["numHours"];
+        $participants = $row["participants"];
+        $training_id = $row["training_id"];
+        $targetParticipants = getTargetParticipants($mysqli, $training_id);
+        $activities = $row["activities"];
+        $evaluation = $row["evaluation"];
+        $evaluation = $evaluation; //str_replace("\n", "<br/>", $evaluation);
+        $frequency = $row["frequency"];
+        $budgetReq = $row["budgetReq"];
+        $partner = $row["partner"];
+        // added for vue
+        $budget = json_decode($row["budget"]);
+        $venue = $row["venue"];
+
+
+        $datum = array(
+            "ldplgusponsoredtrainings_id" => $ldplgusponsoredtrainings_id,
+            "training" => $training,
+            "goal" => $goal,
+            "numHours" => $numHours,
+            "participants" => $participants,
+            "targetParticipants" => $targetParticipants,
+            "activities" => $activities,
+            "evaluation" => $evaluation,
+            "frequency" => $frequency,
+            "budgetReq" => $budgetReq,
+            "partner" => $partner,
+            "budget" => $budget,
+            "venue" => $venue,
+        );
+
+        array_push($data, $datum);
+    }
+
+    // echo json_encode($data);
+    print("<pre>" . print_r($data, true) . "</pre>");
+
+}
+// update budget start
+elseif (isset($_GET["updateBudget"])) {
+    $ldplgusponsoredtrainings_id = $_GET["ldplgusponsoredtrainings_id"];
+    $budget = $_GET["budget"];
+    $b = [];
+    if ($budget["allocated"] == "" || $budget["allocated"] == 0) {
+        $b = NULL;
+        $budget = NULL;
+    } else {
+        $b = $budget;
+        $budget = $mysqli->real_escape_string(json_encode($budget));
+    }
+    $sql = "UPDATE `ldplgusponsoredtrainings` SET `budget` = '$budget' WHERE `ldplgusponsoredtrainings_id` = '$ldplgusponsoredtrainings_id'";
+    $mysqli->query($sql);
+    echo json_encode($b);
+}
+// update budget end
+// vueing end
+elseif (isset($_GET["getTrainings"])) {
+
+    $json = array();
+    $inside_json = array();
+
+    $sql = "SELECT * FROM `trainings`";
+    $result = $mysqli->query($sql);
+    while ($row = $result->fetch_assoc()) {
+        $training_id = $row["training_id"];
+        $training = $row["training"];
+
+        $inside_json = array('title' => $training);
+        array_push($json, $inside_json);
+    }
+
+    echo json_encode($json);
+} elseif (isset($_GET["addNew"])) {
+    $ldplan_id = $_GET["ldplan_id"];
+    $training = $mysqli->real_escape_string($_GET["training"]);
+    $goal = $mysqli->real_escape_string($_GET["goal"]);
+    $numHours = $_GET["numHours"];
+    $participants = $mysqli->real_escape_string($_GET["participants"]);
+    $activities = $mysqli->real_escape_string($_GET["activities"]);
+    $evaluation = $mysqli->real_escape_string($_GET["evaluation"]);
+    $frequency = $mysqli->real_escape_string($_GET["frequency"]);
+    // $budgetReq = $_GET["budgetReq"]; //deprecated
+    $budgetReq = NULL;
+    $partner = $mysqli->real_escape_string($_GET["partner"]);
+    $currentDate = date('Y-m-d H:i:s');
+
+
+    $budget = $_GET["budget"];
+
+    if ($budget["allocated"] == "" || $budget["allocated"] == 0) {
+        $budget = NULL;
+    } else {
+        $budget = $mysqli->real_escape_string(json_encode($budget));
+    }
+
+    $venue = $mysqli->real_escape_string($_GET["venue"]);
+
+    $sql = "SELECT `training_id` FROM `trainings` WHERE `training` = '$training'";
+    $result = $mysqli->query($sql);
+    if ($result->num_rows == 0) {
+        $training = $mysqli->real_escape_string($training);
+        $sql1 = "INSERT INTO `trainings` (`training`, `dateAdded`) VALUES ('$training', '$currentDate')";
+        $mysqli->query($sql1);
+        $training_id = $mysqli->insert_id;
+    } else {
+        $row = $result->fetch_assoc();
+        $training_id = $row["training_id"];
+    }
+
+    $sql = "INSERT INTO `ldplgusponsoredtrainings` (`ldplgusponsoredtrainings_id`, `ldplan_id`, `training_id`, `goal`, `numHours`, `participants`,`activities`, `evaluation`, `frequency`, `budgetReq`,`partner`,`budget`,`venue`) VALUES (NULL, '$ldplan_id', '$training_id', '$goal', '$numHours', '$participants', '$activities', '$evaluation', '$frequency', '$budgetReq', '$partner', '$budget', '$venue')";
+
+    $mysqli->query($sql);
+    echo json_encode("added");
+} elseif (isset($_GET["getRowData"])) {
+    $ldplgusponsoredtrainings_id = $_GET["ldplgusponsoredtrainings_id"];
+    $sql = "SELECT * FROM `ldplgusponsoredtrainings` WHERE `ldplgusponsoredtrainings_id` = '$ldplgusponsoredtrainings_id'";
+    $result = $mysqli->query($sql);
+    $row = $result->fetch_assoc();
+
+    $ldplgusponsoredtrainings_id = $row["ldplgusponsoredtrainings_id"];
+    $ldplan_id = $row["ldplan_id"];
+    $training_id = $row["training_id"];
+
+    $sql1 = "SELECT `training` FROM `trainings` WHERE `training_id` = '$training_id'";
+    $result1 = $mysqli->query($sql1);
+    $row1 = $result1->fetch_assoc();
+    $training = $row1["training"];
+
+    $goal = $row["goal"];
+    $numHours = $row["numHours"];
+    $participants = $row["participants"];
+    $activities = $row["activities"];
+    $evaluation = $row["evaluation"];
+    $frequency = $row["frequency"];
+    $budgetReq = $row["budgetReq"];
+    $partner = $row["partner"];
+
+    $json = array(
+        'ldplgusponsoredtrainings_id' => $ldplgusponsoredtrainings_id,
+        'ldplan_id' => $ldplan_id,
+        'training' => $training,
+        'goal' => $goal,
+        'numHours' => $numHours,
+        'participants' => $participants,
+        'activities' => $activities,
+        'evaluation' => $evaluation,
+        'frequency' => $frequency,
+        'budgetReq' => $budgetReq,
+        'partner' => $partner
+    );
+    echo json_encode($json);
+} elseif (isset($_GET["editRow"])) {
+
+    $ldplgusponsoredtrainings_id = $_GET["ldplgusponsoredtrainings_id"];
+    $training = addslashes($_GET["title_edit"]);
+    $currentDate = date('Y-m-d H:i:s');
+
+    $sql = "SELECT `training_id` FROM `trainings` WHERE `training` = '$training'";
+    $result = $mysqli->query($sql);
+
+    if ($result->num_rows == 0) {
+        $training = addslashes($training);
+        $sql1 = "INSERT INTO `trainings` (`training`, `dateAdded`) VALUES ('$training', '$currentDate')";
+        $mysqli->query($sql1);
+        $training_id = $mysqli->insert_id;
+    } else {
+        $row = $result->fetch_assoc();
+        $training_id = $row["training_id"];
+    }
+
+    $goal = $mysqli->real_escape_string($_GET["goal_edit"]);
+    $numHours = $mysqli->real_escape_string($_GET["hrs_edit"]);
+    $participants = $mysqli->real_escape_string($_GET["participants_edit"]);
+    $activities = $mysqli->real_escape_string($_GET["methods_edit"]);
+    $evaluation = $mysqli->real_escape_string($_GET["eval_edit"]);
+    $frequency = $mysqli->real_escape_string($_GET["freq_edit"]);
+    // $budgetReq = $_GET["budget_edit"]; //deprecated
+    $budgetReq = NULL;
+    $partner = $mysqli->real_escape_string($_GET["partner_edit"]);
+    $budget = $mysqli->real_escape_string(json_encode($_GET["budget"]));
+    $venue = $mysqli->real_escape_string($_GET["venue"]);
+
+    $sql = "UPDATE `ldplgusponsoredtrainings` SET
+    `training_id` = '$training_id',
+    `goal` = '$goal',
+    `numHours` = '$numHours',
+    `participants` = '$participants',
+    `activities` = '$activities',
+    `evaluation` = '$evaluation',
+    `frequency` = '$frequency',
+    `budgetReq` = '$budgetReq',
+    `partner` = '$partner',
+    `budget` = '$budget',
+    `venue` = '$venue' 
+    WHERE `ldplgusponsoredtrainings_id` = '$ldplgusponsoredtrainings_id'";
+
+    $mysqli->query($sql);
+    echo json_encode("success");
+} elseif (isset($_GET["deleteRow"])) {
+    $ldplgusponsoredtrainings_id = $_GET["ldplgusponsoredtrainings_id"];
+    $sql = "DELETE FROM `ldplgusponsoredtrainings` WHERE `ldplgusponsoredtrainings_id` = '$ldplgusponsoredtrainings_id'";
+    $mysqli->query($sql);
 }
 
-/*
-    Iterator function
-    Uncomment query iterator function from below to execute data alteration.
-*/
 
-// foreach ($data as $key => $row) {
-//     $years_of_service_gov = $row['years_of_service_gov'] ? $row['years_of_service_gov'] : NULL;
-//     $mysqli->query("UPDATE `rsp_applicants` SET 
-//     `experience` = '$row[experience]',
-//     `training` = '$row[training]',
-//     `num_years_in_gov` = '$row[num_years_in_gov]',
-//     `years_of_service_gov` = '$years_of_service_gov',
-//     `eligibility` = '$row[eligibility]',
-//     `awards` = '$row[awards]',
-//     `records_infractions` = '$row[records_infractions]'
-//     WHERE `rsp_applicants`.`applicant_id` = $row[applicant_id];");
-// }
-
-function parse_experience($arr)
+function getTargetParticipants($mysqli, $id)
 {
-    if (!$arr || !unserialize($arr)) return NULL;
     $data = [];
-    $arr = unserialize($arr);
-    $experiences = [];
-    foreach ($arr as $key => $value) {
-        # code...
+    // $sql = "SELECT"
+    // $data = $training_id;
+    // start
+    $tnas = getTNAdata($mysqli);
+    $trainings = getTrainings($mysqli);
+
+    foreach ($trainings as $training) {
+        $departments = array();
+        $countDepartments = 0;
+        $training_id = $training["training_id"];
+
+
+        foreach ($tnas as $tna) {
+            $department_id = $tna["department_id"];
+            $department = $tna["department"];
+            $training_ids = $tna["training_ids"];
+
+            foreach ($training_ids as $tr_id) {
+                if ($tr_id == $training_id) {
+                    $departments[] = array(
+                        "department_id" => $department_id,
+                        "department" => $department,
+                    );
+                    $countDepartments += 1;
+                    break;
+                }
+            }
+        }
+
+        $datum = array(
+            "training_id" => $training_id,
+            "training" => $training["training"],
+            "countDepartments" => $countDepartments,
+            "departments" => $departments
+        );
+
+        array_push($data, $datum);
+    }
+    // end
+    $targetParticipant = [];
+    foreach ($data as $tr) {
+        if ($tr["training_id"] == $id) {
+            $targetParticipant = $tr;
+            break;
+        }
+    }
+
+    // getDepartments
+
+    $training_id = $id;
+    $departments = $targetParticipant["departments"];
+
+    return getParticipants($mysqli, $training_id, $departments);
+    // return $targetParticipants;
+}
+
+
+function getParticipants($mysqli, $training_id, $departments)
+{
+    $training_id = $training_id;
+    $departments = count($departments) > 0 ? $departments : [];
+    $data = [];
+    // if (count($departments)==0) return $data;
+
+    foreach ($departments as $dept) {
+
+        $department_id = $dept["department_id"];
+        $department = $dept["department"];
+
+        $managers = [];
+        $staffs = [];
+        $all = [];
+
+
+
+        $haveManagerTraining = false;
+        $sql = "SELECT * FROM `tna` WHERE `department_id` = '$department_id'";
+        $result = $mysqli->query($sql);
+        while ($row = $result->fetch_assoc()) {
+            $trs = unserialize($row["manager_trs"]);
+            foreach ($trs as $tr) {
+                if ($tr == $training_id) {
+                    $haveManagerTraining = true;
+                    break;
+                }
+            }
+        }
+
+
+
+        $haveStaffTraining = false;
+        $sql = "SELECT * FROM `tna` WHERE `department_id` = '$department_id'";
+        $result = $mysqli->query($sql);
+        while ($row = $result->fetch_assoc()) {
+            $trs = unserialize($row["staff_trs"]);
+            foreach ($trs as $tr) {
+                if ($tr == $training_id) {
+                    $haveStaffTraining = true;
+                    break;
+                }
+            }
+        }
+
+
+        $haveAllTraining = false;
+        $sql = "SELECT * FROM `tna` WHERE `department_id` = '$department_id'";
+        $result = $mysqli->query($sql);
+        while ($row = $result->fetch_assoc()) {
+            $trs = unserialize($row["all_trs"]);
+            foreach ($trs as $tr) {
+                if ($tr == $training_id) {
+                    $haveAllTraining = true;
+                    break;
+                }
+            }
+        }
+
+        if ($haveManagerTraining && $haveStaffTraining) {
+            $haveAllTraining = true;
+        }
+
+
+
+        if ($haveManagerTraining && $haveAllTraining != true) {
+            $sql3 = "SELECT * FROM `employees` WHERE `natureOfAssignment` = 'SUPERVISORY' AND `status`='ACTIVE' AND `department_id` = '$department_id' AND `employees_id` NOT IN (SELECT `employees_id` FROM `personneltrainingslist` WHERE `personneltrainings_id` IN (SELECT `personneltrainings_id` FROM `personneltrainings` WHERE `training_id` = '$training_id'))";
+            $result3 = $mysqli->query($sql3);
+            while ($row3 = $result3->fetch_assoc()) {
+                $firstName = $row3["firstName"];
+                $middleName = $row3["middleName"];
+                $lastName = $row3["lastName"];
+                $extName = $row3["extName"];
+                $employee_fullName = "$lastName, $firstName $middleName $extName";
+                $managers[] = $employee_fullName;
+            }
+        }
+
+
+
+        if ($haveStaffTraining && $haveAllTraining != true) {
+            $sql3 = "SELECT * FROM `employees` WHERE `natureOfAssignment` != 'SUPERVISORY' AND `status`='ACTIVE' AND `department_id` = '$department_id' AND `employees_id` NOT IN (SELECT `employees_id` FROM `personneltrainingslist` WHERE `personneltrainings_id` IN (SELECT `personneltrainings_id` FROM `personneltrainings` WHERE `training_id` = '$training_id'))";
+            $result3 = $mysqli->query($sql3);
+            while ($row3 = $result3->fetch_assoc()) {
+                $firstName = $row3["firstName"];
+                $middleName = $row3["middleName"];
+                $lastName = $row3["lastName"];
+                $extName = $row3["extName"];
+
+                $employee_fullName = "$lastName, $firstName $middleName $extName";
+                $staffs[] = $employee_fullName;
+            }
+        }
+
+
+
+        // haveManagerTraining
+        // haveStaffTraining
+        // haveAllTraining
+        if ($haveAllTraining || $haveManagerTraining && $haveStaffTraining) {
+            $sql3 = "SELECT * FROM `employees` WHERE `department_id` = '$department_id' AND `status`='ACTIVE' AND `employees_id` NOT IN (SELECT `employees_id` FROM `personneltrainingslist` WHERE `personneltrainings_id` IN (SELECT `personneltrainings_id` FROM `personneltrainings` WHERE `training_id` = '$training_id'))";
+            $result3 = $mysqli->query($sql3);
+            while ($row3 = $result3->fetch_assoc()) {
+                $firstName = $row3["firstName"];
+                $middleName = $row3["middleName"];
+                $lastName = $row3["lastName"];
+                $extName = $row3["extName"];
+
+                $employee_fullName = "$lastName, $firstName $middleName $extName";
+                $all[] = $employee_fullName;
+            }
+        }
+
         $datum = [
-            "title" => $value[0],
-            "status" => $value[1],
-            "company" => $value[2],
-            "from" => dateToString($value[3]),
-            "to" => dateToString($value[4])
+            "department" => $department,
+            "managers" => $managers,
+            "staffs" => $staffs,
+            "all" => $all
         ];
-        $experiences[] = $datum;
+
+        array_push($data, $datum);
     }
 
-    $data = $experiences;
-    $data = json_encode($data);
-    return $data;
-}
-
-function dateToString($date_val)
-{
-    if ($date_val !== "") {
-        $date = new DateTime($date_val);
-        $res = $date->format('F d, Y');
-        return $res ? $res : '';
-    } elseif ($date_val == "") {
-        return 'Present';
-    }
-}
-
-function years_of_service($arr)
-{
-    if (!$arr) return NULL;
-    $arr = unserialize($arr);
-    $services = [];
-    // check first if all status have data //
-    $count = 0;
-    foreach ($arr as $key => $value) {
-        if ($value) {
-            $count++;
-        }
-    }
-    if (!$count) return null;
-    foreach ($arr as $key => $value) {
-        if ($key != "Private" && $value) {
-            $services[] = [
-                "status" => $key,
-                "num_years" => $value,
-            ];
-        }
-    }
-    return json_encode($services);
-}
-function parse_years_in_service($arr)
-{
-
-    if (!$arr) return NULL;
-    $data =  [];
-    $arr = unserialize($arr);
-    // return $arr;
-    $services = [];
-    // check first if all status have data //
-
-    $count = 0;
-    foreach ($arr as $key => $value) {
-        if ($value) {
-            $count++;
-        }
-    }
-
-    if (!$count) return null;
-
-    foreach ($arr as $key => $value) {
-        if ($key != "Private" && $value) {
-            $services[] = [
-                "status" => $key,
-                "length" => $value,
-            ];
-        }
-    }
-
-    $data[] = [
-        "sector" => "Government",
-        "services" => $services
-    ];
-
-    $data = json_encode($data);
 
     return $data;
 }
 
 
-?>
-<pre>
-    <?php
-    print_r($data);
-    ?>
-</pre>;
+
+function getTrainings($mysqli)
+{
+
+    $data = [];
+    $sql = "SELECT * FROM `trainings` ORDER BY `trainings`.`training_id` ASC";
+    $result = $mysqli->query($sql);
+
+    while ($row = $result->fetch_assoc()) {
+        $training_id = $row["training_id"];
+        $training = $row["training"];
+        $datum = array(
+            "training_id" => $training_id,
+            "training" => $training
+        );
+        array_push($data, $datum);
+    }
+
+    return $data;
+}
+
+
+function getTNAdata($mysqli)
+{
+    $data = [];
+    $sql = "SELECT `tna`.*, `department`.`department` FROM `tna` LEFT JOIN `department` ON `tna`.`department_id` = `department`.`department_id`";
+    $result = $mysqli->query($sql);
+    while ($row = $result->fetch_assoc()) {
+        $training_ids = unserialize($row["all_trs"]);
+        $training_ids_manager = unserialize($row["manager_trs"]);
+        $training_ids_staff = unserialize($row["staff_trs"]);
+
+        $training_ids_merged = array_merge($training_ids, $training_ids_manager, $training_ids_staff);
+        $department_id = $row["department_id"];
+        $department = $row["department"];
+        $datum = array(
+            "department_id" => $department_id,
+            // "training_ids" => $training_ids,
+            // "training_ids_manager" => $training_ids_manager,
+            // "training_ids_staff" => $training_ids_staff,
+            "training_ids" => $training_ids_merged,
+            "department" => $department
+        );
+        array_push($data, $datum);
+    }
+    return $data;
+}
