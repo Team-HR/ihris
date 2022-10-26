@@ -7,6 +7,7 @@ class Pms extends Controller
     private $employee_id;
     private $department_id; // based on spms_performancereviewstatus
     private $final_numerical_rating;
+    private $adjectival_rating;
 
     function __construct()
     {
@@ -33,7 +34,8 @@ class Pms extends Controller
         $core_function_rating = $this->get_core_function_rating();
         $strategic_function_rating = $this->get_strategic_function_rating();
         $support_function_rating = $this->get_support_function_rating();
-        $this->final_numerical_rating = $strategic_function_rating + $core_function_rating + $support_function_rating;
+        $final_numerical_rating = $strategic_function_rating + $core_function_rating + $support_function_rating;
+        $this->final_numerical_rating = floatval(number_format($final_numerical_rating, 2));
         return $this->final_numerical_rating;
     }
 
@@ -56,7 +58,7 @@ class Pms extends Controller
         } elseif ($final_numerical_rating <= 2 && $final_numerical_rating > 1) {
             $adjectival = "U";
         }
-
+        $this->adjectival_rating = $adjectival;
         return $adjectival;
     }
 
@@ -149,10 +151,31 @@ class Pms extends Controller
                 if ($val["t"]) {
                     $num += 1;
                 }
+
+                if ($num == 0) continue;
+
                 $total_core_function += ($val["q"] + $val["e"] + $val["t"]) / $num * $val["percent"] / 100;
             }
         }
         $total_core_function = floatval(number_format($total_core_function, 2,));
         return $total_core_function;
+    }
+
+
+    public function get_comments_and_recommendations()
+    {
+        if (!isset($this->period_id) || !isset($this->employee_id)) return false;
+        $period_id = $this->period_id;
+        $employee_id = $this->employee_id;
+
+        $sql = "SELECT * FROM `spms_commentrec` WHERE `period_id` = '$period_id' AND `emp_id` = '$employee_id' LIMIT 1";
+        $res = $this->mysqli->query($sql);
+
+        $comments_and_recommendations = "";
+        while ($row = $res->fetch_assoc()) {
+            $comments_and_recommendations = $row["comment"];
+        }
+
+        return $comments_and_recommendations;
     }
 }

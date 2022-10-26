@@ -115,7 +115,7 @@ $title = title($mysqli);
           <table class="ui mini very compact celled structured table">
             <thead class="center-align">
               <tr>
-                <th class="noprint" rowspan="2">{{items.length}}</th>
+                <th class="noprint" rowspan="2"></th>
                 <th rowspan="2">CSID</th>
                 <th colspan="4">Employees Name</th>
                 <th rowspan="2">Gender</th>
@@ -137,17 +137,21 @@ $title = title($mysqli);
             </thead>
             <tbody id="tableBody">
               <tr style="text-align: center" v-if="is_loading">
-                <td colspan="18"><img style="transform: scale(0.1); margin-top: -200px;" src="assets/images/loading.gif"></td>
+                <td colspan="18" style="position: relative;">
+                  <!-- <div style="position: abosolute; top: 200px !important;"> -->
+                    <h2>This may take a while, please wait...</h2>
+                  <!-- </div> -->
+                  <img style="position: abosolute; transform: scale(0.1); margin-top: -200px;" src="assets/images/loading.gif">
+                </td>
               </tr>
-              <tr v-for="item in items" :key="item.id">
+              <!-- <tr v-for="item in items" :key="item.id">
                 <td colspan="18">
                   <pre>
                   {{item}}
                   </pre>
                 </td>
-              </tr>
-
-              <!-- <tr v-for="item in items_" :key="item.id" class="center-align" :style="'background:'+stage_color(item.stages)">
+              </tr> -->
+              <tr v-for="item in items" :key="item.id" class="center-align" :style="'background:'+stage_color(item.stages)">
                 <td class="noprint">
                   <a :href="'employeeinfo.php?employees_id='+item.employees_id+'&spms'"><i class="icon link blue folder"></i></a>
                 </td>
@@ -157,9 +161,9 @@ $title = title($mysqli);
                 <td>{{item.middleName}}</td>
                 <td>{{item.extName}}</td>
                 <td>{{item.gender}}</td>
-                <td>{{format_date(item.date_submitted)}}</td>
+                <td>{{item.date_submitted}}</td>
                 <td>{{item.appraisal_type}}</td>
-                <td>{{format_date(item.date_appraised)}}</td>
+                <td>{{item.date_appraised}}</td>
                 <td>{{item.numerical}}</td>
                 <td>{{item.adjectival}}</td>
                 <td>{{item.remarks}}</td>
@@ -178,9 +182,11 @@ $title = title($mysqli);
                 <td class="noprint">
                   <i class="ui icon link red times" @click="removePerInfo(item.prrlist_id)"></i>
                 </td>
-              </tr> -->
+              </tr>
             </tbody>
           </table>
+
+
         </div>
         <br>
         <br>
@@ -439,10 +445,10 @@ function title($mysqli)
     prr_id = f(i.name)['prr_id'].value;
     appraisalType = f(i.name)['appraisalType'].value;
     appraisalDate = f(i.name)['appraisalDate'].value;
-    numericalRating = f(i.name)['numericalRating'].value;
-    adjectiveRate = f(i.name)['adjectiveRate'].value;
+    // numericalRating = f(i.name)['numericalRating'].value;
+    // adjectiveRate = f(i.name)['adjectiveRate'].value;
     remarks = f(i.name)['remark'].value;
-    comments = f(i.name)['comment'].value;
+    // comments = f(i.name)['comment'].value;
     DataSub = f(i.name)['DataSub'].value;
 
     $.post('umbra/PrrSaveRate.php', {
@@ -451,10 +457,10 @@ function title($mysqli)
       prr_id: prr_id,
       appraisalType: appraisalType,
       appraisalDate: appraisalDate,
-      numericalRating: numericalRating,
-      adjectiveRate: adjectiveRate,
+      // numericalRating: numericalRating,
+      // adjectiveRate: adjectiveRate,
       remarks: remarks,
-      comments: comments,
+      // comments: comments,
       DataSub: DataSub
     }, function(data, textStatus, xhr) {
       if (textStatus == 'success') {

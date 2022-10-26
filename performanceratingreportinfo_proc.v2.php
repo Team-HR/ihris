@@ -1,9 +1,9 @@
 <?php
 
+use PhpOffice\PhpSpreadsheet\Worksheet\Row;
+
 require_once "_connect.db.php";
 require_once "./libs/Pms.php";
-
-
 
 if (isset($_POST["load"])) {
     $prr_id = $_POST["prr_id"];
@@ -15,7 +15,76 @@ if (isset($_POST["load"])) {
     $period = $year['period'];
     $year = $year['year'];
 
+    # fetch data from spms_performancereviewstatus
     $fetch_data_online_pms = fetch_data_online_pms($mysqli, $period, $year, $type);
+    # update prrlist from the fetched data
+    // $test = [];
+    foreach ($fetch_data_online_pms as $value) {
+        $employees_id = $value["employees_id"];
+        $date_submitted = $value["date_submitted"];
+        $date_appraised = $value["date_appraised"];
+        $numerical = $value["numerical"];
+        $adjectival = $value["adjectival"];
+        $comments = $mysqli->real_escape_string($value["comments"]);
+        $stages = $value["stages"];
+        // "employees_id": "31018",
+        // "date_submitted": "2022-08-05",
+        // "date_appraised": "2022-09-06",
+        // "numerical": 4.58,
+        // "adjectival": "O",
+        // "comments": "Needs training on detection of Tilapia Lake Virus",
+        // "stages": "W",
+        // "department_id": "4"
+        $sql = "SELECT * FROM `prrlist` WHERE `prr_id`='$prr_id' AND `employees_id`='$employees_id'";
+        $res = $mysqli->query($sql);
+        $row = $res->fetch_assoc();
+
+        if (!$row) {
+            $mysqli->query("INSERT INTO `prrlist`(`prr_id`, `employees_id`, `date_submitted`, `appraisal_type`, `date_appraised`, `numerical`, `adjectival`, `remarks`, `comments`, `stages`) VALUES ('$prr_id','$employees_id', '$date_submitted', 'Semestral', '$date_appraised', '$numerical', '$adjectival', '', '$comments', '$stages')");
+            continue;
+        }
+
+        // $row["date_submitted"];
+        // $row["date_appraised"];
+        // $row["stages"];
+        // if prrlist already have existing datesub or date_appraised skip update 
+
+        $sql = "";
+
+        if (!$row["date_submitted"] && !$row["date_appraised"] && ($row["stages"] == "C")) {
+            $sql = "UPDATE `prrlist` SET `date_submitted`='$date_submitted',`date_appraised`='$date_appraised',`numerical`='$numerical',`adjectival`='$adjectival',`comments`='$comments',`stages`='$stages' WHERE `prr_id`='$prr_id' AND `employees_id`='$employees_id'";
+        } elseif ($row["date_submitted"] && !$row["date_appraised"] && ($row["stages"] == "C")) {
+            $sql = "UPDATE `prrlist` SET `date_appraised`='$date_appraised',`numerical`='$numerical',`adjectival`='$adjectival',`comments`='$comments',`stages`='$stages' WHERE `prr_id`='$prr_id' AND `employees_id`='$employees_id'";
+        } elseif ($row["date_submitted"] && $row["date_appraised"] && ($row["stages"] == "C")) {
+            $sql = "UPDATE `prrlist` SET `numerical`='$numerical',`adjectival`='$adjectival',`comments`='$comments',`stages`='$stages' WHERE `prr_id`='$prr_id' AND `employees_id`='$employees_id'";
+        } elseif ($row["date_submitted"] && $row["date_appraised"] && ($row["stages"] != "C")) {
+            $sql = "UPDATE `prrlist` SET `numerical`='$numerical',`adjectival`='$adjectival',`comments`='$comments' WHERE `prr_id`='$prr_id' AND `employees_id`='$employees_id'";
+        }
+
+        if (!$row["date_appraised"] || $row["date_appraised"] == "0000-00-00") {
+            if (!$date_appraised) {
+                $date_appraised = "0000-00-00";
+            }
+            $sql_dates = "UPDATE `prrlist` SET `date_appraised`='$date_appraised' WHERE `prr_id`='$prr_id' AND `employees_id`='$employees_id'";
+            $mysqli->query($sql_dates);
+        }
+
+        if (!$row["date_submitted"] || $row["date_submitted"] == "0000-00-00") {
+            if (!$date_submitted) {
+                $date_submitted = "0000-00-00";
+            }
+            $sql_dates = "UPDATE `prrlist` SET `date_submitted`='$date_submitted' WHERE `prr_id`='$prr_id' AND `employees_id`='$employees_id'";
+            $mysqli->query($sql_dates);
+        }
+
+
+        // $test[] = $sql;
+
+        if (!$sql) {
+            continue;
+        } else $mysqli->query($sql);
+    }
+
 
     # perform check from online pms
     # get list of `employee_id` from `spms_performancereviewstatus` that are casual and active
@@ -28,8 +97,13 @@ if (isset($_POST["load"])) {
     # if existing always update row 
 
     $data = get_employees($mysqli, $prr_id);
-    // echo json_encode($data);
-    echo json_encode($fetch_data_online_pms);
+    echo json_encode($data);
+    // echo json_encode($test);
+
+    /*
+        to make changes on spms_performancereviewstatus for records earlier than 2022
+    */
+    // update_spms_performancereviewstatus($mysqli, 2);
 } elseif (isset($_POST["get_emps"])) {
     echo json_encode(emp($mysqli));
 } elseif (isset($_POST["get_ova_rates"])) {
@@ -55,10 +129,12 @@ function fetch_data_online_pms($mysqli, $period, $year, $type)
     $pms = new Pms();
     $pms->set_period_id($period_id);
 
-    $sql = "SELECT * FROM `spms_performancereviewstatus` LEFT JOIN `employees` ON `spms_performancereviewstatus`.`employees_id` = `employees`.`employees_id` WHERE `employees`.`status` = 'ACTIVE' AND `employees`.`employmentStatus` = '$type' AND `spms_performancereviewstatus`.`period_id` = '$period_id' LIMIT 1";
-    // remove LIMIT 1 after test
+    $sql = "SELECT * FROM `spms_performancereviewstatus` LEFT JOIN `employees` ON `spms_performancereviewstatus`.`employees_id` = `employees`.`employees_id` WHERE `employees`.`status` = 'ACTIVE' AND `employees`.`employmentStatus` = '$type' AND `spms_performancereviewstatus`.`period_id` = '$period_id' ORDER BY `employees`.`lastName` ASC";
 
     $res = $mysqli->query($sql);
+
+    // $csid = substr($year, -2) . "001";
+
 
     while ($row = $res->fetch_assoc()) {
 
@@ -66,15 +142,15 @@ function fetch_data_online_pms($mysqli, $period, $year, $type)
         $department_id = $row["department_id"];
 
         $datum = [
-            "employees_id" => 9, //$employee_id, // remove 9 after test
-            // "date_submitted" => $row["dateAccomplished"],
-            // "date_appraised" => $row["panelApproved"],
+            "employees_id" => $employee_id,
+            "date_submitted" => format_date_ymd($row["dateAccomplished"]),
+            "date_appraised" => format_date_ymd($row["panelApproved"]),
             "numerical" => [],
             "adjectival" => "",
-            // "comments" => "",
-            // "stages" => "",
+            "comments" => "",
+            "stages" => "C",
             // "period_id" => $period_id,
-            "department_id" => 32 //$department_id, // remove 32 after test
+            "department_id" => $department_id,
         ];
 
         $data[] = $datum;
@@ -85,11 +161,21 @@ function fetch_data_online_pms($mysqli, $period, $year, $type)
     foreach ($data as $key => $pcr) {
         $employee_id = $pcr["employees_id"];
         $department_id = $pcr["department_id"];
-
         $pms->set_employee_id($employee_id);
         $pms->set_department_id($department_id);
         $data[$key]["numerical"] = $pms->get_numerical_rating();
         $data[$key]["adjectival"] = $pms->get_adjectival_rating();
+        $data[$key]["comments"] = $pms->get_comments_and_recommendations();
+        // C !dateAccomplished
+        // Y !panelApproved
+        // W  panelApproved && dateAccomplished
+        if (!$pcr["date_submitted"]) {
+            $data[$key]["stages"] = "C";
+        } elseif ($pcr["date_submitted"] && !$pcr["date_appraised"]) {
+            $data[$key]["stages"] = "Y";
+        } elseif ($pcr["date_submitted"] && $pcr["date_appraised"]) {
+            $data[$key]["stages"] = "W";
+        }
     }
 
     # get row data: `date_submitted`, `date_appraised`, `numerical`, `adjectival` and `comments`
@@ -97,6 +183,75 @@ function fetch_data_online_pms($mysqli, $period, $year, $type)
     return $data;
 }
 
+function update_spms_performancereviewstatus($mysqli, $period_id)
+{
+    if (!$period_id) return false;
+    $sql = "SELECT * FROM prrlist WHERE prr_id = 20;";
+    $data = [];
+    $res = $mysqli->query($sql);
+    while ($row = $res->fetch_assoc()) {
+
+        $row = [
+            "employees_id" => $row["employees_id"],
+            "date_submitted" => format_date($row["date_submitted"]),
+            "date_appraised" => format_date($row["date_appraised"]),
+        ];
+        $data[] = $row;
+    }
+
+    $queries = [];
+    foreach ($data as $key => $value) {
+
+        $employees_id = $value["employees_id"];
+
+        if (!$employees_id) continue;
+
+        $dateAccomplished = $value["date_submitted"];
+        $panelApproved = $value["date_appraised"];
+
+        if (!$panelApproved && !$dateAccomplished) continue;
+
+        if ($panelApproved) {
+            $panelApproved = "`panelApproved`= '$panelApproved'";
+        } else {
+            $panelApproved = "";
+        }
+
+        if ($dateAccomplished) {
+            $dateAccomplished = "`dateAccomplished`= '$dateAccomplished'";
+        } else {
+            $dateAccomplished = "";
+        }
+
+        $inputs = "";
+        if ($panelApproved && $dateAccomplished) {
+            $inputs = "$panelApproved , $dateAccomplished";
+        } elseif ($panelApproved && !$dateAccomplished) {
+            $inputs = "$panelApproved";
+        } elseif (!$panelApproved && $dateAccomplished) {
+            $inputs = "$dateAccomplished";
+        }
+
+        $sql = "UPDATE `spms_performancereviewstatus` SET $inputs WHERE `employees_id` = '$employees_id' AND `period_id` = '$period_id'";
+        // $mysqli->query($sql);
+        // $queries[] = $sql;
+    }
+
+    // return $queries;
+}
+function format_date($date)
+{
+    if (!$date || $date == "0000-00-00") return "";
+    $date = date_create($date);
+    return date_format($date, "m/d/y");
+}
+
+function format_date_ymd($date)
+{
+    if (!$date || $date == "0000-00-00") return "0000-00-00";
+    $date = date_create($date);
+    return date_format($date, "Y-m-d");
+}
 # perform check from online pms
 # get list of `employee_id` from `spms_performancereviewstatus` that are casual and active
 # SELECT * FROM `spms_performancereviewstatus` LEFT JOIN `employees` ON `spms_performancereviewstatus`.`employees_id` = `employees`.`employees_id` WHERE `employees`.`status` = 'ACTIVE' AND `employees`.`employmentStatus` = 'CASUAL' AND `spms_performancereviewstatus`.`period_id` = '2';
