@@ -119,20 +119,39 @@ class Pms extends Controller
 
     public function get_core_function_rating()
     {
+
         if (!$this->period_id || !$this->department_id || !$this->employee_id) return false;
         $period_id = $this->period_id;
         $department_id = $this->department_id;
         $employee_id = $this->employee_id;
 
         $sql = "SELECT * FROM `spms_corefucndata` where empId = '$employee_id' AND `p_id` IN (SELECT `mi_id` FROM `spms_matrixindicators` LEFT JOIN `spms_corefunctions` ON `spms_matrixindicators`.`cf_ID` = `spms_corefunctions`.`cf_ID` WHERE `spms_corefunctions`.`mfo_periodId` = '$period_id' AND spms_corefunctions.dep_id = '$department_id')";
+
         $res = $this->mysqli->query($sql);
+
         $data = [];
+        $spms_corefunction_data = [];
+
         while ($row = $res->fetch_assoc()) {
+            $p_id = $row['p_id'];
+            $exists = false;
+            foreach ($spms_corefunction_data as $value) {
+                if ($value['p_id'] == $p_id) {
+                    $exists = true;
+                }
+            }
+
+            if (!$exists) {
+                $spms_corefunction_data[] = $row;
+            }
+        }
+
+        foreach ($spms_corefunction_data as $row) {
             $datum = [
                 "q" => isset($row["Q"]) ? intval($row["Q"]) : 0,
                 "e" => isset($row["E"]) ? intval($row["E"]) : 0,
                 "t" => isset($row["T"]) ? intval($row["T"]) : 0,
-                "disable" => $row["disable"],
+                "disable" => isset($row["disable"]) ? $row["disable"] : null,
                 "percent" => isset($row["percent"]) ? intval($row["percent"]) : 0,
             ];
             $data[] = $datum;
