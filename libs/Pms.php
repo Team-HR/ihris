@@ -98,8 +98,8 @@ class Pms extends Controller
             }
             $support_function_rating += ($val["q"] + $val["e"] + $val["t"]) / $num * $val["percent"] / 100;
         }
-        $total_core_function = floatval(number_format($support_function_rating, 2));
-        return $total_core_function;
+        $support_function_rating = floatval(number_format($support_function_rating, 2));
+        return $support_function_rating;
     }
 
     public function get_strategic_function_rating()
@@ -119,34 +119,52 @@ class Pms extends Controller
 
     public function get_core_function_rating()
     {
-
-        if (!$this->period_id || !$this->department_id || !$this->employee_id) return false;
+        $total_core_function = 0;
+        if (!$this->period_id || !$this->employee_id) return false;
         $period_id = $this->period_id;
-        $department_id = $this->department_id;
         $employee_id = $this->employee_id;
 
-        $sql = "SELECT * FROM `spms_corefucndata` where empId = '$employee_id' AND `p_id` IN (SELECT `mi_id` FROM `spms_matrixindicators` LEFT JOIN `spms_corefunctions` ON `spms_matrixindicators`.`cf_ID` = `spms_corefunctions`.`cf_ID` WHERE `spms_corefunctions`.`mfo_periodId` = '$period_id' AND spms_corefunctions.dep_id = '$department_id')";
+        $mi_ids = [];
+        $sql = "SELECT * FROM `spms_corefunctions` JOIN `spms_matrixindicators` ON `spms_corefunctions`.`cf_ID` = `spms_matrixindicators`.`cf_ID` WHERE  `spms_corefunctions`.`mfo_periodId` = '$period_id' AND `spms_matrixindicators`.`mi_incharge` LIKE '%$employee_id%'";
+        $res = $this->mysqli->query($sql);
+        while ($row = $res->fetch_assoc()) {
+            $mi_incharge = [];
+            if (isset($row["mi_incharge"])) {
+                $mi_incharge = explode(",", $row["mi_incharge"]);
+            }
+            if (in_array($employee_id, $mi_incharge)) {
+                $mi_ids[] = $row["mi_id"];
+            }
+        }
 
+        if (count($mi_ids) < 1) return 0;
+        $spms_corefucndata = [];
+        $mi_ids = implode(",", $mi_ids);
+
+        $sql = "SELECT * FROM `spms_corefucndata` WHERE `empId` = '$employee_id' AND `p_id` IN ($mi_ids)";
         $res = $this->mysqli->query($sql);
 
-        $data = [];
-        $spms_corefunction_data = [];
-
         while ($row = $res->fetch_assoc()) {
+            $spms_corefucndata[] = $row;
+        }
+
+        if (count($spms_corefucndata) < 1) return 0;
+        $filtered_spms_corefucndata = [];
+        foreach ($spms_corefucndata as $row) {
             $p_id = $row['p_id'];
             $exists = false;
-            foreach ($spms_corefunction_data as $value) {
+            foreach ($filtered_spms_corefucndata as $value) {
                 if ($value['p_id'] == $p_id) {
                     $exists = true;
                 }
             }
 
             if (!$exists) {
-                $spms_corefunction_data[] = $row;
+                $filtered_spms_corefucndata[] = $row;
             }
         }
-
-        foreach ($spms_corefunction_data as $row) {
+        $data = [];
+        foreach ($filtered_spms_corefucndata as $row) {
             $datum = [
                 "q" => isset($row["Q"]) ? intval($row["Q"]) : 0,
                 "e" => isset($row["E"]) ? intval($row["E"]) : 0,
@@ -157,7 +175,6 @@ class Pms extends Controller
             $data[] = $datum;
         }
 
-        $total_core_function = 0;
         foreach ($data as $key => $val) {
             if ($val["disable"] == 0) {
                 $num = 0;
@@ -176,10 +193,8 @@ class Pms extends Controller
                 $total_core_function += ($val["q"] + $val["e"] + $val["t"]) / $num * $val["percent"] / 100;
             }
         }
-        $total_core_function = floatval(number_format($total_core_function, 2,));
-        return $total_core_function;
+        return number_format((float)$total_core_function, 2, '.', '');
     }
-
 
     public function get_comments_and_recommendations()
     {
