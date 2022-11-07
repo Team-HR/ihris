@@ -117,15 +117,66 @@ class Pms extends Controller
         return $strategic_function_rating;
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public function get_core_function_rating()
     {
         $total_core_function = 0;
-        if (!$this->period_id || !$this->employee_id) return false;
+        if (!$this->period_id || !$this->department_id || !$this->employee_id) return false;
         $period_id = $this->period_id;
+        $department_id = $this->department_id;
         $employee_id = $this->employee_id;
 
         $mi_ids = [];
-        $sql = "SELECT * FROM `spms_corefunctions` JOIN `spms_matrixindicators` ON `spms_corefunctions`.`cf_ID` = `spms_matrixindicators`.`cf_ID` WHERE  `spms_corefunctions`.`mfo_periodId` = '$period_id' AND `spms_matrixindicators`.`mi_incharge` LIKE '%$employee_id%'";
+        // $sql = "SELECT * FROM `spms_corefunctions` JOIN `spms_matrixindicators` ON `spms_corefunctions`.`cf_ID` = `spms_matrixindicators`.`cf_ID` WHERE  `spms_corefunctions`.`mfo_periodId` = '$period_id' AND `spms_matrixindicators`.`mi_incharge` LIKE '%$employee_id%'";
+        $sql = "SELECT * FROM `spms_matrixindicators` WHERE `mi_incharge` LIKE '%$employee_id%' AND `cf_ID` IN (SELECT `cf_ID` FROM `spms_corefunctions` WHERE `dep_id` = '$department_id' AND `mfo_periodId` = '$period_id')";
+
         $res = $this->mysqli->query($sql);
         while ($row = $res->fetch_assoc()) {
             $mi_incharge = [];
@@ -163,6 +214,10 @@ class Pms extends Controller
                 $filtered_spms_corefucndata[] = $row;
             }
         }
+
+        return $filtered_spms_corefucndata;
+
+
         $data = [];
         foreach ($filtered_spms_corefucndata as $row) {
             $datum = [
