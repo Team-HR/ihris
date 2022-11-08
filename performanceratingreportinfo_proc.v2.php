@@ -163,8 +163,8 @@ function fetch_data_online_pms($mysqli, $period, $year, $type)
         $department_id = $pcr["department_id"];
         $pms->set_employee_id($employee_id);
         $pms->set_department_id($department_id);
-        $data[$key]["numerical"] = $pms->get_numerical_rating();
-        $data[$key]["adjectival"] = $pms->get_adjectival_rating();
+        $data[$key]["numerical"] = $pms->get_final_numerical_rating();
+        $data[$key]["adjectival"] = $pms->get_final_adjectival_rating();
         $data[$key]["comments"] = $pms->get_comments_and_recommendations();
         // C !dateAccomplished
         // Y !panelApproved
