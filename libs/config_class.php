@@ -585,28 +585,7 @@ class Employee_data
 				$q = 0;
 				$e = 0;
 				$t = 0;
-				// $tableRowColor = '';
-				$acc_row = "";
-				$q_row = "";
-				$e_row = "";
-				$t_row = "";
-				if ($fdata['supEdit'] != "") {
-					$arr = unserialize($fdata['supEdit']);
-					for ($arr_index = 0; $arr_index < count($arr); $arr_index++) {
-						$edArr = $arr[$arr_index][1];
-						for ($edArr_index = 0; $edArr_index < count($edArr); $edArr_index++) {
-							if ($edArr[$edArr_index][0] == "Q") {
-								$q_row = "color:#ff00f5";
-							} else if ($edArr[$edArr_index][0] == "E") {
-								$e_row = "color:#ff00f5";
-							} else if ($edArr[$edArr_index][0] == "T") {
-								$t_row = "color:#ff00f5";
-							} else if ($edArr[$edArr_index][0] == "accomplishment") {
-								$acc_row = "color:#ff00f5";
-							}
-						}
-					}
-				}
+				
 				if ($fdata['Q'] != "") {
 					$q = $fdata['Q'] * $per;
 				}
