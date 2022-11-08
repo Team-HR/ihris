@@ -16,7 +16,7 @@ $pms->set_employee_id($employee_id);
 $pms->set_period_id($period_id);
 $pms->set_department_id($department_id);
 
-// $data = $pms->get_core_function_rating();
+$data = $pms->get_core_function_rating();
 echo $pms->get_final_numerical_rating();
 
 $data = [

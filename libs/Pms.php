@@ -125,6 +125,9 @@ class Pms extends Controller
             }
         }
 
+
+        // return $cores;
+
         $filtered_cores = [];
 
         foreach ($cores as $core) {
@@ -149,8 +152,9 @@ class Pms extends Controller
                 $mi_incharge = explode(",", $row["mi_incharge"]);
             }
             if (in_array($employee_id, $mi_incharge)) {
+                // $mi_ids[] = $row["mi_succIn"];
                 $mi_ids[] = $row["mi_id"];
-                // $mi_ids[] = $row;
+                // $mi_ids[] = $row["cf_ID"];
             }
         }
 
@@ -166,6 +170,8 @@ class Pms extends Controller
         while ($row = $res->fetch_assoc()) {
             $spms_corefucndata[] = $row;
         }
+
+        // return $spms_corefucndata;
 
         if (count($spms_corefucndata) < 1) return 0;
         $filtered_spms_corefucndata = [];
