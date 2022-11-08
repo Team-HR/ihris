@@ -130,39 +130,6 @@ class Employee_data
 		$this->period = $sql->fetch_assoc();
 		$this->load();
 	}
-	public function set_periodMY($m, $y)
-	{
-		//retriving all the data of period
-		$sql = "SELECT  * from spms_mfo_period where month_mfo='$m' and year_mfo='$y'";
-		$sql = $this->mysqli->query($sql);
-		if (!$sql) {
-			die($this->error);
-		}
-		$data = $sql->fetch_assoc();
-		$this->per_ID = $data['mfoperiod_id'];
-		$this->period = $data;
-		$this->coreData = $this->coreAr();
-		$this->load();
-	}
-
-	private function get_percent()
-	{
-		return $this->percent;
-	}
-
-	private function get_supportPercent()
-	{
-		return $this->supportPercent;
-	}
-
-	private function get_strtPercent()
-	{
-		$dat = $this->strtPercent;
-		if ($dat == "20") {
-			$dat .= "%";
-		}
-		return $dat;
-	}
 
 	public function get_emp($i)
 	{
@@ -174,47 +141,8 @@ class Employee_data
 		$per = $this->period;
 		return $per[$i];
 	}
-	private function get_fullname($id)
-	{
-		if (!is_numeric($id)) {
-			return $id;
-		}
-		$sql = "SELECT * from employees where employees_id='$id'";
-		$sql = $this->mysqli->query($sql);
-		$sql = $sql->fetch_assoc();
-
-		$firstName = isset($sql["firstName"]) ? $sql["firstName"] : "";
-		$lastName = isset($sql["lastName"]) ? $sql["lastName"] : "";
-
-		$middleName = " ";
-		if (isset($sql["middleName"])) {
-			$middleName = $sql["middleName"];
-			if ($middleName == ".") {
-				$middleName = " ";
-			} else {
-				if (strlen($middleName) > 0) {
-					$middleName = " " . $middleName[0] . ". ";
-				} else $middleName = " ";
-			}
-		}
-
-		$extName = "";
-		if (isset($sql["extName"])) {
-			$extName = $sql["extName"];
-			if ($extName) {
-				$extName = strtoupper($extName);
-				$extName = ", " . $extName . ".";
-			}
-		}
-
-
-		$fullname =  mb_convert_case("$firstName$middleName$lastName$extName", MB_CASE_UPPER, "UTF-8");
-
-		return $fullname;
-	}
 
 	// method made for reviewing status of the file
-
 	private function file_status()
 	{
 		$perStatus = "SELECT * from spms_performancereviewstatus where period_id='$this->per_ID' and employees_id='$this->emp_ID'";
@@ -585,7 +513,7 @@ class Employee_data
 				$q = 0;
 				$e = 0;
 				$t = 0;
-				
+
 				if ($fdata['Q'] != "") {
 					$q = $fdata['Q'] * $per;
 				}
@@ -644,6 +572,46 @@ class Employee_data
 			$totalAv = 0;
 		}
 		$this->strategic_totalAv = $totalAv;
+	}
+
+
+	public function get_final_adjectival_rating()
+	{
+		// if (!$this->final_numerical_rating) {
+		// 	$this->get_final_numerical_rating();
+		// }
+
+		$final_numerical_rating = $this->get_final_numerical_rating();
+
+		$adjectival = "";
+
+		if ($final_numerical_rating <= 5 && $final_numerical_rating > 4) {
+			$adjectival = "O";
+		} elseif ($final_numerical_rating <= 4 && $final_numerical_rating > 3) {
+			$adjectival = "VS";
+		} elseif ($final_numerical_rating <= 3 && $final_numerical_rating > 2) {
+			$adjectival = "S";
+		} elseif ($final_numerical_rating <= 2 && $final_numerical_rating > 1) {
+			$adjectival = "U";
+		}
+		// $this->adjectival_rating = $adjectival;
+		return $adjectival;
+	}
+
+	public function get_comments_and_recommendations()
+	{
+		if (!isset($this->per_ID) || !isset($this->emp_ID)) return false;
+		$period_id = $this->per_ID;
+		$employee_id = $this->emp_ID;
+
+		$sql = "SELECT * FROM `spms_commentrec` WHERE `period_id` = '$period_id' AND `emp_id` = '$employee_id' LIMIT 1";
+		$res = $this->mysqli->query($sql);
+
+		$comments_and_recommendations = "";
+		while ($row = $res->fetch_assoc()) {
+			$comments_and_recommendations = $row["comment"];
+		}
+		return $comments_and_recommendations;
 	}
 }
 

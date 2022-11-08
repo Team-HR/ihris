@@ -172,8 +172,8 @@ function fetch_data_online_pms($mysqli, $period, $year, $type)
         $employee_data->set_period($period_id);
 
         $data[$key]["numerical"] = $employee_data->get_final_numerical_rating();
-        $data[$key]["adjectival"] = "";//$pms->get_final_adjectival_rating();
-        $data[$key]["comments"] = "";//$pms->get_comments_and_recommendations();
+        $data[$key]["adjectival"] = $employee_data->get_final_adjectival_rating();
+        $data[$key]["comments"] = $employee_data->get_comments_and_recommendations();
         // C !dateAccomplished
         // Y !panelApproved
         // W  panelApproved && dateAccomplished
