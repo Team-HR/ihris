@@ -538,13 +538,13 @@ class Employee_data
 					$a = mb_substr($a, 0, 4);
 				}
 
-				$view = "";
+
 				$cTotal++;
 			} else {
 				$count++;
 			}
 		}
-		$ar = [$view, $count, $a, $cTotal];
+		$ar = ["", $count, $a, $cTotal];
 		return $ar;
 	}
 
