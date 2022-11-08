@@ -169,7 +169,7 @@ function fetch_data_online_pms($mysqli, $period, $year, $type)
         // $pms->set_department_id($department_id);
 
         $employee_data->set_emp($employee_id);
-        $employee_data->set_period($department_id);
+        $employee_data->set_period($period_id);
 
         $data[$key]["numerical"] = $employee_data->get_final_numerical_rating();
         $data[$key]["adjectival"] = "";//$pms->get_final_adjectival_rating();
