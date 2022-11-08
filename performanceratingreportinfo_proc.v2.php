@@ -4,6 +4,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Row;
 
 require_once "_connect.db.php";
 require_once "./libs/Pms.php";
+require_once "./libs/config_class.php";
 
 if (isset($_POST["load"])) {
     $prr_id = $_POST["prr_id"];
@@ -126,8 +127,11 @@ function fetch_data_online_pms($mysqli, $period, $year, $type)
     if (!$period_id) return false;
 
 
-    $pms = new Pms();
-    $pms->set_period_id($period_id);
+    // $pms = new Pms();
+    // $pms->set_period_id($period_id);
+
+    $employee_data = new Employee_data($mysqli);
+
 
     $sql = "SELECT * FROM `spms_performancereviewstatus` LEFT JOIN `employees` ON `spms_performancereviewstatus`.`employees_id` = `employees`.`employees_id` WHERE `employees`.`status` = 'ACTIVE' AND `employees`.`employmentStatus` = '$type' AND `spms_performancereviewstatus`.`period_id` = '$period_id' ORDER BY `employees`.`lastName` ASC";
 
@@ -161,11 +165,15 @@ function fetch_data_online_pms($mysqli, $period, $year, $type)
     foreach ($data as $key => $pcr) {
         $employee_id = $pcr["employees_id"];
         $department_id = $pcr["department_id"];
-        $pms->set_employee_id($employee_id);
-        $pms->set_department_id($department_id);
-        $data[$key]["numerical"] = $pms->get_final_numerical_rating();
-        $data[$key]["adjectival"] = $pms->get_final_adjectival_rating();
-        $data[$key]["comments"] = $pms->get_comments_and_recommendations();
+        // $pms->set_employee_id($employee_id);
+        // $pms->set_department_id($department_id);
+
+        $employee_data->set_emp($employee_id);
+        $employee_data->set_period($department_id);
+
+        $data[$key]["numerical"] = $employee_data->get_final_numerical_rating();
+        $data[$key]["adjectival"] = "";//$pms->get_final_adjectival_rating();
+        $data[$key]["comments"] = "";//$pms->get_comments_and_recommendations();
         // C !dateAccomplished
         // Y !panelApproved
         // W  panelApproved && dateAccomplished
