@@ -223,10 +223,17 @@ class Pms extends Controller
     # SELECT * FROM `spms_supportfunctiondata` where `period_id` = '2' AND `emp_id` = '9';
     public function get_support_function_rating()
     {
+        # to use only support functions associated for the form_type (parent_id => form_type)
+        # 1 and 5, use < 12
+        # 2 and 4, use > 18
+        # 3, use > 11 && <19
+        $form_type = $this->get_status()["formType"];
+        // return $form_type;
         $support_function_rating = 0;
         $data = [];
         $sql = "SELECT * FROM `spms_supportfunctiondata` where `period_id` = '$this->period_id' AND `emp_id` = '$this->employee_id'";
         $res = $this->mysqli->query($sql);
+
         while ($row = $res->fetch_assoc()) {
             $parent_id = $row["parent_id"];
             $datum = [
@@ -236,6 +243,27 @@ class Pms extends Controller
                 "t" => isset($row["T"]) ? intval($row["T"]) : 0,
                 "percent" => isset($row["percent"]) ? intval($row["percent"]) : 0,
             ];
+
+            # exclude rows that does not belong to associated form type
+            if ($form_type == 1 || $form_type == 5) {
+                if ($parent_id > 18) {
+                    continue;
+                } elseif ($parent_id > 11 && $parent_id < 19) {
+                    continue;
+                }
+            } elseif ($form_type == 2 || $form_type == 4) {
+                if ($parent_id < 12) {
+                    continue;
+                } elseif ($parent_id > 11 && $parent_id < 19) {
+                    continue;
+                }
+            } elseif ($form_type == 3) {
+                if ($parent_id < 12) {
+                    continue;
+                } elseif ($parent_id > 18) {
+                    continue;
+                }
+            }
 
             $exists = false;
             foreach ($data as $support_func) {
@@ -249,7 +277,7 @@ class Pms extends Controller
             }
         }
 
-        // return $this->get_status();
+        // return $this->get_status()["formType"];
         // return $data;
 
         if (count($data) < 1) return 0;

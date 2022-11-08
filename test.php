@@ -17,14 +17,14 @@ $pms->set_period_id($period_id);
 $pms->set_department_id($department_id);
 
 // $data = $pms->get_core_function_rating();
-// echo $pms->get_final_numerical_rating();
+echo $pms->get_final_numerical_rating();
 
-// $data = [
-//     $pms->get_strategic_function_rating(),
-//     $pms->get_core_function_rating(),
-//     $pms->get_support_function_rating()
-// ];
-$data = $pms->get_support_function_rating();
+$data = [
+    $pms->get_strategic_function_rating(),
+    $pms->get_core_function_rating(),
+    $pms->get_support_function_rating()
+];
+// $data = $pms->get_support_function_rating();
 // $mi_incharge = [];
 // $sql = "SELECT * FROM `spms_corefunctions` LEFT JOIN `spms_matrixindicators` ON `spms_corefunctions`.`cf_ID` = `spms_matrixindicators`.`cf_ID` WHERE  `spms_corefunctions`.`mfo_periodId` = '$period_id' AND `spms_matrixindicators`.`mi_incharge` LIKE '%$employee_id%'";
 // $res = $mysqli->query($sql);
