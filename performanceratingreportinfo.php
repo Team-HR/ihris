@@ -29,7 +29,7 @@ $title = title($mysqli);
         </div>
       </div>
     </div>
-    <div class="ui container" style="padding: 20px;">
+    <div class="ui fluid container" style="padding: 20px;">
       <!-- <button class="ui button"> Populate List</button> -->
       <div class="ui top attached tabular menu noprint">
         <a class="item active" data-tab="first">Overall</a>
@@ -124,6 +124,7 @@ $title = title($mysqli);
                 <th rowspan="2">Date Appraised (mm/dd/yyyy)</th>
                 <th colspan="2">Rating</th>
                 <th rowspan="2">Remarks</th>
+                <th rowspan="2" class="noprint">Comments</th>
                 <th rowspan="2" colspan="5" class="noprint">Option</th>
               </tr>
               <tr>
@@ -137,18 +138,16 @@ $title = title($mysqli);
             </thead>
             <tbody id="tableBody">
               <tr style="text-align: center" v-if="is_loading">
-                <td colspan="18" style="position: relative;">
+                <td colspan="19" style="position: relative;">
                   <!-- <div style="position: abosolute; top: 200px !important;"> -->
-                    <h2>This may take a while, please wait...</h2>
+                  <h2>This may take a while, please wait...</h2>
                   <!-- </div> -->
                   <img style="position: abosolute; transform: scale(0.1); margin-top: -200px;" src="assets/images/loading.gif">
                 </td>
               </tr>
               <!-- <tr v-for="item in items" :key="item.id">
-                <td colspan="18">
-                  <pre>
+                <td colspan="19">
                   {{item}}
-                  </pre>
                 </td>
               </tr> -->
               <tr v-for="item in items" :key="item.id" class="center-align" :style="'background:'+stage_color(item.stages)">
@@ -167,6 +166,7 @@ $title = title($mysqli);
                 <td>{{item.numerical}}</td>
                 <td>{{item.adjectival}}</td>
                 <td>{{item.remarks}}</td>
+                <td class="noprint" style="text-align: left;">{{item.comments}}</td>
                 <td class="noprint">
                   <i class="ui icon link green edit" @click="ratingModal(item.prrlist_id,item. employees_id,item.prr_id)"></i>
                 </td>
@@ -449,7 +449,7 @@ function title($mysqli)
     // adjectiveRate = f(i.name)['adjectiveRate'].value;
     remarks = f(i.name)['remark'].value;
     // comments = f(i.name)['comment'].value;
-    DataSub = f(i.name)['DataSub'].value;
+    date_submitted = f(i.name)['date_submitted'].value;
 
     $.post('umbra/PrrSaveRate.php', {
       prrList: prrList,
@@ -461,7 +461,7 @@ function title($mysqli)
       // adjectiveRate: adjectiveRate,
       remarks: remarks,
       // comments: comments,
-      DataSub: DataSub
+      date_submitted: date_submitted
     }, function(data, textStatus, xhr) {
       if (textStatus == 'success') {
         // load();

@@ -83,9 +83,6 @@ class Employee_data
 	}
 	private function load()
 	{
-		$this->file_status();
-		// $this->comment();
-		// $this->signatories();
 		$this->coreRow();
 		$this->supportFunctionTr();
 		$this->strategicTr();
@@ -128,6 +125,7 @@ class Employee_data
 			die($this->error);
 		}
 		$this->period = $sql->fetch_assoc();
+		$this->file_status();
 		$this->load();
 	}
 
@@ -280,206 +278,7 @@ class Employee_data
 		return $final_numerical_rating;
 	}
 
-	private function coreAr()
-	{
-		# for more compact and faster query
-		# ... and `dep_id` = '$department_id'
-		$fileStatus = $this->fileStatus;
-		# department_id from spms_performancereviewstatus
-		$department_id = isset($fileStatus["department_id"]) ? $fileStatus["department_id"] : "";
-		# not recommended department_id from employees table
-		// $department_id = $this->EmpInfo["department_id"];
-		$main_Arr = [];
-		$sql = "SELECT * from spms_corefunctions where parent_id='' and mfo_periodId='$this->per_ID' and `dep_id` = '$department_id' ORDER BY `spms_corefunctions`.`cf_count` ASC";
-		$sql = $this->mysqli->query($sql);
-		$parent = [[], [], []];
-		while ($core = $sql->fetch_assoc()) {
-			# parent core (no parent)
-			$parent[0] = $core;
-			# get success indicators
-			$si = $this->si($core['cf_ID']);
-			# check if parent has children
-			$child = $this->q($core['cf_ID']);
-			if ($child->num_rows) {
-				$parent[2] = $this->coreAr_Child($core['cf_ID']);
-			}
-			if (count($si)) {
-				$parent[1] = $si;
-			}
 
-			if (count($si) || $parent[2]) {
-				array_push($main_Arr, $parent);
-				$parent = [[], [], []];
-			}
-		}
-		return $main_Arr;
-	}
-	private function coreAr_Child($dataId)
-	{
-		$main_Arr = [];
-		$sql = $this->q($dataId);
-		$parent = [[], [], []];
-		while ($childCore = $sql->fetch_assoc()) {
-			$parent[0] = $childCore;
-			$si = $this->si($childCore['cf_ID']);
-			$child = $this->q($childCore['cf_ID']);
-			if ($child->num_rows) {
-				$parent[2] = $this->coreAr_Child($childCore['cf_ID']);
-			}
-			if (count($si)) {
-				$parent[1] = $si;
-			}
-			if (count($si) || $parent[2]) {
-				array_push($main_Arr, $parent);
-				$parent = [[], [], []];
-			}
-		}
-		return $main_Arr;
-	}
-
-	private function q($i)
-	{
-
-		$sql = "SELECT * from spms_corefunctions where parent_id='$i' ORDER BY `spms_corefunctions`.`cf_count` ASC";
-		$sql = $this->mysqli->query($sql);
-		if (!$sql) {
-			die($this->error);
-		}
-		return $sql;
-	}
-
-	private function si($siId)
-	{
-		$i = [];
-
-		if (!$siId || $siId == null) return $i;
-
-		$sqlSi1 = "SELECT * from spms_matrixindicators where cf_ID='$siId'";
-		$sqlSi1 = $this->mysqli->query($sqlSi1);
-		if (!$sqlSi1) {
-			die($this->error);
-		}
-		while ($a = $sqlSi1->fetch_assoc()) {
-			$incharge = explode(',', $a['mi_incharge']);
-
-			if (in_array($this->emp_ID, $incharge)) {
-				array_push($i, $a);
-			}
-		}
-
-		return $i;
-	}
-	//methods for core function
-	public function coreRow()
-	{
-		$this->percent = 0;
-		$arr = $this->coreAr();
-		// return $arr;
-		$count0 = count($arr);
-		$in0 = 0;
-		$totalav = 0;
-		while ($in0 < $count0) {
-			$a1 = $arr[$in0][2];
-			$child = $this->coreRow_child(5, $a1);
-			$t0 = $this->Core_mfoRow(5, $arr[$in0]);
-			$totalav += $t0[2] + $child[2];
-			$in0++;
-		}
-
-		$this->core_totalAv	= $totalav;
-	}
-
-	private function Core_mfoRow($padding, $ar)
-	{
-		$cTotal = 0;
-		$count = 0;
-		$totalav = 0;
-		$inSi = 0;
-		$view = "";
-		if (count($ar[1]) > 0) {
-			while ($inSi < count($ar[1])) {
-				if ($inSi == 0) {
-					$row0 = $this->Core_siRow($padding, $ar[0], $ar[1][$inSi]);
-					$count += $row0[1];
-					$totalav += $row0[2];
-					$cTotal += $row0[3];
-				} else {
-					$row1 = $this->Core_siRow($padding, ['cf_count' => '', 'cf_title' => ''], $ar[1][$inSi]);
-					$count += $row1[1];
-					$totalav += $row1[2];
-					$cTotal += $row1[3];
-				}
-				$inSi++;
-			}
-		}
-		$a = [$view, $count, $totalav, $cTotal];
-		return $a;
-	}
-
-	private function coreRow_child($padding, $arr)
-	{
-		$index = 0;
-		$childData = ["", "", "", ""];
-		$view = "";
-		$count = 0;
-		$totalav = 0;
-		$cTotal = 0;
-		$padding += 15;
-		while ($index < count($arr)) {
-			$a2 = $arr[$index][2];
-			$child = $this->coreRow_child($padding, $a2);
-			$data = $this->Core_mfoRow($padding, $arr[$index]);
-			$count += $data[1] + $child[1];
-			$totalav += $data[2] + $child[2];
-			$cTotal += $data[3] + $child[3];
-			$index++;
-		}
-		$childData = [$view, $count, $totalav, $cTotal];
-		return $childData;
-	}
-
-	private function Core_siRow($padding, $ar, $si)
-	{
-		$count = 0;
-		$cTotal = 0;
-		$a = 0;
-		if ($si != "") {
-			$check = "SELECT * from spms_corefucndata where p_id='$si[mi_id]' and empId='$this->emp_ID'";
-			$check = $this->mysqli->query($check);
-			if ($check->num_rows > 0) {
-				$SiData = $check->fetch_assoc();
-				$div = 0;
-				if (!$SiData['disable']) {
-					if ($SiData['Q'] != "") {
-						$a += $SiData['Q'];
-						$div += 1;
-					}
-					if ($SiData['E'] != "") {
-						$a += $SiData['E'];
-						$div += 1;
-					}
-					if ($SiData['T'] != "") {
-						$a += $SiData['T'];
-						$div += 1;
-					}
-					$a = ($a / $div) * ($SiData['percent'] / 100);
-					$a = mb_substr($a, 0, 4);
-				}
-
-
-				$cTotal++;
-			} else {
-				$count++;
-			}
-		}
-		$ar = ["", $count, $a, $cTotal];
-		return $ar;
-	}
-
-	public function get_coreView()
-	{
-		return $this->coreView;
-	}
 	// methods for support function
 	private function supportFunctionTr()
 	{
@@ -612,6 +411,318 @@ class Employee_data
 			$comments_and_recommendations = $row["comment"];
 		}
 		return $comments_and_recommendations;
+	}
+
+	private function coreAr_bak()
+	{
+		# for more compact and faster query
+		# ... and `dep_id` = '$department_id'
+		$fileStatus = $this->fileStatus;
+		# department_id from spms_performancereviewstatus
+		$department_id = isset($fileStatus["department_id"]) ? $fileStatus["department_id"] : "";
+		# not recommended department_id from employees table
+		// $department_id = $this->EmpInfo["department_id"];
+		$main_Arr = [];
+		$sql = "SELECT * from spms_corefunctions where parent_id='' and mfo_periodId='$this->per_ID' and `dep_id` = '$department_id' ORDER BY `spms_corefunctions`.`cf_count` ASC";
+		$sql = $this->mysqli->query($sql);
+		$parent = [[], [], []];
+		while ($core = $sql->fetch_assoc()) {
+			# parent core (no parent)
+			$parent[0] = $core;
+			# get success indicators
+			$si = $this->si($core['cf_ID']);
+			# check if parent has children
+			$child = $this->q($core['cf_ID']);
+			if ($child->num_rows) {
+				$parent[2] = $this->coreAr_Child($core['cf_ID']);
+			}
+			if (count($si)) {
+				$parent[1] = $si;
+			}
+
+			if (count($si) || $parent[2]) {
+				array_push($main_Arr, $parent);
+				$parent = [[], [], []];
+			}
+		}
+		return $main_Arr;
+	}
+
+
+
+
+
+	public function coreAr()
+	{
+		# for more compact and faster query
+		# ... and `dep_id` = '$department_id'
+		$fileStatus = $this->fileStatus;
+		# department_id from spms_performancereviewstatus
+		$department_id = isset($fileStatus["department_id"]) ? $fileStatus["department_id"] : "";
+		# not recommended department_id from employees table
+		// $department_id = $this->EmpInfo["department_id"];
+		$main_Arr = [];
+		$cores = [];
+		$sql = "SELECT * from spms_corefunctions where parent_id='' and mfo_periodId='$this->per_ID' and `dep_id` = '$department_id' ORDER BY `spms_corefunctions`.`cf_count` ASC";
+		$res = $this->mysqli->query($sql);
+		$parent = [[], [], []];
+		while ($row = $res->fetch_assoc()) {
+			$cores[] = $row;
+		}
+
+		foreach ($cores as $core) {
+			# parent core (no parent)
+			$parent[0] = $core;
+			# get success indicators
+			$success_indicators = $this->si($core['cf_ID']);
+			# check if parent has children
+			$children = $this->q($core['cf_ID']);
+			if ($children->num_rows) {
+				$parent[2] = $this->coreAr_Child($core['cf_ID']);
+			}
+
+			if (count($success_indicators)) {
+				$parent[1] = $success_indicators;
+			}
+
+			if (count($success_indicators) || $parent[2]) {
+				array_push($main_Arr, $parent);
+				$parent = [[], [], []];
+			}
+		}
+
+		return $main_Arr;
+	}
+
+
+	private function coreAr_Child($cf_ID)
+	{
+		$main_Arr = [];
+		$res = $this->q($cf_ID);
+		$parent = [[], [], []];
+		$childCores = [];
+
+		while ($row =  $res->fetch_assoc()) {
+			$childCores[] = $row;
+		}
+
+		foreach ($childCores as $childCore) {
+			$parent[0] = $childCore;
+			$si = $this->si($childCore['cf_ID']);
+			$children = $this->q($childCore['cf_ID']);
+			if ($children->num_rows) {
+				$parent[2] = $this->coreAr_Child($childCore['cf_ID']);
+			}
+			if (count($si)) {
+				$parent[1] = $si;
+			}
+			if (count($si) || $parent[2]) {
+				array_push($main_Arr, $parent);
+				$parent = [[], [], []];
+			}
+		}
+		return $main_Arr;
+	}
+
+	private function si($siId)
+	{
+		$i = [];
+
+		if (!$siId || $siId == null) return $i;
+
+		$sqlSi1 = "SELECT mi_id, cf_ID, mi_incharge from spms_matrixindicators where cf_ID='$siId'";
+		$sqlSi1 = $this->mysqli->query($sqlSi1);
+
+		if (!$sqlSi1) {
+			die($this->error);
+		}
+
+		while ($a = $sqlSi1->fetch_assoc()) {
+			$incharge = explode(',', $a['mi_incharge']);
+
+			if (in_array($this->emp_ID, $incharge)) {
+				$i[] = $a;
+			}
+		}
+
+		return $i;
+	}
+
+
+	private function coreAr_Child_bak($dataId)
+	{
+		$main_Arr = [];
+		$sql = $this->q($dataId);
+		$parent = [[], [], []];
+		while ($childCore = $sql->fetch_assoc()) {
+			$parent[0] = $childCore;
+			$si = $this->si($childCore['cf_ID']);
+			$child = $this->q($childCore['cf_ID']);
+			if ($child->num_rows) {
+				$parent[2] = $this->coreAr_Child($childCore['cf_ID']);
+			}
+			if (count($si)) {
+				$parent[1] = $si;
+			}
+			if (count($si) || $parent[2]) {
+				array_push($main_Arr, $parent);
+				$parent = [[], [], []];
+			}
+		}
+		return $main_Arr;
+	}
+
+
+	private function q($i)
+	{
+		$sql = "SELECT `cf_ID` from spms_corefunctions where parent_id='$i' ORDER BY `spms_corefunctions`.`cf_count` ASC";
+		$sql = $this->mysqli->query($sql);
+		if (!$sql) {
+			die($this->error);
+		}
+		return $sql;
+	}
+
+	private function si_bak($siId)
+	{
+		$i = [];
+
+		if (!$siId || $siId == null) return $i;
+
+		$sqlSi1 = "SELECT * from spms_matrixindicators where cf_ID='$siId'";
+		$sqlSi1 = $this->mysqli->query($sqlSi1);
+		if (!$sqlSi1) {
+			die($this->error);
+		}
+		while ($a = $sqlSi1->fetch_assoc()) {
+			$incharge = explode(',', $a['mi_incharge']);
+
+			if (in_array($this->emp_ID, $incharge)) {
+				array_push($i, $a);
+			}
+		}
+
+		return $i;
+	}
+
+	//methods for core function
+	public function coreRow()
+	{
+		$this->percent = 0;
+		$arr = $this->coreAr();
+		$count0 = count($arr);
+		$in0 = 0;
+		$totalav = 0;
+		while ($in0 < $count0) {
+			$success_indicators = $arr[$in0][2];
+			$child = $this->coreRow_child($success_indicators);
+			$t0 = $this->Core_mfoRow($arr[$in0]);
+			$totalav += $t0 + $child;
+			$in0++;
+		}
+		$this->core_totalAv	= $totalav;
+	}
+
+	private function Core_mfoRow($ar)
+	{
+		$totalav = 0;
+		$inSi = 0;
+		if (count($ar[1]) > 0) {
+			while ($inSi < count($ar[1])) {
+				if ($inSi == 0) {
+					$row0 = $this->Core_siRow($ar[1][$inSi]);
+					$totalav += $row0;
+				} else {
+					$row1 = $this->Core_siRow($ar[1][$inSi]);
+					$totalav += $row1;
+				}
+				$inSi++;
+			}
+		}
+		return $totalav;
+	}
+
+	private function coreRow_child($arr)
+	{
+		$index = 0;
+		$totalav = 0;
+		while ($index < count($arr)) {
+			$a2 = $arr[$index][2];
+			$child = $this->coreRow_child($a2);
+			$data = $this->Core_mfoRow($arr[$index]);
+			$totalav += $data + $child;
+			$index++;
+		}
+		return $totalav;
+	}
+
+	private function Core_siRow($si)
+	{
+		$a = 0;
+		if ($si != "") {
+			$check = "SELECT * from spms_corefucndata where p_id='$si[mi_id]' and empId='$this->emp_ID'";
+			$check = $this->mysqli->query($check);
+			if ($check->num_rows > 0) {
+				$SiData = $check->fetch_assoc();
+				$div = 0;
+				if (!$SiData['disable']) {
+					if ($SiData['Q'] != "") {
+						$a += $SiData['Q'];
+						$div += 1;
+					}
+					if ($SiData['E'] != "") {
+						$a += $SiData['E'];
+						$div += 1;
+					}
+					if ($SiData['T'] != "") {
+						$a += $SiData['T'];
+						$div += 1;
+					}
+					$a = ($a / $div) * ($SiData['percent'] / 100);
+					$a = mb_substr($a, 0, 4);
+				}
+			}
+		}
+		return $a;
+	}
+
+
+	private function Core_siRow_bak($padding, $ar, $si)
+	{
+		$count = 0;
+		$cTotal = 0;
+		$a = 0;
+		if ($si != "") {
+			$check = "SELECT * from spms_corefucndata where p_id='$si[mi_id]' and empId='$this->emp_ID'";
+			$check = $this->mysqli->query($check);
+			if ($check->num_rows > 0) {
+				$SiData = $check->fetch_assoc();
+				$div = 0;
+				if (!$SiData['disable']) {
+					if ($SiData['Q'] != "") {
+						$a += $SiData['Q'];
+						$div += 1;
+					}
+					if ($SiData['E'] != "") {
+						$a += $SiData['E'];
+						$div += 1;
+					}
+					if ($SiData['T'] != "") {
+						$a += $SiData['T'];
+						$div += 1;
+					}
+					$a = ($a / $div) * ($SiData['percent'] / 100);
+					$a = mb_substr($a, 0, 4);
+				}
+
+
+				$cTotal++;
+			} else {
+				$count++;
+			}
+		}
+		$ar = ["", $count, $a, $cTotal];
+		return $ar;
 	}
 }
 

@@ -48,18 +48,18 @@ if (isset($_POST["load"])) {
         // $row["date_submitted"];
         // $row["date_appraised"];
         // $row["stages"];
-        // if prrlist already have existing datesub or date_appraised skip update 
+        // if prrlist already have existing datesub or date_appraised skip update
 
         $sql = "";
 
         if (!$row["date_submitted"] && !$row["date_appraised"] && ($row["stages"] == "C")) {
-            $sql = "UPDATE `prrlist` SET `date_submitted`='$date_submitted',`date_appraised`='$date_appraised',`numerical`='$numerical',`adjectival`='$adjectival',`comments`='$comments',`stages`='$stages' WHERE `prr_id`='$prr_id' AND `employees_id`='$employees_id'";
+            $sql = "UPDATE `prrlist` SET `appraisal_type` = 'Semestral', `date_submitted`='$date_submitted',`date_appraised`='$date_appraised',`numerical`='$numerical',`adjectival`='$adjectival',`comments`='$comments',`stages`='$stages' WHERE `prr_id`='$prr_id' AND `employees_id`='$employees_id'";
         } elseif ($row["date_submitted"] && !$row["date_appraised"] && ($row["stages"] == "C")) {
-            $sql = "UPDATE `prrlist` SET `date_appraised`='$date_appraised',`numerical`='$numerical',`adjectival`='$adjectival',`comments`='$comments',`stages`='$stages' WHERE `prr_id`='$prr_id' AND `employees_id`='$employees_id'";
+            $sql = "UPDATE `prrlist` SET `appraisal_type` = 'Semestral', `date_appraised`='$date_appraised',`numerical`='$numerical',`adjectival`='$adjectival',`comments`='$comments',`stages`='$stages' WHERE `prr_id`='$prr_id' AND `employees_id`='$employees_id'";
         } elseif ($row["date_submitted"] && $row["date_appraised"] && ($row["stages"] == "C")) {
-            $sql = "UPDATE `prrlist` SET `numerical`='$numerical',`adjectival`='$adjectival',`comments`='$comments',`stages`='$stages' WHERE `prr_id`='$prr_id' AND `employees_id`='$employees_id'";
+            $sql = "UPDATE `prrlist` SET `appraisal_type` = 'Semestral', `numerical`='$numerical',`adjectival`='$adjectival',`comments`='$comments', `stages` = 'W' WHERE `prr_id`='$prr_id' AND `employees_id`='$employees_id'";
         } elseif ($row["date_submitted"] && $row["date_appraised"] && ($row["stages"] != "C")) {
-            $sql = "UPDATE `prrlist` SET `numerical`='$numerical',`adjectival`='$adjectival',`comments`='$comments' WHERE `prr_id`='$prr_id' AND `employees_id`='$employees_id'";
+            $sql = "UPDATE `prrlist` SET `appraisal_type` = 'Semestral', `numerical`='$numerical',`adjectival`='$adjectival',`comments`='$comments', `stages` = 'W' WHERE `prr_id`='$prr_id' AND `employees_id`='$employees_id'";
         }
 
         if (!$row["date_appraised"] || $row["date_appraised"] == "0000-00-00") {
@@ -354,7 +354,6 @@ function Ov_rates($mysqli, $prr_id)
     //     'F' => array('O' => $FO, 'V' => $FV, 'S' => $FS, 'U' => $FU, 'P' => $FP, 'T' => $FT),
     //     'M' => array('O' => $MO, 'V' => $MV, 'S' => $MS, 'U' => $MU, 'P' => $MP, 'T' => $MT)
     // );
-
     $arr = [
         [
             "row" => "OUTSTANDING",

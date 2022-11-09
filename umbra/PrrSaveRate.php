@@ -13,18 +13,16 @@ if (isset($_POST['Scolor'])) {
 		echo 1;
 	}
 } else {
-
 	$prrList = $_POST['prrList'];
 	$empId = $_POST['empId'];
 	$prr_id = $_POST['prr_id'];
 	$appraisalType = $mysqli->real_escape_string($_POST['appraisalType']);
 	$appraisalDate = $_POST['appraisalDate'];
-	$DataSub = $_POST['DataSub'];
+	$date_submitted = $_POST['date_submitted'];
 	// $numericalRating = $_POST['numericalRating'];
 	// $adjectiveRate = $_POST['adjectiveRate'];
 	$remarks = addslashes($_POST['remarks']);
 	// $comments = addslashes($_POST['comments']);
-
 
 	if ($prrList == 0) {
 		$sql = "INSERT INTO `prrlist`
@@ -36,7 +34,7 @@ if (isset($_POST['Scolor'])) {
 						 `date_appraised`,
 						 `remarks`)
 		VALUES
-		(NULL, '$prr_id', '$empId', '$DataSub', '$appraisalType', '$appraisalDate', '$remarks')";
+		(NULL, '$prr_id', '$empId', '$date_submitted', '$appraisalType', '$appraisalDate', '$remarks')";
 	} else {
 
 		$sql = "UPDATE `prrlist` SET
@@ -45,10 +43,9 @@ if (isset($_POST['Scolor'])) {
 		`comments` = '$comments'
 		WHERE `prrlist_id` = '$prrList'";
 
-
 		$period_id = get_period_id($mysqli, $prr_id);
 		if ($period_id) {
-			$sql_spm_performancereviewstatus = "UPDATE `spms_performancereviewstatus` SET `dateAccomplished` = '$DataSub', `panelApproved` = '$appraisalDate' WHERE `employees_id` = '$empId' AND `period_id` = '2'";
+			$sql_spm_performancereviewstatus = "UPDATE `spms_performancereviewstatus` SET `dateAccomplished` = '$date_submitted', `panelApproved` = '$appraisalDate' WHERE `employees_id` = '$empId' AND `period_id` = '$period_id'";
 			$mysqli->query($sql_spm_performancereviewstatus);
 		}
 	}

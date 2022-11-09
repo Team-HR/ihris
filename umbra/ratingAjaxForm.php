@@ -32,7 +32,7 @@ if (isset($_POST['prrList'])) {
 		</div>
 		<div class="field">
 			<label>Data Submitted</label>
-			<input type="Date" name="DataSub" value="<?= $row['date_submitted'] ?>">
+			<input type="Date" name="date_submitted" value="<?= $row['date_submitted'] ?>">
 		</div>
 		<div class="fields">
 			<div class="seven wide field">
