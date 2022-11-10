@@ -30,10 +30,44 @@ function get_employees($mysqli, $prr_id)
     $result1 = $mysqli->query($sql1);
     $i = 0;
     $tr = "";
+
+    # get period_id with prr_id
+    $sql = "SELECT * FROM prr WHERE `prr_id` = '$prr_id'";
+    $res = $mysqli->query($sql);
+    $prr = $res->fetch_assoc();
+    $month_mfo = $prr["period"];
+    $year_mfo = $prr["year"];
+    $sql = "SELECT * FROM `spms_mfo_period` WHERE `month_mfo` = '$month_mfo' AND `year_mfo` = '$year_mfo'";
+    $res = $mysqli->query($sql);
+    $period = $res->fetch_assoc();
+    $period_id = $period["mfoperiod_id"];
+
+
     while ($row = $result1->fetch_assoc()) {
+        # get date_submitted and date_appraised from spms_performancereviewstatus
+        $sql = "SELECT * FROM `spms_performancereviewstatus` WHERE period_id = '$period_id' AND employees_id = '$row[employees_id]'";
+        $res = $mysqli->query($sql);
+
+        $date_submitted = "0000-00-00";
+        $date_appraised = "0000-00-00";
+        if ($status = $res->fetch_assoc()) {
+            $date_submitted = format_date_ymd($status["dateAccomplished"]);
+            $date_appraised = format_date_ymd($status["panelApproved"]);
+        }
+        $row["date_submitted"] = $date_submitted != "0000-00-00" ? $date_submitted : "";
+        $row["date_appraised"] = $date_appraised != "0000-00-00" ? $date_appraised : "";
         $row["csid"] = $csid++;
         $row["middleName"] = $row["middleName"] ? $row["middleName"][0] : "";
         $row["gender"] = $row["gender"] ? $row["gender"][0] : "";
+        # set color state based on date_submitted and date_appraised
+        if ($date_submitted != "0000-00-00" && $date_appraised != "0000-00-00") {
+            $state = "W";
+        } elseif ($date_submitted != "0000-00-00" && $date_appraised == "0000-00-00") {
+            $state = "Y";
+        } else {
+            $state = "C";
+        }
+        $row["stages"] = $state;
         $data[] = $row;
     }
 
@@ -148,4 +182,12 @@ function Ov_rates($mysqli, $prr_id)
         ],
     ];
     return $arr;
+}
+
+
+function format_date_ymd($date)
+{
+    if (!$date || $date == "0000-00-00") return "0000-00-00";
+    $date = date_create($date);
+    return date_format($date, "Y-m-d");
 }

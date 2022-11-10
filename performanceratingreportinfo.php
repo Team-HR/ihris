@@ -100,16 +100,16 @@ $title = title($mysqli);
             </div>
           </div>
           <div class="ui noprint" style="background:white;padding: 10px">
-              <label for="">Sort by:</label>
-              <select v-model="sort_by" class="ui compact selection sort_by dropdown">
-                <option selected value="lastName">Last Name</option>
-                <option value="date_submitted">Date Submitted</option>
-              </select>
-              <div class="ui basic button" @click="is_asc = !is_asc">
-                <i v-if="is_asc" class="ui icon angle double up"></i>
-                <i v-else class="ui icon angle double down"></i>
-                {{is_asc?'Asc':'Desc'}}
-              </div>
+            <label for="">Sort by:</label>
+            <select v-model="sort_by" class="ui compact selection sort_by dropdown">
+              <option selected value="lastName">Last Name</option>
+              <option value="date_submitted">Date Submitted</option>
+            </select>
+            <div class="ui basic button" @click="is_asc = !is_asc">
+              <i v-if="is_asc" class="ui icon angle double up"></i>
+              <i v-else class="ui icon angle double down"></i>
+              {{is_asc?'Asc':'Desc'}}
+            </div>
             <!-- </div> -->
           </div>
           <table class="ui mini very compact celled structured table">
@@ -124,7 +124,7 @@ $title = title($mysqli);
                 <th rowspan="2">Date Appraised (mm/dd/yyyy)</th>
                 <th colspan="2">Rating</th>
                 <th rowspan="2">Remarks</th>
-                <th rowspan="2" colspan="5" class="noprint">Option</th>
+                <th rowspan="2" colspan="2" class="noprint">Option</th>
               </tr>
               <tr>
                 <th>Last Name</th>
@@ -137,8 +137,11 @@ $title = title($mysqli);
             </thead>
             <tbody id="tableBody">
               <tr style="text-align: center" v-if="is_loading">
-                <td colspan="18"><img style="transform: scale(0.1); margin-top: -200px;" src="assets/images/loading.gif"></td>
+                <td colspan="15"><img style="transform: scale(0.1); margin-top: -200px;" src="assets/images/loading.gif"></td>
               </tr>
+              <!-- <tr v-for="item in items" :key="item.id">
+                <td colspan="18">{{item}}</td>
+              </tr> -->
               <tr v-for="item in items" :key="item.id" class="center-align" :style="'background:'+stage_color(item.stages)">
                 <td class="noprint">
                   <a :href="'employeeinfo.php?employees_id='+item.employees_id+'&spms'"><i class="icon link blue folder"></i></a>
@@ -149,17 +152,16 @@ $title = title($mysqli);
                 <td>{{item.middleName}}</td>
                 <td>{{item.extName}}</td>
                 <td>{{item.gender}}</td>
-                <td>{{format_date(item.date_submitted)}}</td>
+                <td>{{item.date_submitted}}</td>
                 <td>{{item.appraisal_type}}</td>
-                <td>{{format_date(item.date_appraised)}}</td>
+                <td>{{item.date_appraised}}</td>
                 <td>{{item.numerical}}</td>
                 <td>{{item.adjectival}}</td>
                 <td>{{item.remarks}}</td>
                 <td class="noprint">
                   <i class="ui icon link green edit" @click="ratingModal(item.prrlist_id,item. employees_id,item.prr_id)"></i>
                 </td>
-                <td class="noprint">
-                  <!-- stateColor(prrlist_id, employees_id, prr_id, Scolor) -->
+                <!-- <td class="noprint">
                   <i class="ui icon link blue square" @click="stateColor(item.prrlist_id, item.employees_id, item.prr_id, 'C')"></i>
                 </td>
                 <td class="noprint">
@@ -167,7 +169,7 @@ $title = title($mysqli);
                 </td>
                 <td class="noprint">
                   <i class="ui icon link square outline" @click="stateColor(item.prrlist_id, item.employees_id, item.prr_id, 'W')"></i>
-                </td>
+                </td> -->
                 <td class="noprint">
                   <i class="ui icon link red times" @click="removePerInfo(item.prrlist_id)"></i>
                 </td>
