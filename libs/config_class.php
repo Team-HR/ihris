@@ -678,8 +678,10 @@ class Employee_data
 						$a += $SiData['T'];
 						$div += 1;
 					}
-					$a = ($a / $div) * ($SiData['percent'] / 100);
-					$a = mb_substr($a, 0, 4);
+					if ($div > 0) {
+						$a = ($a / $div) * ($SiData['percent'] / 100);
+						$a = mb_substr($a, 0, 4);
+					}
 				}
 			}
 		}
