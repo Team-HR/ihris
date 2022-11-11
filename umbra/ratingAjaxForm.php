@@ -32,7 +32,7 @@ if (isset($_POST['prrList'])) {
 		</div>
 		<div class="field">
 			<label>Data Submitted</label>
-			<input type="Date" name="DataSub" value="<?= $row['date_submitted'] ?>" readonly>
+			<input type="Date" name="DataSub" value="<?= $row['date_submitted'] ?>">
 		</div>
 		<div class="fields">
 			<div class="seven wide field">
@@ -51,7 +51,7 @@ if (isset($_POST['prrList'])) {
 			</div>
 			<div class="seven wide field">
 				<label>Date Appraised</label>
-				<input type="Date" name="appraisalDate" value="<?= $row['date_appraised'] ?>" readonly>
+				<input type="Date" name="appraisalDate" value="<?= $row['date_appraised'] ?>">
 			</div>
 		</div>
 		<div class="fields">
