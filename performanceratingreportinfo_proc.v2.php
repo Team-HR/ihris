@@ -48,12 +48,18 @@ function get_employees($mysqli, $prr_id)
         $sql = "SELECT * FROM `spms_performancereviewstatus` WHERE period_id = '$period_id' AND employees_id = '$row[employees_id]'";
         $res = $mysqli->query($sql);
 
-        $date_submitted = "0000-00-00";
-        $date_appraised = "0000-00-00";
+        $date_submitted = format_date_ymd($row["date_submitted"]);
+        $date_appraised = format_date_ymd($row["date_appraised"]);
+
         if ($status = $res->fetch_assoc()) {
-            $date_submitted = format_date_ymd($status["dateAccomplished"]);
-            $date_appraised = format_date_ymd($status["panelApproved"]);
+            if ($date_submitted == "0000-00-00") {
+                $date_submitted = format_date_ymd($status["dateAccomplished"]);
+            }
+            if ($date_appraised == "0000-00-00") {
+                $date_appraised = format_date_ymd($status["panelApproved"]);
+            }
         }
+
         $row["date_submitted"] = $date_submitted != "0000-00-00" ? $date_submitted : "";
         $row["date_appraised"] = $date_appraised != "0000-00-00" ? $date_appraised : "";
         $row["csid"] = $csid++;
@@ -189,5 +195,5 @@ function format_date_ymd($date)
 {
     if (!$date || $date == "0000-00-00") return "0000-00-00";
     $date = date_create($date);
-    return date_format($date, "Y-m-d");
+    return date_format($date, "m/d/Y");
 }
