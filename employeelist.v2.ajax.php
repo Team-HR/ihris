@@ -1,6 +1,16 @@
 <?php
 include "_connect.db.php";
 
+function get_username($mysqli, $employees_id)
+{
+	$sql = "SELECT `username` FROM `spms_accounts` WHERE `employees_id` = '$employees_id'";
+	$res = $mysqli->query($sql);
+	$username = "";
+	if ($row = $res->fetch_assoc()) {
+		$username = $row["username"];
+	}
+	return $username;
+}
 
 if (isset($_POST["load"])) {
 
@@ -14,6 +24,7 @@ if (isset($_POST["load"])) {
 		$counter++;
 		$status = $row["status"];
 		$employees_id = $row["employees_id"];
+		$username = get_username($mysqli, $employees_id);
 
 		$firstName	=	$row["firstName"];
 		$lastName	=	$row["lastName"];
@@ -81,6 +92,7 @@ if (isset($_POST["load"])) {
 			?>
 			<td><a href="employeeinfo.v2.php?employees_id=<?php echo $employees_id; ?>" title="View Profile"><i class="blue large address book icon"></i> View Profile </a></td>
 			<td id="<?= $employees_id	?>"><?php echo str_pad($employees_id, 5, 0, STR_PAD_LEFT); ?></td>
+			<td><?= $username; ?></td>
 			<td><?= $fullname; ?></td>
 			<td><?php echo $gender; ?></td>
 			<td><?php echo $department; ?></td>

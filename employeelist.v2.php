@@ -436,6 +436,7 @@ if (isset($_GET["scrollTo"])) {
 			<tr>
 				<th colspan="2">Options</th>
 				<th>Id</th>
+				<th>Username</th>
 				<th>Name</th>
 				<th>Gender</th>
 				<th>Department</th>
