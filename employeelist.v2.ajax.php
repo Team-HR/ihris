@@ -48,22 +48,27 @@ if (isset($_POST["load"])) {
 		$fullname =  mb_convert_case("$lastName, $firstName $middleName", MB_CASE_UPPER, "UTF-8") . $extName; //$lastName.", ".$firstName." ".$middleName." ".$extName;
 
 
-		$gender = $row["gender"];
-		if (!$gender) {
+		$gender = "";
+		if (!isset($row["gender"])) {
 			$gender = "<i style='color:grey'>N/A</i>";
 		} else {
-			$gender = $gender[0];
+			$gender = $row["gender"][0];
 		}
 
-		$department = $row["department"];
-		if (!$department) {
+		$department = "";
+		if (!isset($row["department"])) {
 			$department = "<i style='color:grey'>N/A</i>";
+		} else {
+			$department = $row["department"];
 		}
 
-		$position = $row["position"];
-		if (!$position) {
+		$position = "";
+		if (!isset($row["position"])) {
 			$position = "<i style='color:grey'>N/A</i>";
+		} else {
+			$position = $row["position"];
 		}
+
 		$employmentStatus = mb_convert_case($row["employmentStatus"], MB_CASE_UPPER);
 		if (!$employmentStatus) {
 			$employmentStatus = "<i style='color:grey'>N/A</i>";

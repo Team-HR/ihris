@@ -53,16 +53,22 @@ if (isset($_POST["loadProfile"])) {
 	$sql2 = "SELECT * FROM `department` WHERE `department_id` = '$department_id'";
 	$result2 = $mysqli->query($sql2);
 	$row2 = $result2->fetch_assoc();
-	$department = $row2["department"];
-	if (!$department) {
+
+	$department = "";
+	if (!isset($row2["department"])) {
 		$department = "<i style='color:grey'>N/A</i>";
 	} else {
+		$department = $row2["department"];
 		$department = mb_convert_case($department, MB_CASE_UPPER, "UTF-8");
 	}
-	$position_id = $row["position_id"];
-	$sql3 = "SELECT * FROM `positiontitles` WHERE `position_id` = '$position_id'";
-	$result3 = $mysqli->query($sql3);
-	$row3 = $result3->fetch_assoc();
+	
+	$row3 = [];
+	if (isset($row["position_id"])) {
+		$position_id = $row["position_id"];
+		$sql3 = "SELECT * FROM `positiontitles` WHERE `position_id` = '$position_id'";
+		$result3 = $mysqli->query($sql3);
+		$row3 = $result3->fetch_assoc();
+	}
 
 	$position = isset($row3["position"]) ? mb_convert_case($row3["position"], MB_CASE_UPPER, "UTF-8") : "<i style='color:grey'>N/A</i>";
 	$functional = isset($row3["functional"]) ? mb_convert_case($row3["functional"], MB_CASE_UPPER, "UTF-8") : "<i style='color:grey'>N/A</i>";
