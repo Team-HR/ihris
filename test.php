@@ -23,7 +23,7 @@ while ($row = $result->fetch_assoc()) {
 
 $data = [$data[9]];
 
-$data = start_duplicating($mysqli, $data, $selected_period_id, "");
+// $data = start_duplicating($mysqli, $data, $selected_period_id, "");
 
 function get_children($mysqli, $cf_ID)
 {
