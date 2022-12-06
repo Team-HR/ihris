@@ -6,7 +6,7 @@
 */
 require_once "_connect.db.php";
 $period_id = 11;
-$department_id = 2;
+$department_id = 32;
 $selected_period_id = 10;
 
 $data = [];
@@ -21,9 +21,9 @@ while ($row = $result->fetch_assoc()) {
     $data[] = $row;
 }
 
-$data = [$data[29]];
+$data = [$data[9]];
 
-// $data = start_duplicating($mysqli, $data, $selected_period_id, "");
+$data = start_duplicating($mysqli, $data, $selected_period_id, "");
 
 function get_children($mysqli, $cf_ID)
 {
