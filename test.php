@@ -5,153 +5,77 @@
     Uncomment iterator function below to alter format of data
 */
 require_once "_connect.db.php";
+$period_id = 11;
+$department_id = 2;
+$selected_period_id = 10;
 
-$sql = "SELECT * FROM `rsp_applicants`";
-
-$res = $mysqli->query($sql);
 $data = [];
-while ($row = $res->fetch_assoc()) {
-    $data[] = [
-        "applicant_id" => $row["applicant_id"],
-        "name" => $row["name"],
-        // "age" => $row["age"],
-        // "gender" => $row["gender"],
-        // "civil_status" => $row["civil_status"],
-        // "mobile_no" => $row["mobile_no"],
-        // "address" => $row["address"],
-        // "education" => $row["education"],
-        // "school" => $row["school"],
-        ########################################
-        "experience" => $mysqli->real_escape_string(parse_experience($row["experience"])),
-        // "experience" => parse_experience($row["experience"]),
-        "training" => unserialize($row["training"]) ? $mysqli->real_escape_string(json_encode(unserialize($row["training"]))) : NULL,
-        "num_years_in_gov" => $mysqli->real_escape_string(parse_years_in_service($row["num_years_in_gov"])),
-        "years_of_service_gov" =>  $mysqli->real_escape_string(years_of_service($row["num_years_in_gov"])),
-        // "years_of_service_priv" => NULL,
-        "eligibility" => $row["eligibility"] && unserialize($row["eligibility"]) ? $mysqli->real_escape_string(json_encode(unserialize($row["eligibility"]))) : NULL,
-        "awards" => $row["awards"] && unserialize($row["awards"]) ? $mysqli->real_escape_string(json_encode(unserialize($row["awards"]))) : NULL,
-        "records_infractions" => $row["records_infractions"] && unserialize($row["records_infractions"]) ?  $mysqli->real_escape_string(json_encode(unserialize($row["records_infractions"]))) : NULL
-        // "remarks" => $row["remarks"],
-    ];
+$sql = "SELECT * FROM `spms_corefunctions` WHERE `mfo_periodId` = '$period_id' AND `dep_id` = '$department_id' AND `parent_id` = '';";
+$result = $mysqli->query($sql);
+while ($row = $result->fetch_assoc()) {
+    // $data[] = [
+    //   "core_function_data" => $row,
+    //   "success_indicators" => get_success_indicators($mysqli, $row["cf_ID"])
+    // ];
+    $row["children"] = get_children($mysqli, $row['cf_ID']);
+    $data[] = $row;
 }
 
-/*
-    Iterator function
-    Uncomment query iterator function from below to execute data alteration.
-*/
+$data = [$data[29]];
 
-// foreach ($data as $key => $row) {
-//     $years_of_service_gov = $row['years_of_service_gov'] ? $row['years_of_service_gov'] : NULL;
-//     $mysqli->query("UPDATE `rsp_applicants` SET 
-//     `experience` = '$row[experience]',
-//     `training` = '$row[training]',
-//     `num_years_in_gov` = '$row[num_years_in_gov]',
-//     `years_of_service_gov` = '$years_of_service_gov',
-//     `eligibility` = '$row[eligibility]',
-//     `awards` = '$row[awards]',
-//     `records_infractions` = '$row[records_infractions]'
-//     WHERE `rsp_applicants`.`applicant_id` = $row[applicant_id];");
-// }
+$data = start_duplicating($mysqli, $data, $selected_period_id, "");
 
-function parse_experience($arr)
+function get_children($mysqli, $cf_ID)
 {
-    if (!$arr || !unserialize($arr)) return NULL;
     $data = [];
-    $arr = unserialize($arr);
-    $experiences = [];
-    foreach ($arr as $key => $value) {
-        # code...
-        $datum = [
-            "title" => $value[0],
-            "status" => $value[1],
-            "company" => $value[2],
-            "from" => dateToString($value[3]),
-            "to" => dateToString($value[4])
-        ];
-        $experiences[] = $datum;
+    $sql = "SELECT * FROM `spms_corefunctions` WHERE `parent_id` ='$cf_ID'";
+    $result = $mysqli->query($sql);
+    while ($row = $result->fetch_assoc()) {
+        $row["children"] = get_children($mysqli, $row["cf_ID"]);
+        $data[] = $row;
     }
-
-    $data = $experiences;
-    $data = json_encode($data);
     return $data;
 }
 
-function dateToString($date_val)
+function start_duplicating($mysqli, $data, $selected_period_id, $parent_id)
 {
-    if ($date_val !== "") {
-        $date = new DateTime($date_val);
-        $res = $date->format('F d, Y');
-        return $res ? $res : '';
-    } elseif ($date_val == "") {
-        return 'Present';
+    foreach ($data as $key => $core_function) {
+        $parent_id = $parent_id ? $parent_id : NULL;
+        $cf_title = $mysqli->real_escape_string($core_function['cf_title']);
+        $cf_count = $mysqli->real_escape_string($core_function['cf_count']);
+        $sql = "INSERT INTO `spms_corefunctions`(`mfo_periodId`, `parent_id`, `dep_id`, `cf_count`, `cf_title`, `corrections`) VALUES ('$selected_period_id','$parent_id','$core_function[dep_id]','$cf_count','$cf_title','')";
+        $mysqli->query($sql);
+        $insert_id = $mysqli->insert_id;
+
+        #get success indicators
+        $success_idicators = get_success_indicators($mysqli, $core_function["cf_ID"]);
+        foreach ($success_idicators as $success_idicator) {
+            $sql = "INSERT INTO `spms_matrixindicators`(`cf_ID`, `mi_succIn`, `mi_quality`, `mi_eff`, `mi_time`, `mi_incharge`, `corrections`) VALUES ('$insert_id','$success_idicator[mi_succIn]','$success_idicator[mi_quality]','$success_idicator[mi_eff]','$success_idicator[mi_time]','$success_idicator[mi_incharge]','')";
+            $mysqli->query($sql);
+        }
+
+        $data[$key]["children"] = start_duplicating($mysqli, $core_function["children"], $selected_period_id, $insert_id);
     }
+
+    return $data;
 }
 
-function years_of_service($arr)
+
+function get_success_indicators($mysqli, $cf_ID)
 {
-    if (!$arr) return NULL;
-    $arr = unserialize($arr);
-    $services = [];
-    // check first if all status have data //
-    $count = 0;
-    foreach ($arr as $key => $value) {
-        if ($value) {
-            $count++;
-        }
+    $data = [];
+    $sql = "SELECT * FROM `spms_matrixindicators` WHERE `cf_ID` = '$cf_ID'";
+    $result = $mysqli->query($sql);
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
     }
-    if (!$count) return null;
-    foreach ($arr as $key => $value) {
-        if ($key != "Private" && $value) {
-            $services[] = [
-                "status" => $key,
-                "num_years" => $value,
-            ];
-        }
-    }
-    return json_encode($services);
-}
-function parse_years_in_service($arr)
-{
-
-    if (!$arr) return NULL;
-    $data =  [];
-    $arr = unserialize($arr);
-    // return $arr;
-    $services = [];
-    // check first if all status have data //
-
-    $count = 0;
-    foreach ($arr as $key => $value) {
-        if ($value) {
-            $count++;
-        }
-    }
-
-    if (!$count) return null;
-
-    foreach ($arr as $key => $value) {
-        if ($key != "Private" && $value) {
-            $services[] = [
-                "status" => $key,
-                "length" => $value,
-            ];
-        }
-    }
-
-    $data[] = [
-        "sector" => "Government",
-        "services" => $services
-    ];
-
-    $data = json_encode($data);
-
     return $data;
 }
 
 
 ?>
+
 <pre>
     <?php
-    print_r($data);
-    ?>
-</pre>;
+    print_r($data); ?>
+</pre>
