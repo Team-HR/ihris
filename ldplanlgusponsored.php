@@ -335,7 +335,7 @@ $year = $row["year"];
     <!-- showParticipantsModal modal start -->
     <div class="ui small modal" id="showParticipantsModal">
       <div class="header">{{participants.training}}</div>
-      <div class="content">
+      <div class="scrolling content">
         <!-- {{participants}} -->
 
         <div class="ui accordion" id="showParticipantsAccordion">

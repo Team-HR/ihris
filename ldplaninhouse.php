@@ -295,7 +295,7 @@ $year = $row["year"];
               </div>
 
               <button class="ui fluid mini button" @click="editBudget(plan)">
-               <i class="ui edit icon"></i> Edit
+                <i class="ui edit icon"></i> Edit
               </button>
             </div>
 
@@ -334,7 +334,7 @@ $year = $row["year"];
     <!-- showParticipantsModal modal start -->
     <div class="ui small modal" id="showParticipantsModal">
       <div class="header">{{participants.training}}</div>
-      <div class="content">
+      <div class="scrolling content">
         <!-- {{participants}} -->
 
         <div class="ui accordion" id="showParticipantsAccordion">
