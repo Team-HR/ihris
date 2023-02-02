@@ -462,8 +462,11 @@ $tbl = <<<EOD
             <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
             <span> </span> <span> </span> <span> </span><b><u>PHOEBE P. TUPAS</u> <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>/ <span> </span><span> </span><span> </span> <u>JOHNNY C. VILLALUZ</u></b>
             <br/>
+            <span> </span><span> </span><span> </span>
             <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
-            <span> </span> <span> </span> <span> </span>Supervising HRS <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span> / <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>Senior HRS
+            <span> </span> <span> </span> <span> </span>Supervising HRS <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span> / <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
+            <span> </span>
+            Senior HRS
             
             <br/>
        </td>
