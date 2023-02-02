@@ -104,7 +104,7 @@ $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
 // set margins
-$pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT);
+$pdf->SetMargins(PDF_MARGIN_LEFT, 5, PDF_MARGIN_RIGHT);
 // $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
 
 // $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
@@ -434,18 +434,22 @@ $tbl = <<<EOD
         <td width="22%" align="center">{$func($data[43]['remarks'])}</td>
     </tr>
     <tr>
-       <td colspan="2" align="center">
+       <td colspan="2">
+            <i>Prepared by:</i><br/><br/>
             <br/>
-            <br/>
-            <i>Prepared by: ______________________</i> date: ____________ <br/>
-            <span>Highest Ranking HRMO (Agency)</span>
-            <br/>
+            <span> </span><span> </span><span> </span><span> </span>
+            <b><u>VERONICA GRACE P. MIRAFLOR</u></b> <span> </span><span> </span><span> </span><span> </span>date: _______________ <br/>
+            <span> </span><span> </span><span> </span><span> </span>
+            <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
+            <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
+            <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span>CGDH-I</span>
+
        </td>
        <td colspan="4">
-            <br/><br/>
+            <b>Disapproved/Invalidated by:</b><br/><br/>
             <span> </span><span> </span>
-            <b>Disapproved/Invalidated by:</b><br/>
-            <span> </span><span> </span>
+            <br/>
+            <span> </span><span> </span><span> </span><span> </span>
             <i>Reasons: __________________________________________________</i>
        </td>
     </tr>
