@@ -13,8 +13,10 @@ if (isset($_POST['prrList'])) {
 	$result = $mysqli->query($sql);
 	$row = $result->fetch_assoc();
 	$EmpName = $rowName['lastName'] . " " . $rowName['firstName'] . " " . $rowName['middleName'] . " " . $rowName['extName'];
+		
 } else {
 	$view = "<h4>Missing Cardinals</h4>";
+	
 }
 
 ?>
