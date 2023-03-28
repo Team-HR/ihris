@@ -335,12 +335,14 @@ require "header.php"; ?>
             <div class="menu">
               <?php
               $sql = "SELECT * FROM `department` ORDER BY `department` ASC";
-
-              $stmt = $mysqli->prepare($sql);
-              $stmt->execute();
-              $stmt->store_result();
-              $stmt->bind_result($department_id, $department);
-              while ($stmt->fetch()) {
+              $res = $mysqli->query($sql);
+              // $stmt = $mysqli->prepare($sql);
+              // $stmt->execute();
+              // $stmt->store_result();
+              // $stmt->bind_result($department_id, $department);
+              while ($row = $res->fetch_assoc()) {
+                $department_id = $row["department_id"];
+                $department = $row["department"];
                 echo "<div class=\"item\" data-value=\"$department_id\">$department</div>";
               }
               ?>
