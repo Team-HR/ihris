@@ -4,11 +4,11 @@ require_once "_connect.db.php";
 
 if (isset($_POST["load"])) {
     $prr_id = $_POST["prr_id"];
-    $type = $_POST["type"];
-    $year = "SELECT * from prr where prr_id='$prr_id'";
-    $year = $mysqli->query($year);
-    $year = $year->fetch_assoc();
-    $year = $year['year'];
+    // $type = $_POST["type"];
+    // $year = "SELECT * from prr where prr_id='$prr_id'";
+    // $year = $mysqli->query($year);
+    // $year = $year->fetch_assoc();
+    // $year = $year['year'];
     $data = get_employees($mysqli, $prr_id);
     echo json_encode($data);
 } elseif (isset($_POST["get_emps"])) {
@@ -51,6 +51,7 @@ function get_employees($mysqli, $prr_id)
         $date_submitted = format_date_ymd($row["date_submitted"]);
         $date_appraised = format_date_ymd($row["date_appraised"]);
 
+
         if ($status = $res->fetch_assoc()) {
             if ($date_submitted == "0000-00-00") {
                 $date_submitted = format_date_ymd($status["dateAccomplished"]);
@@ -60,20 +61,69 @@ function get_employees($mysqli, $prr_id)
             }
         }
 
-        $row["date_submitted"] = $date_submitted != "0000-00-00" ? $date_submitted : "";
-        $row["date_appraised"] = $date_appraised != "0000-00-00" ? $date_appraised : "";
+        // $date_appraised = isset($row["date_appraised"]) && $row["certify"] ? $date_appraised : "";
+
+        if (!$row['date_appraised'] || $row['date_appraised'] == "0000-00-00") {
+            $date_appraised = isset($status["certify"]) && $status["certify"] != "" ? format_date_ymd($status["certify"]) : "0000-00-00"; //"date_submitted: $date_submitted  date_appraised: $row[date_appraised]";
+        } else {
+            $date_appraised = $row["date_appraised"];
+        }
+
+
+        if ($date_submitted != "0000-00-00") {
+            $row["date_submitted"] =  $date_submitted;
+            $row["date_submitted_view"] =  format_date_mdy($date_submitted);
+        } else {
+            $row["date_submitted"] = "";
+            $row["date_submitted_view"] = "";
+        }
+
+
+        if ($date_appraised != "0000-00-00") {
+            $row["date_appraised"] =  $date_appraised;
+            $row["date_appraised_view"] =  format_date_mdy($date_appraised);
+        } else {
+            $row["date_appraised"] = "";
+            $row["date_appraised_view"] = "";
+        }
+
+
+
         $row["csid"] = $csid++;
         $row["middleName"] = $row["middleName"] ? $row["middleName"][0] : "";
         $row["gender"] = $row["gender"] ? $row["gender"][0] : "";
-        # set color state based on date_submitted and date_appraised
-        if ($date_submitted != "0000-00-00" && $date_appraised != "0000-00-00") {
-            $state = "W";
-        } elseif ($date_submitted != "0000-00-00" && $date_appraised == "0000-00-00") {
-            $state = "Y";
-        } else {
-            $state = "C";
+
+
+        $final_numerical_rating = isset($status["final_numerical_rating"]) ? $status["final_numerical_rating"] : "";
+
+        $row["numerical"] = $final_numerical_rating != 0 ? $final_numerical_rating : "";
+
+        $final_adjectival_rating = "";
+        if ($final_numerical_rating <= 5 && $final_numerical_rating > 4) {
+            $final_adjectival_rating = "O";
+        } elseif ($final_numerical_rating <= 4 && $final_numerical_rating > 3) {
+            $final_adjectival_rating = "VS";
+        } elseif ($final_numerical_rating <= 3 && $final_numerical_rating > 2) {
+            $final_adjectival_rating = "S";
+        } elseif ($final_numerical_rating <= 2 && $final_numerical_rating > 1) {
+            $final_adjectival_rating = "U";
         }
-        $row["stages"] = $state;
+
+        $row["adjectival"] = $final_adjectival_rating;
+
+        $row['appraisal_type'] = 'Semestral';
+        if ($row['stages'] == 'C') {
+            # set color state based on date_submitted and date_appraised
+            if ($date_submitted != "0000-00-00" && $date_appraised != "0000-00-00") {
+                $state = "W";
+            } elseif ($date_submitted != "0000-00-00" && $date_appraised == "0000-00-00") {
+                $state = "Y";
+            } else {
+                $state = "C";
+                $row['appraisal_type'] = '';
+            }
+            $row["stages"] = $state;
+        }
         $data[] = $row;
     }
 
@@ -194,6 +244,20 @@ function Ov_rates($mysqli, $prr_id)
 function format_date_ymd($date)
 {
     if (!$date || $date == "0000-00-00") return "0000-00-00";
-    $date = date_create($date);
-    return date_format($date, "m/d/Y");
+
+    if ($date = date_create($date)) {
+        $date =  date_format($date, "Y-m-d");
+    } else {
+        $date = "0000-00-00";
+    }
+    return $date;
+}
+
+function format_date_mdy($date)
+{
+    if (!$date || $date == "0000-00-00") return "";
+    $date = explode('-', $date);
+    if (count($date) == 3) {
+        return "$date[1]/$date[2]/$date[0]";
+    } else return "";
 }
