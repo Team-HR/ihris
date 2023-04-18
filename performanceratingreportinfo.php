@@ -468,6 +468,7 @@ function title($mysqli)
       if (textStatus == 'success') {
         // load();
         // this.vue_prr.get_items()
+        // console.log("rateDataSave");
         window.vue_prr.get_items()
         $('#rating_modal').modal('hide');
       }

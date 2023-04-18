@@ -2,7 +2,6 @@
 require "../_connect.db.php";
 
 if (isset($_POST['Scolor'])) {
-
 	$prrList = $_POST["prrList"];
 	$Scolor = $_POST["Scolor"];
 	$sql = "UPDATE `prrlist` SET `stages` = '$Scolor' WHERE `prrlist`.`prrlist_id` ='$prrList'";
@@ -29,7 +28,7 @@ if (isset($_POST['Scolor'])) {
 		$sql = "INSERT INTO `prrlist`
 					(`prrlist_id`,
 						 `prr_id`,
-						 `employees_id`,
+						 `employees_id`,s
 						 `date_submitted`,
 						 `appraisal_type`,
 						 `date_appraised`,
@@ -40,6 +39,13 @@ if (isset($_POST['Scolor'])) {
 		VALUES
 		(NULL, '$prr_id', '$empId', '$DataSub', '$appraisalType', '$appraisalDate', '$numericalRating', '$adjectiveRate', '$remarks', '$comments')";
 	} else {
+		$DataSub = $DataSub ? $DataSub : "";
+		$appraisalType = $appraisalType ? $appraisalType : "";
+		$appraisalDate = $appraisalDate ? $appraisalDate : "";
+		$numericalRating = $numericalRating ? $numericalRating : "";
+		$adjectiveRate = $adjectiveRate ? $adjectiveRate : "";
+		$remarks = $remarks ? $remarks : "";
+		$comments = $comments ? $comments : "";
 
 		$sql = "UPDATE `prrlist` SET
 		`date_submitted`='$DataSub',
@@ -54,6 +60,7 @@ if (isset($_POST['Scolor'])) {
 		# date_appraised update also date certified in spm_performancereviewstatus
 		// $date_approved
 		// $period_id = getSpmsMfoPeriodId($mysqli, $prr_id);
+
 		$sql2 = "UPDATE spms_performancereviewstatus SET approved = '$date_approved' WHERE employees_id = $empId AND period_id = '$period_id'";
 
 		if ($empId && $period_id) {
