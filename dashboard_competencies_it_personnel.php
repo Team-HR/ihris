@@ -2,6 +2,16 @@
     Self-Assessed Competency Report
 </div>
 
+
+<div class="ui grid center aligned" style="margin-bottom: -56px;">
+    <div class="eight wide column" height="">
+        <canvas id="overall_chart"></canvas>
+    </div>
+    <div class="eight wide column" height="">
+        <canvas id="gender_chart"></canvas>
+    </div>
+</div>
+
 <table class="reportTb" style="margin-top: 50px;">
     <thead>
         <tr>
@@ -157,6 +167,270 @@
             filters: filters,
         }, function(data, textStatus, xhr) {
             $("#tableBody").html(data);
+
+            $.post('personnelCompetenciesReport_proc.php', {
+                get_average_data: true,
+                filters: filters
+            }, function(data, textStatus, xhr) {
+                /* optional stuff to do after success */
+                // console.log(data);
+                var overall_chart_data = [];
+                if (data) {
+                    overall_chart_data = jQuery.parseJSON(data);
+                    // console.log(overall_chart_data);
+                } else {
+                    overall_chart_data = [];
+                }
+
+                // sorting indexed array start 
+                overall_chart_data.sort(function(a, b) {
+                    if (a.value > b.value) return -1;
+                    if (a.value < b.value) return 1;
+                    return 0;
+                });
+                // sorting indexed array end 
+                if (overallChart instanceof Object) {
+                    overallChart.destroy();
+                }
+
+                createChart(overall_chart_data);
+                // overallChart.update();
+            });
+
+
+
+            // getting average data for male and male
+            $.post('personnelCompetenciesReport_proc.php', {
+                get_average_data_by_gender: true,
+                filters: filters
+            }, function(data, textStatus, xhr) {
+                /* optional stuff to do after success */
+                // console.log(data);
+
+                var overall_chart_data_by_gender = [];
+                if (data) {
+                    overall_chart_data_by_gender = jQuery.parseJSON(data);
+                    console.log(overall_chart_data_by_gender);
+                } else {
+                    overall_chart_data_by_gender = [];
+                }
+
+                // sorting indexed array start 
+                // overall_chart_data_by_gender.sort(function(a,b){
+                //   if(a.value > b.value) return -1;
+                //   if(a.value < b.value) return 1;
+                //   return 0;
+                // });
+                // sorting indexed array end
+
+                if (genderChart instanceof Object) {
+                    genderChart.destroy();
+                }
+
+                createGenderChart(overall_chart_data_by_gender);
+                // overallChart.update();
+            });
+
+
+
         });
+    }
+
+
+
+
+    function createGenderChart(overall_chart_data_by_gender) {
+
+        var chart_data_label = [];
+        var chart_data_data = {
+            male: [],
+            female: []
+        };
+        var gender_chart = $("#gender_chart");
+
+        $.each(overall_chart_data_by_gender.male, function(index, val) {
+            chart_data_label.push(val.competency.split("_").join(" "));
+            chart_data_data.male.push(val.value);
+        });
+        $.each(overall_chart_data_by_gender.female, function(index, val) {
+            //  chart_data_label.push(val.competency.split("_").join(" "));
+            chart_data_data.female.push(val.value);
+        });
+
+        var config = {
+            type: 'bar',
+            data: {
+                labels: chart_data_label,
+                datasets: [{
+                    label: 'Male:',
+                    data: chart_data_data.male,
+                    backgroundColor: '#055bc8',
+                    borderColor: [
+                        // '#055bc8'
+                    ],
+                    fill: false,
+                    borderWidth: 1,
+                    lineTension: 0,
+                }, {
+                    label: 'Female:',
+                    data: chart_data_data.female,
+                    backgroundColor: '#ff80ff',
+                    borderColor: [
+                        // '#e03997'
+                    ],
+                    fill: false,
+                    borderWidth: 1,
+                    lineTension: 0,
+                }]
+            },
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                            if (label) {
+                                label += ' Level ';
+                            }
+                            label += tooltipItem.yLabel;
+                            return label;
+                        }
+                    }
+                },
+                responsive: true,
+                title: {
+                    display: true,
+                    text: "Average Mastery by Gender"
+                },
+                legend: {
+                    display: true,
+                },
+                scales: {
+                    xAxes: [{
+
+                        ticks: {
+                            // fontSize:14,
+                            // beginAtZero: true,
+                            // stepSize:1
+                            autoSkip: false
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        ticks: {
+                            beginAtZero: true,
+                            stepSize: 1,
+                            autoSkip: false,
+                            max: 5
+                        }
+                    }],
+                },
+                onClick: function(evt, items) {
+                    var firstPoint = this.getElementAtEvent(evt)[0];
+                    if (firstPoint) {
+                        var label = this.data.labels[firstPoint._index];
+                        var value = this.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+                        showCompInfo(label, value);
+                    }
+                }
+            }
+        };
+        // console.log(overallChart instanceof Object);
+        genderChart = new Chart(gender_chart, config);
+        // console.log(overallChart instanceof Object);
+    }
+
+
+
+    function createChart(overall_chart_data) {
+
+        var overall_chart_data_label = [];
+        var overall_chart_data_data = [];
+        var overall_chart = $("#overall_chart");
+        $.each(overall_chart_data, function(index, val) {
+            overall_chart_data_label.push(val.competency.split("_").join(" "));
+            overall_chart_data_data.push(val.value);
+        });
+
+        var config = {
+            type: 'bar',
+            data: {
+                labels: overall_chart_data_label,
+                datasets: [{
+                    label: 'Average Mastery is ',
+                    data: overall_chart_data_data,
+                    backgroundColor: '#055bc8',
+                    borderColor: [
+                        // '#055bc8'
+                    ],
+                    fill: false,
+                    borderWidth: 1,
+                    lineTension: 0,
+                }]
+            },
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                            if (label) {
+                                label += 'Level ';
+                            }
+                            label += tooltipItem.yLabel;
+                            return label;
+                        }
+                    }
+                },
+                responsive: true,
+                title: {
+                    display: true,
+                    text: "General Average"
+                },
+                legend: {
+                    display: false,
+                },
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            // fontSize:14,
+                            // min: 0,
+                            // max: 25,
+                            // beginAtZero: true,
+                            // stepSize:1
+                            autoSkip: false,
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        ticks: {
+                            beginAtZero: true,
+                            stepSize: 1,
+                            autoSkip: false,
+                            max: 5
+                        }
+                    }],
+                },
+                onClick: function(evt, items) {
+
+                    var firstPoint = this.getElementAtEvent(evt)[0];
+
+                    if (firstPoint) {
+                        var label = this.data.labels[firstPoint._index];
+                        var value = this.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+
+                        // console.log(firstPoint);
+                        // console.log(label+': '+value);
+                        showCompInfo(label, value);
+
+                    }
+
+                }
+
+            }
+        };
+        // console.log(overallChart instanceof Object);
+        overallChart = new Chart(overall_chart, config);
+        // console.log(overallChart instanceof Object);
     }
 </script>
