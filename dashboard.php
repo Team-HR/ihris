@@ -156,9 +156,9 @@ if (isset($_GET["spms"])) {
     </div>
 </div>
 
-<div class="ui container" style="min-height: 600px; padding: 5px;">
+<div class="ui fluid container" style="min-height: 600px; padding: 5px;">
     <!-- auth user info start -->
-    <div id="auth_user_app">
+    <div class="ui container" id="auth_user_app">
         <template>
             <div class="ui borderless blue inverted mini menu">
                 <div class="left item" style="margin-right: 0px !important;">
@@ -222,7 +222,7 @@ if (isset($_GET["spms"])) {
         </template>
     </div>
     <!-- auth user info end -->
-    <div class="ui container" style="padding: 5px; width: 1300px;">
+    <div class="" style="padding: 5px; width: 1500px; margin: auto;">
         <div class="ui segment grid">
             <div class="three wide column">
                 <div id="pim-menu" class="ui vertical pointing menu fluid">
@@ -252,7 +252,7 @@ if (isset($_GET["spms"])) {
             <div class="thirteen wide stretched column">
                 <div class="ui tab active" data-tab="competencies">
                     <div class="ui pointing secondary blue menu fluid" id="competencies">
-                        <a class="item active" data-tab="self_assessed">
+                        <a class="item" data-tab="self_assessed">
                             Self Assessment
                         </a>
                         <?php if ($_SESSION['supervisory']) { ?>
@@ -260,15 +260,25 @@ if (isset($_GET["spms"])) {
                                 Subordinates
                             </a>
                         <?php } ?>
+                        <?php if ($_SESSION['employee_id'] == '21919') { ?>
+                            <a class="item active" data-tab="it_personnel" style="color: purple !important;">
+                                IT Personnel
+                            </a>
+                        <?php } ?>
                     </div>
-                    <div class="ui tab segment active" data-tab="self_assessed">
+                    <div class="ui tab segment" data-tab="self_assessed">
                         <?php
-                            require_once "dashboard_competencies_self_assessment.php";
+                        require_once "dashboard_competencies_self_assessment.php";
                         ?>
                     </div>
                     <div class="ui tab segment" data-tab="subordinates">
                         <?php
-                            require_once "dashboard_competencies_subordinates.php";
+                        require_once "dashboard_competencies_subordinates.php";
+                        ?>
+                    </div>
+                    <div class="ui tab segment active" data-tab="it_personnel">
+                        <?php
+                        require_once "dashboard_competencies_it_personnel.php";
                         ?>
                     </div>
                 </div>
