@@ -1,35 +1,34 @@
 <?php
 require "../_connect.db.php";
 
-if(isset($_POST['Scolor'])){
-
+if (isset($_POST['Scolor'])) {
 	$prrList = $_POST["prrList"];
 	$Scolor = $_POST["Scolor"];
 	$sql = "UPDATE `prrlist` SET `stages` = '$Scolor' WHERE `prrlist`.`prrlist_id` ='$prrList'";
 	$sql = $mysqli->query($sql);
-	if(!$sql){
+	if (!$sql) {
 		echo $mysqli->error;
-	}else{
+	} else {
 		echo 1;
 	}
-}else{
+} else {
 
 	$prrList = $_POST['prrList'];
 	$empId = $_POST['empId'];
 	$prr_id = $_POST['prr_id'];
-	$appraisalType = addslashes($_POST['appraisalType']);
+	$appraisalType = $mysqli->real_escape_string($_POST['appraisalType']);
 	$appraisalDate = $_POST['appraisalDate'];
 	$numericalRating = $_POST['numericalRating'];
 	$adjectiveRate = $_POST['adjectiveRate'];
-	$remarks = addslashes($_POST['remarks']);
-	$comments = addslashes($_POST['comments']);
-	$DataSub = addslashes($_POST['DataSub']);
-
-	if ($prrList==0) {
-		$sql="INSERT INTO `prrlist`
+	$remarks = $mysqli->real_escape_string($_POST['remarks']);
+	$comments = $mysqli->real_escape_string($_POST['comments']);
+	$DataSub = $mysqli->real_escape_string($_POST['DataSub']);
+	$spms_performancereviewstatus_updated_msg = "";
+	if ($prrList == 0) {
+		$sql = "INSERT INTO `prrlist`
 					(`prrlist_id`,
 						 `prr_id`,
-						 `employees_id`,
+						 `employees_id`,s
 						 `date_submitted`,
 						 `appraisal_type`,
 						 `date_appraised`,
@@ -39,7 +38,14 @@ if(isset($_POST['Scolor'])){
 						 `comments`)
 		VALUES
 		(NULL, '$prr_id', '$empId', '$DataSub', '$appraisalType', '$appraisalDate', '$numericalRating', '$adjectiveRate', '$remarks', '$comments')";
-	}else{
+	} else {
+		$DataSub = $DataSub ? $DataSub : '0000-00-00';
+		$appraisalType = $appraisalType ? $appraisalType : "";
+		$appraisalDate = $appraisalDate ? $appraisalDate : '0000-00-00';
+		$numericalRating = $numericalRating ? $numericalRating : 0;
+		$adjectiveRate = $adjectiveRate ? $adjectiveRate : "";
+		$remarks = $remarks ? $remarks : "";
+		$comments = $comments ? $comments : "";
 
 		$sql = "UPDATE `prrlist` SET
 		`date_submitted`='$DataSub',
@@ -51,8 +57,36 @@ if(isset($_POST['Scolor'])){
 		`comments` = '$comments'
 		WHERE `prrlist_id` = '$prrList'";
 
+		# date_appraised update also date certified in spm_performancereviewstatus
+		$date_approved = $appraisalDate;
+		$period_id = getSpmsMfoPeriodId($mysqli, $prr_id);
+		$sql2 = "UPDATE spms_performancereviewstatus SET approved = '$date_approved' WHERE employees_id = $empId AND period_id = '$period_id'";
+
+		if ($empId && $period_id) {
+			$mysqli->query($sql2);
+			$spms_performancereviewstatus_updated_msg = "and spms_performancereviewstatus";
+		}
 	}
 	$mysqli->query($sql);
+	// echo json_encode([
+	// "sql" => $sql,
+	// "sql2" => $sql2,
+	// ]);
+	echo "prrlist $spms_performancereviewstatus_updated_msg updated, sql: " . $sql;
 }
 
-?>
+
+function getSpmsMfoPeriodId($mysqli, $prr_id)
+{
+	$sql = "SELECT * FROM prr WHERE `prr_id` = '$prr_id'";
+	$res = $mysqli->query($sql);
+	$prr = $res->fetch_assoc();
+	$month_mfo = $prr["period"];
+	$year_mfo = $prr["year"];
+	$sql = "SELECT * FROM `spms_mfo_period` WHERE `month_mfo` = '$month_mfo' AND `year_mfo` = '$year_mfo'";
+	$res = $mysqli->query($sql);
+	if ($period = $res->fetch_assoc()) {
+		return $period["mfoperiod_id"];
+	}
+	return false;
+}

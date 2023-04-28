@@ -21,7 +21,7 @@ var vue_prr = new Vue({
     },
     methods: {
         do_sort() {
-            console.log("do sort:", this.sort_by + " " + this.is_asc);
+            // console.log("do sort:", this.sort_by + " " + this.is_asc);
             // this.items = []
             var sort_by = this.sort_by
             if (!this.is_asc) {
@@ -31,11 +31,11 @@ var vue_prr = new Vue({
         },
         dynamicSort(property) {
             var sortOrder = 1;
-            if(property[0] === "-") {
+            if (property[0] === "-") {
                 sortOrder = -1;
                 property = property.substr(1);
             }
-            return function (a,b) {
+            return function (a, b) {
                 /* next line works with strings and numbers, 
                  * and you may want to customize it to your needs
                  */
@@ -46,6 +46,7 @@ var vue_prr = new Vue({
         get_items() {
             this.items = []
             this.is_loading = true
+            // console.log("prr_id: " + this.prr_id + " type: " + this.type);
             $.post("performanceratingreportinfo_proc.v2.php", {
                 load: true,
                 prr_id: this.prr_id,
@@ -63,9 +64,9 @@ var vue_prr = new Vue({
                         if (this.myChart) {
                             this.myChart.destroy()
                         }
-                        this.load_chart()
+                        // this.load_chart()
                     })
-                    
+
                 },
                 "json"
             );

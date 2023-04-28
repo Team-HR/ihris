@@ -133,6 +133,7 @@ $title = title($mysqli);
                 <th>Name Ext.</th>
                 <th>Numerical</th>
                 <th>Adjectival</th>
+                <th class="noprint"></th>
               </tr>
             </thead>
             <tbody id="tableBody">
@@ -146,22 +147,23 @@ $title = title($mysqli);
                 <td class="noprint">
                   <a :href="'employeeinfo.php?employees_id='+item.employees_id+'&spms'"><i class="icon link blue folder"></i></a>
                 </td>
+                <!-- <td colspan="12">{{ item }}</td> -->
                 <td>{{item.csid}}</td>
                 <td class="left-align">{{item.lastName}}</td>
                 <td class="left-align">{{item.firstName}}</td>
                 <td>{{item.middleName}}</td>
                 <td>{{item.extName}}</td>
                 <td>{{item.gender}}</td>
-                <td>{{item.date_submitted}}</td>
+                <td>{{item.date_submitted_view}}</td>
                 <td>{{item.appraisal_type}}</td>
-                <td>{{item.date_appraised}}</td>
+                <td>{{item.date_appraised_view}}</td>
                 <td>{{item.numerical}}</td>
                 <td>{{item.adjectival}}</td>
                 <td>{{item.remarks}}</td>
                 <td class="noprint">
                   <i class="ui icon link green edit" @click="ratingModal(item.prrlist_id,item. employees_id,item.prr_id)"></i>
                 </td>
-                <!-- <td class="noprint">
+                <td class="noprint">
                   <i class="ui icon link blue square" @click="stateColor(item.prrlist_id, item.employees_id, item.prr_id, 'C')"></i>
                 </td>
                 <td class="noprint">
@@ -169,7 +171,7 @@ $title = title($mysqli);
                 </td>
                 <td class="noprint">
                   <i class="ui icon link square outline" @click="stateColor(item.prrlist_id, item.employees_id, item.prr_id, 'W')"></i>
-                </td> -->
+                </td>
                 <td class="noprint">
                   <i class="ui icon link red times" @click="removePerInfo(item.prrlist_id)"></i>
                 </td>
@@ -439,6 +441,19 @@ function title($mysqli)
     remarks = f(i.name)['remark'].value;
     comments = f(i.name)['comment'].value;
     DataSub = f(i.name)['DataSub'].value;
+    // console.log("rateDataSave: ", {
+    //   prrList: prrList,
+    //   empId: empId,
+    //   prr_id: prr_id,
+    //   appraisalType: appraisalType,
+    //   appraisalDate: appraisalDate,
+    //   numericalRating: numericalRating,
+    //   adjectiveRate: adjectiveRate,
+    //   remarks: remarks,
+    //   comments: comments,
+    //   DataSub: DataSub,
+    // });
+
 
     $.post('umbra/PrrSaveRate.php', {
       prrList: prrList,
@@ -455,6 +470,7 @@ function title($mysqli)
       if (textStatus == 'success') {
         // load();
         // this.vue_prr.get_items()
+        // console.log("rateDataSave: ", data);
         window.vue_prr.get_items()
         $('#rating_modal').modal('hide');
       }
