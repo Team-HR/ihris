@@ -21,7 +21,7 @@ var vue_prr = new Vue({
     },
     methods: {
         do_sort() {
-            console.log("do sort:", this.sort_by + " " + this.is_asc);
+            // console.log("do sort:", this.sort_by + " " + this.is_asc);
             // this.items = []
             var sort_by = this.sort_by
             if (!this.is_asc) {
@@ -46,7 +46,7 @@ var vue_prr = new Vue({
         get_items() {
             this.items = []
             this.is_loading = true
-            console.log("prr_id: " + this.prr_id + " type: " + this.type);
+            // console.log("prr_id: " + this.prr_id + " type: " + this.type);
             $.post("performanceratingreportinfo_proc.v2.php", {
                 load: true,
                 prr_id: this.prr_id,
@@ -64,7 +64,7 @@ var vue_prr = new Vue({
                         if (this.myChart) {
                             this.myChart.destroy()
                         }
-                        this.load_chart()
+                        // this.load_chart()
                     })
 
                 },

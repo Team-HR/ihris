@@ -94,7 +94,8 @@ function get_employees($mysqli, $prr_id)
         $row["gender"] = $row["gender"] ? $row["gender"][0] : "";
 
 
-        $final_numerical_rating = isset($status["final_numerical_rating"]) ? $status["final_numerical_rating"] : "";
+        // $final_numerical_rating = isset($status["final_numerical_rating"]) ? $status["final_numerical_rating"] : "";
+        $final_numerical_rating = $row["numerical"];
 
         $row["numerical"] = $final_numerical_rating != 0 ? $final_numerical_rating : "";
 

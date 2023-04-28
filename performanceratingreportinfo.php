@@ -441,18 +441,20 @@ function title($mysqli)
     remarks = f(i.name)['remark'].value;
     comments = f(i.name)['comment'].value;
     DataSub = f(i.name)['DataSub'].value;
-    console.log("rateDataSave: ", {
-      prrList: prrList,
-      empId: empId,
-      prr_id: prr_id,
-      appraisalType: appraisalType,
-      appraisalDate: appraisalDate,
-      numericalRating: numericalRating,
-      adjectiveRate: adjectiveRate,
-      remarks: remarks,
-      comments: comments,
-      DataSub: DataSub,
-    });
+    // console.log("rateDataSave: ", {
+    //   prrList: prrList,
+    //   empId: empId,
+    //   prr_id: prr_id,
+    //   appraisalType: appraisalType,
+    //   appraisalDate: appraisalDate,
+    //   numericalRating: numericalRating,
+    //   adjectiveRate: adjectiveRate,
+    //   remarks: remarks,
+    //   comments: comments,
+    //   DataSub: DataSub,
+    // });
+
+
     $.post('umbra/PrrSaveRate.php', {
       prrList: prrList,
       empId: empId,
@@ -468,7 +470,7 @@ function title($mysqli)
       if (textStatus == 'success') {
         // load();
         // this.vue_prr.get_items()
-        // console.log("rateDataSave");
+        // console.log("rateDataSave: ", data);
         window.vue_prr.get_items()
         $('#rating_modal').modal('hide');
       }

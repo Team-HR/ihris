@@ -23,7 +23,7 @@ if (isset($_POST['Scolor'])) {
 	$remarks = $mysqli->real_escape_string($_POST['remarks']);
 	$comments = $mysqli->real_escape_string($_POST['comments']);
 	$DataSub = $mysqli->real_escape_string($_POST['DataSub']);
-
+	$spms_performancereviewstatus_updated_msg = "";
 	if ($prrList == 0) {
 		$sql = "INSERT INTO `prrlist`
 					(`prrlist_id`,
@@ -39,10 +39,10 @@ if (isset($_POST['Scolor'])) {
 		VALUES
 		(NULL, '$prr_id', '$empId', '$DataSub', '$appraisalType', '$appraisalDate', '$numericalRating', '$adjectiveRate', '$remarks', '$comments')";
 	} else {
-		$DataSub = $DataSub ? $DataSub : "";
+		$DataSub = $DataSub ? $DataSub : '0000-00-00';
 		$appraisalType = $appraisalType ? $appraisalType : "";
-		$appraisalDate = $appraisalDate ? $appraisalDate : "";
-		$numericalRating = $numericalRating ? $numericalRating : "";
+		$appraisalDate = $appraisalDate ? $appraisalDate : '0000-00-00';
+		$numericalRating = $numericalRating ? $numericalRating : 0;
 		$adjectiveRate = $adjectiveRate ? $adjectiveRate : "";
 		$remarks = $remarks ? $remarks : "";
 		$comments = $comments ? $comments : "";
@@ -58,16 +58,21 @@ if (isset($_POST['Scolor'])) {
 		WHERE `prrlist_id` = '$prrList'";
 
 		# date_appraised update also date certified in spm_performancereviewstatus
-		// $date_approved
-		// $period_id = getSpmsMfoPeriodId($mysqli, $prr_id);
-
+		$date_approved = $appraisalDate;
+		$period_id = getSpmsMfoPeriodId($mysqli, $prr_id);
 		$sql2 = "UPDATE spms_performancereviewstatus SET approved = '$date_approved' WHERE employees_id = $empId AND period_id = '$period_id'";
 
 		if ($empId && $period_id) {
 			$mysqli->query($sql2);
+			$spms_performancereviewstatus_updated_msg = "and spms_performancereviewstatus";
 		}
 	}
 	$mysqli->query($sql);
+	// echo json_encode([
+	// "sql" => $sql,
+	// "sql2" => $sql2,
+	// ]);
+	echo "prrlist $spms_performancereviewstatus_updated_msg updated, sql: " . $sql;
 }
 
 
