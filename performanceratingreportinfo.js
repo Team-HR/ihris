@@ -64,7 +64,7 @@ var vue_prr = new Vue({
                         if (this.myChart) {
                             this.myChart.destroy()
                         }
-                        // this.load_chart()
+                        this.load_chart()
                     })
 
                 },
@@ -155,7 +155,7 @@ var vue_prr = new Vue({
                 get_ova_rates: true,
                 prr_id: this.prr_id
             }, (data, textStatus, jqXHR) => {
-                // console.log(data);
+                console.log("figs:", data);
                 this.ova_rates = JSON.parse(JSON.stringify(data))
             },
                 "json"
@@ -166,17 +166,19 @@ var vue_prr = new Vue({
             this.myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['POOR', 'UNSATISFACTORY', 'SATISFACTORY', 'VERY SATISFACTORY	', 'OUTSTANDING'],
+                    labels: ['POOR', 'UNSATISFACTORY', 'SATISFACTORY', 'VERY SATISFACTORY', 'OUTSTANDING'],
                     datasets: [{
-                        label: ['Performance Rating Report'],
+                        label: ['Percentage (%)'],
                         data: [
-                            vue_prr.ova_rates[4].total,
-                            vue_prr.ova_rates[3].total,
-                            vue_prr.ova_rates[2].total,
-                            vue_prr.ova_rates[1].total,
-                            vue_prr.ova_rates[0].total
+                            // vue_prr.ova_rates[5].total,
+                            vue_prr.ova_rates[4].percent,
+                            vue_prr.ova_rates[3].percent,
+                            vue_prr.ova_rates[2].percent,
+                            vue_prr.ova_rates[1].percent,
+                            vue_prr.ova_rates[0].percent
                         ],
                         backgroundColor: [
+                            // 'rgba(231, 0, 0, 0.2)',
                             'rgba(231, 0, 0, 0.2)',
                             'rgba(231, 115, 0, 0.2)',
                             'rgba(231, 231, 0, 0.2)',
@@ -184,6 +186,7 @@ var vue_prr = new Vue({
                             'rgba(0, 231, 231, 0.2)',
                         ],
                         borderColor: [
+                            // 'rgba(231, 0, 0, 1)',
                             'rgba(231, 0, 0, 1)',
                             'rgba(231, 115, 0, 1)',
                             'rgba(231, 231, 0, 1)',

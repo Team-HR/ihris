@@ -217,15 +217,46 @@ $title = title($mysqli);
                 <tr style="text-align: center" v-if="!ova_rates.length">
                   <td colspan="5"><img style="transform: scale(0.1); margin-top: -200px;" src="assets/images/loading.gif"></td>
                 </tr>
-                <tr v-for="ova in ova_rates" :key="ova.row">
-                  <td class="noborder noright">{{ova.row}}</td>
-                  <td class="noborder">=</td>
-                  <td style="text-align: center; border: 1px solid black;">{{ova.female}}</td>
-                  <td style="text-align: center; border: 1px solid black;">{{ova.male}}</td>
-                  <td style="text-align: center; border: 1px solid black;">{{ova.total}}</td>
+                <tr v-for="ova, o in ova_rates" :key="o">
+                  <template v-if="o < 6">
+                    <td class="noborder noright">{{ova.row}}</td>
+                    <td class="noborder">=</td>
+                    <td style="text-align: center; border: 1px solid black;">{{ova.female}}</td>
+                    <td style="text-align: center; border: 1px solid black;">{{ova.male}}</td>
+                    <td style="text-align: center; border: 1px solid black;">{{ova.total}} <i>({{ova.percent}}%)</i></td>
+                  </template>
                 </tr>
               </tbody>
             </table>
+
+            <br><br>
+
+            <table style="border-collapse: collapse;margin: auto;">
+              <thead>
+                <tr>
+                  <th class="noborder noright" style="width: 200px"></th>
+                  <th class="noborder" style="width: 50px"></th>
+                  <th style="width: 100px; border: 1px solid black;">Female</th>
+                  <th style="width: 100px; border: 1px solid black;">Male</th>
+                  <th style="width: 100px; border: 1px solid black;">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="text-align: center" v-if="!ova_rates.length">
+                  <td colspan="5"><img style="transform: scale(0.1); margin-top: -200px;" src="assets/images/loading.gif"></td>
+                </tr>
+                <tr v-for="ova, o in ova_rates" :key="o">
+                  <template v-if="o == 6">
+                    <td class="noborder noright">*{{ova.row}}</td>
+                    <td class="noborder">=</td>
+                    <td style="text-align: center; border: 1px solid black;">{{ova.female}}</td>
+                    <td style="text-align: center; border: 1px solid black;">{{ova.male}}</td>
+                    <td style="text-align: center; border: 1px solid black;">{{ova.total}}</td>
+                  </template>
+                </tr>
+              </tbody>
+            </table>
+
           </div>
           <!-- chart -->
 

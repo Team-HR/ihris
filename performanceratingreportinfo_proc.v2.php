@@ -162,34 +162,43 @@ function Ov_rates($mysqli, $prr_id)
     $MU = 0;
     $MP = 0;
     $MT = 0;
+
+    $others_male = 0;
+    $others_female = 0;
+    $others_total = 0;
+
     while ($row = $result->fetch_assoc()) {
-        $employees_id = $row["employees_id"];
-        $sql1 = "SELECT * from prrlist where prr_id='$_POST[prr_id]' AND employees_id='$employees_id'";
-        $result2 = $mysqli->query($sql1);
-        $row2 = $result2->fetch_assoc();
         if ($row['gender'] == "MALE") {
-            if ($row2['adjectival'] == 'O') {
-                $MO++;
-            } elseif ($row2['adjectival'] == 'VS') {
-                $MV++;
-            } elseif ($row2['adjectival'] == 'S') {
-                $MS++;
-            } elseif ($row2['adjectival'] == 'US') {
-                $MU++;
+            if (isset($row["date_submitted"]) && $row["date_submitted"] != "0000-00-00" && $row["numerical"] != "0") {
+                if ($row['adjectival'] == 'O') {
+                    $MO++;
+                } elseif ($row['adjectival'] == 'VS') {
+                    $MV++;
+                } elseif ($row['adjectival'] == 'S') {
+                    $MS++;
+                } elseif ($row['adjectival'] == 'US') {
+                    $MU++;
+                } else {
+                    $MP++;
+                }
             } else {
-                $MP++;
+                $others_male++;
             }
         } elseif ($row['gender'] == "FEMALE") {
-            if ($row2['adjectival'] == 'O') {
-                $FO++;
-            } elseif ($row2['adjectival'] == 'VS') {
-                $FV++;
-            } elseif ($row2['adjectival'] == 'S') {
-                $FS++;
-            } elseif ($row2['adjectival'] == 'US') {
-                $FU++;
+            if (isset($row["date_submitted"]) && $row["date_submitted"] != "0000-00-00" && $row["numerical"] != "0") {
+                if ($row['adjectival'] == 'O') {
+                    $FO++;
+                } elseif ($row['adjectival'] == 'VS') {
+                    $FV++;
+                } elseif ($row['adjectival'] == 'S') {
+                    $FS++;
+                } elseif ($row['adjectival'] == 'US') {
+                    $FU++;
+                } else {
+                    $FP++;
+                }
             } else {
-                $FP++;
+                $others_female++;
             }
         }
     }
@@ -205,38 +214,50 @@ function Ov_rates($mysqli, $prr_id)
             "row" => "OUTSTANDING",
             "female" => $FO,
             "male" => $MO,
-            "total" => $FO + $MO
+            "total" => $FO + $MO,
+            "percent" => round((($FO + $MO) / ($FT + $MT) * 100))
         ],
         [
             "row" => "VERY SATISFACTORY",
             "female" => $FV,
             "male" => $MV,
-            "total" => $FV + $MV
+            "total" => $FV + $MV,
+            "percent" => round((($FV + $MV) / ($FT + $MT) * 100))
         ],
         [
             "row" => "SATISFACTORY",
             "female" => $FS,
             "male" => $MS,
-            "total" => $FS + $MS
+            "total" => $FS + $MS,
+            "percent" => round((($FS + $MS) / ($FT + $MT) * 100))
         ],
         [
             "row" => "UNSATISFACTORY",
             "female" => $FU,
             "male" => $MU,
-            "total" => $FU + $MU
+            "total" => $FU + $MU,
+            "percent" => round((($FU + $MU) / ($FT + $MT) * 100))
         ],
         [
             "row" => "POOR",
             "female" => $FP,
             "male" => $MP,
-            "total" => $FP + $MP
+            "total" => $FP + $MP,
+            "percent" => round((($FP + $MP) / ($FT + $MT) * 100))
         ],
         [
             "row" => "TOTAL",
             "female" => $FT,
             "male" => $MT,
-            "total" => $FT + $MT
+            "total" => $FT + $MT,
+            "percent" => 100
         ],
+        [
+            "row" => "OTHERS (Not submitted/ Separated/ Inactive)",
+            "female" => $others_female,
+            "male" => $others_male,
+            "total" => $others_female + $others_male
+        ]
     ];
     return $arr;
 }
