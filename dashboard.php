@@ -226,7 +226,10 @@ if (isset($_GET["spms"])) {
         <div class="ui segment grid">
             <div class="three wide column">
                 <div id="pim-menu" class="ui vertical pointing menu fluid">
-                    <a class="item active" data-tab="competencies">
+                    <a class="item active" data-tab="personality">
+                        Personality
+                    </a>
+                    <a class="item" data-tab="competencies">
                         Competencies
                     </a>
                     <a class="item" data-tab="calendar">
@@ -250,9 +253,23 @@ if (isset($_GET["spms"])) {
                 </div>
             </div>
             <div class="thirteen wide stretched column">
-                <div class="ui tab active" data-tab="competencies">
+                <div class="ui tab active" data-tab="personality">
                     <div class="ui pointing secondary blue menu fluid" id="competencies">
-                        <a class="item" data-tab="self_assessed">
+                        <a class="item active" data-tab="myersBriggsIndicator">
+                            Myers-Briggs Type Indicator
+                        </a>
+                    </div>
+                    <div class="ui tab segment active" data-tab="myersBriggsIndicator">
+                        <h3 style="text-align: center;">MYERS-BRIGGS TYPE INDICATOR</h3>
+                        <!-- <span>Results will be shown here</span> -->
+                        <?php
+                        require "mbti_dashboard.php"
+                        ?>
+                    </div>
+                </div>
+                <div class="ui tab" data-tab="competencies">
+                    <div class="ui pointing secondary blue menu fluid" id="competencies">
+                        <a class="item <?php echo $_SESSION['employee_id'] == '21919' ? '' : 'active' ?>" data-tab="self_assessed">
                             Self Assessment
                         </a>
                         <?php if ($_SESSION['supervisory']) { ?>
@@ -266,7 +283,7 @@ if (isset($_GET["spms"])) {
                             </a>
                         <?php } ?>
                     </div>
-                    <div class="ui tab segment" data-tab="self_assessed">
+                    <div class="ui tab segment <?php echo $_SESSION['employee_id'] == '21919' ? '' : 'active' ?>" data-tab="self_assessed">
                         <?php
                         require_once "dashboard_competencies_self_assessment.php";
                         ?>
@@ -276,11 +293,16 @@ if (isset($_GET["spms"])) {
                         require_once "dashboard_competencies_subordinates.php";
                         ?>
                     </div>
-                    <div class="ui tab segment active" data-tab="it_personnel">
-                        <?php
-                        require_once "dashboard_competencies_it_personnel.php";
-                        ?>
-                    </div>
+
+                    <?php if ($_SESSION['employee_id'] == '21919') { ?>
+                        <div class="ui tab segment active" data-tab="it_personnel">
+                            <?php
+                            require_once "dashboard_competencies_it_personnel.php";
+                            ?>
+                        </div>
+                    <?php } ?>
+
+
                 </div>
 
                 <div class="ui tab" data-tab="calendar">

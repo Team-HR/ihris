@@ -23,7 +23,7 @@ require "header.php";
                         item count: {{items1[i].answer.length}}
                         <div :id="`item${i}`" class="field" v-for="choice,c in item.choices" :key="c">
                             <div class="ui checkbox" style="margin-left: 15px;">
-                                <input :required="items1[i].answer.length ==0 ? true: false" type="checkbox" :name="`choiceItem${i++}`" tabindex="0" v-model="item.answer" :value="c">
+                                <input :required="items1[i].answer && items1[i].answer.length ==0 ? true: false" type="checkbox" :name="`choiceItem${i++}`" tabindex="0" v-model="item.answer" :value="c">
                                 <label>{{choice}}</label>
                             </div>
                         </div>
@@ -92,41 +92,6 @@ require "header.php";
 
             <button class="ui button" type="submit">Submit</button>
         </form>
-
-        <!-- results down here -->
-        <template v-if="results.raw">
-            <div class="ui grid" style="margin-top: 50px;">
-                <div class="two wide column" v-for="res, key in results.raw" :key="key">
-                    <h3 style="text-align: center;">{{key}}</h3>
-                    <h4>Total Points: {{results.raw[key].total}}</h4>
-                    <li v-for="item, i in results.raw[key].qc" :key="i">{{item.code}} - {{item.points}}</li>
-                </div>
-
-
-                <h3>Personality Type: {{results.personalityType}}</h3>
-                <br>
-
-            </div>
-        </template>
-        <!-- <table class="ui table">
-            <thead>
-                <tr>
-                    <th>E</th>
-                    <th>I</th>
-                    <th>S</th>
-                    <th>N</th>
-                    <th>T</th>
-                    <th>F</th>
-                    <th>J</th>
-                    <th>P</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-
-                </tr>
-            </tbody> -->
-
         </table>
 
     </div>
@@ -145,7 +110,7 @@ require "header.php";
                             "Plan what you will do and when, or",
                             "Just go!!"
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "If you were a teacher, would you rather teach",
@@ -153,7 +118,7 @@ require "header.php";
                             "Facts-based courses, or",
                             "Courses inlvolving opinion or theory?"
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "Are you usually",
@@ -161,7 +126,7 @@ require "header.php";
                             "A 'Good Mixer with groups of people, or'",
                             "Rather quiet and reserve?"
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "Do you more often let",
@@ -169,7 +134,7 @@ require "header.php";
                             "Your heart rule your head, or",
                             "Your head rule your heart?"
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "In doing something that many other people do, would you rather",
@@ -177,7 +142,7 @@ require "header.php";
                             "Invent a way of your own, or",
                             "Do it in the accepted way?"
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "Among your friends are you",
@@ -185,7 +150,7 @@ require "header.php";
                             "Full of news about everybody, or",
                             "One of the last to ehar what is going on?"
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "Does the idea of making a list of what you should get done over a weekend",
@@ -194,7 +159,7 @@ require "header.php";
                             "Stress you, or",
                             "Depress you?"
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "When you have a special job to do, do you like to",
@@ -202,7 +167,7 @@ require "header.php";
                             "Organize it carefully before you start, or",
                             "Find out what is necessary as you go along?"
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "Do you tend to have",
@@ -210,7 +175,7 @@ require "header.php";
                             "Broad friendships with many different people, or",
                             "Deep friendship with very few people?"
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "Do you admire more the people who are",
@@ -218,7 +183,7 @@ require "header.php";
                             "Normal-acting to never make themselves the center of attention, or",
                             "Too original and individual to care whether they are the center of attention or not"
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "Do you prefer to",
@@ -226,7 +191,7 @@ require "header.php";
                             "Arrange picnics, parties etc, well in advance, or",
                             "Be free to do whatever to loos like fun when the time comes?"
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "Do you usually get along better with",
@@ -234,7 +199,7 @@ require "header.php";
                             "Realistic people, or",
                             "Imaginative people?"
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "When you are with the group of people, would you usually rather",
@@ -242,7 +207,7 @@ require "header.php";
                             "Join in the talkof the group or ",
                             "Stand back and listen first?"
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "Is it a higher compliment to be called",
@@ -250,7 +215,7 @@ require "header.php";
                             "A person of real feeling, or",
                             "A consistently reasonable person?"
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "In reading for pleasure, do you",
@@ -258,7 +223,7 @@ require "header.php";
                             "Enjoy odd or original ways of saying things, or",
                             "Like writers to say exactly what they mean?"
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "Do you",
@@ -266,7 +231,7 @@ require "header.php";
                             "Talk easily to almost anyone for as long as you have to, or",
                             "Find a lot to say only to certian people or under certain conditions?"
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "Does following a schedule",
@@ -274,7 +239,7 @@ require "header.php";
                             "Appeal to you, or",
                             "Cramp you?"
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "When it is settled well in advance that you will do a certain things at a certain time, do you find it",
@@ -282,7 +247,7 @@ require "header.php";
                             "Nice to be able to plan accordingly, or",
                             "A little unpleasant to be tied down?"
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "Are you more successful",
@@ -290,7 +255,7 @@ require "header.php";
                             "At following a carefully worked plan, or",
                             "At dealing with the unexpected and seeing quickly what should be done?"
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "Would you rather be considered",
@@ -298,7 +263,7 @@ require "header.php";
                             "A practical person, or",
                             "An out-of-the-box-thinking person?"
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "In a large group, do you more often",
@@ -306,7 +271,7 @@ require "header.php";
                             "Introduce others, or",
                             "Get introduced?"
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "Do you usually",
@@ -314,7 +279,7 @@ require "header.php";
                             "Value emotion more than logic, or",
                             "Value logic more than feelings?"
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "Would you rather have as a friend",
@@ -322,7 +287,7 @@ require "header.php";
                             "Someone who is always coming up with new ideas, or",
                             "Someone who has both feet on the ground?"
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "Can the new pople you meet tell you what you are interested",
@@ -330,7 +295,7 @@ require "header.php";
                             "Right away,",
                             "Only after they really get to know you?"
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "(On this question only, if two answers are true, pick both) In your daily work, do you",
@@ -339,7 +304,7 @@ require "header.php";
                             "Rather enjoy an emergency that makes you work against time, or",
                             "Hate to work under pressure?"
                         ],
-                        answer: [0, 2]
+                        answer: []
                     },
                     {
                         question: "Do you usually",
@@ -347,7 +312,7 @@ require "header.php";
                             "Show your feelings freely, or",
                             "Keep your feelings to yourself?",
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "",
@@ -355,7 +320,7 @@ require "header.php";
                             "Scheduled",
                             "Unplanned",
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "",
@@ -363,7 +328,7 @@ require "header.php";
                             "Facts",
                             "Ideas",
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "",
@@ -371,7 +336,7 @@ require "header.php";
                             "Quiet",
                             "Hearty",
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "",
@@ -379,7 +344,7 @@ require "header.php";
                             "Convincing",
                             "Touching",
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "",
@@ -387,7 +352,7 @@ require "header.php";
                             "Imaginative",
                             "Matter-of-fact",
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "",
@@ -395,7 +360,7 @@ require "header.php";
                             "Benefits",
                             "Blessings",
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "",
@@ -403,7 +368,7 @@ require "header.php";
                             "Peacemaker",
                             "Judge",
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "",
@@ -411,7 +376,7 @@ require "header.php";
                             "Systematic",
                             "Spontaneous",
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "",
@@ -419,7 +384,7 @@ require "header.php";
                             "Statement",
                             "Concept",
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "",
@@ -427,7 +392,7 @@ require "header.php";
                             "Reserve",
                             "Talkative",
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "",
@@ -435,7 +400,7 @@ require "header.php";
                             "Analyze",
                             "Sympathize",
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "",
@@ -443,7 +408,7 @@ require "header.php";
                             "Create",
                             "Make",
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "",
@@ -451,7 +416,7 @@ require "header.php";
                             "Determined",
                             "Devoted",
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "",
@@ -459,7 +424,7 @@ require "header.php";
                             "Gentle",
                             "Firm",
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "",
@@ -467,7 +432,7 @@ require "header.php";
                             "Systematic",
                             "Casual",
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "",
@@ -475,7 +440,7 @@ require "header.php";
                             "Certainty",
                             "Theory",
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "",
@@ -483,7 +448,7 @@ require "header.php";
                             "Calm",
                             "Lively",
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "",
@@ -491,7 +456,7 @@ require "header.php";
                             "Justice",
                             "Mercy",
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "",
@@ -499,7 +464,7 @@ require "header.php";
                             "Fascinating",
                             "Sensible",
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "",
@@ -507,7 +472,7 @@ require "header.php";
                             "Firm-minded",
                             "Warm hearted",
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "",
@@ -515,7 +480,7 @@ require "header.php";
                             "Feeling",
                             "Thinking",
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "",
@@ -523,7 +488,7 @@ require "header.php";
                             "Literal",
                             "Figurative",
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "",
@@ -531,7 +496,7 @@ require "header.php";
                             "Anticipation",
                             "Compassion",
                         ],
-                        answer: 1
+                        answer: null
                     },
                     {
                         question: "",
@@ -539,7 +504,7 @@ require "header.php";
                             "Hard",
                             "Soft",
                         ],
-                        answer: 1
+                        answer: null
                     },
                 ],
                 results: {}
@@ -547,14 +512,16 @@ require "header.php";
         },
         methods: {
             submitTest() {
+
                 $.post("mbti_proc.php", {
                         submitTest: true,
                         items: this.items1
                     },
                     (data, textStatus, jqXHR) => {
-                        // console.log(data);
-                        this.results = data
-                        console.log(this.results);
+                        console.log(data);
+                        // this.results = data
+                        // console.log(this.results);
+                        window.history.back();
                     },
                     "json"
                 );
