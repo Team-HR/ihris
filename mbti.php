@@ -3,22 +3,22 @@ require "header.php";
 ?>
 
 
-<div class="ui container" style="font-size: 18px;" id="myersBriggsTestApp">
+<div class="ui container" id="myersBriggsTestApp" st>
     <div class="column ui segment center aligned">
         <h3>MYERS-BRIGGS TYPE INDICATOR</strong></h3>
         <span>By Katharine C. Briggs & Isabel Briggs Myers</span>
     </div>
 
-    <div class="ui segment">
-        <form @submit.prevent="submitTest()">
+    <div class="ui segment" style="background-color: #fffad3;">
+        <form @submit.prevent="submitTest()" style="margin: 50px;">
             <h3>Directions:</h3>
             <p>There are no "right" or "wrong" answers to the question.... (continue later)</p>
             <h3>Part 1: Which answer comes closer to telling how many you usually feel or act?</h3>
 
             <template v-for="item, i in items1" :key="i">
-                <div class="grouped fields" v-if="i < 26">
+                <div class="grouped fields" v-if="i < 26" style="font-size: 18px !important;">
                     <template v-if="i == 24">
-                        <label :for="`item${i}`">{{` ${i+1}. ${item.question}`}}</label>
+                        <label :for="`item${i}`" style="margin-bottom: 15px;">{{` ${i+1}. ${item.question}`}}</label>
                         <br>
                         item count: {{items1[i].answer.length}}
                         <div :id="`item${i}`" class="field" v-for="choice,c in item.choices" :key="c">
@@ -30,12 +30,15 @@ require "header.php";
                     </template>
                     <template v-else>
                         <label :for="`item${i}`">{{` ${i+1}. ${item.question}`}}</label>
+                        <br>
+                        <br>
                         <div :id="`item${i}`" class="field" v-for="choice,c in item.choices" :key="c">
                             <div class="ui radio checkbox" style="margin-left: 15px;">
                                 <input required type="radio" :name="`choiceItem${i}`" tabindex="0" class="hidden" v-model="item.answer" :value="c">
                                 <label>{{choice}}</label>
                             </div>
                         </div>
+                        <br>
                     </template>
 
                 </div>
@@ -43,7 +46,7 @@ require "header.php";
 
 
             <div style="margin-top: 20px; margin-bottom: 20px;">
-                <h3>Part 2: Which word in each pair appeals to your more?</h3>
+                <h3>Part 2: Which word in each pair appeals to you more?</h3>
                 <span>(Think what word means, not how they look or how they sound)</span>
             </div>
 
@@ -90,7 +93,7 @@ require "header.php";
                 </div>
             </div>
 
-            <button class="ui button" type="submit">Submit</button>
+            <button class="ui green button" type="submit">Submit</button>
         </form>
         </table>
 
@@ -290,7 +293,7 @@ require "header.php";
                         answer: null
                     },
                     {
-                        question: "Can the new pople you meet tell you what you are interested",
+                        question: "Can the new people you meet tell you what you are interested",
                         choices: [
                             "Right away,",
                             "Only after they really get to know you?"
