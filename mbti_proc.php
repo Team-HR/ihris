@@ -107,7 +107,7 @@ function getPersonalityType($mysqli, $answers)
                     "code" => $ref["code"],
                     "points" => $ref["points"],
                 ];
-                $data[$ref["type"]]["total"] += $ref["points"];
+                $data[$ref["type"]]["total"]  += $ref["points"];
                 break;
             }
         }
@@ -115,10 +115,34 @@ function getPersonalityType($mysqli, $answers)
 
     // compare
     $personalityType = "";
-    # E/I
+    # E/I in case of tie selec I
     $personalityType .= $data["E"]["total"] > $data["I"]["total"] ? "E" : "I";
+
+    # S/N in case of tie selec N
     $personalityType .= $data["S"]["total"] > $data["N"]["total"] ? "S" : "N";
-    $personalityType .= $data["T"]["total"] > $data["F"]["total"] ? "T" : "F";
+
+    # T/F in case of tie select T if male, F if female
+    $employee_id = $_SESSION["employee_id"];
+    $sql = "SELECT `gender` FROM `employees` WHERE `employees_id` = '$employee_id'";
+    $res = $mysqli->query($sql);
+    $row = $res->fetch_assoc();
+    $gender = $row["gender"];
+
+    if ($data["T"]["total"] == $data["F"]["total"]) {
+        if ($gender == 'MALE') {
+            $personalityType .= "T";
+        } elseif ($gender == 'FEMALE') {
+            $personalityType .= "F";
+        } else {
+            $personalityType .= " <score tied for T/F, select T if Male, F if Female> ";
+        }
+    } else {
+        $personalityType .= $data["T"]["total"] > $data["F"]["total"] ? "T" : "F";
+    }
+
+    // $personalityType .= $data["T"]["total"] > $data["F"]["total"] ? "T" : "F";
+
+    # J/P in case of tie select P
     $personalityType .= $data["J"]["total"] > $data["P"]["total"] ? "J" : "P";
 
     // echo json_encode([
@@ -128,6 +152,6 @@ function getPersonalityType($mysqli, $answers)
 
     return [
         "raw" => $data,
-        "personalityType" => $personalityType
+        "personalityType" => $personalityType,
     ];
 }

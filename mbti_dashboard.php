@@ -1,6 +1,5 @@
 <div id="mbtiVueApp">
     <template>
-
         <!-- results down here -->
         <template v-if="results.length > 0">
             <div v-for="result, res in results" :key="res" class="ui segment green">
@@ -34,7 +33,7 @@
                         getDataIfExisting: true
                     },
                     (data, textStatus, jqXHR) => {
-                        // console.log(data);
+                        console.log(data);
                         this.results = data
                     },
                     "json"
