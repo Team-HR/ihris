@@ -4,29 +4,32 @@ require "header.php";
 
 
 <div class="ui container" id="myersBriggsTestApp" st>
-    <div class="column ui segment center aligned">
+    <div class="column ui segment center aligned" style="background-color: #fffef5;">
         <h3>MYERS-BRIGGS TYPE INDICATOR</strong></h3>
         <span>By Katharine C. Briggs & Isabel Briggs Myers</span>
     </div>
 
-    <div class="ui segment" style="background-color: #fffad3;">
+    <div class="ui segment" style="background-color: #fffef5;">
         <form @submit.prevent="submitTest()" style="margin: 50px;">
-            <h3>Directions:</h3>
-            <p>There are no "right" or "wrong" answers to the question.... (continue later)</p>
-            <h3>Part 1: Which answer comes closer to telling how many you usually feel or act?</h3>
+            <h3 style="font-size: 18px;">Directions:</h3>
+            <p style="font-size: 18px;">There are no "right" or "wrong" answers to the question on this inventory. Your answers will help to show you like to look at things and how you like to go about deciding things. Knowing your own preferences and learning about other people with different preferences can relate to each other and be valuable to society.</p>
+            <p style="font-size: 18px;">Read each question carefully and select one of the two choices given, which applies to you, by choosing either "A" or "B"</p>
+            <strong style="font-size: 18px;">Part 1: Which answer comes closer to telling how many you usually feel or act?</strong>
 
             <template v-for="item, i in items1" :key="i">
                 <div class="grouped fields" v-if="i < 26" style="font-size: 18px !important;">
                     <template v-if="i == 24">
                         <label :for="`item${i}`" style="margin-bottom: 15px;">{{` ${i+1}. ${item.question}`}}</label>
                         <br>
-                        item count: {{items1[i].answer.length}}
+                        <br>
+                        <!-- item count: {{items1[i].answer.length}} -->
                         <div :id="`item${i}`" class="field" v-for="choice,c in item.choices" :key="c">
                             <div class="ui checkbox" style="margin-left: 15px;">
                                 <input :required="items1[i].answer && items1[i].answer.length ==0 ? true: false" type="checkbox" :name="`choiceItem${i++}`" tabindex="0" v-model="item.answer" :value="c">
                                 <label>{{choice}}</label>
                             </div>
                         </div>
+                        <br>
                     </template>
                     <template v-else>
                         <label :for="`item${i}`">{{` ${i+1}. ${item.question}`}}</label>
@@ -46,13 +49,14 @@ require "header.php";
 
 
             <div style="margin-top: 20px; margin-bottom: 20px;">
-                <h3>Part 2: Which word in each pair appeals to you more?</h3>
-                <span>(Think what word means, not how they look or how they sound)</span>
+                <strong style="font-size: 18px;">Part 2: Which word in each pair appeals to you more?</strong>
+                <br>
+                <span style="font-size: 16px;">(Think what word means, not how they look or how they sound)</span>
             </div>
 
 
-            <div class="ui grid" style="margin-bottom: 20px;">
-                <div class="four wide column">
+            <div class="ui grid" style="margin-bottom: 20px; font-size:18px;">
+                <div class="column" style="width: 30%;">
                     <template v-for="item, i in items1" :key="i">
                         <div class="grouped fields" v-if="i > 25 && i < 34">
                             <label :for="`item${i}`">{{` ${i+1}. ${item.question}`}}</label>
@@ -65,7 +69,7 @@ require "header.php";
                         </div>
                     </template>
                 </div>
-                <div class="four wide column">
+                <div class="column" style="width: 30%;">
                     <template v-for="item, i in items1" :key="i">
                         <div class="grouped fields" v-if="i > 33 && i < 42">
                             <label :for="`item${i}`">{{` ${i+1}. ${item.question}`}}</label>
@@ -78,7 +82,7 @@ require "header.php";
                         </div>
                     </template>
                 </div>
-                <div class="four wide column">
+                <div class="column" style="width: 30%;">
                     <template v-for="item, i in items1" :key="i">
                         <div class="grouped fields" v-if="i > 41">
                             <label :for="`item${i}`">{{` ${i+1}. ${item.question}`}}</label>
