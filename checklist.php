@@ -23,10 +23,14 @@ $sql = "SELECT * FROM `rsp_comp_checklist` WHERE `rspcomp_id` = $rspcomp_id";
 $result = $mysqli->query($sql);
 $row = $result->fetch_assoc();
 $data = array();
+$date_signed = null;
 if ($result->num_rows > 0) {
   $data = unserialize($row['data']);
+  $date_signed = $row['date_signed'];
   $printReady = 'true';
 }
+
+// echo $date_signed;
 
 ?>
 
@@ -71,7 +75,9 @@ if ($result->num_rows > 0) {
   </style>
   <script type="text/javascript">
     $(document).ready(function() {
-
+      // $("#date_signed_input").val();
+      // var dateSigned = <?= $date_signed ?>;
+      // console.log(dateSigned);
       $(document).on('keydown', function(e) {
         if (e.ctrlKey && (e.key == "p" || e.charCode == 16 || e.charCode == 112 || e.keyCode == 80)) {
           e.cancelBubble = true;
@@ -87,7 +93,7 @@ if ($result->num_rows > 0) {
       $(function() {
         var printReady = <?= $printReady ?>;
         if (printReady) {
-          $('#printBTN').removeClass('disabled');
+          $('.printBTN').removeClass('disabled');
         }
       });
 
@@ -170,10 +176,13 @@ if ($result->num_rows > 0) {
       };
       rows.push(arr);
 
-      console.log(rows);
+      // console.log(rows);
+      var date_signed = $("#date_signed_input").val();
+      // console.log(date_signed);
       $.post('checklist_proc.php', {
         saveData: true,
         data: rows,
+        date_signed: date_signed,
         rspcomp_id: <?= $rspcomp_id ?>
       }, function(data, textStatus, xhr) {
         arr = $.parseJSON(data);
@@ -191,7 +200,7 @@ if ($result->num_rows > 0) {
   </script>
 
   <button class="ui button green" onclick="saveData(true)"><i class="icon save"></i> Save</button>
-  <a id="printBTN" class="ui button green disabled" target="_blank" onclick="saveData(false)"><i class="icon print"></i> Save & Print</a>
+  <a id="printBTN" class="printBTN ui button green disabled" target="_blank" onclick="saveData(false)"><i class="icon print"></i> Save & Print</a>
   <table class="ui table very compact" width="100%">
     <thead>
       <tr>
@@ -373,10 +382,22 @@ if ($result->num_rows > 0) {
       <tr class="drow">
         <td width="70%" colspan="5">S-card completely filled out back to back? Not multiple s-card?</td>
       </tr>
+      <tr>
+        <th width="100%" colspan="8"><i>DATE PREPARED:</i></th>
+      </tr>
+      <tr>
+        <td width="100%" colspan="8">
+          <label for="">Input Date:</label>
+          <div class="ui input">
+            <input type="date" id="date_signed_input" value="<?= $date_signed ?>">
+          </div>
+        </td>
+      </tr>
     </tbody>
   </table>
   <!-- table end -->
-
+  <button class="ui button green" onclick="saveData(true)"><i class="icon save"></i> Save</button>
+  <a id="printBTN" class="printBTN ui button green disabled" target="_blank" onclick="saveData(false)"><i class="icon print"></i> Save & Print</a>
 
 
 </div>

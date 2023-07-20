@@ -4,21 +4,32 @@ require '_connect.db.php';
 if (isset($_POST['saveData'])) {
 	$data = serialize($_POST['data']);
 	$rspcomp_id = $_POST['rspcomp_id'];
-
-	if (check_if_exist($mysqli,$rspcomp_id)) {
+	$date_signed = $_POST['date_signed'];
+	$date_signed  = $date_signed ? $date_signed : null;
+	if (check_if_exist($mysqli, $rspcomp_id)) {
 		// update if existing
-		$stmt = $mysqli->prepare("UPDATE `rsp_comp_checklist` SET `data` = ? WHERE `rsp_comp_checklist`.`rspcomp_id` = ?");
-		$stmt->bind_param("si",$data,$rspcomp_id);
+		// $stmt = $mysqli->prepare("UPDATE `rsp_comp_checklist` SET `data` = ?, `date_signed` = ? WHERE `rsp_comp_checklist`.`rspcomp_id` = ?");
+		// $stmt->bind_param("ssi", $data, $date_signed, $rspcomp_id);
+		if ($date_signed) {
+			$sql = "UPDATE `rsp_comp_checklist` SET `data` = '$data', `date_signed` = '$date_signed'  WHERE `rsp_comp_checklist`.`rspcomp_id` = $rspcomp_id";
+		} else {
+			$sql = "UPDATE `rsp_comp_checklist` SET `data` = '$data' WHERE `rsp_comp_checklist`.`rspcomp_id` = $rspcomp_id";
+		}
 	} else {
 		// insert if not existing
-		$stmt = $mysqli->prepare("INSERT INTO `rsp_comp_checklist` (`rspcomp_id`, `data`) VALUES (?,?)");
-		$stmt->bind_param("is",$rspcomp_id,$data);
+		// $stmt = $mysqli->prepare("INSERT INTO `rsp_comp_checklist` (`rspcomp_id`, `data`, `date_signed`) VALUES (?,?, ?)");
+		// $stmt->bind_param("iss", $rspcomp_id, $data, $date_signed);
+		if ($date_signed) {
+			$sql = "INSERT INTO `rsp_comp_checklist` (`rspcomp_id`, `data`, `date_signed`) VALUES ($rspcomp_id, '$data','$date_signed')";
+		} else {
+			$sql = "INSERT INTO `rsp_comp_checklist` (`rspcomp_id`, `data`) VALUES ($rspcomp_id, '$data')";
+		}
 	}
-		$stmt->execute();
-		$stmt->close();
+	// $stmt->execute();
+	// $stmt->close();
+	$mysqli->query($sql);
 
-
-		echo json_encode($data);	
+	echo json_encode($date_signed);
 }
 
 // if (isset($_POST['fetchData'])) {
@@ -58,20 +69,20 @@ if (isset($_POST['saveData'])) {
 // 	);
 
 // 	echo json_encode($json);
-	
+
 // }
 
 
-function check_if_exist($mysqli,$rspcomp_id){
+function check_if_exist($mysqli, $rspcomp_id)
+{
 	// check if rspcomp_id has already a checklist
 	$exist = false;
 	$sql = "SELECT * FROM `rsp_comp_checklist` WHERE `rspcomp_id` = $rspcomp_id";
 	$result = $mysqli->query($sql);
 	$row = $result->fetch_assoc();
-	if ($result->num_rows>0) {
-	  $exist = true;
+	if ($result->num_rows > 0) {
+		$exist = true;
 	}
 
 	return $exist;
-
 }

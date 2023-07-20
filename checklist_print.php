@@ -63,8 +63,14 @@ $sql = "SELECT * FROM `rsp_comp_checklist` WHERE `rspcomp_id` = $rspcomp_id";
 $result = $mysqli->query($sql);
 $row = $result->fetch_assoc();
 $data = array();
+$date_signed = null;
 if ($result->num_rows > 0) {
     $data = unserialize($row['data']);
+    $date_signed = $row['date_signed'];
+
+    $date_signed = new DateTime($date_signed);
+    $date_signed = $date_signed->format('F d, Y');
+    // $date_signed = date('Y', $date_signed);
 }
 
 foreach ($data as $key => $value) {
@@ -434,58 +440,103 @@ $tbl = <<<EOD
         <td width="22%" align="center">{$func($data[43]['remarks'])}</td>
     </tr>
     <tr>
-       <td colspan="2">
-            <i>Prepared by:</i><br/><br/>
+       <td colspan="2" style="font-size:8px;">
             <br/>
+            <br/>
+            <br/>
+            <br/>
+            <i>Prepared by:</i>
             <span> </span><span> </span><span> </span><span> </span>
-            <b><u>VERONICA GRACE P. MIRAFLOR</u></b> <span> </span><span> </span><span> </span><span> </span>date: _______________ <br/>
+            <b><u>VERONICA GRACE P. MIRAFLOR</u></b> <span> </span><span> </span><span> </span><span> </span>date: <u><span> </span><span> </span>$date_signed<span> </span><span> </span></u><br/>
             <span> </span><span> </span><span> </span><span> </span>
             <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
-            <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
-            <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span>CGDH-I</span>
-
+            <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span> <span> </span> 
+            <span style="text-align: center; font-size:7px;">Highest Ranking HRMO (LGU Bayawan City)</span>
+            <br/>
+            <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span> <span> </span> 
+            <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span> <span> </span> 
+            <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span> <span> </span> 
+            <span> </span><span> </span><span> </span><span> </span>
+            <span style="font-size:6px;"><i>(Signature over printed name)</i></span>
        </td>
        <td colspan="4">
-            <b>Disapproved/Invalidated by:</b><br/><br/>
-            <span> </span><span> </span>
             <br/>
-            <span> </span><span> </span><span> </span><span> </span>
+            <br/>
+            <br/>
+            <span> </span><span> </span><span> </span><span> </span><b style="font-size:8px;">Disapproved/Invalidated by:</b><br/>
             <i>Reasons: __________________________________________________</i>
+            <br/>
        </td>
     </tr>
     <tr>
-       <td colspan="2">
-            <b>Evaluated by:</b>
+       <td colspan="2" >
+            <span style="font-size:8px;"><b>Evaluated by:</b></span>
             <br/>
-            <br/>
-            <br/>
-            <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
-            <span> </span> <span> </span> <span> </span><b><u>PHOEBE P. TUPAS</u> <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>/ <span> </span><span> </span><span> </span> <u>JOHNNY C. VILLALUZ</u></b>
-            <br/>
-            <span> </span><span> </span><span> </span>
-            <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
-            <span> </span> <span> </span> <span> </span>Supervising HRS <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span> / <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
-            <span> </span>
-            Senior HRS
-            
-            <br/>
+            <div style="text-align: center"><b><u><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>JOHNNY C. VILLALUZ<span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span></u></b></div>
+            <span style="text-align: center">Senior HRS</span>
        </td>
        <td colspan="4">
-            <b>Approved/Validated by:</b>
-            <br/>
-            <br/>
-            <br/>
-            <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
-            <span> </span> <span> </span> <span> </span><b><u>PHOEBE P. TUPAS</u> <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>/ <span> </span><span> </span><span> </span><u>MERLINDA FLORES-QUILLANO</u></b>
-            <br/>
-            <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
-            <span> </span> <span> </span> <span> </span><span> </span><span> </span><span> </span><span> </span>Supervising HRS <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span> / <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>Director II
-            <br/>
+       <span style="font-size:8px;"><b>Approved/Validated by:</b></span>
+       <br/>
+            <div style="text-align: center"><b><u><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>MERLINDA FLORES-QUILLANO<span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span></u></b></div>
+            <span style="text-align: center">Director II</span>
        </td>
     </tr>
+    
 </table>
 
 EOD;
+
+// <tr>
+//        <td colspan="2">
+//             <i>Prepared by:</i><br/><br/>
+//             <br/>
+//             <span> </span><span> </span><span> </span><span> </span>
+//             <b><u>VERONICA GRACE P. MIRAFLOR</u></b> <span> </span><span> </span><span> </span><span> </span>date: _______________ <br/>
+//             <span> </span><span> </span><span> </span><span> </span>
+//             <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
+//             <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
+//             <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span>CGDH-I</span>
+
+//        </td>
+//        <td colspan="4">
+//             <b>Disapproved/Invalidated by:</b><br/><br/>
+//             <span> </span><span> </span>
+//             <br/>
+//             <span> </span><span> </span><span> </span><span> </span>
+//             <i>Reasons: __________________________________________________</i>
+//        </td>
+//     </tr>
+// <tr>
+//        <td colspan="2">
+//             <b>Evaluated by:</b>
+//             <br/>
+//             <br/>
+//             <br/>
+//             <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
+//             <span> </span> <span> </span> <span> </span><b><u>PHOEBE P. TUPAS</u> <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>/ <span> </span><span> </span><span> </span> <u>JOHNNY C. VILLALUZ</u></b>
+//             <br/>
+//             <span> </span><span> </span><span> </span>
+//             <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
+//             <span> </span> <span> </span> <span> </span>Supervising HRS <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span> / <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
+//             <span> </span>
+//             Senior HRS
+
+//             <br/>
+//        </td>
+//        <td colspan="4">
+//             <b>Approved/Validated by:</b>
+//             <br/>
+//             <br/>
+//             <br/>
+//             <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
+//             <span> </span> <span> </span> <span> </span><b><u>PHOEBE P. TUPAS</u> <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>/ <span> </span><span> </span><span> </span><u>MERLINDA FLORES-QUILLANO</u></b>
+//             <br/>
+//             <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
+//             <span> </span> <span> </span> <span> </span><span> </span><span> </span><span> </span><span> </span>Supervising HRS <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span> / <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>Director II
+//             <br/>
+//        </td>
+//     </tr>
 // $html = utf8_encode($html);
 $pdf->writeHTML($tbl, true, false, false, false, '');
 
