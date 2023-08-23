@@ -26,6 +26,15 @@ SQL mode default (Prevents saving DB records with null/empty data) and disable t
 `#Disable table name case sensitivity` <br>
 `lower_case_table_names=1`
 * `sudo systemctl restart mariadb`
+  
+# INCREASE UPLOAD MAX FILESIZE for phpmyadmin
+* Do `sudo nano /etc/php/7.4/apache2/php.ini`
+*  and change the following:
+  `memory_limit=1024M`
+  `post_max_size=512M`
+  `upload_max_filesize=254M`
+* Do `sudo /etc/init.d/apache2 restart`
+	
 # FIX FOR CERTBOT ERR_CERT_COMMON_NAME_INVALID:
 https://gist.github.com/FranzValencia/8d4a224f5b8186be1275766e4b3dc9a0
 # SETUP MAILX FOR LINUX
