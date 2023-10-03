@@ -4,8 +4,18 @@ require_once "_connect.db.php";
 session_start();
 // Check if the user is already logged in, if yes then redirect him to welcome page
 if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]) {
-    header("location: dashboard.php?employees_id=".$_SESSION["employee_id"]);
-    exit;
+  // if (condition) {
+  //   # code...
+  // }
+
+  if (in_array("HR", $_SESSION["roles"])) {
+    header("location: index.php");
+  } else {
+    header("location: dashboard.php?employees_id=" . $_SESSION["employee_id"]);
+  }
+
+
+  exit;
   // if ($_SESSION["is_admin"]) {
   //   header("location: ". $app_uri_admin);
   //   exit;
@@ -13,7 +23,7 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]) {
   //   header("location: ". $app_uri_public);
   //   exit;
   // }
-} 
+}
 ?>
 <!DOCTYPE html>
 <html>
