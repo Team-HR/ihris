@@ -7,6 +7,7 @@ namespace Composer\Autoload;
 class ComposerStaticInit3bfda12a43f0d435aa85c04ed1541af0
 {
     public static $files = array (
+        '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         'abede361264e2ae69ec1eee813a101af' => __DIR__ . '/..' . '/markbaker/complex/classes/src/functions/abs.php',
         '21a5860fbef5be28db5ddfbc3cca67c4' => __DIR__ . '/..' . '/markbaker/complex/classes/src/functions/acos.php',
@@ -66,7 +67,6 @@ class ComposerStaticInit3bfda12a43f0d435aa85c04ed1541af0
         'aa53dcba601214d17ad405b7c291b7e8' => __DIR__ . '/..' . '/markbaker/matrix/classes/src/operations/multiply.php',
         '75c79eb1b25749b05a47976f32b0d8a2' => __DIR__ . '/..' . '/markbaker/matrix/classes/src/operations/divideby.php',
         '6ab8ad87a734f276a6bcd5a0fe1289be' => __DIR__ . '/..' . '/markbaker/matrix/classes/src/operations/divideinto.php',
-        '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -156,16 +156,11 @@ class ComposerStaticInit3bfda12a43f0d435aa85c04ed1541af0
         ),
     );
 
-    public static $classMap = array (
-        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-    );
-
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit3bfda12a43f0d435aa85c04ed1541af0::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit3bfda12a43f0d435aa85c04ed1541af0::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit3bfda12a43f0d435aa85c04ed1541af0::$classMap;
 
         }, null, ClassLoader::class);
     }
