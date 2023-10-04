@@ -1,32 +1,4 @@
 <?php
-//	Apache/2.4.39 (Win64) OpenSSL/1.0.2s PHP/7.1.31
-//	DevelopmentYear 2019 -
-//	@Author
-//	** pascual Tomulto
-// 	** message me @https://www.facebook.com/pascual.tomulto.54
-//  ** messageCode "PCR Help"
-//	heart the program miss with it carefully
-//	to the next programmer
-//  your better then I am ; I know nothing
-//  we only need logic That is our power
-//	great achievements start from useless ideas  " God Bless "
-//	crazy is what we are
-date_default_timezone_set("Asia/Manila");
-$host = "localhost";
-$usernameDb = "admin";
-// $password = "teamhrmo2019";
-$password = "teamhrmo2019";
-$database = "ihris_guest";
-$mysqli = new mysqli($host, $usernameDb, $password, $database);
-// $mysqli->set_charset("utf8");
-
-
-// MYSQL ERROR REPORTING START
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-// MYSQL ERROR REPORTING END
-
 
 class Employee_data extends mysqli
 {
