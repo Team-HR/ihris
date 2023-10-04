@@ -18,6 +18,23 @@ if (isset($_POST["load"])) {
     echo json_encode(Ov_rates($mysqli, $prr_id));
 }
 
+
+function get_mfo_period_id($mysqli, $prr_id)
+{
+    # get period_id with prr_id
+    $sql = "SELECT * FROM prr WHERE `prr_id` = '$prr_id'";
+    $res = $mysqli->query($sql);
+    $prr = $res->fetch_assoc();
+    $month_mfo = $prr["period"];
+    $year_mfo = $prr["year"];
+    $sql = "SELECT * FROM `spms_mfo_period` WHERE `month_mfo` = '$month_mfo' AND `year_mfo` = '$year_mfo'";
+    $res = $mysqli->query($sql);
+    $period = $res->fetch_assoc();
+    // $period_id = $period["mfoperiod_id"];
+    return $period["mfoperiod_id"];
+}
+
+
 function get_employees($mysqli, $prr_id)
 {
     $data = array();
@@ -32,15 +49,7 @@ function get_employees($mysqli, $prr_id)
     $tr = "";
 
     # get period_id with prr_id
-    $sql = "SELECT * FROM prr WHERE `prr_id` = '$prr_id'";
-    $res = $mysqli->query($sql);
-    $prr = $res->fetch_assoc();
-    $month_mfo = $prr["period"];
-    $year_mfo = $prr["year"];
-    $sql = "SELECT * FROM `spms_mfo_period` WHERE `month_mfo` = '$month_mfo' AND `year_mfo` = '$year_mfo'";
-    $res = $mysqli->query($sql);
-    $period = $res->fetch_assoc();
-    $period_id = $period["mfoperiod_id"];
+    $period_id = get_mfo_period_id($mysqli, $prr_id);
 
 
     while ($row = $result1->fetch_assoc()) {
@@ -125,6 +134,7 @@ function get_employees($mysqli, $prr_id)
             }
             $row["stages"] = $state;
         }
+        $row["period_id"] = $period_id;
         $data[] = $row;
     }
 
