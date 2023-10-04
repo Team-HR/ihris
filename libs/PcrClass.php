@@ -1,5 +1,11 @@
 <?php
-
+##################################
+### To use this class call the
+### functions bellow in order
+### ->set_emp($employee_id)
+### ->set_period($period_id)
+### ->load()
+################################
 class Pcr
 {
     public $accountStatus;
@@ -60,7 +66,7 @@ class Pcr
     {
         $this->mysqli = $mysqli;
     }
-    private function load()
+    public function load()
     {
         $this->file_status();
         $this->comment();
@@ -186,7 +192,7 @@ class Pcr
         }
         $this->period = $sql->fetch_assoc();
         $this->coreData = $this->coreAr();
-        $this->load();
+        // $this->load();
     }
     public function set_periodMY($m, $y)
     {
@@ -542,6 +548,14 @@ class Pcr
 		<td style='$this->budgetView'></td>
 		<td style='$this->accountableView'></td>
 		$col</tr>";
+
+        if ($count0 < 1) {
+            $view1 .= "<tr style=' background: #ffcfcf;'><td colspan='8'><div style='margin-left: 50px;'>No assigned MFOs...</div></td><td class='noprint'></td>
+            <td style='$this->budgetView'></td>
+            <td style='$this->accountableView'></td>
+            $col</tr>";
+        }
+
         $this->core_countEmpty = $count;
         $this->core_countTotal = count($arr);
         $this->core_totalAv    = $totalav;
@@ -747,10 +761,11 @@ class Pcr
 				<td style='width:25%'>" . nl2br($si['mi_succIn']) . "</td>
 				<td style='$this->budgetView'></td>
 				<td style='$this->accountableView'>" . $accountableNames . "</td>
-				<td colspan='8' style='padding:10px'>
-				<button class='ui fluid basic blue button' onclick='accOpenModal($si[mi_id])'>Add Accomplishments</button>
+				<td colspan='8' style='padding:10px; background: #ffcfcf;'>
+				<!-- <button class='ui fluid basic blue button' onclick='accOpenModal($si[mi_id])'>Add Accomplishments</button>
 				<br>
-				<button class='ui fluid red button' onclick='reassign($si[mi_id])'>Not Applicable</button>
+				<button class='ui fluid red button' onclick='reassign($si[mi_id])'>Not Applicable</button> --!>
+                <div style='margin-left: 50px;'>Form not accomplished...</div>
 				</td>
 				</tr>";
                 $count++;
@@ -910,7 +925,7 @@ class Pcr
 				<tr>
 				<td style='width:25%'>$tr[mfo] = $tr[percent] %</td>
 				<td style='width:25%'>$tr[suc_in]</td>
-				<td style='width:25%;padding:10px' colspan='10'><button class='ui basic primary fluid button' onclick='addSuppAccomplishement($tr[id_suppFunc])'> Add Accomplishments for your Support Function</button></td>
+				<td style='width:25%;padding:10px; background: #ffcfcf;' colspan='10'>Form not accomplished...<!-- <button class='ui basic primary fluid button' onclick='addSuppAccomplishement($tr[id_suppFunc])'> Add Accomplishments for your Support Function</button> --!></td>
 				</tr>
 				";
             }
@@ -930,6 +945,7 @@ class Pcr
         $sql = "SELECT * from spms_strategicfuncdata where period_id = '$this->per_ID' and emp_id = '$this->emp_ID'";
         $sql = $this->mysqli->query($sql);
         $countStrat = $sql->num_rows;
+
         if (!$sql) {
             die($this->error);
         }
@@ -941,6 +957,19 @@ class Pcr
 		<td style='$this->budgetView'></td>
 		<td style='$this->accountableView'></td>
 		$col</tr>";
+
+
+        if ($countStrat < 1) {
+            $tr .= "
+			<tr style='background: #ffcfcf;'>
+			    <td colspan='10'><div style='margin-left: 50px;'>Form not accomplished...</div></td>
+			<td class='noprint'></td>
+			$col
+			</tr>
+			";
+        }
+
+
         $totalCount = 0;
         $totalAv = 0;
         while ($row = $sql->fetch_assoc()) {
@@ -1133,7 +1162,8 @@ class Pcr
     public function get_comment($i)
     {
         $dat = $this->commentData;
-        return $dat[$i];
+
+        return $dat ? $dat[$i] : "";
     }
     // strat
     private function head_of_agency()

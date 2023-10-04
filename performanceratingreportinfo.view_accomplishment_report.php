@@ -10,19 +10,19 @@ $pcr =  new Pcr($mysqli);
 
 $pcr->set_emp($employees_id);
 $pcr->set_period($period_id);
+$pcr->load();
 
 $view = "";
 $table = new PcrTableClass($pcr->hideCol);
 $table->formType($pcr->get_status('formType'));
 
 $pcr->hideNextBtn();
+
 $rows = $pcr->get_strategicView() . $pcr->get_coreView() . $pcr->get_supportView();
+
 $table->set_head($pcr->tableHeader());
 $table->set_body($rows);
 $table->set_foot($pcr->tableFooter() . "<br class='noprint'>" . $pcr->get_approveBTN());
 $view = $table->_get();
 
 echo $view;
-
-
-?>
