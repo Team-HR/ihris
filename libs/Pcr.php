@@ -18,7 +18,7 @@ $usernameDb = "admin";
 $password = "teamhrmo2019";
 $database = "ihris_guest";
 $mysqli = new mysqli($host, $usernameDb, $password, $database);
-$mysqli->set_charset("utf8");
+// $mysqli->set_charset("utf8");
 
 
 // MYSQL ERROR REPORTING START
