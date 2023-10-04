@@ -1,6 +1,6 @@
 <?php
 
-class Pcr extends mysqli
+class Pcr
 {
     public $accountStatus;
     private $rsmStatus;
@@ -51,17 +51,14 @@ class Pcr extends mysqli
 
     private $pmt = false;
 
+    private $mysqli;
+
 
     // method for my objects
 
-    function __construct()
+    function __construct($mysqli)
     {
-        $host = "db";
-        $usernameDb = "admin";
-        $password = "teamhrmo2019";
-        $database = "ihris";
-        parent::__construct($host, $usernameDb, $password, $database);
-        parent::set_charset("utf8");
+        $this->mysqli = $mysqli;
     }
     private function load()
     {
@@ -73,7 +70,7 @@ class Pcr extends mysqli
         $this->strategicTr();
 
         # update prrlist from ihris
-        // $this->update_prrlist();
+        $this->update_prrlist();
     }
     public function get_prr_id()
     {
@@ -81,7 +78,7 @@ class Pcr extends mysqli
         $month_mfo = $this->period["month_mfo"];
         $year_mfo = $this->period["year_mfo"];
         $sql = "SELECT `prr_id` FROM `prr` WHERE `period` = '$month_mfo' AND `year` = '$year_mfo'";
-        $res = mysqli::query($sql);
+        $res = $this->mysqli->query($sql);
         $data = [];
         # since spms_performancereviewstatus table does not identify the personnel to be casual or 
         # permanent on the time they accomplish their pcrs
@@ -128,7 +125,7 @@ class Pcr extends mysqli
         $prr_id = 0;
         foreach ($prr_ids as $id) {
             $sql = "SELECT * FROM `prrlist` WHERE `prr_id` = '$id' AND `employees_id` = '$employee_id'";
-            $result = mysqli::query($sql);
+            $result = $this->mysqli->query($sql);
             if ($result->num_rows > 0) {
                 $prr_id = $id;
                 continue;
@@ -136,10 +133,10 @@ class Pcr extends mysqli
         }
         // $date_submitted = $this->fileStatus["dateAccomplished"];
         // $date_appraised = $this->fileStatus["panelApproved"];
-        $final_comments = mysqli::real_escape_string($this->final_comments);
+        $final_comments = $this->mysqli->real_escape_string($this->final_comments);
         // $prr_id = $this->get_prr_id();
         $sql = "UPDATE `prrlist` SET `numerical` = '$final_numerical_rating', `adjectival` = '$final_adjectival_rating', `comments` = '$final_comments' WHERE `prr_id` = '$prr_id' AND `employees_id` = '$employee_id'";
-        mysqli::query($sql);
+        $this->mysqli->query($sql);
 
         return [
             "prr_id" => $prr_id,
@@ -155,7 +152,6 @@ class Pcr extends mysqli
         $this->hide = $h;
         $this->load();
     }
-
     public function set_emp($emp)
     {
         $this->emp_ID = $emp;
@@ -164,13 +160,13 @@ class Pcr extends mysqli
 		left join department on employees.department_id=department.department_id
 		left join positiontitles on employees.position_id=positiontitles.position_id
 		where employees_id='$this->emp_ID'";
-        $sql = mysqli::query($sql);
+        $sql = $this->mysqli->query($sql);
         if (!$sql) {
             die($this->error);
         }
         $this->EmpInfo = $sql->fetch_assoc();
         $authSql = "SELECT * FROM `spms_accounts` where employees_id='$this->emp_ID'";
-        $authSql = mysqli::query($authSql);
+        $authSql = $this->mysqli->query($authSql);
         $authSql = $authSql->fetch_assoc();
         if ($authSql['type'] == "") {
             $this->authorization = "";
@@ -184,7 +180,7 @@ class Pcr extends mysqli
         $this->per_ID = $per;
         //retriving all the data of period
         $sql = "SELECT  * from spms_mfo_period where mfoperiod_id='$this->per_ID'";
-        $sql = mysqli::query($sql);
+        $sql = $this->mysqli->query($sql);
         if (!$sql) {
             die($this->error);
         }
@@ -192,12 +188,11 @@ class Pcr extends mysqli
         $this->coreData = $this->coreAr();
         $this->load();
     }
-
     public function set_periodMY($m, $y)
     {
         //retriving all the data of period
         $sql = "SELECT  * from spms_mfo_period where month_mfo='$m' and year_mfo='$y'";
-        $sql = mysqli::query($sql);
+        $sql = $this->mysqli->query($sql);
         if (!$sql) {
             die($this->error);
         }
@@ -243,7 +238,7 @@ class Pcr extends mysqli
             return $id;
         }
         $sql = "SELECT * from employees where employees_id='$id'";
-        $sql = mysqli::query($sql);
+        $sql = $this->mysqli->query($sql);
         $sql = $sql->fetch_assoc();
 
         $firstName = isset($sql["firstName"]) ? $sql["firstName"] : "";
@@ -279,7 +274,7 @@ class Pcr extends mysqli
     private function get_department_this_period($department_id)
     {
         $sql = "SELECT * FROM department WHERE department_id = $department_id";
-        $res = mysqli::query($sql);
+        $res = $this->mysqli->query($sql);
         if ($row = $res->fetch_assoc()) {
             return $row["department"];
         }
@@ -290,7 +285,7 @@ class Pcr extends mysqli
     private function file_status()
     {
         $perStatus = "SELECT * from spms_performancereviewstatus where period_id='$this->per_ID' and employees_id='$this->emp_ID'";
-        $perStatus = mysqli::query($perStatus);
+        $perStatus = $this->mysqli->query($perStatus);
         $countData = $perStatus->num_rows;
 
         $perStatus = $perStatus->fetch_assoc();
@@ -400,7 +395,6 @@ class Pcr extends mysqli
             }
         }
     }
-
     public function get_status($i)
     {
         $dat = $this->fileStatus;
@@ -416,6 +410,7 @@ class Pcr extends mysqli
         $this->rsmStatus = $sql->fetch_assoc();
     }
 
+
     private function coreAr()
     {
         # for more compact and faster query
@@ -426,21 +421,16 @@ class Pcr extends mysqli
         # not recommended department_id from employees table
         // $department_id = $this->EmpInfo["department_id"];
         $main_Arr = [];
-
         $sql = "SELECT * from spms_corefunctions where parent_id='' and mfo_periodId='$this->per_ID' and `dep_id` = '$department_id' ORDER BY `spms_corefunctions`.`cf_count` ASC";
-
-
-        $sql = mysqli::query($sql);
+        $sql = $this->mysqli->query($sql);
         $parent = [[], [], []];
         while ($core = $sql->fetch_assoc()) {
             $parent[0] = $core;
             $si = $this->si($core['cf_ID']);
             $child = $this->q($core['cf_ID']);
-
             if ($child->num_rows) {
                 $parent[2] = $this->coreAr_Child($core['cf_ID']);
             }
-
             if (count($si)) {
                 $parent[1] = $si;
             }
@@ -479,7 +469,7 @@ class Pcr extends mysqli
     {
 
         $sql = "SELECT * from spms_corefunctions where parent_id='$i' ORDER BY `spms_corefunctions`.`cf_count` ASC";
-        $sql = mysqli::query($sql);
+        $sql = $this->mysqli->query($sql);
         if (!$sql) {
             die($this->error);
         }
@@ -488,41 +478,39 @@ class Pcr extends mysqli
 
     private function si($siId)
     {
-        $employee_id = $this->emp_ID;
-        $success_indicators = [];
+        $i = [];
 
         if (!$siId || $siId == null) {
-            return $success_indicators;
+            return $i;
         }
 
-        $sqlSi1 = "SELECT * from spms_matrixindicators where cf_ID='$siId' -- AND mi_incharge LIKE '%$employee_id%'";
-        $sqlSi1 = mysqli::query($sqlSi1);
+        $sqlSi1 = "SELECT * from spms_matrixindicators where cf_ID='$siId'";
+        $sqlSi1 = $this->mysqli->query($sqlSi1);
         if (!$sqlSi1) {
             die($this->error);
         }
         if ($sqlSi1->num_rows > 0) {
             while ($a = $sqlSi1->fetch_assoc()) {
                 $incharge = explode(',', $a['mi_incharge']);
-                $index = 0;
-                while ($index < count($incharge)) {
-                    if ($incharge[$index] == $this->emp_ID) {
-                        array_push($success_indicators, $a);
+                $cIn = 0;
+                while ($cIn < count($incharge)) {
+                    if ($incharge[$cIn] == $this->emp_ID) {
+                        array_push($i, $a);
                     }
-                    $index++;
+                    $cIn++;
                 }
             }
         } else {
-            $success_indicators = [];
+            $i = [];
         }
 
-        return $success_indicators;
+        return $i;
     }
     //methods for core function
-    public function coreRow()
+    private function coreRow()
     {
         $this->percent = 0;
         $arr = $this->coreAr();
-
         $col = "";
         if (!$this->hideCol) {
             $col = "<td class='noprint' ></td>";
@@ -533,10 +521,9 @@ class Pcr extends mysqli
         $totalav = 0;
         $cTotal = 0;
         $view = "";
-
         while ($in0 < $count0) {
             $a1 = $arr[$in0][2];
-            $child = $this->coreRow_child(20, $a1);
+            $child = $this->coreRow_child(5, $a1);
             $t0 = $this->Core_mfoRow(5, $arr[$in0]);
             $view .= $t0[0] . $child[0];
             $count += $t0[1] + $child[1];
@@ -561,6 +548,7 @@ class Pcr extends mysqli
         $this->coreView = $view1 . $view;
     }
 
+
     private function coreRow_child($padding, $arr)
     {
         $index = 0;
@@ -583,38 +571,58 @@ class Pcr extends mysqli
         $childData = [$view, $count, $totalav, $cTotal];
         return $childData;
     }
-
-    private function Core_mfoRow($padding, $ar)
+    private function accountblePersons($perId)
     {
-        $cTotal = 0;
-        $count = 0;
-        $totalav = 0;
-        $inSi = 0;
-        $view = "";
-        if (count($ar[1]) > 0) {
-            while ($inSi < count($ar[1])) {
-                if ($inSi == 0) {
-                    $row0 = $this->Core_siRow($padding, $ar[0], $ar[1][$inSi]);
-                    $view .= $row0[0];
-                    $count += $row0[1];
-                    $totalav += $row0[2];
-                    $cTotal += $row0[3];
-                } else {
-                    $row1 = $this->Core_siRow($padding, ['cf_count' => '', 'cf_title' => ''], $ar[1][$inSi]);
-                    $view .= $row1[0];
-                    $count += $row1[1];
-                    $totalav += $row1[2];
-                    $cTotal += $row1[3];
+
+        $period_id = $this->fileStatus["period_id"];
+        $emp = $this->fileStatus["employees_id"];
+        $superiors_id = $emp;
+
+        $indicators = $this->mysqli->query("SELECT * FROM `spms_matrixindicators` where cf_ID='$perId'");
+        while ($empId = $indicators->fetch_assoc()) {
+            $emp .= "," . $empId['mi_incharge'];
+        }
+
+        $emp  = explode(",", $emp);
+        $emp = array_unique($emp);
+        $emp_length = count($emp);
+        $view = "<br>";
+        # filter here only employee_id what with immediate supervisor $emp
+        // SELECT `employees_id` FROM `spms_performancereviewstatus` where period_id = $period_id and ImmediateSup = $ImmediateSup;
+
+        if ($this->fileStatus["formType"] != 5) {
+            $subordinates = [];
+
+            if ($this->fileStatus["formType"] == 2 || $this->fileStatus["formType"] == 4) { //if spcr division pcr
+                $res = $this->mysqli->query("SELECT `employees_id` FROM `spms_performancereviewstatus` where `period_id` = '$period_id' and `ImmediateSup` = '$superiors_id'");
+            } elseif ($this->fileStatus["formType"] == 3) { //else if dpcr
+                $res = $this->mysqli->query("SELECT `employees_id` FROM `spms_performancereviewstatus` where `period_id` = '$period_id' and `DepartmentHead` = '$superiors_id'");
+            }
+
+            while ($row = $res->fetch_assoc()) {
+                $subordinates[] = $row['employees_id'];
+            }
+
+
+            foreach ($emp as $i => $employee_id) {
+                if (in_array($employee_id, $subordinates) || $employee_id == $superiors_id) {
+                    $view .= $this->get_fullname($employee_id);
+                    if ($i < $emp_length && $emp_length > 1) {
+                        $view .= ";<br>";
+                    }
                 }
-                $inSi++;
             }
         } else {
-            $view .= $this->Core_siRow($padding, $ar[0], "")[0];
+            foreach ($emp as $i => $employee_id) {
+                $view .= $this->get_fullname($employee_id);
+                if ($i < $emp_length && $emp_length > 1) {
+                    $view .= ";<br>";
+                }
+            }
         }
-        $a = [$view, $count, $totalav, $cTotal];
-        return $a;
-    }
 
+        return $view;
+    }
     private function Core_siRow($padding, $ar, $si)
     {
         $count = 0;
@@ -622,7 +630,7 @@ class Pcr extends mysqli
         $a = 0;
         if ($si != "") {
             $check = "SELECT * from spms_corefucndata where p_id='$si[mi_id]' and empId='$this->emp_ID'";
-            $check = mysqli::query($check);
+            $check = $this->mysqli->query($check);
             $accountableNames = "";
             if ($this->get_status('formType') > 1) {
                 if (isset($ar['cf_ID'])) {
@@ -727,7 +735,7 @@ class Pcr extends mysqli
 				<td style='$t_row'>$SiData[T]</td>
 				<td>$a</td>
 				<td>" . nl2br($SiData['remarks']) . "</td>
-				<td style='width:50px' class ='noprint'><!-- <button class='ui basic blue button' onclick='fileUplod()' data-id='$SiData[cfd_id]|$this->emp_ID'>Documentations </button>-!></td>
+				<td style='width:50px' class ='noprint'><!--<button class='ui basic blue button' onclick='fileUplod()' data-id='$SiData[cfd_id]|$this->emp_ID'>Documentations</button>--!></td>
 				$col
 				</tr>";
                 $cTotal++;
@@ -770,65 +778,40 @@ class Pcr extends mysqli
         $ar = [$view, $count, $a, $cTotal];
         return $ar;
     }
-
+    private function Core_mfoRow($padding, $ar)
+    {
+        $cTotal = 0;
+        $count = 0;
+        $totalav = 0;
+        $inSi = 0;
+        $view = "";
+        if (count($ar[1]) > 0) {
+            while ($inSi < count($ar[1])) {
+                if ($inSi == 0) {
+                    $row0 = $this->Core_siRow($padding, $ar[0], $ar[1][$inSi]);
+                    $view .= $row0[0];
+                    $count += $row0[1];
+                    $totalav += $row0[2];
+                    $cTotal += $row0[3];
+                } else {
+                    $row1 = $this->Core_siRow($padding, ['cf_count' => '', 'cf_title' => ''], $ar[1][$inSi]);
+                    $view .= $row1[0];
+                    $count += $row1[1];
+                    $totalav += $row1[2];
+                    $cTotal += $row1[3];
+                }
+                $inSi++;
+            }
+        } else {
+            $view .= $this->Core_siRow($padding, $ar[0], "")[0];
+        }
+        $a = [$view, $count, $totalav, $cTotal];
+        return $a;
+    }
     public function get_coreView()
     {
         return $this->coreView;
     }
-
-    private function accountblePersons($perId)
-    {
-
-        $period_id = $this->fileStatus["period_id"];
-        $emp = $this->fileStatus["employees_id"];
-        $superiors_id = $emp;
-
-        $indicators = mysqli::query("SELECT * FROM `spms_matrixindicators` where cf_ID='$perId'");
-        while ($empId = $indicators->fetch_assoc()) {
-            $emp .= "," . $empId['mi_incharge'];
-        }
-
-        $emp  = explode(",", $emp);
-        $emp = array_unique($emp);
-        $emp_length = count($emp);
-        $view = "<br>";
-        # filter here only employee_id what with immediate supervisor $emp
-        // SELECT `employees_id` FROM `spms_performancereviewstatus` where period_id = $period_id and ImmediateSup = $ImmediateSup;
-
-        if ($this->fileStatus["formType"] != 5) {
-            $subordinates = [];
-
-            if ($this->fileStatus["formType"] == 2 || $this->fileStatus["formType"] == 4) { //if spcr division pcr
-                $res = mysqli::query("SELECT `employees_id` FROM `spms_performancereviewstatus` where `period_id` = '$period_id' and `ImmediateSup` = '$superiors_id'");
-            } elseif ($this->fileStatus["formType"] == 3) { //else if dpcr
-                $res = mysqli::query("SELECT `employees_id` FROM `spms_performancereviewstatus` where `period_id` = '$period_id' and `DepartmentHead` = '$superiors_id'");
-            }
-
-            while ($row = $res->fetch_assoc()) {
-                $subordinates[] = $row['employees_id'];
-            }
-
-
-            foreach ($emp as $i => $employee_id) {
-                if (in_array($employee_id, $subordinates) || $employee_id == $superiors_id) {
-                    $view .= $this->get_fullname($employee_id);
-                    if ($i < $emp_length && $emp_length > 1) {
-                        $view .= ";<br>";
-                    }
-                }
-            }
-        } else {
-            foreach ($emp as $i => $employee_id) {
-                $view .= $this->get_fullname($employee_id);
-                if ($i < $emp_length && $emp_length > 1) {
-                    $view .= ";<br>";
-                }
-            }
-        }
-
-        return $view;
-    }
-
     // methods for support function
     private function supportFunctionTr()
     {
@@ -840,9 +823,8 @@ class Pcr extends mysqli
         } else {
             $sql = "SELECT * FROM `spms_supportfunctions` where `type`=2";
         }
-        $sql = mysqli::query($sql);
+        $sql = $this->mysqli->query($sql);
         $col = "";
-
         if (!$this->hideCol) {
             $col = "<td class='noprint' ></td>";
         }
@@ -854,7 +836,7 @@ class Pcr extends mysqli
         $totalAv = 0;
         while ($tr = $sql->fetch_assoc()) {
             $sqlSelect = "SELECT * from spms_supportfunctiondata where parent_id='$tr[id_suppFunc]' and emp_id='$this->emp_ID' and period_id='$this->per_ID'";
-            $sqlSelect = mysqli::query($sqlSelect);
+            $sqlSelect = $this->mysqli->query($sqlSelect);
             $sqlSelectCount = $sqlSelect->num_rows;
             if ($sqlSelectCount > 0) {
                 $fdata = $sqlSelect->fetch_assoc();
@@ -946,7 +928,7 @@ class Pcr extends mysqli
     {
         $this->strtPercent = "N/A"; //previously N/A
         $sql = "SELECT * from spms_strategicfuncdata where period_id = '$this->per_ID' and emp_id = '$this->emp_ID'";
-        $sql = mysqli::query($sql);
+        $sql = $this->mysqli->query($sql);
         $countStrat = $sql->num_rows;
         if (!$sql) {
             die($this->error);
@@ -1038,7 +1020,7 @@ class Pcr extends mysqli
         # get form filetype
         $sql = "SELECT `formType` FROM `spms_performancereviewstatus` WHERE `period_id` = '$period_id' and `employees_id` = '$employee_id';
 		";
-        $result = mysqli::query($sql);
+        $result = $this->mysqli->query($sql);
         $row = $result->fetch_assoc();
         $formType = $row['formType'];
         if ($formType == 3) {
@@ -1123,7 +1105,7 @@ class Pcr extends mysqli
     private function comment()
     {
         $commentsql = "SELECT * from spms_commentrec where period_id='$this->per_ID' and emp_id='$this->emp_ID'";
-        $commentsql = mysqli::query($commentsql);
+        $commentsql = $this->mysqli->query($commentsql);
         $countRow = $commentsql->num_rows;
         $commentsql = $commentsql->fetch_assoc();
         $comment = "";
@@ -1157,7 +1139,7 @@ class Pcr extends mysqli
     private function head_of_agency()
     {
         $sql = "SELECT * from spms_performancereviewstatus where period_id='$this->per_ID' and employees_id='$this->emp_ID'";
-        $result = mysqli::query($sql);
+        $result = $this->mysqli->query($sql);
 
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
@@ -1187,7 +1169,7 @@ class Pcr extends mysqli
             $id = 0;
         }
         $empSql = "SELECT * from `employees`";
-        $empSql = mysqli::query($empSql);
+        $empSql = $this->mysqli->query($empSql);
         while ($getData = $empSql->fetch_assoc()) {
             $val = $getData["employees_id"];
 
@@ -1846,11 +1828,10 @@ class Pcr extends mysqli
         return $view;
     }
 
-
     public function get_department_name($department_id)
     {
         $sql  = "SELECT * FROM `department` where `department_id`='$department_id'";
-        $res = parent::query($sql);
+        $res = $this->mysqli->query($sql);
         $row = $res->fetch_assoc();
         return isset($row["department"]) ? $row["department"] : "_______________________________";
     }
@@ -1979,3 +1960,219 @@ class Pcr extends mysqli
 ##############################################
 #####	 End of Employee_data Class  	######
 ##############################################
+
+
+
+class year
+{
+    private $show;
+    function __construct()
+    {
+        $dnow = date('Y') + 1;
+        $dpast = date('Y') - 50;
+        $view = "";
+        while ($dnow >= $dpast) {
+
+            if ($dnow == date('Y')) {
+                $view .= "<option value='$dnow' selected>$dnow</option>";
+            } else {
+                $view .= "<option value='$dnow'>$dnow</option>";
+            }
+            $dnow--;
+        }
+        $this->show = $view;
+    }
+    function get_year()
+    {
+        return $this->show;
+    }
+}
+
+
+
+class step
+{
+    private    $signa;
+    private    $core;
+    private    $strat;
+    private    $support;
+    private    $comment;
+    private    $final;
+    function __construct()
+    {
+        $this->signa = "disabled";
+        $this->core = "disabled";
+        $this->strat = "disabled";
+        $this->support = "disabled";
+        $this->comment = "disabled";
+        $this->final = "disabled";
+    }
+    public function _set($i)
+    {
+        if ($i == "signatories") {
+            $this->signa = "active";
+        } else if ($i == "core") {
+            $this->signa = "completed";
+            $this->core = "active";
+        } else if ($i == "support") {
+            $this->signa = "completed";
+            $this->core = "completed";
+            $this->support = "active";
+        } else if ($i == "strategic") {
+            $this->signa = "completed";
+            $this->core = "completed";
+            $this->support = "completed";
+            $this->strat = "active";
+        } else if ($i == "comment") {
+            $this->signa = "completed";
+            $this->core = "completed";
+            $this->support = "completed";
+            $this->strat = "completed";
+            $this->comment = "active";
+        } else if ($i == "final") {
+            $this->signa = "completed";
+            $this->core = "completed";
+            $this->support = "completed";
+            $this->strat = "completed";
+            $this->comment = "completed";
+            $this->final = "active";
+        }
+    }
+    public function _get()
+    {
+        $view = "
+		<div class='ui mini six steps noprint'>
+		<div class='$this->signa step' onclick='showPr(\"coreFunction\",\"signatories\")'>
+		<i class='list alternate icon'></i>
+		<div class='content'>
+		<div class='title'>Signatories	</div>
+		<div class='description'>Fill in the Signatories assigned for you.</div>
+		</div>
+		</div>
+		<div class='$this->core step' onclick='showPr(\"coreFunction\",\"core\")'>
+		<i class='list alternate icon'></i>
+		<div class='content'>
+		<div class='title'>Core Function	</div>
+		<div class='description'>Fill in your Accomplishments Reports</div>
+		</div>
+		</div>
+		<div class='$this->support step' onclick='showPr(\"coreFunction\",\"support\")'>
+		<i class='band aid icon'></i>
+		<div class='content'>
+		<div class='title'>Support Functions</div>
+		<div class='description'>Input your Support Function Accomplishments</div>
+		</div>
+		</div>
+		<div class='$this->strat step' onclick='showPr(\"coreFunction\",\"strategic\")'>
+		<i class='id badge icon'></i>
+		<div class='content'>
+		<div class='title'>Strategic Function</div>
+		<div class='description'>Add your Strategic Function</div>
+		</div>
+		</div>
+		<div class='$this->comment step' onclick='showPr(\"coreFunction\",\"comment\")'>
+		<i class='id badge icon'></i>
+		<div class='content'>
+		<div class='title'>Comment And Recommendation</div>
+		<div class='description'>For improvement purposes</div>
+		</div>
+		</div>
+		<div class='$this->final step' onclick='showPr(\"coreFunction\",\"final\")'>
+		<i class='clipboard check icon'></i>
+		<div class='content'>
+		<div class='title'>Final Stage</div>
+		<div class='description'>Your Performance and Commitment Review for this period is Ready for Submission</div>
+		</div>
+		</div>
+		</div>
+		";
+        return $view;
+    }
+    public function set_disable($var)
+    {
+        if ($var) {
+            $this->signa = "disabled";
+            $this->core = "disabled";
+            $this->strat = "disabled";
+            $this->support = "disabled";
+            $this->comment = "disabled";
+            $this->final = "disabled";
+        }
+    }
+}
+class table
+{
+    private $trHead;
+    private $trBody;
+    private $trFoot;
+    private $hideCol;
+    private $budgetView;
+    private $accountableView;
+    private $dat;
+    function __construct($h)
+    {
+        $this->hideCol = $h;
+    }
+    public function formType($type)
+    {
+        if ($type == 2) {
+            $this->budgetView     = 'display:none';
+        } else if ($type == 1) {
+            $this->budgetView = 'display:none';
+            $this->accountableView = 'display:none';
+        }
+    }
+    public function set_body($data)
+    {
+        $this->trBody .= $data;
+        $this->load();
+    }
+    public function set_head($data)
+    {
+        $this->trHead = $data;
+        $this->load();
+    }
+    public function set_foot($data)
+    {
+        $this->trFoot = $data;
+        $this->load();
+    }
+    private function load()
+    {
+        $col = "";
+        if (!$this->hideCol) {
+            $col = "<th rowspan='2' class='noprint' ><i class='ui cog icon'></th>";
+        }
+        $table = "
+		$this->trHead
+		<table border='1px' style='border-collapse:collapse;width:98%;margin:auto;'>
+		<tr style='background:#00c4ff36;font-size:14px'>
+		<th rowspan='2' style='padding:20px'>MFO / PAP</th>
+		<th rowspan='2'>Success Indicator</th>
+		<th rowspan='2' style='$this->budgetView'>Alloted Budget<br>for 2021 (whole<br>year)</th>
+		<th  rowspan='2' style='$this->accountableView'>Individual/s or <br> Division Accountable</th>
+		<th rowspan='2'>Actual Accomplishments</th>
+		<th colspan='4' style='width:40px'>Rating Matrix</th>
+		<th rowspan='2'>Remarks</th>
+		<th rowspan='2' class='noprint' ><i class='ui blue folder icon'></i></th>
+		$col
+		</tr>
+		<tr style='font-size:12px;background:#00c4ff36;font-size:14px'>
+		<th>Q</th>
+		<th>E</th>
+		<th>T</th>
+		<th>A</th>
+		</tr>
+		<tbody style='font-size:14px'>
+		$this->trBody
+		</tbody>
+		</table>
+		$this->trFoot
+		";
+        $this->dat = $table;
+    }
+    public function _get()
+    {
+        return $this->dat;
+    }
+}

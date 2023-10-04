@@ -1,6 +1,6 @@
 <?php
 require_once "_connect.db.php";
-require_once "libs/Pcr.php";
+require_once "libs/PcrClass.php";
 require_once "libs/PcrTableClass.php";
 
 $period_id = $_GET["period_id"];
