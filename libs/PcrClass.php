@@ -56,6 +56,8 @@ class Pcr
     // pmt 
 
     private $pmt = false;
+    public $total_final_numerical_rating;
+
 
     private $mysqli;
 
@@ -78,6 +80,32 @@ class Pcr
         # update prrlist from ihris
         $this->update_prrlist();
     }
+
+
+    public function get_final_rating_data()
+    {
+        $fileStatus = $this->fileStatus;
+        $overallAv = 0;
+
+        # if department head
+        if ($fileStatus["formType"] != '3') {
+            $overallAv += $this->strategic_totalAv;
+        }
+
+        $overallAv += $this->core_totalAv;
+        $overallAv += $this->support_totalAv;
+
+        $this->total_final_numerical_rating =  $overallAv;
+
+        return [
+            "strategic_total_average" => $this->strategic_totalAv,
+            "core_function_total_average" => $this->core_totalAv,
+            "support_function_total_average" => $this->support_totalAv,
+            "final_numerical_rating" => $overallAv
+        ];
+    }
+
+
     public function get_prr_id()
     {
         if (!$this->fileStatus["period_id"]) return null;
@@ -529,8 +557,8 @@ class Pcr
         $view = "";
         while ($in0 < $count0) {
             $a1 = $arr[$in0][2];
-            $child = $this->coreRow_child(5, $a1);
-            $t0 = $this->Core_mfoRow(5, $arr[$in0]);
+            $child = $this->coreRow_child(15, $a1);
+            $t0 = $this->Core_mfoRow(15, $arr[$in0]);
             $view .= $t0[0] . $child[0];
             $count += $t0[1] + $child[1];
             $totalav += $t0[2] + $child[2];
@@ -734,7 +762,7 @@ class Pcr
 				<td>
 				<div class='segment'>
 				$sideTag
-				<p style='padding-left:$padding;'>
+				<p style='padding-left:$padding" . "px;'>
 				$percentBadge
 				" . $ar['cf_count'] . " " . $ar['cf_title'] . " 
 				</p>
@@ -755,7 +783,7 @@ class Pcr
                 $cTotal++;
             } else {
                 $view = "<tr>
-				<td style='padding-left:$padding;width:25%'>
+				<td style='padding-left:$padding" . "px;width:25%'>
 					" . $ar['cf_count'] . " " . $ar['cf_title'] . "
 				</td>
 				<td style='width:25%'>" . nl2br($si['mi_succIn']) . "</td>
@@ -776,7 +804,7 @@ class Pcr
                 $col = "<td class='noprint' ></td>";
             }
             $view = "<tr>
-			<td style='padding-left:$padding;width:25%'>" . $ar['cf_count'] . " " . $ar['cf_title'] . "</td>
+			<td style='padding-left:$padding" . "px;width:25%'>" . $ar['cf_count'] . " " . $ar['cf_title'] . "</td>
 			<td style='width:25%'></td>
 			<td style='$this->budgetView'></td>
 			<td style='$this->accountableView'></td>
@@ -1950,7 +1978,7 @@ class Pcr
     {
         if ($si != "") {
             $view = "<tr>
-			<td style='padding-left:$padding;width:25%'>" . $ar['cf_count'] . " " . $ar['cf_title'] . "</td>
+			<td style='padding-left:$padding" . "px;width:25%'>" . $ar['cf_count'] . " " . $ar['cf_title'] . "</td>
 			<td style='width:25%'>" . nl2br($si['mi_succIn']) . "</td>
 			<td style='width:15%'>" . $this->RatingMat($si['mi_quality']) . "</td>
 			<td style='width:15%'>" . $this->RatingMat($si['mi_eff']) . "</td>
@@ -1958,7 +1986,7 @@ class Pcr
 			</tr>";
         } else {
             $view = "<tr>
-			<td style='padding-left:$padding;width:25%'>" . $ar['cf_count'] . " " . $ar['cf_title'] . "</td>
+			<td style='padding-left:$padding" . "px;width:25%'>" . $ar['cf_count'] . " " . $ar['cf_title'] . "</td>
 			<td style='width:25%'></td>
 			<td></td>
 			<td></td>
