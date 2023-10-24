@@ -1,4 +1,4 @@
-<?php 
+<?php
 require_once "_connect.db.php";
 
 if (isset($_POST["load"])) {
@@ -22,13 +22,13 @@ if (isset($_POST["load"])) {
 
 	$result = $mysqli->query($sql);
 	if ($result->num_rows === 0) {
-		?>
+?>
 		<tr>
 			<td colspan="11" style="color: grey; text-align: center; padding: 20px; font-size: 24px;"><i>No records found...</i></td>
 		</tr>
-		<?php
+	<?php
 	}
-	
+
 	while ($row = $result->fetch_assoc()) {
 		$controlNumber = $row["controlNumber"];
 		$dateReceived = $row["dateReceived"];
@@ -37,7 +37,7 @@ if (isset($_POST["load"])) {
 			$source = "<i style=\"color: lightgrey;\">N/A</i>";
 		}
 
-		$department_ids = getDeptInvolved($mysqli,$controlNumber);
+		$department_ids = getDeptInvolved($mysqli, $controlNumber);
 		$dept_ids = "";
 
 		if ($department_ids != null) {
@@ -48,7 +48,7 @@ if (isset($_POST["load"])) {
 				if (count($department_ids) == $counter) {
 					$eol = ";<br>";
 				}
-				$dept_ids .= getDepartment($mysqli,$department_id).$eol;
+				$dept_ids .= getDepartment($mysqli, $department_id) . $eol;
 			}
 		} else {
 			$dept_ids = "<i style=\"color: lightgrey;\">N/A</i>";
@@ -56,27 +56,27 @@ if (isset($_POST["load"])) {
 
 		$subject = $row["subject"];
 		$fromDate = $row["fromDate"];
-		$toDate= $row["toDate"];
+		$toDate = $row["toDate"];
 		$venue = $row["venue"];
-		$remarks= $row["remarks"];
+		$remarks = $row["remarks"];
 		$carriedBy = $row["carriedBy"];
-		$date= $row["date"];
-		$isMeeting= $row["isMeeting"];
-		?>
+		$date = $row["date"];
+		$isMeeting = $row["isMeeting"];
+	?>
 		<tr style="vertical-align: top">
 			<td style="white-space: nowrap;">
-				<?php 
-				echo "HRMO-".getYearOnly($dateReceived)."-".str_pad((string)$controlNumber, 5, "0", STR_PAD_LEFT);
+				<?php
+				echo "HRMO-" . getYearOnly($dateReceived) . "-" . str_pad((string)$controlNumber, 5, "0", STR_PAD_LEFT);
 				?>
 			</td>
-			<td style="white-space: nowrap;"><?php echo dateToStr($dateReceived);?></td>
-			<td><?php echo $source;?></td>
-			<td><?php echo $dept_ids;?></td>
-			<td><?php echo $subject;?></td>
-			<td style="white-space: nowrap;"><?php echo dateToStr($fromDate);?></td>
-			<td style="white-space: nowrap;"><?php echo dateToStr($toDate);?></td>
-			<td><?php echo $venue;?></td>
-			<td style="white-space: nowrap;"><?php echo getEmployeeInvolved($mysqli,$controlNumber);?></td>
+			<td style="white-space: nowrap;"><?php echo dateToStr($dateReceived); ?></td>
+			<td><?php echo $source; ?></td>
+			<td><?php echo $dept_ids; ?></td>
+			<td><?php echo $subject; ?></td>
+			<td style="white-space: nowrap;"><?php echo dateToStr($fromDate); ?></td>
+			<td style="white-space: nowrap;"><?php echo dateToStr($toDate); ?></td>
+			<td><?php echo $venue; ?></td>
+			<td style="white-space: nowrap;"><?php echo getEmployeeInvolved($mysqli, $controlNumber); ?></td>
 			<td>
 				<?php
 				if ($isMeeting === "no") {
@@ -93,9 +93,7 @@ if (isset($_POST["load"])) {
 					$isMeeting = "Workshop";
 				} elseif ($isMeeting === "others") {
 					$isMeeting = "Others";
-				}
-				
-				else {
+				} else {
 					$isMeeting = "<div title='Please identify the type of communication!' style='color: red;'><i class='icon circle info'></i><i>n/a</i></div";
 				}
 				echo $isMeeting;
@@ -104,18 +102,16 @@ if (isset($_POST["load"])) {
 			</td>
 			<td>
 				<div class="ui icon basic mini buttons">
-					<button onclick="viewFunc('<?php echo $controlNumber;?>')" title="Open" class="ui button"><i class="folder open outline icon"></i></button>
-					<button onclick="updateFunc('<?php echo $controlNumber;?>')" title="Quick Edit" class="ui button"><i class="edit outline icon"></i></button>
-					<button onclick="deleteFunc('<?php echo $controlNumber;?>')" title="Delete" class="ui button"><i class="trash alternate outline icon"></i></button>
+					<button onclick="viewFunc('<?php echo $controlNumber; ?>')" title="Open" class="ui button"><i class="folder open outline icon"></i></button>
+					<button onclick="updateFunc('<?php echo $controlNumber; ?>')" title="Quick Edit" class="ui button"><i class="edit outline icon"></i></button>
+					<button onclick="deleteFunc('<?php echo $controlNumber; ?>')" title="Delete" class="ui button"><i class="trash alternate outline icon"></i></button>
 				</div>
 			</td>
 		</tr>
-		<?php
+	<?php
 	}
-// header('Location: http://192.168.14.22/hris/reqsandcoms.php');
-}
-
-elseif (isset($_POST["loadListToAdd"])) {
+	// header('Location: http://192.168.14.22/hris/reqsandcoms.php');
+} elseif (isset($_POST["loadListToAdd"])) {
 	$sql = "SELECT * FROM `employees` WHERE `status` = 'ACTIVE' ORDER BY `lastName` ASC";
 	$result = $mysqli->query($sql);
 	while ($row = $result->fetch_assoc()) {
@@ -124,37 +120,33 @@ elseif (isset($_POST["loadListToAdd"])) {
 		$firstName = $row["firstName"];
 		$middleName = $row["middleName"];
 		$extName = $row["extName"];
-		$fullName = $lastName.", ".$firstName." ".$middleName." ".$extName."<br>";
-		?>
-		<div id="<?php echo $employees_id;?>" class="item">
+		$fullName = $lastName . ", " . $firstName . " " . $middleName . " " . $extName . "<br>";
+	?>
+		<div id="<?php echo $employees_id; ?>" class="item">
 			<div class="right floated content">
-				<button onclick="addToList('<?php echo $employees_id;?>')" class="ui icon mini basic button">Add
+				<button onclick="addToList('<?php echo $employees_id; ?>')" class="ui icon mini basic button">Add
 				</button>
 			</div>
 			<div class="content"><?php echo $fullName; ?></div>
 		</div>
-		<?php
+	<?php
 	}
-}
-
-elseif (isset($_POST["addOther"])) {
+} elseif (isset($_POST["addOther"])) {
 	if ($name = $_POST["name"]) {
 		$nameUp = mb_convert_case($name, MB_CASE_UPPER, "UTF-8")
 
-		?>
-		<div id="<?php echo $name;?>" class="item">
+	?>
+		<div id="<?php echo $name; ?>" class="item">
 			<div class="right floated content">
-				<button onclick="removeOther('<?php echo $name;?>')" class="ui icon basic mini button"><i class="icon times"></i></button>
+				<button onclick="removeOther('<?php echo $name; ?>')" class="ui icon basic mini button"><i class="icon times"></i></button>
 			</div>
 			<div class="content"><?php echo $nameUp; ?></div>
 		</div>
 
-		<?php
+	<?php
 
 	}
-}
-
-elseif (isset($_POST["add"])) {
+} elseif (isset($_POST["add"])) {
 	$source = addslashes($_POST["source"]);
 	$subject = addslashes($_POST["subject"]);
 	$department_ids = $_POST["department_ids"];
@@ -193,25 +185,20 @@ elseif (isset($_POST["add"])) {
 				$sql = "INSERT INTO `requestandcomslist` (`controlNumber`, `others`) VALUES ('$controlNumber', '$others')";
 				$mysqli->query($sql);
 			}
-		} 
+		}
 	}
-
-}
-
-elseif (isset($_POST["delete"])) {
+} elseif (isset($_POST["delete"])) {
 	$controlNumber = $_POST["controlNumber"];
-	$sql0 ="DELETE FROM `requestandcoms` WHERE `requestandcoms`.`controlNumber` = '$controlNumber'";
-	$sql1 ="DELETE FROM `requestandcomslist` WHERE `requestandcomslist`.`controlNumber` = '$controlNumber'";
-	$sql2 ="DELETE FROM `requestandcomslist_dept` WHERE `requestandcomslist_dept`.`controlNumber` = '$controlNumber'";
+	$sql0 = "DELETE FROM `requestandcoms` WHERE `requestandcoms`.`controlNumber` = '$controlNumber'";
+	$sql1 = "DELETE FROM `requestandcomslist` WHERE `requestandcomslist`.`controlNumber` = '$controlNumber'";
+	$sql2 = "DELETE FROM `requestandcomslist_dept` WHERE `requestandcomslist_dept`.`controlNumber` = '$controlNumber'";
 	$mysqli->query($sql0);
 	$mysqli->query($sql1);
 	$mysqli->query($sql2);
-}
-
-elseif (isset($_POST["getRowData"])) {
+} elseif (isset($_POST["getRowData"])) {
 
 	$controlNumber = $_POST["controlNumber"];
-	$sql = "SELECT * FROM `requestandcoms` WHERE `controlNumber` = '$controlNumber'" ;
+	$sql = "SELECT * FROM `requestandcoms` WHERE `controlNumber` = '$controlNumber'";
 	$result = $mysqli->query($sql);
 	$row = $result->fetch_assoc();
 
@@ -266,31 +253,28 @@ elseif (isset($_POST["getRowData"])) {
 		$isMeeting = "Orientation";
 	} elseif ($isMeeting === "conference") {
 		$isMeeting = "Conference";
-	}
-	else {
+	} else {
 		$isMeeting = "";
 	}
-// <i style=\"color: lightgrey\">n/a</i>
+	// <i style=\"color: lightgrey\">n/a</i>
 	$json = array(
 		'controlNumber' => $controlNumber,
-		'controlNumberFormatted' => "HRMO-".getYearOnly($dateReceived)."-".$controlNumber,
+		'controlNumberFormatted' => "HRMO-" . getYearOnly($dateReceived) . "-" . $controlNumber,
 		'dateReceived' => dateToStrComplete($dateReceived),
-		'source'=> $source,
-		'department_ids'=> $department_ids,
-		'subject'=> $subject,
-		'fromDate'=> $fromDate,
-		'toDate'=> $toDate,
-		'fromDateFormatted'=>dateToStrComplete( $fromDate),
-		'toDateFormatted'=> dateToStrComplete($toDate),
-		'venue'=> $venue,
-		'type'=> $isMeeting,
-		'employees_ids'=> $employees_ids,
-		'others_array'=> $others_array
+		'source' => $source,
+		'department_ids' => $department_ids,
+		'subject' => $subject,
+		'fromDate' => $fromDate,
+		'toDate' => $toDate,
+		'fromDateFormatted' => dateToStrComplete($fromDate),
+		'toDateFormatted' => dateToStrComplete($toDate),
+		'venue' => $venue,
+		'type' => $isMeeting,
+		'employees_ids' => $employees_ids,
+		'others_array' => $others_array
 	);
 	echo json_encode($json);
-
-}
-elseif (isset($_POST["loadListToAddEdit"])) {
+} elseif (isset($_POST["loadListToAddEdit"])) {
 	$controlNumber = $_POST["controlNumber"];
 	$sql = "SELECT * FROM `employees` WHERE `employees_id` NOT IN (SELECT `employees_id` FROM `requestandcomslist` WHERE `controlNumber` = '$controlNumber' AND `employees_id` IS NOT NULL) AND `status` = 'ACTIVE' ORDER BY `lastName` ASC";
 	$result = $mysqli->query($sql);
@@ -300,37 +284,35 @@ elseif (isset($_POST["loadListToAddEdit"])) {
 		$firstName = $row["firstName"];
 		$middleName = $row["middleName"];
 		$extName = $row["extName"];
-		$fullName = $lastName.", ".$firstName." ".$middleName." ".$extName."<br>";
-		?>
-		<div id="<?php echo $employees_id;?>" class="item">
+		$fullName = $lastName . ", " . $firstName . " " . $middleName . " " . $extName . "<br>";
+	?>
+		<div id="<?php echo $employees_id; ?>" class="item">
 			<div class="right floated content">
-				<button onclick="addToListEdit('<?php echo $employees_id;?>')" class="ui icon basic mini button">
+				<button onclick="addToListEdit('<?php echo $employees_id; ?>')" class="ui icon basic mini button">
 					Add
 				</button>
 			</div>
 			<div class="content"><?php echo $fullName; ?></div>
 		</div>
-		<?php
+	<?php
 	}
-}
-elseif (isset($_POST["addOtherEdit"])) {
+} elseif (isset($_POST["addOtherEdit"])) {
 	if ($name = $_POST["name"]) {
 		$nameUp = mb_convert_case($name, MB_CASE_UPPER, "UTF-8");
 		$element_id = str_replace(' ', '', $name);
-
-		?>
-		<div id="<?php echo $element_id;?>" class="item">
+		$element_id = preg_replace('/[^A-Za-z0-9\-]/', '', $element_id);
+	?>
+		<div id="<?php echo $element_id; ?>" class="item">
 			<div class="right floated content">
-				<button onclick="removeOtherEdit('<?php echo $element_id;?>','<?php echo $name;?>')" class="ui icon basic mini button"><i class="icon times"></i></button>
+				<button onclick="removeOtherEdit('<?php echo $element_id; ?>','<?php echo $name; ?>')" class="ui icon basic mini button"><i class="icon times"></i></button>
 			</div>
 			<div class="content"><?php echo $nameUp; ?></div>
 		</div>
 
-		<?php
+	<?php
 
 	}
-}
-elseif (isset($_POST["popListEmployees_id"])) {
+} elseif (isset($_POST["popListEmployees_id"])) {
 	$employees_id = $_POST["employees_id"];
 	$sql = "SELECT * FROM `employees` WHERE `employees_id` = '$employees_id'";
 	$result = $mysqli->query($sql);
@@ -339,37 +321,33 @@ elseif (isset($_POST["popListEmployees_id"])) {
 	$firstName = $row["firstName"];
 	$middleName = $row["middleName"];
 	$extName = $row["extName"];
-	$fullName = $lastName.", ".$firstName." ".$middleName." ".$extName."<br>";
+	$fullName = $lastName . ", " . $firstName . " " . $middleName . " " . $extName . "<br>";
 
 	?>
-	<div id="<?php echo $employees_id;?>" class="item">
+	<div id="<?php echo $employees_id; ?>" class="item">
 		<div class="right floated content">
-			<button onclick="removeFromListEdit('<?php echo $employees_id;?>')" class="ui icon basic mini button">Del</button>
+			<button onclick="removeFromListEdit('<?php echo $employees_id; ?>')" class="ui icon basic mini button">Del</button>
 		</div>
 		<div class="content"><?php echo $fullName; ?></div>
 	</div>
 	<?php
-}
-
-elseif (isset($_POST["popListOthers"])) {
+} elseif (isset($_POST["popListOthers"])) {
 	if ($name = $_POST["name"]) {
 		$nameUp = mb_convert_case($name, MB_CASE_UPPER, "UTF-8");
 		$element_id = str_replace(' ', '', $name);
-
-		?>
-		<div id="<?php echo $element_id;?>" class="item">
+		$element_id = preg_replace('/[^A-Za-z0-9\-]/', '', $element_id);
+	?>
+		<div id="<?php echo $element_id; ?>" class="item">
 			<div class="right floated content">
-				<button onclick="removeOtherEdit('<?php echo $element_id;?>','<?php echo $name;?>')" class="ui icon basic mini button"><i class="icon times"></i></button>
+				<button onclick="removeOtherEdit('<?php echo $element_id; ?>','<?php echo $name; ?>')" class="ui icon basic mini button"><i class="icon times"></i></button>
 			</div>
 			<div class="content"><?php echo $nameUp; ?></div>
 		</div>
 
-		<?php
+	<?php
 
 	}
-}
-
-elseif (isset($_POST["edit"])) {
+} elseif (isset($_POST["edit"])) {
 	$controlNumber = $_POST["controlNumber"];
 	$source = addslashes($_POST["source"]);
 	$subject = addslashes($_POST["subject"]);
@@ -416,9 +394,7 @@ elseif (isset($_POST["edit"])) {
 			}
 		}
 	}
-}
-
-elseif (isset($_POST["getListsForView"])) {
+} elseif (isset($_POST["getListsForView"])) {
 	$controlNumber = $_POST["controlNumber"];
 	$sql = "SELECT `department_id` FROM `requestandcomslist_dept` WHERE `controlNumber` = '$controlNumber'";
 	$result = $mysqli->query($sql);
@@ -426,10 +402,10 @@ elseif (isset($_POST["getListsForView"])) {
 	while ($row = $result->fetch_assoc()) {
 		array_push($department_ids, $row["department_id"]);
 	}
-  // $department_ids = $row["department_ids"];
+	// $department_ids = $row["department_ids"];
 	if ($department_ids != null) {
-    // $department_ids = unserialize($department_ids);
-		?>
+		// $department_ids = unserialize($department_ids);
+	?>
 		<div class="field" id="deptsField">
 			<h5 class="ui header">Departments Concerned:</h5>
 			<div class="ui small list">
@@ -439,16 +415,16 @@ elseif (isset($_POST["getListsForView"])) {
 					$result = $mysqli->query($sql);
 					$row = $result->fetch_assoc();
 					$department = $row["department"];
-					?>
+				?>
 					<div class="item">
-						<?php echo $department;?>
+						<?php echo $department; ?>
 					</div>
-					<?php
+				<?php
 				}
 				?>
 			</div>
 		</div>
-		<?php
+	<?php
 	}
 
 	$sql = "SELECT * FROM `requestandcomslist` WHERE `controlNumber` = '$controlNumber'";
@@ -456,13 +432,13 @@ elseif (isset($_POST["getListsForView"])) {
 	$employees_ids = array();
 	$otherss = array();
 	if ($result->num_rows != 0) {
-		?>
+	?>
 		<div class="field" id="employeesInvolvedField">
 			<?php
 			while ($row = $result->fetch_assoc()) {
 				$employees_id = $row["employees_id"];
 				$others = $row["others"];
-				if ($employees_id != null) {  
+				if ($employees_id != null) {
 					array_push($employees_ids, $employees_id);
 				}
 				if ($others != null) {
@@ -471,7 +447,7 @@ elseif (isset($_POST["getListsForView"])) {
 			}
 
 			if (count($employees_ids) != 0) {
-				?>
+			?>
 				<h5 class="ui header">Personnels Involved:</h5>
 				<div class="ui small list">
 					<?php
@@ -485,35 +461,35 @@ elseif (isset($_POST["getListsForView"])) {
 						$lastName = $row["lastName"];
 						$extName = $row["extName"];
 						$fullName = "$lastName, $firstName $middleName $extName";
-						?>
+					?>
 						<div class="item">
-							<?php echo mb_convert_case($fullName, MB_CASE_TITLE, "UTF-8");?>
+							<?php echo mb_convert_case($fullName, MB_CASE_TITLE, "UTF-8"); ?>
 						</div>
-						<?php
+					<?php
 					}
 					?>
 				</div>
-				<?php
+			<?php
 			}
 			if (count($otherss) != 0) {
-				?>
+			?>
 				<h5 class="ui header">Other/s Involved:</h5>
 				<div class="ui small list">
 					<?php
 					foreach ($otherss as $others) {
-						?>
+					?>
 						<div class="item">
-							<?php echo mb_convert_case($others, MB_CASE_TITLE, "UTF-8");?>
+							<?php echo mb_convert_case($others, MB_CASE_TITLE, "UTF-8"); ?>
 						</div>
-						<?php
+					<?php
 					}
 					?>
 				</div>
-				<?php
+			<?php
 			}
 			?>
 		</div>
-		<?php
+<?php
 	}
 } elseif (isset($_POST["loadViewRemarks"])) {
 	$controlNumber = $_POST["controlNumber"];
@@ -540,52 +516,56 @@ elseif (isset($_POST["getListsForView"])) {
 	}
 
 
-	$json = array('remarks'=>$remarks, 'carriedBy'=>$carriedBy,'date'=>$date, 'dateFormatted'=>$dateFormatted);
+	$json = array('remarks' => $remarks, 'carriedBy' => $carriedBy, 'date' => $date, 'dateFormatted' => $dateFormatted);
 	echo json_encode($json);
-
 } elseif (isset($_POST["saveRemarks"])) {
 	$controlNumber = $_POST["controlNumber"];
 	$remarks = addslashes($_POST["remarks"]);
 	$carriedBy = addslashes($_POST["carriedBy"]);
 	$date = $_POST["date"];
 
-  // if ($date == null) {
-  //  $date = date('Y-m-d');
-  // }
+	// if ($date == null) {
+	//  $date = date('Y-m-d');
+	// }
 
 	$sql = "UPDATE `requestandcoms` SET `remarks`='$remarks',`carriedBy`='$carriedBy', `date` = '$date' WHERE `controlNumber` = '$controlNumber'";
 	$mysqli->query($sql);
 }
 
-function getYearOnly($numeric_date){
+function getYearOnly($numeric_date)
+{
 	$date = new DateTime($numeric_date);
 	$year = $date->format('Y');
 	return $year;
 }
 
-function dateToStr($numeric_date){
+function dateToStr($numeric_date)
+{
 	$date = new DateTime($numeric_date);
 	$strDate = $date->format('M d Y');
 	return $strDate;
 }
 
-function dateToStrComplete($numeric_date){
+function dateToStrComplete($numeric_date)
+{
 	$date = new DateTime($numeric_date);
 	$strDate = $date->format('F d, Y');
 	return $strDate;
 }
 
 
-function getDepartment($mysqli,$department_id){
-  // require "_connect.db.php";
-	$sql = "SELECT `department` FROM `department` WHERE `department_id` = '$department_id'"; 
+function getDepartment($mysqli, $department_id)
+{
+	// require "_connect.db.php";
+	$sql = "SELECT `department` FROM `department` WHERE `department_id` = '$department_id'";
 	$result = $mysqli->query($sql);
 	$row = $result->fetch_assoc();
 	return $department = $row["department"];
 }
 
-function getDeptInvolved($mysqli,$controlNumber){
-	$sql = "SELECT `department_id` FROM `requestandcomslist_dept` WHERE `controlNumber` = '$controlNumber'"; 
+function getDeptInvolved($mysqli, $controlNumber)
+{
+	$sql = "SELECT `department_id` FROM `requestandcomslist_dept` WHERE `controlNumber` = '$controlNumber'";
 	$result = $mysqli->query($sql);
 
 	$department_ids = array();
@@ -595,13 +575,14 @@ function getDeptInvolved($mysqli,$controlNumber){
 	return $department_ids;
 }
 
-function getEmployeeInvolved($mysqli,$controlNumber){
+function getEmployeeInvolved($mysqli, $controlNumber)
+{
 	$sql = "SELECT `controlNumber`,`requestandcomslist`.`employees_id`,`others`,`firstName`,`middleName`,`lastName`,`extName` FROM `requestandcomslist` 
 	LEFT JOIN `employees` 
 	ON `requestandcomslist`.`employees_id` = `employees`.`employees_id`
-	WHERE `controlNumber` = '$controlNumber'"; 
+	WHERE `controlNumber` = '$controlNumber'";
 	$result = $mysqli->query($sql);
-  // $employee = array();
+	// $employee = array();
 	$employees = "";
 	while ($row = $result->fetch_assoc()) {
 		$employees_id = $row["employees_id"];
@@ -613,11 +594,11 @@ function getEmployeeInvolved($mysqli,$controlNumber){
 		$others = $row["others"];
 
 		if ($employees_id) {
-			$employees .= $fullName."<br>";
+			$employees .= $fullName . "<br>";
 		} elseif (!$employees_id) {
-			$employees .= mb_convert_case($others, MB_CASE_TITLE, "UTF-8")."<br>";
+			$employees .= mb_convert_case($others, MB_CASE_TITLE, "UTF-8") . "<br>";
 		}
-    // array_push($employee, $row["department_id"]);
+		// array_push($employee, $row["department_id"]);
 	}
 
 	return $employees;
