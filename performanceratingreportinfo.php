@@ -29,7 +29,7 @@ $title = title($mysqli);
         </div>
       </div>
     </div>
-    <div class="ui container" style="padding: 20px;">
+    <div class="ui fluid container" style="padding: 20px;">
       <!-- <button class="ui button"> Populate List</button> -->
       <div class="ui top attached tabular menu noprint">
         <a class="item active" data-tab="first">Overall</a>
@@ -144,8 +144,10 @@ $title = title($mysqli);
                 <td colspan="18">{{item}}</td>
               </tr> -->
               <tr v-for="item in items" :key="item.id" class="center-align" :style="'background:'+stage_color(item.stages)">
-                <td class="noprint">
-                  <a :href="'employeeinfo.php?employees_id='+item.employees_id+'&spms'"><i class="icon link blue folder"></i></a>
+                <td class="noprint" nowrap>
+                  <!-- <a :href="'employeeinfo.php?employees_id='+item.employees_id+'&spms'"><i class="icon link blue folder"></i></a> -->
+                  <a :href="`performanceratingreportinfo.view_accomplishment_report.php?period_id=${item.period_id}&employees_id=${item.employees_id}`" target="_blank"><i class="icon link blue file"></i> View Accomplishment Report</a>
+                  <!-- {{item.period_id}} {{item.employees_id}} -->
                 </td>
                 <!-- <td colspan="12">{{ item }}</td> -->
                 <td>{{item.csid}}</td>
