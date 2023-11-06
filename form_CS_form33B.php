@@ -195,9 +195,10 @@ if ($committee_chair) {
 if ($vacated_by) {
   $sql_vacator = "SELECT `firstName`, `lastName`, `middleName`, `extName` FROM `employees` WHERE `employees_id` = '$vacated_by'";
   $res_vacator = $mysqli->query($sql_vacator);
-  $vacator = $res_vacator->fetch_assoc();
-  $name_formatter = new NameFormatter($vacator["firstName"], $vacator["lastName"], $vacator["middleName"], $vacator["extName"]);
-  $vacated_by = $name_formatter->getFullNameStandardTitle();
+  if ($vacator = $res_vacator->fetch_assoc()) {
+    $name_formatter = new NameFormatter($vacator["firstName"], $vacator["lastName"], $vacator["middleName"], $vacator["extName"]);
+    $vacated_by = $name_formatter->getFullNameStandardTitle();
+  } else $vacated_by = blank();
 } else {
   $vacated_by = blank();
 }
