@@ -76,7 +76,7 @@ $nature_of_appointment = $appointment["nature_of_appointment"];
 $nature_of_appointment = formatToTitleCase($nature_of_appointment);
 $appointing_authority = $appointment["appointing_authority"];
 $date_of_signing = $appointment["date_of_signing"];
-$date_of_signing = $date_of_signing !== '0000-00-00' ? dateToString($date_of_signing) : blank().blank().blank();
+$date_of_signing = $date_of_signing !== '0000-00-00' ? dateToString($date_of_signing) : blank() . blank() . blank();
 $csc_authorized_official = $appointment["csc_authorized_official"];
 $csc_mc_no = $appointment["csc_mc_no"];
 $csc_mc_no = $csc_mc_no ? $csc_mc_no : blank();
@@ -153,10 +153,10 @@ if ($gender == "MALE") {
 //######################## get personal pds end
 
 
-
 //######################## get name of signatories start
 
 // city mayor
+// $city_mayor = $appointing_authority;
 if ($appointing_authority) {
   $sql = "SELECT * FROM `signatory_saves` WHERE `id`='$appointing_authority'";
   $res = $mysqli->query($sql);
@@ -164,7 +164,7 @@ if ($appointing_authority) {
     $city_mayor = $row["name"];
   } else
     $city_mayor = blank();
-}
+} else  $city_mayor = blank();
 
 // hrmo
 if ($HRMO) {
@@ -177,6 +177,9 @@ if ($HRMO) {
     $hrmo_personnel = blank();
     $hrmo_position = blank();
   }
+} else {
+  $hrmo_personnel = blank();
+  $hrmo_position = blank();
 }
 // committee chairperson
 if ($committee_chair) {
@@ -185,7 +188,7 @@ if ($committee_chair) {
   if ($row = $res->fetch_assoc()) {
     $hrmpsb_chair = $row["name"];
   } else $hrmpsb_chair = blank();
-}
+} else $hrmpsb_chair = blank();
 //######################## get name of signatories end
 
 //######################## get name of incumbent start
@@ -193,8 +196,11 @@ if ($vacated_by) {
   $sql_vacator = "SELECT `firstName`, `lastName`, `middleName`, `extName` FROM `employees` WHERE `employees_id` = '$vacated_by'";
   $res_vacator = $mysqli->query($sql_vacator);
   $vacator = $res_vacator->fetch_assoc();
-  $name_formatter = new NameFormatter($vacator["firstName"], $vacator["lastName"], $vacator["middleName"], $vacator["extName"]);
-  $vacated_by = $name_formatter->getFullNameStandardTitle();
+  # debug start
+  // $name_formatter = new NameFormatter($vacator["firstName"], $vacator["lastName"], $vacator["middleName"], $vacator["extName"]);
+  // $vacated_by = $name_formatter->getFullNameStandardTitle();
+  # debug end
+  $vacated_by = "";
 } else {
   $vacated_by = blank();
 }
@@ -207,7 +213,7 @@ $department = formatToTitleCase($department);
 $position_id = $appointment["position_id"];
 $position = $appointment["position"];
 $functional = $appointment["functional"];
-$position_and_function = $position." ($functional)";
+$position_and_function = $position . " ($functional)";
 $position = formatToTitleCase($position);
 $functional = $appointment["functional"];
 $level = $appointment["level"];
