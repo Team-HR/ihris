@@ -120,4 +120,37 @@ class Employee
 
         return $full_name;
     }
+
+    public function get_full_name_upper_std($id)
+    {
+        if (!$id) return "";
+        $employee = $this->get_data($id);
+        
+        $firstName = $employee['firstName'];
+        $lastName = $employee['lastName'];
+        $middleName = $employee['middleName'];
+        $extName = $employee['extName'];
+        if ($middleName == ".") {
+            $middleName = "";
+        } else {
+            $middleName    = $middleName;
+            // $middleName = $this->middleName[0].".";
+            if (strlen($middleName) > 0) {
+                $middleName = " " . $middleName[0] . ". ";
+            } else $middleName = " " . $middleName . ". ";
+        }
+
+        $extName    =    strtoupper($extName);
+        $exts = $this->exts;
+
+        if (in_array(substr($extName, 0, 2), $exts)) {
+            $extName = " ," . mb_convert_case($extName, MB_CASE_TITLE, "UTF-8");
+        } else {
+            $extName = "" . $extName;
+        }
+
+        $full_name =  mb_convert_case("$firstName $middleName $lastName", MB_CASE_UPPER, "UTF-8") . $extName;
+
+        return $full_name;
+    }
 }
