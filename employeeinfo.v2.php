@@ -368,7 +368,7 @@ if (isset($_GET["spms"])) {
                                     <th>Function</th>
                                     <th>Date of Appointment</th>
                                     <th>Nature of Appointment</th>
-                                    <th width="100"></th>
+                                    <th width="150"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -384,7 +384,11 @@ if (isset($_GET["spms"])) {
                                                 <i class="icon print"></i>
                                             </a>
 
-                                            <a :href="'form_CS_form32_revision_2017.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon button">
+                                            <a :href="'form_CS_form32_revision_2017.pdf.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon button">
+                                                <i class="icon print"></i>
+                                            </a>
+
+                                            <a :href="'form_CS_form4_revision_2017.pdf.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon button">
                                                 <i class="icon print"></i>
                                             </a>
                                         </td>
