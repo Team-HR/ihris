@@ -130,15 +130,14 @@ class Employee
         $lastName = $employee['lastName'];
         $middleName = $employee['middleName'];
         $extName = $employee['extName'];
-        if ($middleName == ".") {
-            $middleName = "";
-        } else {
-            $middleName    = $middleName;
-            // $middleName = $this->middleName[0].".";
-            if (strlen($middleName) > 0) {
-                $middleName = " " . $middleName[0] . ". ";
-            } else $middleName = " " . $middleName . ". ";
-        }
+
+		if ($middleName == ".") {
+			$middleName = "";
+		} else {
+			if ($middleName) {
+				$middleName = " " . $middleName[0] . ". ";
+			}
+		}
 
         $extName    =    strtoupper($extName);
         $exts = $this->exts;
