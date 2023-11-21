@@ -1,6 +1,6 @@
 $(document).ready(function () {
   $(".dropdown").dropdown({
-    fullTextSearch: true
+    fullTextSearch: true,
   });
 });
 var app = new Vue({
@@ -9,10 +9,11 @@ var app = new Vue({
     Employees: [],
     All_Employees: [],
     Plantilla: [],
-    employees_id: 0,
+    employees_id: null,
     waitLoad: "loading",
-    employees_id: "",
+    // employees_id: "",
     plantilla_id: "",
+    reason_of_vacancy: "",
     status_of_appointment: "",
     csc_authorized_official: "Dir. Merlinda F. Quillano",
     date_signed_by_csc: "",
@@ -39,7 +40,7 @@ var app = new Vue({
     cert_issued_date: "",
     casual_promotion: "",
     probationary_period: "",
-    date_of_last_promotion: ""
+    date_of_last_promotion: "",
   },
   methods: {
     getEmployees: function () {
@@ -55,9 +56,9 @@ var app = new Vue({
       xml.send(fd);
     },
     get_plantilla: function () {
-      dataId = document.getElementById("appointments_form").attributes[
-        "data-id"
-      ].value;
+      dataId =
+        document.getElementById("appointments_form").attributes["data-id"]
+          .value;
       app.plantilla_id = dataId;
       var fd = new FormData();
       fd.append("Plantilla", dataId);
@@ -74,7 +75,7 @@ var app = new Vue({
             class: "warning",
             title: "Opps!! Can't Overwrite",
             message:
-              "There is an Existing Data pls Vacate<br>Please wait redirecting"
+              "There is an Existing Data pls Vacate<br>Please wait redirecting",
           });
           setTimeout(() => {
             window.location.href = "plantilla.php";
@@ -93,7 +94,7 @@ var app = new Vue({
           position: "top center",
           class: "error",
           title: "No Employee Selected",
-          message: "Please Select an Employee and Confirm"
+          message: "Please Select an Employee and Confirm",
         });
         window.location.href = "#headerAppoint";
       } else {
@@ -101,6 +102,7 @@ var app = new Vue({
         fd.append("saveAppointment", true);
         fd.append("employees_id", app.employees_id);
         fd.append("plantilla_id", app.plantilla_id);
+        fd.append("reason_of_vacancy", app.reason_of_vacancy);
         fd.append("status_of_appointment", app.status_of_appointment);
         fd.append("csc_authorized_official", app.csc_authorized_official);
         fd.append("date_signed_by_csc", app.date_signed_by_csc);
@@ -135,7 +137,7 @@ var app = new Vue({
           $("body").toast({
             position: "top center",
             class: res.color,
-            message: res.msg
+            message: res.msg,
           });
           if (res.status) {
             setTimeout(() => {
@@ -148,8 +150,15 @@ var app = new Vue({
         xml.open("POST", "umbra/appointments/config.php");
         xml.send(fd);
       }
-    }
+    },
   },
+
+  created() {
+    this.reason_of_vacancy = this.Plantilla
+      ? this.Plantilla.reason_of_vacancy
+      : "";
+  },
+
   mounted: function () {
     var interval = setInterval(() => {
       if (document.readyState == "complete") {
@@ -158,5 +167,5 @@ var app = new Vue({
         clearInterval(interval);
       }
     }, 1000);
-  }
+  },
 });

@@ -117,6 +117,7 @@ if (isset($_POST['Employees'])) {
 } elseif (isset($_POST['saveAppointment'])) {
     $employees_id = $_POST['employees_id'];
     $plantilla_id = $_POST['plantilla_id'];
+    $reason_of_vacancy = $_POST['reason_of_vacancy'];
     $status_of_appointment = $_POST['status_of_appointment'];
     $csc_authorized_official = $_POST['csc_authorized_official'];
     $date_signed_by_csc = $_POST['date_signed_by_csc'];
@@ -177,6 +178,7 @@ if (isset($_POST['Employees'])) {
                             `appointment_id`,
                             `employee_id`,
                             `plantilla_id`,
+                            `reason_of_vacancy`,
                             `status_of_appointment`,
                             `csc_authorized_official`,
                             `date_signed_by_csc`,
@@ -208,6 +210,7 @@ if (isset($_POST['Employees'])) {
                             NULL,
                             '$employees_id',
                             '$plantilla_id',
+                            '$reason_of_vacancy',
                             '$status_of_appointment',
                             '$csc_authorized_official',
                             '$date_signed_by_csc',
