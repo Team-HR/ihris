@@ -1,9 +1,4 @@
-$(document).ready(function () {
-  $(".dropdown").dropdown({
-    fullTextSearch: true,
-  });
-});
-var app = new Vue({
+new Vue({
   el: "#app",
   data: {
     Employees: [],
@@ -42,32 +37,36 @@ var app = new Vue({
     probationary_period: "",
     date_of_last_promotion: "",
   },
-  methods: {
-    getEmployees: function () {
-      var fd = new FormData();
-      fd.append("Employees", true);
-      var xml = new XMLHttpRequest();
-      xml.onload = function () {
-        res = JSON.parse(xml.responseText);
-        app.Employees = res.Employees;
-        app.All_Employees = res.All_Employees;
-      };
-      xml.open("POST", "umbra/appointments/config.php", true);
-      xml.send(fd);
+  watch: {
+    Plantilla(val) {
+      this.reason_of_vacancy = val.reason_of_vacancy;
     },
-    get_plantilla: function () {
-      dataId =
+  },
+  methods: {
+    getEmployees() {
+      $.post(
+        "umbra/appointments/config.php",
+        {
+          Employees: true,
+        },
+        (data) => {
+          const res = JSON.parse(data);
+          this.Employees = res.Employees;
+          this.All_Employees = res.All_Employees;
+        }
+      );
+    },
+    get_plantilla() {
+      const dataId =
         document.getElementById("appointments_form").attributes["data-id"]
           .value;
-      app.plantilla_id = dataId;
-      var fd = new FormData();
-      fd.append("Plantilla", dataId);
-      var xml = new XMLHttpRequest();
-      xml.onload = function () {
-        res = JSON.parse(xml.responseText);
+      this.plantilla_id = dataId;
+
+      $.post("umbra/appointments/config.php", { Plantilla: dataId }, (data) => {
+        const res = JSON.parse(data);
         if (res.status) {
-          app.Plantilla = res.dat;
-          app.waitLoad = "";
+          this.Plantilla = res.dat;
+          this.waitLoad = "";
         } else {
           console.log(res.status);
           $("body").toast({
@@ -78,18 +77,16 @@ var app = new Vue({
               "There is an Existing Data pls Vacate<br>Please wait redirecting",
           });
           setTimeout(() => {
-            window.location.href = "plantilla.php";
+            // window.location.href = "plantilla.php";
           }, 3000);
         }
-      };
-      xml.open("POST", "umbra/appointments/config.php", true);
-      xml.send(fd);
+      });
     },
-    formatNumber: function (num) {
+    formatNumber(num) {
       return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
     },
-    saveAppointment: function () {
-      if (!app.employees_id) {
+    saveAppointment() {
+      if (!this.employees_id) {
         $("body").toast({
           position: "top center",
           class: "error",
@@ -98,74 +95,73 @@ var app = new Vue({
         });
         window.location.href = "#headerAppoint";
       } else {
-        var fd = new FormData();
-        fd.append("saveAppointment", true);
-        fd.append("employees_id", app.employees_id);
-        fd.append("plantilla_id", app.plantilla_id);
-        fd.append("reason_of_vacancy", app.reason_of_vacancy);
-        fd.append("status_of_appointment", app.status_of_appointment);
-        fd.append("csc_authorized_official", app.csc_authorized_official);
-        fd.append("date_signed_by_csc", app.date_signed_by_csc);
-        fd.append("committee_chair", app.committee_chair);
-        fd.append("date_of_appointment", app.date_of_appointment);
-        fd.append("date_of_assumption", app.date_of_assumption);
-        fd.append("csc_mc_no", app.csc_mc_no);
-        fd.append("series_no", app.series_no);
-        fd.append("HRMO", app.HRMO);
-        fd.append("office_assignment", app.office_assignment);
-        fd.append("nature_of_appointment", app.nature_of_appointment);
-        fd.append("date_of_signing", app.date_of_signing);
-        fd.append("deliberation_date_from", app.deliberation_date_from);
-        fd.append("deliberation_date_to", app.deliberation_date_to);
-        fd.append("published_at", app.published_at);
-        fd.append("posted_in", app.posted_in);
-        fd.append("govId_type", app.govId_type);
-        fd.append("govId_no", app.govId_no);
-        fd.append("govId_issued_date", app.govId_issued_date);
-        fd.append("posted_date_from", app.posted_date_from);
-        fd.append("posted_date_to", app.posted_date_to);
-        fd.append("csc_release_date", app.csc_release_date);
-        fd.append("sworn_date", app.sworn_date);
-        fd.append("cert_issued_date", app.cert_issued_date);
-        fd.append("casual_promotion", app.casual_promotion);
-        fd.append("probationary_period", app.probationary_period);
-        fd.append("date_of_last_promotion", app.date_of_last_promotion);
-        var xml = new XMLHttpRequest();
-        xml.onload = function () {
-          app.waitLoad = "loading";
-          res = JSON.parse(xml.responseText);
-          $("body").toast({
-            position: "top center",
-            class: res.color,
-            message: res.msg,
-          });
-          if (res.status) {
-            setTimeout(() => {
-              window.location.href = "plantilla.php";
-            }, 3000);
-          } else {
-            app.waitLoad = "";
+        this.waitLoad = "loading";
+        $.post(
+          "umbra/appointments/config.php",
+          {
+            saveAppointment: true,
+            employees_id: this.employees_id,
+            plantilla_id: this.plantilla_id,
+            reason_of_vacancy: this.reason_of_vacancy,
+            status_of_appointment: this.status_of_appointment,
+            csc_authorized_official: this.csc_authorized_official,
+            date_signed_by_csc: this.date_signed_by_csc,
+            committee_chair: this.committee_chair,
+            date_of_appointment: this.date_of_appointment,
+            date_of_assumption: this.date_of_assumption,
+            csc_mc_no: this.csc_mc_no,
+            series_no: this.series_no,
+            HRMO: this.HRMO,
+            office_assignment: this.office_assignment,
+            nature_of_appointment: this.nature_of_appointment,
+            date_of_signing: this.date_of_signing,
+            deliberation_date_from: this.deliberation_date_from,
+            deliberation_date_to: this.deliberation_date_to,
+            published_at: this.published_at,
+            posted_in: this.posted_in,
+            govId_type: this.govId_type,
+            govId_no: this.govId_no,
+            govId_issued_date: this.govId_issued_date,
+            posted_date_from: this.posted_date_from,
+            posted_date_to: this.posted_date_to,
+            csc_release_date: this.csc_release_date,
+            sworn_date: this.sworn_date,
+            cert_issued_date: this.cert_issued_date,
+            casual_promotion: this.casual_promotion,
+            probationary_period: this.probationary_period,
+            date_of_last_promotion: this.date_of_last_promotion,
+          },
+          (data) => {
+            const res = JSON.parse(data);
+            $("body").toast({
+              position: "top center",
+              class: res.color,
+              message: res.msg,
+            });
+            if (res.status) {
+              setTimeout(() => {
+                window.location.href = "plantilla.php";
+              }, 3000);
+            } else {
+              this.waitLoad = "";
+            }
           }
-        };
-        xml.open("POST", "umbra/appointments/config.php");
-        xml.send(fd);
+        );
       }
     },
   },
 
-  created() {
-    this.reason_of_vacancy = this.Plantilla
-      ? this.Plantilla.reason_of_vacancy
-      : "";
-  },
-
-  mounted: function () {
+  mounted() {
     var interval = setInterval(() => {
       if (document.readyState == "complete") {
-        app.getEmployees();
-        app.get_plantilla();
+        this.getEmployees();
+        this.get_plantilla();
+        // console.log("mounted(): ", this.Plantilla);
         clearInterval(interval);
       }
     }, 1000);
+    $(".dropdown").dropdown({
+      fullTextSearch: true,
+    });
   },
 });
