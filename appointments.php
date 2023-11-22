@@ -25,7 +25,8 @@ require_once "_connect.db.php";
   ">
   <template>
     <h2 class="ui dividing header" id="headerAppoint">
-      Appointment for {{ Plantilla["position"] }} - {{ Plantilla["item_no"] }} #plantilla: {{Plantilla}}
+      Appointment for {{ Plantilla["position"] }} - {{ Plantilla["item_no"] }}
+      <!--  #plantilla: {{Plantilla}}  -->
     </h2>
 
     <form class="ui form" :class="waitLoad" id="appointments_form" data-id="<?= $_GET['id'] ?>" @submit.prevent="saveAppointment()">
