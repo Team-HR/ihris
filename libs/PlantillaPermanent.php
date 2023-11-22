@@ -91,7 +91,7 @@ class PlantillaPermanent extends Controller
 
     public function positionData($position_id)
     {
-        $position = new Position();
+        $position = new PositionController();
         $data = $position->getData($position_id);
         return $data;
     }
@@ -100,7 +100,7 @@ class PlantillaPermanent extends Controller
     public function getMonthlySalary($position_id, $step, $schedule)
     {
         if (empty($position_id) || empty($step) || empty($schedule)) return false;
-        $position = new Position();
+        $position = new PositionController();
         $sg = $position->getSalaryGrade($position_id);
         $monthly_salary = 0;
         if (empty($sg)) return false;

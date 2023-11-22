@@ -368,7 +368,7 @@ if (isset($_GET["spms"])) {
                                     <th>Function</th>
                                     <th>Date of Appointment</th>
                                     <th>Nature of Appointment</th>
-                                    <th></th>
+                                    <th width="150"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -380,8 +380,19 @@ if (isset($_GET["spms"])) {
                                         <td>{{appointment.date_of_appointment}}</td>
                                         <td>{{appointment.nature_of_appointment}}</td>
                                         <td>
-                                            <a :href="'form_CS_form33B.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon button">
+                                            <a style="margin: 1px;" :href="'form_CS_form33B.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon fluid button">
                                                 <i class="icon print"></i>
+                                                Appointment Form
+                                            </a>
+                                                
+                                            <a style="margin: 1px;" :href="'form_CS_form32_revision_2017.pdf.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon fluid button">
+                                                <i class="icon print"></i>
+                                                Oath of Office
+                                            </a>
+
+                                            <a style="margin: 1px;" :href="'form_CS_form4_revision_2017.pdf.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon fluid button">
+                                                <i class="icon print"></i>
+                                                Cert of Assump...
                                             </a>
                                         </td>
                                     </tr>

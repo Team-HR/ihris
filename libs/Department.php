@@ -21,15 +21,16 @@ class Department extends Controller
 		return $data;
 	}
 
-	public function get_departments(){
-		
+	public function get_departments()
+	{
+
 		$mysqli2 = $this->mysqli2;
 		$data = [];
 		$sql = "SELECT * FROM `departments` ORDER BY `department` ASC";
 		$res = $mysqli2->query($sql);
 
 		while ($row = $res->fetch_assoc()) {
-			$data [] = [
+			$data[] = [
 				"department_id" => $row["id"],
 				"department" => $row["department"]
 			];
@@ -53,6 +54,18 @@ class Department extends Controller
 
 		$stmt->close();
 
+		return $department;
+	}
+	public function getDepartmentData($id)
+	{
+		$mysqli = $this->mysqli;
+		$department = "";
+		$sql = "SELECT * FROM `department` WHERE `department_id` = '$id'";
+
+		$res = $mysqli->query($sql);
+		if ($row = $res->fetch_assoc()) {
+			$department = $row;
+		}
 		return $department;
 	}
 }

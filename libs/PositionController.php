@@ -1,7 +1,7 @@
 <?php
 require_once "Controller.php";
 
-class Position extends Controller
+class PositionController extends Controller
 {
     private $dat = array();
     function __construct()

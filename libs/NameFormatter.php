@@ -91,7 +91,9 @@ class NameFormatter
 			$middleName = "";
 		} else {
 			$middleName	= $this->middleName;
-			$middleName = " " . $this->middleName[0] . ". ";
+			if ($middleName) {
+				$middleName = " " . $this->middleName[0] . ". ";
+			}
 		}
 
 		$extName	=	strtoupper($this->extName);
