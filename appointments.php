@@ -2,6 +2,7 @@
 if (!isset($_GET['id']) || $_GET['id'] == "" || $_GET['id'] == 0) {
   header("location:plantilla.php");
 }
+
 $title = "Appointments";
 require_once "header.php";
 require_once "_connect.db.php";
@@ -31,7 +32,7 @@ require_once "_connect.db.php";
 
     <form class="ui form" :class="waitLoad" id="appointments_form" data-id="<?= $_GET['id'] ?>" @submit.prevent="saveAppointment()">
       <!-- <input type="text" v-model="reason_of_vacancy" :value="promotion"> -->
-      <div class="field" style="width: 500px;">
+      <div class="field" style="width: 500px;" :style="!isVacant ? 'display:none;':''">
         <label>Select Appointee:</label>
         <select class="ui search dropdown fluid clearable" id="empList" v-model="employees_id" required>
           <option value="">Search Employee</option>
@@ -41,6 +42,11 @@ require_once "_connect.db.php";
           </option>
         </select>
       </div>
+      <div class="field" style="width: 500px;" :style="!isVacant ? '':'display:none;'">
+        <label>Appointee:</label>
+        {{incumbentName}}
+      </div>
+
       <h4 class="ui dividing header" style="color: #00000066">
         Plantilla Information
       </h4>
@@ -87,7 +93,7 @@ require_once "_connect.db.php";
       <div class="four fields">
         <div class="field">
           <label>Status of Appointment</label>
-          <select id="status" class="ui fluid search selection dropdown" v-model="status_of_appointment">
+          <select id="status_of_appointment" class="ui fluid search selection dropdown" v-model="status_of_appointment">
             <option value="">---</option>
             <option value="elective">Elective</option>
             <option value="permanent">Permanent</option>
@@ -108,7 +114,7 @@ require_once "_connect.db.php";
         </div>
         <div class="field">
           <label>Committee Chair</label>
-          <select class="ui search dropdown" v-model="committee_chair">
+          <select id="committee_chair" class="ui search dropdown" v-model="committee_chair">
             <option value="">Search Name</option>
             <option v-for="(comChair,index) in All_Employees" :value="comChair.employees_id">
               {{ comChair.lastName }} {{ comChair.firstName }}
@@ -139,7 +145,7 @@ require_once "_connect.db.php";
         </div>
         <div class="field">
           <label>HRMO</label>
-          <select class="ui search dropdown" v-model="HRMO">
+          <select id="HRMO" class="ui search dropdown" v-model="HRMO">
             <option value="">Search Name</option>
             <option v-for="(hr,index) in All_Employees" :key="index" :value="hr.employees_id">
               {{ hr.lastName }} {{ hr.firstName }}
@@ -160,7 +166,7 @@ require_once "_connect.db.php";
       <div class="four fields">
         <div class="field">
           <label>Nature of appointment</label>
-          <select class="ui search dropdown" v-model="nature_of_appointment">
+          <select id="nature_of_appointment" class="ui search dropdown" v-model="nature_of_appointment">
             <option value="">---</option>
             <option value="original">Original</option>
             <option value="promotion">Promotion</option>
