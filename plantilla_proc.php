@@ -101,6 +101,7 @@ if (isset($_POST["load"])) {
 
 		$counter++;
 		$id = $row["id"];
+		$appointment_id = $sql5["appointment_id"];
 		$employee_id = $sql5['employee_id'];
 		$plantilla_id = $row["id"];
 		$schedule = $row["schedule"];
@@ -117,6 +118,8 @@ if (isset($_POST["load"])) {
 		}
 
 		$incumbent = $sql5['firstName'] . " " . $sql5['middleName'] . " " . $sql5['lastName'] . " " . $sql5['extName'];
+		$incumbent = "<a class='ui basic fluid tiny button' title='Edit Appointment' href='appointments.php?id=$id'> $incumbent </a>";
+
 		if (!$row['incumbent']) {
 			$incumbent = "
 						<div class='ui buttons'>
