@@ -67,7 +67,9 @@ var dtrSummary = new Vue({
                 }
                 xml.open('POST','umbra/dtrManagement/config_summary.php',false)
                 xml.send(fd)
-        },getDataNeeded:function(){
+        },
+        
+        getDataNeeded:function(){
             this_dtr = this;
                 var fd = new FormData()
                 fd.append('period',this.period)
@@ -98,6 +100,7 @@ var dtrSummary = new Vue({
                 xml.open('POST','umbra/dtrManagement/config_summary.php',false)
                 xml.send(fd)
         },
+        
         sortArrays(arrays) {
             return arrays.slice().sort(function(a, b){
                 return (a.lastName > b.lastName) ? 1 : -1;

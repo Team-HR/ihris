@@ -103,8 +103,8 @@ class Employee
             $middleName    = $middleName;
             // $middleName = $this->middleName[0].".";
             if (strlen($middleName) > 0) {
-                $middleName = " " . $middleName[0] . ". ";
-            } else $middleName = " " . $middleName . ". ";
+                $middleName = " " . $middleName[0] . ".";
+            } else $middleName = " " . $middleName . ".";
         }
 
         $extName    =    strtoupper($extName);
@@ -113,7 +113,7 @@ class Employee
         if (in_array(substr($extName, 0, 2), $exts)) {
             $extName = " " . mb_convert_case($extName, MB_CASE_TITLE, "UTF-8");
         } else {
-            $extName = " " . $extName;
+            $extName = $extName ? " " . $extName : "";
         }
 
         $full_name =  mb_convert_case("$lastName, $firstName $middleName", MB_CASE_UPPER, "UTF-8") . $extName;

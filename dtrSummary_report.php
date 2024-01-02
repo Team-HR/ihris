@@ -7,7 +7,6 @@
 
 </style>
 
-
 <div id="dtrSummary_app">
 <div class="ui segment noprint"   style="margin:auto;max-width:50%;min-width:500px;">
         <h3>DTR Summary Report</h3>
