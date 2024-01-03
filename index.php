@@ -43,6 +43,7 @@ if ($auth->is_hr) {
 										<a class="item" href="rnrplan.php">R&R Plan (Yearly)</a>
 										<a class="item" href="rnr_system_review.php">System Review</a>
 										<a class="item" href="">Search for Outstanding Employees</a>
+										<a class="item" href="dtrSummary_yearly_report.php">Sunshine Awardee Employees</a>
 									</div>
 								</div>
 							</div>

@@ -18,7 +18,7 @@ require_once "header.php";
                     </button>
                 </div>
                 <div class="item">
-                    <h3><i class="users icon"></i> DTR Yearly Report</h3>
+                    <h3><i class="sun icon"></i> Search for Sunshine Awardee Employee</h3>
                 </div>
 
                 <div class="right item">
@@ -61,22 +61,22 @@ require_once "header.php";
                 <h2 class="ui header block">{{employmentStatus}} PERSONNEL DTR REPORTS FOR THE YEAR {{year}}</h2>
                 <table class="ui compact small celled table">
                     <tr>
-                        <!-- <th>ID</th> -->
+                        <th></th>
                         <th>Name</th>
-                        <th>Status</th>
+                        <th></th>
                         <th v-for="(month, m) in months" :key="m">{{month}}</th>
                     </tr>
 
                     <template>
                         <tr v-if="isLoading">
-                            <td colspan="14" style="text-align: center;font-size: 24px;">
+                            <td colspan="15" style="text-align: center;font-size: 24px;">
                                 Loading data... Please wait...
                             </td>
                         </tr>
                         <tr v-else v-for="(item, index) in items" :key="index">
-                            <!-- <td>{{item.id}}</td> -->
+                            <td>{{index+1}}</td>
                             <td>{{item.name}}</td>
-                            <td>{{item.employment_status}}</td>
+                            <td>{{item.employment_status[0]}}</td>
                             <td v-for="(month, m) in 12" :key="m">
                                 <template v-if="item.months[m] != ''">
                                     Tardy(n): <span v-if="item.months[m].totalTardy != '0' || item.months[m].totalTardy != 0" style="color: red;">{{item.months[m].totalTardy}}</span>
