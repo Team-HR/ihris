@@ -234,6 +234,7 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]) {
 
 
   <div class="ui header basic center aligned headerLGUBayawan">
+    <div class="bgDiv"></div>
     <img class="imgSeal" src="assets/images/bayawanSealNew.png">
     <div class="ui header title" style="display: inline-block; margin-left:50px; margin-right: 50px;">
       <!-- Local Government of Bayawan City -->
@@ -245,9 +246,18 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]) {
   <style>
     .headerLGUBayawan {
       position: relative;
-      /* top: 100px; */
-      /* background-color: grey; */
-      margin: auto
+      /* left: 100px; */
+      margin: auto !important;
+    }
+
+    .headerLGUBayawan>.bgDiv {
+      position: absolute;
+      /* left: 15%; */
+      height: 200px;
+      /* background-color: white !important; */
+      background: rgb(125, 125, 125);
+      background: linear-gradient(0deg, rgba(255,255,255,0.0313375350140056) 0%, rgba(255,255,255,1) 51%);
+      width: 100% !important;
     }
 
     .headerLGUBayawan>.title {
