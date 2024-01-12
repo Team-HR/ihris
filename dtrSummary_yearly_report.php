@@ -65,6 +65,7 @@ require_once "header.php";
                         <th>Name</th>
                         <th></th>
                         <th v-for="(month, m) in months" :key="m">{{month}}</th>
+                        <th>Remarks</th>
                     </tr>
 
                     <template>
@@ -78,6 +79,9 @@ require_once "header.php";
                             <td>{{item.name}}</td>
                             <td>{{item.employment_status[0]}}</td>
                             <td v-for="(month, m) in 12" :key="m">
+
+                                <!-- item.remarks[{{month}}] -->
+                                <!-- {{'2023_'+item.id}}.general_remarks.m{{(m+1)}} -->
                                 <template v-if="item.months[m] != ''">
                                     Tardy(n): <span v-if="item.months[m].totalTardy != '0' || item.months[m].totalTardy != 0" style="color: red;">{{item.months[m].totalTardy}}</span>
                                     <span v-else><i style="color: grey;">none</i></span>
@@ -93,10 +97,28 @@ require_once "header.php";
                                 </template>
                                 <template v-else>
                                     <div>
-
                                         No <br>record <br>found
                                     </div>
                                 </template>
+
+                                <!-- <button class="ui mini icon button basic" @click="addEditRemarks(`${year}_${item.id}`,'m'+(m+1))" style="white-space: nowrap;">
+                                        <i class="ui edit icon"></i>
+                                    </button> -->
+                                <br>
+                                <!-- {{item.months[m].dtrsummary_remarks}} -->
+                                Remarks: <i style="color:green;">{{item.months[m].dtrsummary_remarks ? item.months[m].dtrsummary_remarks.remarks : ''}}</i>
+                                <i class="ui edit grey icon link" @click="addEditRemarks(item.months[m].dtrsummary_remarks)"></i>
+
+                            </td>
+                            <td>
+                                <i style="color:green;">
+                                    {{item.general_remarks ? item.general_remarks.remarks : '' }}
+                                </i>
+                                <!-- {{item.general_remarks}} -->
+                                <button class="ui mini icon button basic" @click="addEditRemarks(item.general_remarks)" style="white-space: nowrap;">
+                                    <i class="ui edit icon"></i> Remarks
+                                </button>
+
                             </td>
                         </tr>
 
@@ -107,6 +129,24 @@ require_once "header.php";
 
             </div>
         </div>
+
+
+        <div id="addEditRemarksModal" class="ui modal tiny">
+            <div class="header">Remarks</div>
+            <div class="content">
+                <div class="ui form">
+                    <div class="field ui fluid input">
+                        <textarea v-model="editRemarks.remarks" name="remarksInput" id="remarksInput" rows="10" style="width: 100%;" placeholder="Enter comments here"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="actions">
+                <div class="ui approve small button primary"><i class="ui save icon"></i>Save</div>
+                <div class="ui cancel small button">Cancel</div>
+            </div>
+        </div>
+
+
     </template>
 </div>
 <script>
@@ -130,7 +170,12 @@ require_once "header.php";
                 "November",
                 "December"
             ],
-            items: []
+            items: [],
+            editRemarks: {
+                identifier: null,
+                column_name: null,
+                remarks: null
+            }
         },
         methods: {
             generateReport() {
@@ -146,11 +191,36 @@ require_once "header.php";
                     },
                     "json"
                 );
+            },
+            addEditRemarks(dtrsummary_remarks) {
+                // console.log(dtrsummary_remarks);
+                // return false;
+                this.editRemarks.identifier = dtrsummary_remarks.identifier
+                this.editRemarks.column_name = dtrsummary_remarks.column_name
+                this.editRemarks.remarks = dtrsummary_remarks.remarks
+                $("#addEditRemarksModal").modal("show");
+            },
+            submitRemarks() {
+                $.post("dtrSummary_yearly_report_config.php", {
+                        submitRemarks: true,
+                        payload: this.editRemarks
+                    }, (data, textStatus, jqXHR) => {
+                        // console.log(data);
+                        this.generateReport()
+                    },
+                    "json"
+                );
             }
         },
         mounted() {
             this.generateReport()
             $("#employmentStatusDropdown").dropdown()
+            $("#addEditRemarksModal").modal({
+                closable: false,
+                onApprove: () => {
+                    this.submitRemarks()
+                }
+            })
         },
     });
 </script>

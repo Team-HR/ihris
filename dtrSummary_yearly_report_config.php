@@ -14,7 +14,7 @@ if (isset($_POST["generateReport"])) {
     }
 
 
-    $sql = "SELECT * FROM `employees` WHERE `status` = 'ACTIVE' AND $filter ORDER BY `employees`.`lastName` ASC";
+    $sql = "SELECT * FROM `employees` WHERE `status` = 'ACTIVE' AND $filter ORDER BY `employees`.`lastName` ASC LIMIT 10";
 
     $res = $mysqli->query($sql);
     while ($row = $res->fetch_assoc()) {
@@ -22,7 +22,31 @@ if (isset($_POST["generateReport"])) {
     }
 
     echo json_encode($data, JSON_PRETTY_PRINT);
+} elseif (isset($_POST["submitRemarks"])) {
+    $payload = $_POST["payload"];
+    $identifier = $payload["identifier"];
+    // check first if identifier is already existing
+    $sql = "SELECT * FROM `dtrsummary_remarks` WHERE `identifier` = '$identifier'";
+    $res = $mysqli->query($sql);
+    if ($row = $res->fetch_assoc()) {
+        // update
+        $column_name = $payload['column_name'];
+        $remarks = $mysqli->real_escape_string($payload['remarks']);
+        $sql = "UPDATE `dtrsummary_remarks` SET `$column_name` = '$remarks' WHERE `identifier` = '$identifier'";
+        $mysqli->query($sql);
+    } else {
+        // create new entry
+        $column_name = $payload['column_name'];
+        $remarks = $mysqli->real_escape_string($payload['remarks']);
+        $sql = "INSERT INTO `dtrsummary_remarks` (`identifier`,`$column_name`, `created_at`, `updated_at`) VALUES ('$identifier', '$remarks', current_timestamp(), current_timestamp())";
+        $mysqli->query($sql);
+    }
+
+    echo json_encode(1);
 }
+
+
+
 
 function get_employee_dtr($mysqli, $employee_id, $year)
 {
@@ -44,24 +68,87 @@ function get_employee_dtr($mysqli, $employee_id, $year)
     $dtrs = filter_array('dtr_year', $year, $dtrs);
     $months = [];
 
+    // get employee remarks for the year start
+
+    $identifier = $year . "_" . $employee_id;
+    $sql = "SELECT * FROM `dtrsummary_remarks` WHERE `identifier` = '$identifier'";
+    $res = $mysqli->query($sql);
+
+    $dtrsummary_remarks = null;
+    $general_remarks = null;
+
+    if ($row = $res->fetch_assoc()) {
+        $dtrsummary_remarks = $row;
+        $general_remarks = [
+            'identifier' => $identifier,
+            'column_name' => 'general_remarks',
+            'remarks' => $row['general_remarks']
+        ];
+    } else {
+        $general_remarks = [
+            'identifier' => $identifier,
+            'column_name' => 'general_remarks',
+            'remarks' => null
+        ];
+    }
+
+    // get employee remarks for the year end
+
+
     for ($i = 0; $i < 12; $i++) {
         $m = filter_array('dtr_month', $i + 1, $dtrs);
-        $months[] =  $m ?  $m[0] : [
-            // "dtrSummary_id" => null,
-            // "employee_id" => null,
-            // "month" => null,
-            // "totalMinsTardy" => 0,
-            // "totalTardy" => 0,
-            // "totalMinsUndertime" => 0,
-            // "letterOfNotice" => null,
-            // "halfDaysTardy" => 0,
-            // "halfDaysUndertime" => 0,
-            // "remarks" => "",
-            // "submitted" => null,
-            // "color" => null,
-            // "dtr_year" => null,
-            // "dtr_month" => null
-        ];
+
+        $remarks = isset($dtrsummary_remarks['m' . ($i + 1)]) ? $dtrsummary_remarks['m' . ($i + 1)] : null;
+
+        if ($m) {
+            $m = $m[0];
+            $m['dtrsummary_remarks'] = [
+                'identifier' => $identifier,
+                'column_name' => 'm' . ($i + 1),
+                'remarks' => $remarks
+            ];
+            $months[] = $m;
+        } else {
+
+            $months[] = [
+                "dtrSummary_id" => null,
+                "employee_id" => null,
+                "month" => null,
+                "totalMinsTardy" => 0,
+                "totalTardy" => 0,
+                "totalMinsUndertime" => 0,
+                "letterOfNotice" => null,
+                "halfDaysTardy" => 0,
+                "halfDaysUndertime" => 0,
+                "remarks" => "",
+                "submitted" => null,
+                "color" => null,
+                "dtr_year" => null,
+                "dtr_month" => null,
+                "dtrsummary_remarks" => [
+                    'identifier' => $identifier,
+                    'column_name' => 'm' . ($i + 1),
+                    'remarks' => $remarks
+                ]
+            ];
+        }
+
+        // $months[] =  $m ?  $m[0] : [
+        // "dtrSummary_id" => null,
+        // "employee_id" => null,
+        // "month" => null,
+        // "totalMinsTardy" => 0,
+        // "totalTardy" => 0,
+        // "totalMinsUndertime" => 0,
+        // "letterOfNotice" => null,
+        // "halfDaysTardy" => 0,
+        // "halfDaysUndertime" => 0,
+        // "remarks" => "",
+        // "submitted" => null,
+        // "color" => null,
+        // "dtr_year" => null,
+        // "dtr_month" => null
+        // ];
     }
 
     $employment_status = $employee->get_data($employee_id) ? $employee->get_data($employee_id)['employmentStatus'] : '';
@@ -69,7 +156,8 @@ function get_employee_dtr($mysqli, $employee_id, $year)
         "id" => $employee_id,
         "name" => $employee->get_full_name_upper($employee_id),
         "employment_status" => $employment_status,
-        "months" => $months
+        "months" => $months,
+        "general_remarks" => $general_remarks
     ];
 
     return $employee;
