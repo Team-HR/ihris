@@ -226,7 +226,10 @@ if (isset($_GET["spms"])) {
         <div class="ui segment grid">
             <div class="three wide column">
                 <div id="pim-menu" class="ui vertical pointing menu fluid">
-                    <a class="item active" data-tab="personality">
+                    <a class="item active" data-tab="pds">
+                        PDS
+                    </a>
+                    <a class="item" data-tab="personality">
                         Personality
                     </a>
                     <a class="item" data-tab="competencies">
@@ -237,9 +240,6 @@ if (isset($_GET["spms"])) {
                     </a>
                     <a class="item" data-tab="appointments">
                         Appointment
-                    </a>
-                    <a class="item" data-tab="pds">
-                        PDS
                     </a>
                     <a class="item" data-tab="service_records">
                         Service Records
@@ -253,7 +253,7 @@ if (isset($_GET["spms"])) {
                 </div>
             </div>
             <div class="thirteen wide stretched column">
-                <div class="ui tab active" data-tab="personality">
+                <div class="ui tab" data-tab="personality">
                     <div class="ui pointing secondary blue menu fluid" id="competencies">
                         <a class="item active" data-tab="myersBriggsIndicator">
                             Myers-Briggs Type Indicator
@@ -353,7 +353,7 @@ if (isset($_GET["spms"])) {
                         </table>
                     </div>
                 </div>
-                <div class="ui tab" data-tab="pds">
+                <div class="ui tab active" data-tab="pds">
                     <div class="ui pointing secondary blue menu fluid" id="pds">
                         <a class="item active" data-tab="personal">Personal</a>
                         <a class="item" data-tab="family">Family</a>
