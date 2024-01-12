@@ -60,21 +60,35 @@ require_once "header.php";
                 <!-- content start -->
                 <h2 class="ui header block">{{employmentStatus}} PERSONNEL DTR REPORTS FOR THE YEAR {{year}}</h2>
                 <table class="ui compact small celled table">
-                    <tr>
-                        <th></th>
-                        <th>Name</th>
-                        <th></th>
-                        <th v-for="(month, m) in months" :key="m">{{month}}</th>
-                        <th>Remarks</th>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>
+                                <div class="ui checkbox selectAllcheckbox">
+                                    <input type="checkbox" name="selectAll" id="selectAll">
+                                    <label for="selectAll"> Select_all</label>
+                                </div>
+                            </th>
+                            <th></th>
+                            <th>Name</th>
+                            <th></th>
+                            <th v-for="(month, m) in months" :key="m">{{month}}</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
 
                     <template>
                         <tr v-if="isLoading">
-                            <td colspan="15" style="text-align: center;font-size: 24px;">
+                            <td colspan="16" style="text-align: center;font-size: 24px;">
                                 Loading data... Please wait...
                             </td>
                         </tr>
                         <tr v-else v-for="(item, index) in items" :key="index">
+                            <td class="center aligned">
+                                <div class="ui checkbox">
+                                    <input type="checkbox" name="selectForPrint" id="selectForPrint" v-model="printSelections" :value="item">
+                                    <label for="selectForPrint"> </label>
+                                </div>
+                            </td>
                             <td>{{index+1}}</td>
                             <td>{{item.name}}</td>
                             <td>{{item.employment_status[0]}}</td>
@@ -148,11 +162,23 @@ require_once "header.php";
 
 
     </template>
+
+
+    <button class="printBtn ui big button green" @click="printSelected()"><i class="ui print icon"></i> Print Selected</button>
+
 </div>
+<style>
+    .printBtn {
+        position: fixed;
+        bottom: 50px;
+        right: 50px;
+    }
+</style>
 <script>
     new Vue({
         el: "#dtrYearlyReportApp",
         data: {
+            printSelections: [],
             isLoading: null,
             year: 2023, //curr year - 1
             employmentStatus: "ALL",
@@ -186,7 +212,7 @@ require_once "header.php";
                         employmentStatus: this.employmentStatus,
                     }, (data, textStatus, jqXHR) => {
                         this.items = data;
-                        console.log(this.items);
+                        // console.log(this.items);
                         this.isLoading = false
                     },
                     "json"
@@ -210,9 +236,20 @@ require_once "header.php";
                     },
                     "json"
                 );
+            },
+
+            printSelected() {
+                console.log(this.printSelections);
             }
+
         },
         mounted() {
+            $(".ui.checkbox").checkbox();
+            $(".selectAllcheckbox").checkbox({
+                 
+            });
+            
+
             this.generateReport()
             $("#employmentStatusDropdown").dropdown()
             $("#addEditRemarksModal").modal({
