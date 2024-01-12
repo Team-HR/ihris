@@ -232,7 +232,49 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]) {
     </div>
   </div>
 
-  <div class="ui mini container" style="width: 300px; padding-top: 100px;">
+
+  <div class="ui header basic center aligned headerLGUBayawan">
+    <img class="imgSeal" src="assets/images/bayawanSealNew.png">
+    <div class="ui header title" style="display: inline-block; margin-left:50px; margin-right: 50px;">
+      <!-- Local Government of Bayawan City -->
+      LOCAL GOVERNMENT OF BAYAWAN CITY
+    </div>
+    <img class="imgBrand" src="assets/images/bayawanLogo.png">
+  </div>
+
+  <style>
+    .headerLGUBayawan {
+      position: relative;
+      /* top: 100px; */
+      /* background-color: grey; */
+      margin: auto
+    }
+
+    .headerLGUBayawan>.title {
+      /* color: #1c3d07cc; */
+      position: relative;
+      top: 5px;
+      left: 40px;
+      font-family: monospace;
+    }
+
+    .headerLGUBayawan>.imgSeal {
+      position: relative;
+      left: 63px;
+      width: 90px !important;
+      height: 90px !important;
+    }
+
+    .headerLGUBayawan>.imgBrand {
+      position: relative;
+      left: 25px;
+      top: -11px;
+      width: 165px !important;
+    }
+  </style>
+
+  <div class="ui mini container" style="width: 300px; _padding-top: 100px;">
+
     <form id="loginForm">
       <div class="ui form blue stacked segment">
         <!-- <div style="text-align: center; padding: 30px; color: #23193e;">
@@ -289,6 +331,21 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]) {
       </div>
     </form>
   </div>
+
+
+  <div class="ui container center aligned footerLogin">
+    <i>Integrated Human Resource Information System v2019</i>
+    <br>
+    <span style="font-size: 12px;">Office of the Human Resource Management and Development</span>
+  </div>
+
+  <style>
+    .footerLogin {
+      margin-top: 30px;
+      font-size: 10px;
+      color: grey;
+    }
+  </style>
 
   <!-- register modal start -->
   <div class="ui tiny modal" id="regModal" style="top: 20%;">
