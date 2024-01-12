@@ -33,7 +33,7 @@
                         getDataIfExisting: true
                     },
                     (data, textStatus, jqXHR) => {
-                        console.log(data);
+                        // console.log(data);
                         this.results = data
                     },
                     "json"

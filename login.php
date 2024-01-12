@@ -158,10 +158,10 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]) {
               $("input[name='userName']").val("");
               $("input[name='password']").val("");
               $("input[name='password_verify']").val("");
-              console.log(data);
+              // console.log(data);
               // location.reload();
             } else if (data == "1") {
-              console.log(data);
+              // console.log(data);
               $("#registerForm").form("add errors", ["Username is already taken! Please re-enter a different one."]);
               $("#registerForm").form("add prompt", "userName", ["Username is already taken! Please re-enter a different one."]);
             }
@@ -256,7 +256,7 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]) {
       height: 200px;
       /* background-color: white !important; */
       background: rgb(125, 125, 125);
-      background: linear-gradient(0deg, rgba(255,255,255,0.0313375350140056) 0%, rgba(255,255,255,1) 51%);
+      background: linear-gradient(0deg, rgba(255, 255, 255, 0.0313375350140056) 0%, rgba(255, 255, 255, 1) 51%);
       width: 100% !important;
     }
 
