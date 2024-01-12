@@ -26,7 +26,7 @@
 
     <label for="sort_year">Select Year:</label>
     <select name="year" id="sort_year" class="ui dropdown" v-model="year" @change="sort_by_year()">
-        <option v-for="(year, y) in years" :key="year" :value="year.year" :selected="year.is_current">{{year.year}}</option>
+        <option v-for="(year, y) in years" :key="y" :value="year.year" :selected="year.is_current">{{year.year}}</option>
     </select>
 
     <div :id="`${subordinate.employee_id}`" class="ui segment" v-for="(subordinate, s) in subordinates" :key="subordinate.superior_records_id">
