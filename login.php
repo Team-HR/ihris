@@ -29,7 +29,7 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]) {
 <html>
 
 <head>
-  <title>HRMO Login</title>
+  <title>Login to iHRIS</title>
   <meta charset="UTF-8" name="google" value="notranslate" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="ui/dist/semantic.css">
@@ -292,7 +292,7 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]) {
           </div> -->
         <div style="text-align: center;">
           <img src="favicon.ico" style="width: 150px; margin-bottom: 20px;">
-          <h3 class="ui header">Login IHRIS</h3>
+          <h3 class="ui header">Login iHRIS</h3>
         </div>
         <!-- <div class="two fields"> -->
         <div id="usernameField" class="field">
