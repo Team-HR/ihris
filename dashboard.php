@@ -173,16 +173,7 @@ if (isset($_GET["spms"])) {
             </div>
 
             <div class="ui container" style="padding: 5px; width: 1300px;">
-                <style type="text/css">
-                    .actives {
-                        background-color: #f2f2f2;
-                        color: #4075a9;
-                    }
 
-                    .ui.tab.segment {
-                        min-height: 300px;
-                    }
-                </style>
                 <table class="ui very compact small celled table" style="font-size: 12px;">
                     <tr>
                         <td class="actives">STATUS:</td>
@@ -221,6 +212,18 @@ if (isset($_GET["spms"])) {
             </div>
         </template>
     </div>
+
+    <style type="text/css">
+        .actives {
+            background-color: #f2f2f2;
+            color: #4075a9;
+        }
+
+        .ui.tab.segment {
+            min-height: 300px;
+        }
+    </style>
+
     <!-- auth user info end -->
     <div class="" style="padding: 5px; width: 1500px; margin: auto;">
         <div class="ui segment grid">
