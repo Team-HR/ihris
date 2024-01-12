@@ -26,10 +26,10 @@
 
     <label for="sort_year">Select Year:</label>
     <select name="year" id="sort_year" class="ui dropdown" v-model="year" @change="sort_by_year()">
-        <option v-for="year in years" :key="year" :value="year.year" :selected="year.is_current">{{year.year}}</option>
+        <option v-for="(year, y) in years" :key="year" :value="year.year" :selected="year.is_current">{{year.year}}</option>
     </select>
 
-    <div :id="`${subordinate.employee_id}`" class="ui segment" v-for="subordinate in subordinates" :key="subordinate.superior_records_id">
+    <div :id="`${subordinate.employee_id}`" class="ui segment" v-for="(subordinate, s) in subordinates" :key="subordinate.superior_records_id">
         <strong>{{subordinate.full_name}}</strong> <br>
         <i>{{format_position(subordinate.position,subordinate.functional)}}</i> <br>
         <button v-if="!subordinate.is_sup_assessed" class="ui button primary pt-2" @click="assess_subordinate(subordinate)">Assess</button>
@@ -49,7 +49,7 @@
                             <div class="ui segment">
                                 <div class="ui link list" style="margin-left: 20px">
                                     <a href="#contextSurvey" class="item active" @click="page = -1">Top</a>
-                                    <a v-for="(competency, c) in competencies" :key="competency.id" class="item" :style="form_data.competency_scores[competency.id]?'color: green !important;':''" @click="page = c">{{`${c+1}.) ${competency.name}`}}</a>
+                                    <a v-for="(competency, c) in competencies" :key="c" class="item" :style="form_data.competency_scores[competency.id]?'color: green !important;':''" @click="page = c">{{`${c+1}.) ${competency.name}`}}</a>
                                 </div>
                             </div>
                         </div>
