@@ -59,7 +59,7 @@ require_once "header.php";
                 <div class="ui divider"></div>
                 <!-- content start -->
                 <h2 class="ui header block">{{employmentStatus}} PERSONNEL DTR REPORTS FOR THE YEAR {{year}}</h2>
-                <table class="ui compact small celled table">
+                <table class="ui compact small celled table" style="font-size: 11px;">
                     <thead>
                         <tr>
                             <th>
@@ -67,7 +67,7 @@ require_once "header.php";
                                     <input type="checkbox" name="selectAll" id="selectAll">
                                     <label for="selectAll"> Select_all</label>
                                 </div> -->
-                                Select for Print
+                                Print
                             </th>
                             <th></th>
                             <th>Name</th>

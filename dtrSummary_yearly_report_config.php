@@ -15,7 +15,6 @@ if (isset($_POST["generateReport"])) {
 
 
     $sql = "SELECT * FROM `employees` WHERE `status` = 'ACTIVE' AND $filter ORDER BY `employees`.`lastName` ASC";
-    // LIMIT 10
 
     $res = $mysqli->query($sql);
     while ($row = $res->fetch_assoc()) {
@@ -44,9 +43,6 @@ if (isset($_POST["generateReport"])) {
     }
 
     echo json_encode(1);
-} elseif (isset($_POST["print"])) {
-    $printData = $_POST["printData"];
-    echo json_encode($printData);
 }
 
 
