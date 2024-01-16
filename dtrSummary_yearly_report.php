@@ -63,10 +63,11 @@ require_once "header.php";
                     <thead>
                         <tr>
                             <th>
-                                <div class="ui checkbox selectAllcheckbox">
+                                <!-- <div class="ui checkbox selectAllcheckbox">
                                     <input type="checkbox" name="selectAll" id="selectAll">
                                     <label for="selectAll"> Select_all</label>
-                                </div>
+                                </div> -->
+                                Select for Print
                             </th>
                             <th></th>
                             <th>Name</th>
@@ -82,10 +83,10 @@ require_once "header.php";
                                 Loading data... Please wait...
                             </td>
                         </tr>
-                        <tr v-else v-for="(item, index) in items" :key="index">
+                        <tr v-else v-for="(item, index) in items" :key="index" :style="isSelected(index)">
                             <td class="center aligned">
                                 <div class="ui checkbox">
-                                    <input type="checkbox" name="selectForPrint" id="selectForPrint" v-model="printSelections" :value="item">
+                                    <input type="checkbox" name="selectForPrint" id="selectForPrint" v-model="printSelections" :value="index">
                                     <label for="selectForPrint"> </label>
                                 </div>
                             </td>
@@ -164,7 +165,10 @@ require_once "header.php";
     </template>
 
 
-    <button class="printBtn ui big button green" @click="printSelected()"><i class="ui print icon"></i> Print Selected</button>
+    <a :href="`dtrSummary_yearly_report.print.php?year=${year}&ids=${printSelectionsEmployeeIds}`" target="_blank" class="printBtn ui big button green" :class="printSelections.length > 0 ? '':'disabled'" @click="printSelected()"><i class="ui print icon"></i>{{printSelectedNum}} Print Selected</a>
+    <!-- printSelections -->
+
+
 
 </div>
 <style>
@@ -179,6 +183,7 @@ require_once "header.php";
         el: "#dtrYearlyReportApp",
         data: {
             printSelections: [],
+            printSelectionsEmployeeIds: [],
             isLoading: null,
             year: 2023, //curr year - 1
             employmentStatus: "ALL",
@@ -203,7 +208,34 @@ require_once "header.php";
                 remarks: null
             }
         },
+        watch: {
+            printSelections(newValue, oldValue) {
+                // console.log(newValue);
+                // printSelectionsEmployeeIds
+                this.printSelectionsEmployeeIds = [];
+                newValue.forEach(index => {
+                    // console.log(index);
+                    this.printSelectionsEmployeeIds.push(this.items[index].id)
+                });
+                // this.printSelectionsEmployeeIds = JSON.stringify(this.printSelectionsEmployeeIds)
+                console.log(this.printSelectionsEmployeeIds);
+            },
+        },
+        computed: {
+            printSelectedNum() {
+                if (this.printSelections.length > 0) {
+                    return `(${this.printSelections.length})`;
+                }
+
+            }
+        },
         methods: {
+            isSelected(index) {
+                if (this.printSelections.includes(index)) {
+                    return "background-color: #1a80001c;"
+                }
+            },
+
             generateReport() {
                 this.isLoading = true;
                 $.post("dtrSummary_yearly_report_config.php", {
@@ -239,16 +271,37 @@ require_once "header.php";
             },
 
             printSelected() {
-                console.log(this.printSelections);
+                if (this.printSelections.length > 0) {
+                    var printData = [];
+                    this.printSelections.sort()
+                    this.printSelections.forEach(element => {
+                        printData.push(this.items[element])
+                    });
+                    console.log(this.printSelections);
+                    console.log(printData); //item selected for printing
+
+                    // $.get("dtrSummary_yearly_report.print.php", {
+                    //     ids: this.printSelections
+                    // })
+
+                    // $.post("dtrSummary_yearly_report_config.php", {
+                    //         print: true,
+                    //         printData: printData
+                    //     }, (data, textStatus, jqXHR) => {
+                    //         console.log('print: ', data);
+                    //     },
+                    //     "json"
+                    // );
+                } else console.log("Nothing selected");
             }
 
         },
         mounted() {
             $(".ui.checkbox").checkbox();
             $(".selectAllcheckbox").checkbox({
-                 
+
             });
-            
+
 
             this.generateReport()
             $("#employmentStatusDropdown").dropdown()
