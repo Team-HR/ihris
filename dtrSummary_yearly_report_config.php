@@ -43,6 +43,30 @@ if (isset($_POST["generateReport"])) {
     }
 
     echo json_encode(1);
+} elseif (isset($_POST["updateSelections"])) {
+    $year = $_POST["year"];
+    $employee_ids = $_POST["employee_ids"];
+
+    $sql = "DELETE FROM `dtrsummary_selections` WHERE `year` = '$year'";
+    $mysqli->query($sql);
+
+    foreach ($employee_ids as $employee_id) {
+        $sql = "INSERT INTO `dtrsummary_selections` (`id`, `employee_id`, `year`, `created_at`, `updated_at`) VALUES (NULL, '$employee_id', '$year', current_timestamp(), current_timestamp())";
+        $mysqli->query($sql);
+    }
+
+    echo json_encode($employee_ids);
+} elseif (isset($_POST["getSelections"])) {
+    $year = $_POST["year"];
+
+    $sql = "SELECT * FROM `dtrsummary_selections` WHERE `year` = '$year'";
+    $res = $mysqli->query($sql);
+    $selections = [];
+    while ($row = $res->fetch_assoc()) {
+        $selections[] = $row["employee_id"];
+    }
+
+    echo json_encode($selections);
 }
 
 

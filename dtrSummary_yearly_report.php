@@ -218,8 +218,13 @@ require_once "header.php";
                     this.printSelectionsEmployeeIds.push(this.items[index].id)
                 });
                 // this.printSelectionsEmployeeIds = JSON.stringify(this.printSelectionsEmployeeIds)
-                console.log(this.printSelectionsEmployeeIds);
+                // console.log(this.printSelectionsEmployeeIds);
+                this.updateSelections()
             },
+            // year(newValue, oldValue) {
+
+            //     this.printSelections = []
+            // }
         },
         computed: {
             printSelectedNum() {
@@ -230,6 +235,34 @@ require_once "header.php";
             }
         },
         methods: {
+            updateSelections() {
+                $.post("dtrSummary_yearly_report_config.php", {
+                        updateSelections: true,
+                        year: this.year,
+                        employee_ids: this.printSelectionsEmployeeIds
+                    }, (data, textStatus, jqXHR) => {
+                        // console.log(data);
+                        // this.generateReport()
+                    },
+                    "json"
+                );
+            },
+            getSelections() {
+                $.post("dtrSummary_yearly_report_config.php", {
+                        getSelections: true,
+                        year: this.year,
+                    }, (data, textStatus, jqXHR) => {
+                        console.log(data);
+                        // this.generateReport()
+                        var indeces = [];
+                        data.forEach(id => {
+                            indeces.push(this.items.findIndex(element => element['id'] === id))
+                        });
+                        this.printSelections = indeces
+                    },
+                    "json"
+                );
+            },
             isSelected(index) {
                 if (this.printSelections.includes(index)) {
                     return "background-color: #1a80001c;"
@@ -238,6 +271,7 @@ require_once "header.php";
 
             generateReport() {
                 this.isLoading = true;
+                // this.printSelections = []
                 $.post("dtrSummary_yearly_report_config.php", {
                         generateReport: true,
                         year: this.year,
@@ -246,6 +280,7 @@ require_once "header.php";
                         this.items = data;
                         // console.log(this.items);
                         this.isLoading = false
+                        this.getSelections()
                     },
                     "json"
                 );
