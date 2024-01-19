@@ -145,7 +145,6 @@ require_once "header.php";
             </div>
         </div>
 
-
         <div id="addEditRemarksModal" class="ui modal tiny">
             <div class="header">Remarks</div>
             <div class="content">
@@ -183,7 +182,7 @@ require_once "header.php";
         el: "#dtrYearlyReportApp",
         data: {
             printSelections: [],
-            printSelectionsEmployeeIds: [],
+            printSelectionsEmployees: [],
             isLoading: null,
             year: 2023, //curr year - 1
             employmentStatus: "ALL",
@@ -211,14 +210,18 @@ require_once "header.php";
         watch: {
             printSelections(newValue, oldValue) {
                 // console.log(newValue);
-                // printSelectionsEmployeeIds
-                this.printSelectionsEmployeeIds = [];
+                // printSelectionsEmployees
+                this.printSelectionsEmployees = [];
                 newValue.forEach(index => {
                     // console.log(index);
-                    this.printSelectionsEmployeeIds.push(this.items[index].id)
+                    this.printSelectionsEmployees.push({
+                        employee_id: this.items[index].id,
+                        employment_status: this.items[index].employment_status,
+                    })
                 });
-                // this.printSelectionsEmployeeIds = JSON.stringify(this.printSelectionsEmployeeIds)
-                // console.log(this.printSelectionsEmployeeIds);
+                // this.printSelectionsEmployees = JSON.stringify(this.printSelectionsEmployees)
+                // employment_status
+                // console.log(this.printSelectionsEmployees);
                 this.updateSelections()
             },
             // year(newValue, oldValue) {
@@ -227,19 +230,26 @@ require_once "header.php";
             // }
         },
         computed: {
+            printSelectionsEmployeeIds() {
+                var ids = [];
+                this.printSelectionsEmployees.forEach(emp => {
+                    ids.push(emp.employee_id)
+                });
+                return ids;
+            },
             printSelectedNum() {
                 if (this.printSelections.length > 0) {
                     return `(${this.printSelections.length})`;
                 }
-
             }
         },
         methods: {
             updateSelections() {
                 $.post("dtrSummary_yearly_report_config.php", {
                         updateSelections: true,
+                        employmentStatus: this.employmentStatus,
                         year: this.year,
-                        employee_ids: this.printSelectionsEmployeeIds
+                        selected_employees: this.printSelectionsEmployees
                     }, (data, textStatus, jqXHR) => {
                         // console.log(data);
                         // this.generateReport()
@@ -250,6 +260,7 @@ require_once "header.php";
             getSelections() {
                 $.post("dtrSummary_yearly_report_config.php", {
                         getSelections: true,
+                        employmentStatus: this.employmentStatus,
                         year: this.year,
                     }, (data, textStatus, jqXHR) => {
                         console.log(data);

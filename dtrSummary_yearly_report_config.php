@@ -14,7 +14,7 @@ if (isset($_POST["generateReport"])) {
     }
 
 
-    $sql = "SELECT * FROM `employees` WHERE `status` = 'ACTIVE' AND $filter ORDER BY `employees`.`lastName` ASC";
+    $sql = "SELECT * FROM `employees` WHERE `status` = 'ACTIVE' AND $filter ORDER BY `employees`.`lastName` ASC LIMIT 50";
 
     $res = $mysqli->query($sql);
     while ($row = $res->fetch_assoc()) {
@@ -45,21 +45,33 @@ if (isset($_POST["generateReport"])) {
     echo json_encode(1);
 } elseif (isset($_POST["updateSelections"])) {
     $year = $_POST["year"];
-    $employee_ids = $_POST["employee_ids"];
-
-    $sql = "DELETE FROM `dtrsummary_selections` WHERE `year` = '$year'";
-    $mysqli->query($sql);
-
-    foreach ($employee_ids as $employee_id) {
-        $sql = "INSERT INTO `dtrsummary_selections` (`id`, `employee_id`, `year`, `created_at`, `updated_at`) VALUES (NULL, '$employee_id', '$year', current_timestamp(), current_timestamp())";
-        $mysqli->query($sql);
+    $selected_employees = $_POST["selected_employees"];
+    $employmentStatus = $_POST["employmentStatus"];
+    if ($employmentStatus == "ALL") {
+        $sql = "DELETE FROM `dtrsummary_selections` WHERE `year` = '$year'";
+    } else {
+        $sql = "DELETE FROM `dtrsummary_selections` WHERE `year` = '$year' AND `employmentStatus` = '$employmentStatus'";
     }
 
-    echo json_encode($employee_ids);
+    $mysqli->query($sql);
+
+    foreach ($selected_employees as $employee) {
+        if (isset($employee['employment_status']) && $employee['employment_status']) {
+            $sql = "INSERT INTO `dtrsummary_selections` (`id`, `employee_id`, `year`, `employmentStatus`, `created_at`, `updated_at`) VALUES (NULL, '$employee[employee_id]', '$year', '$employee[employment_status]', current_timestamp(), current_timestamp())";
+            $mysqli->query($sql);
+        }
+    }
+
+    echo json_encode($selected_employees);
 } elseif (isset($_POST["getSelections"])) {
     $year = $_POST["year"];
+    $employmentStatus = $_POST["employmentStatus"];
+    if ($employmentStatus == "ALL") {
+        $sql = "SELECT * FROM `dtrsummary_selections` WHERE `year` = '$year'";
+    } else {
+        $sql = "SELECT * FROM `dtrsummary_selections` WHERE `year` = '$year' AND `employmentStatus` = '$employmentStatus'";
+    }
 
-    $sql = "SELECT * FROM `dtrsummary_selections` WHERE `year` = '$year'";
     $res = $mysqli->query($sql);
     $selections = [];
     while ($row = $res->fetch_assoc()) {
