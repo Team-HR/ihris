@@ -14,7 +14,7 @@ while ($row = $res->fetch_assoc()) {
     foreach ($unserialized as $key => $value) {
         if ($key == 7) {
             $data_new[] = array(
-                "polarity" => 0,
+                "polarity" => null,
                 "remarks" => ""
             );
         }
