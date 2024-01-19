@@ -167,44 +167,46 @@ $tbl = <<<EOD
         <td width="22%" align="center"><b><i>REMARKS</i></b></td>
     </tr>
     <tr>
-        <td width="15%" colspan="2"><b>QS: 1. Education</b></td>
-        <td width="55%">$education</td>
+        <td width="70%" colspan="3"><b>QS: 1. Education:</b><span style="color:white;">--</span>$education</td>
         <td width="4%" align="center">{$func(checker("1", (isset($data[1]['polarity']) ?$data[1]['polarity'] : 'none')))}</td>
         <td width="4%" align="center">{$func(checker("0", (isset($data[1]['polarity']) ?$data[1]['polarity'] : 'none')))}</td>
         <td width="22%" align="center">{$func($data[1]['remarks'])}</td>
     </tr>
     <tr>
-        <td width="15%" colspan="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. Experience</b></td>
-        <td width="55%">$experience</td>
+        <td width="70%" colspan="3"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. Experience:</b> $experience</td>
         <td width="4%" align="center">{$func(checker("1", (isset($data[2]['polarity']) ?$data[2]['polarity'] : 'none')))}</td>
         <td width="4%" align="center">{$func(checker("0", (isset($data[2]['polarity']) ?$data[2]['polarity'] : 'none')))}</td>
         <td width="22%" align="center">{$func($data[2]['remarks'])}</td>
     </tr>
     <tr>
-        <td width="15%" colspan="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. Training</b></td>
-        <td width="55%">$training</td>
+        <td width="70%" colspan="3"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. Training:</b><span style="color:white;">----</span>$training</td>
         <td width="4%" align="center">{$func(checker("1", (isset($data[3]['polarity']) ?$data[3]['polarity'] : 'none')))}</td>
         <td width="4%" align="center">{$func(checker("0", (isset($data[3]['polarity']) ?$data[3]['polarity'] : 'none')))}</td>
         <td width="22%" align="center">{$func($data[3]['remarks'])}</td>
     </tr>
     <tr>
-        <td width="15%" colspan="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4. Elig.</b></td>
-        <td width="55%">$eligibility</td>
+        <td width="70%" colspan="3"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4. Elig.</b> <i style="font-size:8px;">(If practice of profession, is the license valid)</i>  $eligibility</td>
         <td width="4%" align="center">{$func(checker("1", (isset($data[4]['polarity']) ?$data[4]['polarity'] : 'none')))}</td>
         <td width="4%" align="center">{$func(checker("0", (isset($data[4]['polarity']) ?$data[4]['polarity'] : 'none')))}</td>
         <td width="22%" align="center">{$func($data[4]['remarks'])}</td>
     </tr>
     <tr>
-        <td width="70%" colspan="3"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4a. If  practice of profession -valid license;drivers-Cert allowed</b></td>
+        <td width="70%" colspan="3"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4a. If  practice of profession -valid license; drivers-Cert allowed</b></td>
         <td width="4%" align="center">{$func(checker("1", (isset($data[5]['polarity']) ?$data[5]['polarity'] : 'none')))}</td>
         <td width="4%" align="center">{$func(checker("0", (isset($data[5]['polarity']) ?$data[5]['polarity'] : 'none')))}</td>
         <td width="22%" align="center">{$func($data[5]['remarks'])}</td>
     </tr>
     <tr>
-        <td width="70%" colspan="3"><b>5.&nbsp;&nbsp;&nbsp;&nbsp; -Other reqts: Residency (LGU Dept Heads)</b> <cite>Localization w/n 6 mos residency</cite></td>
+        <td width="70%" colspan="3"><b>5.&nbsp;&nbsp;&nbsp;&nbsp; -Other reqts: Residency (LGU Dept Heads)</b></td>
         <td width="4%" align="center">{$func(checker("1", (isset($data[6]['polarity']) ?$data[6]['polarity'] : 'none')))}</td>
         <td width="4%" align="center">{$func(checker("0", (isset($data[6]['polarity']) ?$data[6]['polarity'] : 'none')))}</td>
         <td width="22%" align="center">{$func($data[6]['remarks'])}</td>
+    </tr>
+    <tr>
+        <td width="70%" colspan="3"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -Other reqts: Not w/n 6 months from retirements</b></td>
+        <td width="4%" align="center">{$func(checker("1", (isset($data[44]['polarity']) ?$data[44]['polarity'] : 'none')))}</td>
+        <td width="4%" align="center">{$func(checker("0", (isset($data[44]['polarity']) ?$data[44]['polarity'] : 'none')))}</td>
+        <td width="22%" align="center">{$func($data[44]['remarks'])}</td>
     </tr>
     <tr>
         <td width="70%" colspan="3"><b>5a. Check if info in PUBLICATION is correct (plantilla item#, QS, etc)</b></td>
@@ -252,7 +254,7 @@ $tbl = <<<EOD
         <td width="22%" align="center">{$func($data[13]['remarks'])}</td>
     </tr>
     <tr>
-        <td width="70%" colspan="3"><b>12. Certification by PSB Chair at back of apntmt (or Copy of PSB mins.)</b></td>
+        <td width="70%" colspan="3"><b>12. Certification by PSB Chair at back of appt (or Copy of PSB mins.)</b></td>
         <td width="4%" align="center">{$func(checker("1", (isset($data[14]['polarity']) ?$data[14]['polarity'] : 'none')))}</td>
         <td width="4%" align="center">{$func(checker("0", (isset($data[14]['polarity']) ?$data[14]['polarity'] : 'none')))}</td>
         <td width="22%" align="center">{$func($data[14]['remarks'])}</td>
@@ -334,13 +336,13 @@ $tbl = <<<EOD
         <td width="22%" align="center">{$func($data[26]['remarks'])}</td>
     </tr>
     <tr>
-        <td width="60%"><b>Dept Head: Sanggunian Reso-concurrence of majority; or Cert by Sasnggunian Sec/HRMO confirm'g non-action by Sanggunian w/n 15 days from date of submission</b></td>
+        <td width="60%"><b>Dept Head: Sanggunian Reso-concurrence of majority; or Cert by Sanggunian Sec/HRMO confirm'g non-action by Sanggunian w/n 15 days from date of submission</b></td>
         <td width="4%" align="center">{$func(checker("1", (isset($data[27]['polarity']) ?$data[27]['polarity'] : 'none')))}</td>
         <td width="4%" align="center">{$func(checker("0", (isset($data[27]['polarity']) ?$data[27]['polarity'] : 'none')))}</td>
         <td width="22%" align="center">{$func($data[27]['remarks'])}</td>
     </tr>
     <tr>
-        <td width="60%"><b>If creation/recals & w/ appropriation: Sang.ordinance-subj to review by SP if component cities/muni; by DBM if province</b></td>
+        <td width="60%"><b>If creation/reclas & w/ appropriation: Sang.ordinance-subj to review by SP if component cities/mun/; by DBM if province</b></td>
         <td width="4%" align="center">{$func(checker("1", (isset($data[28]['polarity']) ?$data[28]['polarity'] : 'none')))}</td>
         <td width="4%" align="center">{$func(checker("0", (isset($data[28]['polarity']) ?$data[28]['polarity'] : 'none')))}</td>
         <td width="22%" align="center">{$func($data[28]['remarks'])}</td>
@@ -428,7 +430,7 @@ $tbl = <<<EOD
         <td width="22%" align="center">{$func($data[41]['remarks'])}</td>
     </tr>
     <tr>
-        <td width="70%" colspan="3"><b>Appointment received by the appointee - Name, Signature, Date</b></td>
+        <td width="70%" colspan="3"><b>Appointment received by the appointee - Name, Signature, and Date</b></td>
         <td width="4%" align="center">{$func(checker("1", (isset($data[42]['polarity']) ?$data[42]['polarity'] : 'none')))}</td>
         <td width="4%" align="center">{$func(checker("0", (isset($data[42]['polarity']) ?$data[42]['polarity'] : 'none')))}</td>
         <td width="22%" align="center">{$func($data[42]['remarks'])}</td>
@@ -447,11 +449,11 @@ $tbl = <<<EOD
             <br/>
             <i>Prepared by:</i>
             <span> </span><span> </span><span> </span><span> </span>
-            <b><u>VERONICA GRACE P. MIRAFLOR</u></b> <span> </span><span> </span><span> </span><span> </span>date: <u><span> </span><span> </span>$date_signed<span> </span><span> </span></u><br/>
+            <b><u>MARIA JANSSEN A. EUMAGUE</u></b> <span> </span><span> </span><span> </span><span> </span>date: <u><span> </span><span> </span>$date_signed<span> </span><span> </span></u><br/>
             <span> </span><span> </span><span> </span><span> </span>
             <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
             <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span> <span> </span> 
-            <span style="text-align: center; font-size:7px;">Highest Ranking HRMO (LGU Bayawan City)</span>
+            <span style="text-align: center; font-size:7px;"><span style="color:white">--------------------</span>OIC HRMD</span>
             <br/>
             <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span> <span> </span> 
             <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span> <span> </span> 
@@ -472,14 +474,14 @@ $tbl = <<<EOD
        <td colspan="2" >
             <span style="font-size:8px;"><b>Evaluated by:</b></span>
             <br/>
-            <div style="text-align: center"><b><u><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>JOHNNY C. VILLALUZ<span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span></u></b></div>
-            <span style="text-align: center">Senior HRS</span>
+            <div style="text-align: center; color: white;"><b><u><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span>JOHNNY C. VILLALUZ</span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span></u></b></div>
+            <span style="text-align: center; color: white;">Senior HRS</span>
        </td>
        <td colspan="4">
        <span style="font-size:8px;"><b>Approved/Validated by:</b></span>
        <br/>
-            <div style="text-align: center"><b><u><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>MERLINDA FLORES-QUILLANO<span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span></u></b></div>
-            <span style="text-align: center">Director II</span>
+            <div style="text-align: center; color: white;"><b><u><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span>MERLINDA FLORES-QUILLANO</span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span></u></b></div>
+            <span style="text-align: center; color: white;">Director II</span>
        </td>
     </tr>
     

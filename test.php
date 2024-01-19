@@ -1,81 +1,10 @@
 <?php
-// require "header.php";
-header('Content-Type: application/json');
 
-require "_connect.db.php";
-// SELECT * FROM `employees` WHERE `status` = 'ACTIVE' and `employmentStatus` != 'ELECTIVE';
+$serial = 'a:45:{i:0;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:1;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:2;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:3;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:4;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:5;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:6;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:7;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:8;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:9;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:10;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:11;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:12;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:13;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:14;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:15;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:16;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:17;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:18;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:19;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:20;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:21;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:22;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:23;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:24;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:25;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:26;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:27;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:28;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:29;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:30;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:31;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:32;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:33;a:1:{s:7:"remarks";s:0:"";}i:34;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:35;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:36;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:37;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:38;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:39;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:40;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:41;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:42;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:43;a:1:{s:7:"remarks";s:0:"";}i:44;a:2:{s:8:"polarity";s:9:"undefined";s:7:"remarks";s:10:"15, 635.00";}}';
 
+$unserialized = unserialize($serial);
 
-$year = 2023;
-$data = [];
-$sql = "SELECT * FROM `employees` WHERE `status` = 'ACTIVE' and `employmentStatus` != 'ELECTIVE' ORDER BY `employees`.`lastName` ASC; LIMIT 10";
+var_dump($unserialized);
+$json = json_encode($unserialized, JSON_PRETTY_PRINT);
 
-$res = $mysqli->query($sql);
-while ($row = $res->fetch_assoc()) {
-    $data[] = get_employee_dtr($mysqli, $row['employees_id'], $year);
-}
-
-echo json_encode($data, JSON_PRETTY_PRINT);
-
-
-function get_employee_dtr($mysqli, $employee_id, $year)
-{
-    require_once "libs/models/Employee.php";
-
-    $employee = new Employee;
-
-
-
-    $sql = "SELECT * FROM `dtrsummary` WHERE `employee_id` = '$employee_id';";
-    $res = $mysqli->query($sql);
-    $dtrs = [];
-    while ($row = $res->fetch_assoc()) {
-        $header_month = explode("-", $row["month"]);
-        $row['dtr_year'] = $header_month[0];
-        $row['dtr_month'] = $header_month[1];
-        $dtrs[] = $row;
-    }
-
-
-    $dtrs = filter_array('dtr_year', $year, $dtrs);
-    $months = [];
-
-    for ($i = 0; $i < 12; $i++) {
-        $m = filter_array('dtr_month', $i + 1, $dtrs);
-        $months[] =  $m ?  $m[0] : [
-            "dtrSummary_id" => null,
-            "employee_id" => null,
-            "month" => null,
-            "totalMinsTardy" => 0,
-            "totalTardy" => 0,
-            "totalMinsUndertime" => 0,
-            "letterOfNotice" => null,
-            "halfDaysTardy" => 0,
-            "halfDaysUndertime" => 0,
-            "remarks" => "",
-            "submitted" => null,
-            "color" => null,
-            "dtr_year" => null,
-            "dtr_month" => null
-        ];
-    }
-
-    // $employment_status = $employee->get_data($employee_id) ? $employee->get_data($employee_id)['employmentStatus'] : '';
-    $employee = [
-        "id" => $employee_id,
-        "name" => $employee->get_full_name_upper($employee_id),
-        // "employment_status" => $employment_status,
-        "months" => $months
-    ];
-
-    return $employee;
-}
-
-function filter_array($property, $value, $data)
-{
-    $resultArray = array_filter($data, function ($element) use ($property, $value) {
-        return isset($element[$property]) && $element[$property] == $value;
-    });
-
-    return array_values($resultArray);
-}
+echo "<pre>$json</pre>";
