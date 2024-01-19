@@ -23,5 +23,5 @@ while ($row = $res->fetch_assoc()) {
     $serialized = $mysqli->real_escape_string(serialize($data_new));
 
     $sql = "UPDATE `rsp_comp_checklist` SET `data_new`='$serialized' WHERE `id` = '$id'";
-    $mysqli->query($sql);
+    // $mysqli->query($sql);
 }
