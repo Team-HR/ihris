@@ -136,14 +136,14 @@ if ($result->num_rows > 0) {
 
       });
 
-      $('.remarksCompensation').val(data[44].remarks);
+      $('.remarksCompensation').val(data[45].remarks);
 
     });
 
     function fetchData() {
 
       data = <?= json_encode($data) ?>;
-      console.log(data);
+      // console.log(data);
       return data;
     }
 
@@ -185,13 +185,14 @@ if ($result->num_rows > 0) {
         date_signed: date_signed,
         rspcomp_id: <?= $rspcomp_id ?>
       }, function(data, textStatus, xhr) {
-        console.log(JSON.parse(data));
-        // arr = $.parseJSON(data);
-        // if (reload) {
-        //   location.reload();
-        // } else {
-        //   window.open('checklist_print.php?rspcomp_id=<?= $rspcomp_id ?>', '_blank');
-        // }
+        // console.log('rows: ', rows);
+        // console.log(JSON.parse(data));
+        arr = $.parseJSON(data);
+        if (reload) {
+          location.reload();
+        } else {
+          window.open('checklist_print.php?rspcomp_id=<?= $rspcomp_id ?>', '_blank');
+        }
       });
 
 
@@ -260,10 +261,11 @@ if ($result->num_rows > 0) {
       <tr class="drow">
         <td width="70%" colspan="5">5.&nbsp;&nbsp;&nbsp;&nbsp; -Other reqts: Residency (LGU Dept Heads)</td>
       </tr>
-      <!-- new row added as of Jan 2024 -->
-      <tr class="drow45">
+      <!-- new row added as of Jan 2024  start-->
+      <tr class="drow">
         <td width="70%" colspan="5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -Other reqts: Localization w/n 6 mos from retirements</td>
       </tr>
+      <!-- new row added as of Jan 2024  end-->
       <tr class="drow">
         <td width="70%" colspan="5">5a. Check if info in PUBLICATION is correct (plantilla item#, QS, etc)</td>
       </tr>

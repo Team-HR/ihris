@@ -1,10 +1,27 @@
 <?php
+require_once "_connect.db.php";
 
-$serial = 'a:45:{i:0;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:1;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:2;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:3;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:4;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:5;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:6;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:7;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:8;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:9;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:10;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:11;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:12;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:13;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:14;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:15;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:16;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:17;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:18;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:19;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:20;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:21;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:22;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:23;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:24;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:25;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:26;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:27;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:28;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:29;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:30;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:31;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:32;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:33;a:1:{s:7:"remarks";s:0:"";}i:34;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:35;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:36;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:37;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:38;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:39;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:40;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:41;a:2:{s:8:"polarity";s:1:"0";s:7:"remarks";s:0:"";}i:42;a:2:{s:8:"polarity";s:1:"1";s:7:"remarks";s:0:"";}i:43;a:1:{s:7:"remarks";s:0:"";}i:44;a:2:{s:8:"polarity";s:9:"undefined";s:7:"remarks";s:10:"15, 635.00";}}';
+$sql = "SELECT * FROM `rsp_comp_checklist`";
+$res = $mysqli->query($sql);
 
-$unserialized = unserialize($serial);
+// $data = [];
 
-var_dump($unserialized);
-$json = json_encode($unserialized, JSON_PRETTY_PRINT);
+while ($row = $res->fetch_assoc()) {
+    $id = $row['id'];
+    $serial = $row['data'];
+    $unserialized = unserialize($serial);
+    $data_new = [];
+    foreach ($unserialized as $key => $value) {
+        if ($key == 7) {
+            $data_new[] = array(
+                "polarity" => 0,
+                "remarks" => ""
+            );
+        }
+        $data_new[] = $value;
+    }
+    $serialized = $mysqli->real_escape_string(serialize($data_new));
 
-echo "<pre>$json</pre>";
+    $sql = "UPDATE `rsp_comp_checklist` SET `data_new`='$serialized' WHERE `id` = '$id'";
+    $mysqli->query($sql);
+}
