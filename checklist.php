@@ -136,14 +136,14 @@ if ($result->num_rows > 0) {
 
       });
 
-      $('.remarksCompensation').val(data[44].remarks);
+      $('.remarksCompensation').val(data[45].remarks);
 
     });
 
     function fetchData() {
 
       data = <?= json_encode($data) ?>;
-      console.log(data);
+      // console.log(data);
       return data;
     }
 
@@ -185,13 +185,14 @@ if ($result->num_rows > 0) {
         date_signed: date_signed,
         rspcomp_id: <?= $rspcomp_id ?>
       }, function(data, textStatus, xhr) {
+        // console.log('rows: ', rows);
+        // console.log(JSON.parse(data));
         arr = $.parseJSON(data);
         if (reload) {
           location.reload();
         } else {
           window.open('checklist_print.php?rspcomp_id=<?= $rspcomp_id ?>', '_blank');
         }
-
       });
 
 
@@ -258,8 +259,13 @@ if ($result->num_rows > 0) {
         <td width="70%" colspan="5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4a. If practice of profession -valid license;drivers-Cert allowed</td>
       </tr>
       <tr class="drow">
-        <td width="70%" colspan="5">5.&nbsp;&nbsp;&nbsp;&nbsp; -Other reqts: Residency (LGU Dept Heads) <cite>Localization w/n 6 mos residency</cite></td>
+        <td width="70%" colspan="5">5.&nbsp;&nbsp;&nbsp;&nbsp; -Other reqts: Residency (LGU Dept Heads)</td>
       </tr>
+      <!-- new row added as of Jan 2024  start-->
+      <tr class="drow">
+        <td width="70%" colspan="5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -Other reqts: Localization w/n 6 mos from retirements</td>
+      </tr>
+      <!-- new row added as of Jan 2024  end-->
       <tr class="drow">
         <td width="70%" colspan="5">5a. Check if info in PUBLICATION is correct (plantilla item#, QS, etc)</td>
       </tr>
@@ -398,7 +404,6 @@ if ($result->num_rows > 0) {
   <!-- table end -->
   <button class="ui button green" onclick="saveData(true)"><i class="icon save"></i> Save</button>
   <a id="printBTN" class="printBTN ui button green disabled" target="_blank" onclick="saveData(false)"><i class="icon print"></i> Save & Print</a>
-
 
 </div>
 <?php

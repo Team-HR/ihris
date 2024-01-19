@@ -2,10 +2,14 @@
 require '_connect.db.php';
 
 if (isset($_POST['saveData'])) {
+	// echo json_encode($_POST['data']);
+	// return null;
 	$data = serialize($_POST['data']);
 	$rspcomp_id = $_POST['rspcomp_id'];
 	$date_signed = $_POST['date_signed'];
 	$date_signed  = $date_signed ? $date_signed : null;
+
+
 	if (check_if_exist($mysqli, $rspcomp_id)) {
 		// update if existing
 		// $stmt = $mysqli->prepare("UPDATE `rsp_comp_checklist` SET `data` = ?, `date_signed` = ? WHERE `rsp_comp_checklist`.`rspcomp_id` = ?");
