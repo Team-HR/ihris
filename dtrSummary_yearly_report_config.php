@@ -17,7 +17,7 @@ if (isset($_POST["generateReport"])) {
     }
 
 
-    $sql = "SELECT * FROM `employees` WHERE `status` = 'ACTIVE' $filter ORDER BY `employees`.`lastName` ASC LIMIT 10";
+    $sql = "SELECT * FROM `employees` WHERE `status` = 'ACTIVE' $filter ORDER BY `employees`.`lastName` ASC";
 
     $res = $mysqli->query($sql);
     while ($row = $res->fetch_assoc()) {
