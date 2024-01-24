@@ -38,24 +38,34 @@ require_once "header.php";
                     <div class="fields">
                         <div class="field">
                             <label>Select Year:</label>
-                            <input type="number" placeholder="Enter Year" v-model="year" required style="width: 150px;">
+                            <input @change="generateReport()" type="number" placeholder="Enter Year" v-model="year" required style="width: 150px;">
                             <!-- <input type="submit" value="Generate" class="ui button blue"> -->
                         </div>
                         <div class="field">
                             <label>Select Employment Status:</label>
-                            <select name="employmentStatusDropdown" id="employmentStatusDropdown" v-model="employmentStatus">
+                            <select @change="generateReport()" name="employmentStatusDropdown" id="employmentStatusDropdown" v-model="employmentStatus">
                                 <option value="" disabled>Select employment status</option>
                                 <option value="ALL">All</option>
                                 <option value="PERMANENT">Permanent</option>
                                 <option value="CASUAL">Casual</option>
                             </select>
                         </div>
-                        <div class="field">
+                        <!-- <div class="field">
                             <br>
                             <input type="submit" value="Generate" class="ui button blue" style="margin-top: 4px;">
+                        </div> -->
+                        <div class="field">
+                            <label>Filter with Tardy and Undertime:</label>
+                            <select @change="generateReport()" name="with_tardy_and_undertime" id="with_tardy_and_undertime" v-model="with_tardy_and_undertime">
+                                <option value="">Select filter</option>
+                                <option value="all">All</option>
+                                <option :value="false">No tardy and undertime</option>
+                                <option :value="true">With tardy and undertime</option>
+                            </select>
                         </div>
                     </div>
                 </form>
+
                 <div class="ui divider"></div>
                 <!-- content start -->
                 <h2 class="ui header block">{{employmentStatus}} PERSONNEL DTR REPORTS FOR THE YEAR {{year}}</h2>
@@ -83,59 +93,68 @@ require_once "header.php";
                                 Loading data... Please wait...
                             </td>
                         </tr>
-                        <tr v-else v-for="(item, index) in items" :key="index" :style="isSelected(index)">
-                            <td class="center aligned">
-                                <div class="ui checkbox">
-                                    <input type="checkbox" name="selectForPrint" id="selectForPrint" v-model="printSelections" :value="index">
-                                    <label for="selectForPrint"> </label>
-                                </div>
-                            </td>
-                            <td>{{index+1}}</td>
-                            <td>{{item.name}}</td>
-                            <td>{{item.employment_status[0]}}</td>
-                            <td v-for="(month, m) in 12" :key="m">
+                        <template v-else>
+                            <!-- v-if="with_tardy_and_undertime == null || with_tardy_and_undertime == item.with_tardy_and_undertime" -->
+                            <tr v-for="(item, index) in items" :key="index" :style="isSelected(item.is_selected)">
+                                <td class="center aligned">
+                                    <!-- <div class="ui checkbox">
+                                        <input type="checkbox" name="selectForPrint" id="selectForPrint" v-model="printSelections" :value="index">
+                                        <label for="selectForPrint"> </label>
+                                    </div> -->
 
-                                <!-- item.remarks[{{month}}] -->
-                                <!-- {{'2023_'+item.id}}.general_remarks.m{{(m+1)}} -->
-                                <template v-if="item.months[m] != ''">
-                                    Tardy(n): <span v-if="item.months[m].totalTardy != '0' || item.months[m].totalTardy != 0" style="color: red;">{{item.months[m].totalTardy}}</span>
-                                    <span v-else><i style="color: grey;">none</i></span>
-                                    <br>
-                                    UT:
-                                    <span v-if="item.months[m].totalMinsUndertime != '0' || item.months[m].totalMinsUndertime != 0" style="color: red;">{{item.months[m].totalMinsUndertime}} mins</span>
-                                    <span v-else><i style="color: grey;">none</i></span>
-                                    <br>
-                                    Absences:
-                                    <br>
-                                    <span v-if="item.months[m].remarks != ''" style="color: red;">{{item.months[m].remarks}}</span>
-                                    <span v-else><i style="color: grey;">none</i></span>
-                                </template>
-                                <template v-else>
-                                    <div>
-                                        No <br>record <br>found
+                                    <div class="ui checkbox">
+                                        <input type="checkbox" name="selectForPrint" id="selectForPrint" :value="index" @change="checkChanged(item)" :checked="item.is_selected">
+                                        <label for="selectForPrint"> </label>
                                     </div>
-                                </template>
+                                </td>
+                                <td>{{index+1}}</td>
+                                <td>{{item.name}}</td>
+                                <td>{{item.employment_status[0]}}</td>
+                                <td v-for="(month, m) in 12" :key="m">
 
-                                <!-- <button class="ui mini icon button basic" @click="addEditRemarks(`${year}_${item.id}`,'m'+(m+1))" style="white-space: nowrap;">
+                                    <!-- item.remarks[{{month}}] -->
+                                    <!-- {{'2023_'+item.id}}.general_remarks.m{{(m+1)}} -->
+                                    <template v-if="item.months[m] != ''">
+                                        Tardy(n): <span v-if="item.months[m].totalTardy != '0' || item.months[m].totalTardy != 0" style="color: red;">{{item.months[m].totalTardy}}</span>
+                                        <span v-else><i style="color: grey;">none</i></span>
+                                        <br>
+                                        UT:
+                                        <span v-if="item.months[m].totalMinsUndertime != '0' || item.months[m].totalMinsUndertime != 0" style="color: red;">{{item.months[m].totalMinsUndertime}} mins</span>
+                                        <span v-else><i style="color: grey;">none</i></span>
+                                        <br>
+                                        Absences:
+                                        <br>
+                                        <span v-if="item.months[m].remarks != ''" style="color: red;">{{item.months[m].remarks}}</span>
+                                        <span v-else><i style="color: grey;">none</i></span>
+                                    </template>
+                                    <template v-else>
+                                        <div>
+                                            No <br>record <br>found
+                                        </div>
+                                    </template>
+
+                                    <!-- <button class="ui mini icon button basic" @click="addEditRemarks(`${year}_${item.id}`,'m'+(m+1))" style="white-space: nowrap;">
                                         <i class="ui edit icon"></i>
                                     </button> -->
-                                <br>
-                                <!-- {{item.months[m].dtrsummary_remarks}} -->
-                                Remarks: <i style="color:green;">{{item.months[m].dtrsummary_remarks ? item.months[m].dtrsummary_remarks.remarks : ''}}</i>
-                                <i class="ui edit grey icon link" @click="addEditRemarks(item.months[m].dtrsummary_remarks)"></i>
+                                    <br>
+                                    <!-- {{item.months[m].dtrsummary_remarks}} -->
+                                    Remarks: <i style="color:green;">{{item.months[m].dtrsummary_remarks ? item.months[m].dtrsummary_remarks.remarks : ''}}</i>
+                                    <i class="ui edit grey icon link" @click="addEditRemarks(item.months[m].dtrsummary_remarks)"></i>
 
-                            </td>
-                            <td>
-                                <i style="color:green;">
-                                    {{item.general_remarks ? item.general_remarks.remarks : '' }}
-                                </i>
-                                <!-- {{item.general_remarks}} -->
-                                <button class="ui mini icon button basic" @click="addEditRemarks(item.general_remarks)" style="white-space: nowrap;">
-                                    <i class="ui edit icon"></i> Remarks
-                                </button>
+                                </td>
+                                <td>
+                                    <i style="color:green;">
+                                        {{item.general_remarks ? item.general_remarks.remarks : '' }}
+                                    </i>
+                                    <!-- {{item.general_remarks}} -->
+                                    <button class="ui mini icon button basic" @click="addEditRemarks(item.general_remarks)" style="white-space: nowrap;">
+                                        <i class="ui edit icon"></i> Remarks
+                                    </button>
 
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
+                        </template>
+
 
                     </template>
                 </table>
@@ -167,8 +186,6 @@ require_once "header.php";
     <a :href="`dtrSummary_yearly_report.print.php?year=${year}&ids=${printSelectionsEmployeeIds}`" target="_blank" class="printBtn ui big button green" :class="printSelections.length > 0 ? '':'disabled'" @click="printSelected()"><i class="ui print icon"></i>{{printSelectedNum}} Print Selected</a>
     <!-- printSelections -->
 
-
-
 </div>
 <style>
     .printBtn {
@@ -181,8 +198,10 @@ require_once "header.php";
     new Vue({
         el: "#dtrYearlyReportApp",
         data: {
+            // all or no tardy and undertime
+            checked: [],
+            with_tardy_and_undertime: null,
             printSelections: [],
-            printSelectionsEmployees: [],
             isLoading: null,
             year: 2023, //curr year - 1
             employmentStatus: "ALL",
@@ -208,32 +227,17 @@ require_once "header.php";
             }
         },
         watch: {
-            printSelections(newValue, oldValue) {
-                // console.log(newValue);
-                // printSelectionsEmployees
-                this.printSelectionsEmployees = [];
-                newValue.forEach(index => {
-                    // console.log(index);
-                    this.printSelectionsEmployees.push({
-                        employee_id: this.items[index].id,
-                        employment_status: this.items[index].employment_status,
-                    })
-                });
-                // this.printSelectionsEmployees = JSON.stringify(this.printSelectionsEmployees)
-                // employment_status
-                // console.log(this.printSelectionsEmployees);
-                this.updateSelections()
+            with_tardy_and_undertime(newValue) {
+                if (newValue == 'all') {
+                    this.with_tardy_and_undertime = null
+                }
             },
-            // year(newValue, oldValue) {
-
-            //     this.printSelections = []
-            // }
         },
         computed: {
             printSelectionsEmployeeIds() {
                 var ids = [];
-                this.printSelectionsEmployees.forEach(emp => {
-                    ids.push(emp.employee_id)
+                this.printSelections.forEach(emp => {
+                    ids.push(emp)
                 });
                 return ids;
             },
@@ -244,38 +248,45 @@ require_once "header.php";
             }
         },
         methods: {
-            updateSelections() {
+            checkChanged(item) {
+                const index = event.target.value;
+                var is_selected = item.is_selected ? false : true;
+                this.items[index].is_selected = is_selected;
+                this.updateSelections(item, is_selected)
+            },
+
+            updateSelections(item, is_selected) {
                 $.post("dtrSummary_yearly_report_config.php", {
                         updateSelections: true,
-                        employmentStatus: this.employmentStatus,
                         year: this.year,
-                        selected_employees: this.printSelectionsEmployees
+                        employee_id: item.id,
+                        is_selected: is_selected,
+                        employmentStatus: item.employment_status,
+                        with_tardy_and_undertime: item.with_tardy_and_undertime
                     }, (data, textStatus, jqXHR) => {
-                        // console.log(data);
-                        // this.generateReport()
+                        console.log("updateSelections", data);
+                        this.getSelections()
                     },
                     "json"
                 );
             },
+
             getSelections() {
                 $.post("dtrSummary_yearly_report_config.php", {
                         getSelections: true,
-                        employmentStatus: this.employmentStatus,
                         year: this.year,
+                        employmentStatus: this.employmentStatus,
+                        with_tardy_and_undertime: this.with_tardy_and_undertime
                     }, (data, textStatus, jqXHR) => {
-                        console.log(data);
-                        // this.generateReport()
-                        var indeces = [];
-                        data.forEach(id => {
-                            indeces.push(this.items.findIndex(element => element['id'] === id))
-                        });
-                        this.printSelections = indeces
+                        this.printSelections = data
+                        console.log("getSelections(): ", data);
                     },
                     "json"
                 );
             },
-            isSelected(index) {
-                if (this.printSelections.includes(index)) {
+
+            isSelected(is_selected) {
+                if (is_selected) {
                     return "background-color: #1a80001c;"
                 }
             },
@@ -287,15 +298,17 @@ require_once "header.php";
                         generateReport: true,
                         year: this.year,
                         employmentStatus: this.employmentStatus,
+                        with_tardy_and_undertime: this.with_tardy_and_undertime
                     }, (data, textStatus, jqXHR) => {
+                        console.log("generateReport: ", data);
                         this.items = data;
-                        // console.log(this.items);
                         this.isLoading = false
                         this.getSelections()
                     },
                     "json"
                 );
             },
+
             addEditRemarks(dtrsummary_remarks) {
                 // console.log(dtrsummary_remarks);
                 // return false;
@@ -318,17 +331,17 @@ require_once "header.php";
 
             printSelected() {
                 if (this.printSelections.length > 0) {
-                    var printData = [];
-                    this.printSelections.sort()
-                    this.printSelections.forEach(element => {
-                        printData.push(this.items[element])
-                    });
-                    console.log(this.printSelections);
-                    console.log(printData); //item selected for printing
+                    // var printData = [];
+                    // this.printSelections.sort()
+                    // this.printSelections.forEach(element => {
+                    //     printData.push(this.items[element])
+                    // });
+                    // console.log(this.printSelections);
+                    // console.log(printData); //item selected for printing
 
-                    // $.get("dtrSummary_yearly_report.print.php", {
-                    //     ids: this.printSelections
-                    // })
+                    $.get("dtrSummary_yearly_report.print.php", {
+                        ids: this.printSelections
+                    })
 
                     // $.post("dtrSummary_yearly_report_config.php", {
                     //         print: true,
@@ -339,7 +352,8 @@ require_once "header.php";
                     //     "json"
                     // );
                 } else console.log("Nothing selected");
-            }
+            },
+
 
         },
         mounted() {
@@ -348,9 +362,10 @@ require_once "header.php";
 
             });
 
-
             this.generateReport()
             $("#employmentStatusDropdown").dropdown()
+            $("#with_tardy_and_undertime").dropdown()
+
             $("#addEditRemarksModal").modal({
                 closable: false,
                 onApprove: () => {
