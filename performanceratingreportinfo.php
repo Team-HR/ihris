@@ -419,22 +419,26 @@ function title($mysqli)
     });
   }
 
-  function ratingModal(id, empId, prr_id) {
-    $('#rating_modal').modal('show');
-    $("#rating_modal").html("<center><img style='transform: scale(0.1); margin-top: -200px;' src='assets/images/loading.gif'></center>");
-    $.post('umbra/ratingAjaxForm.php', {
-      prrList: id,
-      prr_id: prr_id,
-      empId: empId
-    }, function(data, textStatus, xhr) {
-      if (textStatus == "success") {
-        $("#rating_modal").html(data)
-      } else {
-        $("#rating_modal").html("<center><h1>Something went Wrong</h1></center>");
-      }
+  // function ratingModal(id, empId, prr_id) {
 
-    });
-  }
+  //   console.log("ratingModal");
+
+  //   return false;
+  //   $('#rating_modal').modal('show');
+  //   $("#rating_modal").html("<center><img style='transform: scale(0.1); margin-top: -200px;' src='assets/images/loading.gif'></center>");
+  //   $.post('umbra/ratingAjaxForm.php', {
+  //     prrList: id,
+  //     prr_id: prr_id,
+  //     empId: empId
+  //   }, function(data, textStatus, xhr) {
+  //     if (textStatus == "success") {
+  //       $("#rating_modal").html(data)
+  //     } else {
+  //       $("#rating_modal").html("<center><h1>Something went Wrong</h1></center>");
+  //     }
+
+  //   });
+  // }
 
   function adrate(i) {
     inputedData = parseFloat(i.value);
