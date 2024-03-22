@@ -1,5 +1,6 @@
 <?php
-require "_connect.db.php";
+require_once "_connect.db.php";
+require_once "libs/NameFormatter.php";
 
 if (isset($_POST["getTrainings"])) {
 
@@ -22,7 +23,10 @@ if (isset($_POST["getTrainings"])) {
 
 SELECT
 	employees.employees_id,
-	UPPER(CONCAT( employees.lastName, ', ', employees.firstName, ' ', employees.middleName, ' ', employees.extName )) AS fullName,
+  employees.lastName,
+  employees.firstName,
+  employees.middleName,
+  employees.extName,
 	CONCAT_WS(', ',prr.period, prr.year) AS period,
 	prr.type,
 	prrlist.comments 
@@ -53,11 +57,16 @@ SQL;
       'type' => $row['type'],
       'comments' => $row['comments']
     ];
+    // lastName
+    // firstName
+    // middleName
+    // extName
+    $nameFormatter = new NameFormatter($row["firstName"], $row["lastName"], $row["middleName"], $row["extName"]);
 
     if (!array_key_exists('id_' . $id, $data)) {
       $data['id_' . $id] = [
         'id' => $id,
-        'fullName' => $row['fullName'],
+        'fullName' => mb_convert_case($nameFormatter->getFullName(), MB_CASE_UPPER),
         'prr' => [$prr]
       ];
       // $id0 = 'id_'.$id;
@@ -417,14 +426,13 @@ SQL;
     <?php
 
   }
-} 
-elseif (isset($_POST["search_by_training"])) {
+} elseif (isset($_POST["search_by_training"])) {
 
   $keyword = $_POST["keyword"];
   $tnaIDS = getTNAuniqueIDs($mysqli);
-// echo implode(',', $tnaIDS);
+  // echo implode(',', $tnaIDS);
 
-// " . implode(',', $tnaIDS) . "
+  // " . implode(',', $tnaIDS) . "
   $sql = "SELECT * FROM `trainings` WHERE `training_id` IN (" . implode(',', $tnaIDS) . ") AND `training` LIKE '%$keyword%'";
 
   // $sql = "SELECT * FROM table WHERE comp_id IN (" . implode(',', $arr) . ")";
@@ -611,8 +619,7 @@ elseif (isset($_POST["search_by_training"])) {
   else {
     echo "<div>No training with keyword [$keyword] was found!</div>";
   }
-}
-elseif (isset($_POST["getConsolidatedTNA"])) {
+} elseif (isset($_POST["getConsolidatedTNA"])) {
   $data = [];
   $tnas = getTNAdata($mysqli);
   $trainings = getTrainings($mysqli);
@@ -656,7 +663,7 @@ elseif (isset($_POST["getConsolidatedTNA"])) {
 } elseif (isset($_POST["getTargetParticipants"])) {
 
   $training_id = $_POST["training_id"];
-  $departments = isset($_POST["departments"])?$_POST["departments"]:[];
+  $departments = isset($_POST["departments"]) ? $_POST["departments"] : [];
   $data = [];
 
   // if (count($departments)==0) return $data;
@@ -714,9 +721,9 @@ elseif (isset($_POST["getConsolidatedTNA"])) {
       }
     }
 
-  if ($haveManagerTraining && $haveStaffTraining) {
-    $haveAllTraining = true;
-  }
+    if ($haveManagerTraining && $haveStaffTraining) {
+      $haveAllTraining = true;
+    }
 
 
 
@@ -851,21 +858,21 @@ function sortArrayDesc($a, $b)
 
 function getTNAuniqueIDs($mysqli)
 {
-    $data = [];
-    $sql = "SELECT `tna`.*, `department`.`department` FROM `tna` LEFT JOIN `department` ON `tna`.`department_id` = `department`.`department_id`";
-    $result = $mysqli->query($sql);
-    while ($row = $result->fetch_assoc()) {
-        $training_ids = unserialize($row["all_trs"]);
-        $training_ids_manager = unserialize($row["manager_trs"]);
-        $training_ids_staff = unserialize($row["staff_trs"]);
-        $training_ids_merged = array_merge($training_ids, $training_ids_manager, $training_ids_staff);
-        array_push($data, $training_ids_merged);
-    }
-    $merged_array = [];
-    foreach ($data as $dat) {
-        $merged_array = array_merge($merged_array, $dat);
-    }
-    return array_values(array_unique($merged_array));
+  $data = [];
+  $sql = "SELECT `tna`.*, `department`.`department` FROM `tna` LEFT JOIN `department` ON `tna`.`department_id` = `department`.`department_id`";
+  $result = $mysqli->query($sql);
+  while ($row = $result->fetch_assoc()) {
+    $training_ids = unserialize($row["all_trs"]);
+    $training_ids_manager = unserialize($row["manager_trs"]);
+    $training_ids_staff = unserialize($row["staff_trs"]);
+    $training_ids_merged = array_merge($training_ids, $training_ids_manager, $training_ids_staff);
+    array_push($data, $training_ids_merged);
+  }
+  $merged_array = [];
+  foreach ($data as $dat) {
+    $merged_array = array_merge($merged_array, $dat);
+  }
+  return array_values(array_unique($merged_array));
 }
 
 ?>

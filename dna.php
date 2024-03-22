@@ -417,7 +417,7 @@ require_once "message_pop.php";
   <div id="cons-tna-vue" class="ui bottom attached tab segment active" data-tab="cons">
     <template>
 
-    <h3 class="header">Consolidated List of Trainings and Target Participants based on TNA</h3>
+      <h3 class="header">Consolidated List of Trainings and Target Participants based on TNA</h3>
 
       <table class="ui very compact celled structured table selectable striped">
         <thead>
@@ -602,7 +602,7 @@ require_once "message_pop.php";
         <template v-for="employee in prr">
           <li class="prr_li">
             <div>
-              {{employee.fullName}}
+              ) {{employee.fullName}}
               <ul>
                 <li v-for="prr in employee.prr">
                   <i v-if="!prr.comments" style="color:lightgrey">n/a</i><span v-else>{{prr.comments}}</span><i style="color:grey">- As of period: {{prr.period}} as: {{prr.type}}</i>
@@ -644,7 +644,7 @@ require_once "message_pop.php";
               get_prr: true
             }, (data) => {
               this.prr = data
-              // console.log(data);
+              // console.log("getPrr: ", data);
             },
             "json"
           );
