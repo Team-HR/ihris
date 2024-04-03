@@ -442,25 +442,17 @@ $tbl = <<<EOD
         <td width="22%" align="center">{$func($data[44]['remarks'])}</td>
     </tr>
     <tr>
-       <td colspan="2" style="font-size:8px;">
+        <td colspan="2">
+            <i>Prepared by:</i><br/><br/>
             <br/>
-            <br/>
-            <br/>
-            <br/>
-            <i>Prepared by:</i>
             <span> </span><span> </span><span> </span><span> </span>
-            <b><u>MARIA JANSSEN A. EUMAGUE</u></b> <span> </span><span> </span><span> </span><span> </span>date: <u><span> </span><span> </span>$date_signed<span> </span><span> </span></u><br/>
+            <b><u>VERONICA GRACE P. MIRAFLOR</u></b> <span> </span><span> </span><span> </span><span> </span>date: _______________ <br/>
             <span> </span><span> </span><span> </span><span> </span>
             <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
-            <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span> <span> </span> 
-            <span style="text-align: center; font-size:7px;"><span style="color:white">--------------------</span>OIC HRMD</span>
-            <br/>
-            <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span> <span> </span> 
-            <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span> <span> </span> 
-            <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span> <span> </span> 
-            <span> </span><span> </span><span> </span><span> </span>
-            <span style="font-size:6px;"><i>(Signature over printed name)</i></span>
-       </td>
+            <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
+            <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span>CGDH-I</span>
+
+        </td>
        <td colspan="4">
             <br/>
             <br/>
@@ -488,6 +480,45 @@ $tbl = <<<EOD
 </table>
 
 EOD;
+
+
+/*
+# Maam Janssen as OIC
+<td colspan="2" style="font-size:8px;">
+<br/>
+<br/>
+<br/>
+<br/>
+<i>Prepared by:</i>
+<span> </span><span> </span><span> </span><span> </span>
+<b><u>MARIA JANSSEN A. EUMAGUE</u></b> <span> </span><span> </span><span> </span><span> </span>date: <u><span> </span><span> </span>$date_signed<span> </span><span> </span></u><br/>
+<span> </span><span> </span><span> </span><span> </span>
+<span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
+<span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span> <span> </span> 
+<span style="text-align: center; font-size:7px;"><span style="color:white">--------------------</span>OIC HRMD</span>
+<br/>
+<span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span> <span> </span> 
+<span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span> <span> </span> 
+<span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span> <span> </span> 
+<span> </span><span> </span><span> </span><span> </span>
+<span style="font-size:6px;"><i>(Signature over printed name)</i></span>
+</td>
+*/
+
+/*
+# Maam Nica as DH
+       <td colspan="2">
+            <i>Prepared by:</i><br/><br/>
+            <br/>
+            <span> </span><span> </span><span> </span><span> </span>
+            <b><u>VERONICA GRACE P. MIRAFLOR</u></b> <span> </span><span> </span><span> </span><span> </span>date: _______________ <br/>
+            <span> </span><span> </span><span> </span><span> </span>
+            <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
+            <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span>
+            <span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span>CGDH-I</span>
+
+       </td>
+*/
 
 // <tr>
 //        <td colspan="2">
