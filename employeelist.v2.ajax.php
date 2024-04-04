@@ -95,7 +95,7 @@ if (isset($_POST["load"])) {
 			<?php
 			}
 			?>
-			<td><a href="employeeinfo.v2.php?employees_id=<?php echo $employees_id; ?>" title="View Profile"><i class="blue large address book icon"></i> View Profile </a></td>
+			<td><a href="employeeinfo.v2.php?employees_id=<?php echo $employees_id; ?>" title="View Profile"><i class="blue large address book icon"></i> View</a></td>
 			<td id="<?= $employees_id	?>"><?php echo str_pad($employees_id, 5, 0, STR_PAD_LEFT); ?></td>
 			<td><?= $username; ?></td>
 			<td><?= $fullname; ?></td>
