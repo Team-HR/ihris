@@ -92,7 +92,7 @@ class Employee
     {
         if (!$id) return "";
         $employee = $this->get_data($id);
-        
+
         $firstName = $employee['firstName'];
         $lastName = $employee['lastName'];
         $middleName = $employee['middleName'];
@@ -107,7 +107,7 @@ class Employee
             } else $middleName = " " . $middleName . ".";
         }
 
-        $extName    =    strtoupper($extName);
+        $extName    =    $extName ? strtoupper($extName) : "";
         $exts = $this->exts;
 
         if (in_array(substr($extName, 0, 2), $exts)) {
@@ -125,19 +125,19 @@ class Employee
     {
         if (!$id) return "";
         $employee = $this->get_data($id);
-        
+
         $firstName = $employee['firstName'];
         $lastName = $employee['lastName'];
         $middleName = $employee['middleName'];
         $extName = $employee['extName'];
 
-		if ($middleName == ".") {
-			$middleName = "";
-		} else {
-			if ($middleName) {
-				$middleName = " " . $middleName[0] . ". ";
-			}
-		}
+        if ($middleName == ".") {
+            $middleName = "";
+        } else {
+            if ($middleName) {
+                $middleName = " " . $middleName[0] . ". ";
+            }
+        }
 
         $extName    =    strtoupper($extName);
         $exts = $this->exts;

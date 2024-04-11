@@ -1,6 +1,6 @@
 {
     "require": {
         "phpoffice/phpspreadsheet": "^1.13",
-        "mpdf/mpdf": "^8.0"
+        "mpdf/mpdf": "^8.1"
     }
 }
