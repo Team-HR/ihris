@@ -42,11 +42,36 @@ if (isset($data->getEmployeeList)) {
 
     if ($row = $res->fetch_assoc()) {
         $data = getEmployeeInformation($mysqli, $employee_id);
+
+        $data["date_of_birth"] = "";
+
+        if ($row["birthdate"]) {
+            $date = new DateTimeImmutable($row["birthdate"]);
+            $date = $date->format('F d, Y');
+            $data["date_of_birth"] = mb_convert_case($date, MB_CASE_UPPER);
+        }
+
+        new DateTimeImmutable('2000-01-01');
+
+        $data["blood_type"] = $row["blood_type"];
+
+        $address = "";
+        $address .= $row["res_house_no"] ? $row["res_house_no"] . ", " : "";
+        $address .= $row["res_street"] ? $row["res_street"] . ", " : "";
+        $address .= $row["res_subdivision"] ? $row["res_subdivision"] . ", " : "";
+        $address .= $row["res_barangay"] ? $row["res_barangay"] . ", " : "";
+        $address .= $row["res_city"] ? $row["res_city"] . ", " : "";
+        $address .= $row["res_province"] ? $row["res_province"] . " " : "";
+        $address .= $row["res_zip_code"] ? $row["res_zip_code"] : "";
+        $data["address"] = $address;
+
+        $data["emergency_name"] = $row["emergency_name"];
+        $data["emergency_address"] = $row["emergency_address"];
+        $data["emergency_number"] = $row["emergency_number"];
     }
 
     echo json_encode($data);
 }
-
 
 function getEmployeeInformation($mysqli, $employee_id)
 {
@@ -57,15 +82,20 @@ function getEmployeeInformation($mysqli, $employee_id)
 
     if ($row = $res->fetch_assoc()) {
         $row["idNumber"] = $row["employees_id"];
+        $row["name"] = "";
+        $name = "";
+        $name .= $row["lastName"] . ", " . $row["firstName"];
+        $name .= $row["middleName"] ? " " . $row["middleName"] : "";
+        $name .= $row["extName"] ? " " . $row["extName"] : "";
+
+        $row["name"] = mb_convert_case($name, MB_CASE_UPPER);
         $row["position"] = getPositionInformation($mysqli, $row["position_id"])["position"];
         $row["position_function"] = getPositionInformation($mysqli, $row["position_id"])["function"];
-        $row["date_of_birth"] = "";
+        $row["date_issued"] = mb_convert_case(date("F d, Y"), MB_CASE_UPPER);
+        $row["date_valid_until"] = "";
+        $row["sex"] = $row["gender"];
+
         $row["sex"] = "";
-        $row["blood_type"] = "";
-        $row["address"] = "";
-        $row["emergency_contact_name"] = "";
-        $row["emergency_contact_address"] = "";
-        $row["emergency_contact_mobile"] = "";
         return $row;
     }
 
