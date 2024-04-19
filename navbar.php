@@ -83,6 +83,7 @@ $auth = new Auth;
       <div class="menu">
         <a href="plantilla_report.php" class="item"><i class="icon print"></i> Plantilla Report</a>
         <a href="plantilla_vacantpos.php" class="item"><i class="icon print"></i> Publications Report</a>
+        <a href="pds_completion_report.php" class="item"><i class="icon print"></i> PDS Filling Report</a>
       </div>
     </div>
     <div id="Leave_dropdown" class="ui pointing dropdown link item">
