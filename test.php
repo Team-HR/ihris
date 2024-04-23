@@ -63,10 +63,10 @@ if (isset($data->getEmployeeList)) {
         $address .= $row["res_city"] ? $row["res_city"] . ", " : "";
         $address .= $row["res_province"] ? $row["res_province"] . " " : "";
         $address .= $row["res_zip_code"] ? $row["res_zip_code"] : "";
-        $data["address"] = $address;
-
+        $data["address"] = $address ? substr($address, 0, 46) . '...' : '';
         $data["emergency_name"] = $row["emergency_name"];
         $data["emergency_address"] = $row["emergency_address"];
+        $data["emergency_address"] = $data["emergency_address"] ? substr($data["emergency_address"], 0, 37) . '...' : '';
         $data["emergency_number"] = $row["emergency_number"];
     }
 
