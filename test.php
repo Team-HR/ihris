@@ -85,9 +85,9 @@ function getEmployeeInformation($mysqli, $employee_id)
         $row["name"] = "";
         $name = "";
         $name .= $row["lastName"] . ", " . $row["firstName"];
-        $name .= $row["middleName"] ? " " . $row["middleName"] : "";
+        $name .= $row["middleName"] ? " " . $row["middleName"][0] . "." : "";
         $name .= $row["extName"] ? " " . $row["extName"] : "";
-
+        $row["middleName"] = $row["middleName"] ? " " . $row["middleName"][0] . "." : "";
         $row["name"] = mb_convert_case($name, MB_CASE_UPPER);
         $row["position"] = getPositionInformation($mysqli, $row["position_id"])["position"];
         $row["position_function"] = getPositionInformation($mysqli, $row["position_id"])["function"];
