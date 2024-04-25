@@ -21,7 +21,7 @@ if (isset($data->getEmployeeList)) {
 
         $lastName = $row["lastName"];
         $firstName = $row["firstName"];
-        $middleName = $row["middleName"] ? " " . $row["middleName"][0] . "." : "";
+        $middleName = $row["middleName"] ? " " . $row["middleName"] : "";
         $extName = $row["extName"] ? " " . $row["extName"] : "";
 
         $data[] = [
