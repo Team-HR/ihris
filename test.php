@@ -1,27 +1,31 @@
 <?php
 require_once "_connect.db.php";
 
-$sql = "SELECT * FROM `rsp_comp_checklist`";
+$sql = "SELECT * FROM `employees_card_number`";
 $res = $mysqli->query($sql);
-
-// $data = [];
-
+$data = [];
 while ($row = $res->fetch_assoc()) {
-    $id = $row['id'];
-    $serial = $row['data'];
-    $unserialized = unserialize($serial);
-    $data_new = [];
-    foreach ($unserialized as $key => $value) {
-        if ($key == 7) {
-            $data_new[] = array(
-                "polarity" => null,
-                "remarks" => ""
-            );
-        }
-        $data_new[] = $value;
-    }
-    $serialized = $mysqli->real_escape_string(serialize($data_new));
-
-    $sql = "UPDATE `rsp_comp_checklist` SET `data_new`='$serialized' WHERE `id` = '$id'";
-    // $mysqli->query($sql);
+    $data[] = $row;
 }
+
+$queries = [];
+// "employees_id": "432369",
+//         "empid": "3678",
+//         "objid": "3678",
+//         "dtrno": "438",
+//         "empno": "32429"
+
+foreach ($data as $emp) {
+    $employees_id = $emp['employees_id'];
+    $empid = $emp['empid'];
+    $objid = $emp['objid'];
+    $dtrno = $emp['dtrno'];
+    $empno = $emp['empno'];
+
+    $sql = "UPDATE `employees` SET `empid`='$empid', `objid` = '$objid', `dtrno` = '$dtrno', `empno` = '$empno' WHERE `employees_id` = '$employees_id';";
+    $queries[] = $mysqli->query($sql);
+}
+
+$json = json_encode($queries, JSON_PRETTY_PRINT);
+
+echo "<pre> $json </pre>";
