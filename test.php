@@ -54,7 +54,7 @@ if (isset($data->getEmployeeList)) {
         new DateTimeImmutable('2000-01-01');
 
         $data["blood_type"] = $row["blood_type"];
-
+        $data["birthdate"] = $row["birthdate"];
         $address = "";
         $address .= $row["res_house_no"] ? $row["res_house_no"] . ", " : "";
         $address .= $row["res_street"] ? $row["res_street"] . ", " : "";
@@ -64,15 +64,62 @@ if (isset($data->getEmployeeList)) {
         $address .= $row["res_province"] ? $row["res_province"] . " " : "";
         $address .= $row["res_zip_code"] ? $row["res_zip_code"] : "";
         // $data["address"] = $address ? substr($address, 0, 46) . '...' : '';
-        $data["address"] = $address;
+        $data["address"] = mb_convert_case($address, MB_CASE_UPPER);
+        $data["address_res_house_no"] = mb_convert_case($row["res_house_no"], MB_CASE_UPPER);
+        $data["address_res_street"] = mb_convert_case($row["res_street"], MB_CASE_UPPER);
+        $data["address_res_subdivision"] = mb_convert_case($row["res_subdivision"], MB_CASE_UPPER);
+        $data["address_res_barangay"] = mb_convert_case($row["res_barangay"], MB_CASE_UPPER);
+        $data["address_res_city"] = mb_convert_case($row["res_city"], MB_CASE_UPPER);
+        $data["address_res_province"] = mb_convert_case($row["res_province"], MB_CASE_UPPER);
+        $data["address_res_zip_code"] = mb_convert_case($row["res_zip_code"], MB_CASE_UPPER);
         $data["contact_number"] = $row["mobile"];
         $data["emergency_name"] = $row["emergency_name"];
-        $data["emergency_address"] = $row["emergency_address"];
-        $data["emergency_address"] = $data["emergency_address"] ? substr($data["emergency_address"], 0, 37) . '...' : '';
+        $data["emergency_address"] = mb_convert_case($row["emergency_address"], MB_CASE_UPPER);
+        // $data["emergency_address"] = $data["emergency_address"] ? substr($data["emergency_address"], 0, 37) . '...' : '';
         $data["emergency_number"] = $row["emergency_number"];
     }
 
     echo json_encode($data);
+}
+
+if (isset($data->saveEmployeeData)) {
+    $selected_employee_data = $data->selected_employee_data;
+
+    $employees_id = $selected_employee_data->employees_id;
+    $firstName = $selected_employee_data->firstName;
+    $lastName = $selected_employee_data->lastName;
+    $middleName = $selected_employee_data->middleName;
+    $extName = $selected_employee_data->extName;
+    $gender = $selected_employee_data->gender;
+    $empno = $selected_employee_data->empno;
+
+    $birthdate = $selected_employee_data->birthdate;
+    $blood_type = $selected_employee_data->blood_type;
+    $address_res_barangay = $selected_employee_data->address_res_barangay;
+    $address_res_city = $selected_employee_data->address_res_city;
+    $address_res_province = $selected_employee_data->address_res_province;
+    $contact_number = $selected_employee_data->contact_number;
+    $emergency_name = $selected_employee_data->emergency_name;
+    $emergency_number = $selected_employee_data->emergency_number;
+    $emergency_address = $selected_employee_data->emergency_address;
+
+    // update employees table
+    $sql = "UPDATE `employees` SET `firstName`='$firstName',`lastName`='$lastName',`middleName`='$middleName',`extName`='$extName',`gender`='$gender',`empno`='$empno' WHERE `employees_id` = '$employees_id'";
+    $mysqli->query($sql);
+
+    // update/insert pds_personal
+
+    $sql = "SELECT * FROM `pds_personal` WHERE `employee_id` = '$employees_id'";
+    $res = $mysqli->query($sql);
+    if ($row = $res->fetch_assoc()) {
+        $query = "UPDATE `pds_personal` SET `birthdate` = '$birthdate', `blood_type` = '$blood_type', `res_barangay` = '$address_res_barangay', `res_city` = '$address_res_city', `res_province` = '$address_res_province', `mobile` = '$contact_number', `emergency_name` = '$emergency_name', `emergency_number` = '$emergency_number', `emergency_address` = '$emergency_address' WHERE `employee_id` = '$employees_id'";
+    } else {
+        $query = "INSERT INTO `pds_personal` (`employee_id`, `birthdate`, `blood_type`, `res_barangay`, `res_city`, `res_province`, `mobile`, `emergency_name`,  `emergency_number`, `emergency_address`) VALUES ('$employees_id', '$birthdate', '$blood_type','$address_res_barangay', '$address_res_city',  '$address_res_province', '$contact_number', '$emergency_name', '$emergency_number', '$emergency_address')";
+    }
+
+    $mysqli->query($query);
+
+    echo json_encode("success");
 }
 
 function getEmployeeInformation($mysqli, $employee_id)
@@ -89,15 +136,30 @@ function getEmployeeInformation($mysqli, $employee_id)
         $name .= $row["lastName"] . ", " . $row["firstName"];
         $name .= $row["middleName"] ? " " . $row["middleName"][0] . "." : "";
         $name .= $row["extName"] ? " " . $row["extName"] : "";
-        $row["middleName"] = $row["middleName"] ? " " . $row["middleName"][0] . "." : "";
+        $row["middleName"] = $row["middleName"] ? $row["middleName"] : "";
         $row["name"] = mb_convert_case($name, MB_CASE_UPPER);
         $row["position"] = getPositionInformation($mysqli, $row["position_id"])["position"];
         $row["position_function"] = getPositionInformation($mysqli, $row["position_id"])["function"];
-        $row["date_issued"] = mb_convert_case(date("F d, Y"), MB_CASE_UPPER);
-        $row["date_valid_until"] = "";
-        $row["sex"] = $row["gender"];
+        $date_issued = mb_convert_case(date("F d, Y"), MB_CASE_UPPER);
+        $row["date_issued"] = $date_issued;
+        $date_valid_until = "";
 
-        $row["sex"] = "";
+        $t = strtotime($date_issued);
+
+        $validity = "+6 years";
+
+        $date_valid_until = strtotime($validity, $t);
+        // $date = new DateTimeImmutable($date_valid_until);
+        // $date = $date->format('F d, Y');
+
+        $row["date_valid_until"] = mb_convert_case(date("F d, Y", $date_valid_until), MB_CASE_UPPER);
+
+        if ($row["employmentStatus"] == 'CASUAL') {
+            $row["date_valid_until"]  = "";
+        }
+        // $row["date_valid_until"] = ""; // blank para sticker nlang 
+        // $row["date_valid_until"] = $date_valid_until;
+        // $row["sex"] = $row["gender"];
         return $row;
     }
 
