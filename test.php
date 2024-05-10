@@ -31,6 +31,39 @@ if (isset($data->getEmployeeList)) {
     }
 
     echo json_encode($data);
+} elseif (isset($data->uploadPhoto)) {
+    # code...
+    $formData = $data;
+    echo json_encode($formData);
+} elseif (isset($data->saveImageCaptured)) {
+    $img = $data->dataUrl;
+    $employees_id = $data->employees_id;
+    $img = str_replace('data:image/jpeg;base64,', '', $img);
+    $img = str_replace(' ', '+', $img);
+    $fileData = base64_decode($img);
+    //saving
+    $fileName = "id_photos/" . $employees_id . '.jpg';
+    file_put_contents($fileName, $fileData);
+
+    echo json_encode($employees_id);
+} elseif (isset($data->savePendata)) {
+    $m_penData = $data->m_penData;
+
+    $m_penData = json_encode($m_penData);
+
+    $employees_id = $data->employees_id;
+
+    $sql = "SELECT * FROM `employee_id_cards` WHERE `ihris_employee_id` = '$employees_id';";
+    $res = $mysqli->query($sql);
+
+    if ($row = $res->fetch_assoc()) {
+        $sql = "UPDATE `employee_id_cards` SET `sig_src`='$m_penData' WHERE `ihris_employee_id` = '$employees_id'";
+    } else {
+        $sql = "INSERT INTO `employee_id_cards` (`ihris_employee_id`, `sig_src`, `created_at`, `updated_at`) VALUES ( '$employees_id', '$m_penData', current_timestamp(), current_timestamp())";
+    }
+    $mysqli->query($sql);
+
+    echo json_encode($m_penData);
 } elseif (isset($data->getEmployeeData)) {
 
     if (!$data->employeeId) return;
@@ -79,10 +112,23 @@ if (isset($data->getEmployeeList)) {
         $data["emergency_number"] = $row["emergency_number"];
     }
 
-    echo json_encode($data);
-}
 
-if (isset($data->saveEmployeeData)) {
+    // get id text formatting values
+    $sql = "SELECT * FROM `employee_id_cards` WHERE `ihris_employee_id` = '$employee_id'";
+    $res = $mysqli->query($sql);
+    $data["text_formatting"] = null;
+    $data["photo_formatting"] = null;
+    $data["sig_src"] = null;
+    if ($row = $res->fetch_assoc()) {
+        // if ($row["text_formatting"]) {
+        $data["text_formatting"] = json_decode($row["text_formatting"]);
+        $data["sig_src"] = json_decode($row["sig_src"]);
+        $data["photo_formatting"] = json_decode($row["photo_formatting"]);
+        // }
+    }
+
+    echo json_encode($data);
+} else if (isset($data->saveEmployeeData)) {
     $selected_employee_data = $data->selected_employee_data;
 
     $employees_id = $selected_employee_data->employees_id;
@@ -97,6 +143,7 @@ if (isset($data->saveEmployeeData)) {
     $blood_type = $selected_employee_data->blood_type;
     $address_res_barangay = $selected_employee_data->address_res_barangay;
     $address_res_city = $selected_employee_data->address_res_city;
+    $address_res_zip_code = $selected_employee_data->address_res_zip_code;
     $address_res_province = $selected_employee_data->address_res_province;
     $contact_number = $selected_employee_data->contact_number;
     $emergency_name = $selected_employee_data->emergency_name;
@@ -105,21 +152,35 @@ if (isset($data->saveEmployeeData)) {
 
     // update employees table
     $sql = "UPDATE `employees` SET `firstName`='$firstName',`lastName`='$lastName',`middleName`='$middleName',`extName`='$extName',`gender`='$gender',`empno`='$empno' WHERE `employees_id` = '$employees_id'";
-    $mysqli->query($sql);
+    $mysqli->query($sql); // uncomment to execute query
 
     // update/insert pds_personal
 
     $sql = "SELECT * FROM `pds_personal` WHERE `employee_id` = '$employees_id'";
     $res = $mysqli->query($sql);
     if ($row = $res->fetch_assoc()) {
-        $query = "UPDATE `pds_personal` SET `birthdate` = '$birthdate', `blood_type` = '$blood_type', `res_barangay` = '$address_res_barangay', `res_city` = '$address_res_city', `res_province` = '$address_res_province', `mobile` = '$contact_number', `emergency_name` = '$emergency_name', `emergency_number` = '$emergency_number', `emergency_address` = '$emergency_address' WHERE `employee_id` = '$employees_id'";
+        $query = "UPDATE `pds_personal` SET `birthdate` = '$birthdate', `blood_type` = '$blood_type', `res_barangay` = '$address_res_barangay', `res_city` = '$address_res_city', `res_zip_code` = '$address_res_zip_code', `res_province` = '$address_res_province', `mobile` = '$contact_number', `emergency_name` = '$emergency_name', `emergency_number` = '$emergency_number', `emergency_address` = '$emergency_address' WHERE `employee_id` = '$employees_id'";
     } else {
-        $query = "INSERT INTO `pds_personal` (`employee_id`, `birthdate`, `blood_type`, `res_barangay`, `res_city`, `res_province`, `mobile`, `emergency_name`,  `emergency_number`, `emergency_address`) VALUES ('$employees_id', '$birthdate', '$blood_type','$address_res_barangay', '$address_res_city',  '$address_res_province', '$contact_number', '$emergency_name', '$emergency_number', '$emergency_address')";
+        $query = "INSERT INTO `pds_personal` (`employee_id`, `birthdate`, `blood_type`, `res_barangay`, `res_city`, `res_zip_code`, `res_province`, `mobile`, `emergency_name`,  `emergency_number`, `emergency_address`) VALUES ('$employees_id', '$birthdate', '$blood_type','$address_res_barangay', '$address_res_city', '$address_res_zip_code',  '$address_res_province', '$contact_number', '$emergency_name', '$emergency_number', '$emergency_address')";
     }
 
-    $mysqli->query($query);
+    $mysqli->query($query); // uncomment to execute query
 
-    echo json_encode("success");
+    $sql = "SELECT * FROM `employee_id_cards` WHERE `ihris_employee_id` = '$employees_id';";
+    $res = $mysqli->query($sql);
+
+    $text_formatting = json_encode($data->textFormat);
+    $photo_formatting = json_encode($data->photoFormat);
+
+    if ($row = $res->fetch_assoc()) {
+        $sql = "UPDATE `employee_id_cards` SET `text_formatting`='$text_formatting', `photo_formatting`='$photo_formatting' WHERE `ihris_employee_id` = '$employees_id'";
+        $mysqli->query($sql);
+    } else {
+        $sql = "INSERT INTO `employee_id_cards` (`ihris_employee_id`, `text_formatting`, `photo_formatting`, `created_at`, `updated_at`) VALUES ( '$employees_id', '$text_formatting', '$photo_formatting', current_timestamp(), current_timestamp())";
+        $mysqli->query($sql);
+    }
+
+    echo json_encode($data->textFormat);
 }
 
 function getEmployeeInformation($mysqli, $employee_id)
