@@ -246,7 +246,3 @@ function getPositionInformation($mysqli, $position_id)
 
     return $data;
 }
-
-$json = json_encode($queries, JSON_PRETTY_PRINT);
-
-echo "<pre> $json </pre>";
