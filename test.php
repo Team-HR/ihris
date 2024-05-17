@@ -33,8 +33,19 @@ if (isset($data->getEmployeeList)) {
     echo json_encode($data);
 } elseif (isset($data->uploadPhoto)) {
     # code...
-    $formData = $data;
+    $employees_id = $data->employees_id;
+    $formData = $data->formData;
     echo json_encode($formData);
+} elseif (isset($data->getPhoto)) {
+    $employees_id = $data->employees_id;
+    $imagePath = "id_photos/" . $employees_id . ".jpg";
+
+    if (file_exists($imagePath)) {
+        $imageData = file_get_contents($imagePath);
+        $base64 = base64_encode($imageData);
+        $imageBase64 = 'data:image/jpeg;base64,' . $base64;
+        echo json_encode($imageBase64);
+    }
 } elseif (isset($data->saveImageCaptured)) {
     $img = $data->dataUrl;
     $employees_id = $data->employees_id;
