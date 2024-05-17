@@ -130,13 +130,42 @@ if (isset($data->getEmployeeList)) {
     $data["text_formatting"] = null;
     $data["photo_formatting"] = null;
     $data["sig_src"] = null;
+    $data["date_issued"] = date("Y-m-d");
+    $data["date_expire"] = "";
+    if ($data["employmentStatus"] == "CASUAL") {
+        $data["date_expire"] = "2024-06-30";
+    } else {
+        $data["date_expire"] = "2025-06-30";
+    }
+
+
+    $data["date_expire_formatted"] = "";
     if ($row = $res->fetch_assoc()) {
-        // if ($row["text_formatting"]) {
         $data["text_formatting"] = json_decode($row["text_formatting"]);
         $data["sig_src"] = json_decode($row["sig_src"]);
         $data["photo_formatting"] = json_decode($row["photo_formatting"]);
-        // }
+        $data["date_issued"] = $row["date_issued"] ? $row["date_issued"] : $data["date_issued"];
+        $data["date_expire"] = $row["date_expire"] ? $row["date_expire"] : $data["date_expire"];
     }
+
+    $data["date_issued_formatted"] = mb_convert_case(dateFormat($data["date_issued"]), MB_CASE_UPPER);
+    $data["date_expire_formatted"] = mb_convert_case(dateFormat($data["date_expire"]), MB_CASE_UPPER);
+
+    // $date_issued = mb_convert_case(date("F d, Y"), MB_CASE_UPPER);
+    // $row["date_issued"] = $date_issued;
+    // $date_expire = "";
+
+    // $t = strtotime($date_issued);
+    // $validity = "+6 years";
+    // $date_expire = strtotime($validity, $t);
+
+
+    // $row["date_expire"] = mb_convert_case(date("F d, Y", $date_expire), MB_CASE_UPPER);
+
+    // if ($row["employmentStatus"] == 'CASUAL') {
+    //     $row["date_expire"]  = "";
+    // }
+
 
     echo json_encode($data);
 } else if (isset($data->saveEmployeeData)) {
@@ -212,25 +241,9 @@ function getEmployeeInformation($mysqli, $employee_id)
         $row["name"] = mb_convert_case($name, MB_CASE_UPPER);
         $row["position"] = getPositionInformation($mysqli, $row["position_id"])["position"];
         $row["position_function"] = getPositionInformation($mysqli, $row["position_id"])["function"];
-        $date_issued = mb_convert_case(date("F d, Y"), MB_CASE_UPPER);
-        $row["date_issued"] = $date_issued;
-        $date_valid_until = "";
 
-        $t = strtotime($date_issued);
-
-        $validity = "+6 years";
-
-        $date_valid_until = strtotime($validity, $t);
-        // $date = new DateTimeImmutable($date_valid_until);
-        // $date = $date->format('F d, Y');
-
-        $row["date_valid_until"] = mb_convert_case(date("F d, Y", $date_valid_until), MB_CASE_UPPER);
-
-        if ($row["employmentStatus"] == 'CASUAL') {
-            $row["date_valid_until"]  = "";
-        }
-        // $row["date_valid_until"] = ""; // blank para sticker nlang 
-        // $row["date_valid_until"] = $date_valid_until;
+        // $row["date_expire"] = ""; // blank para sticker nlang 
+        // $row["date_expire"] = $date_expire;
         // $row["sex"] = $row["gender"];
         return $row;
     }
@@ -256,4 +269,12 @@ function getPositionInformation($mysqli, $position_id)
     }
 
     return $data;
+}
+
+
+function dateFormat($dateInput)
+{
+    if (!$dateInput) return null;
+    $dateFormatted = new DateTimeImmutable($dateInput);
+    return $dateFormatted->format('F d, Y');
 }
