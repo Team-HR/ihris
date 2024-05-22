@@ -189,6 +189,8 @@ if (isset($data->getEmployeeList)) {
     $emergency_name = $selected_employee_data->emergency_name;
     $emergency_number = $selected_employee_data->emergency_number;
     $emergency_address = $selected_employee_data->emergency_address;
+    $date_issued = $selected_employee_data->date_issued;
+    $date_expire = $selected_employee_data->date_expire;
 
     // update employees table
     $sql = "UPDATE `employees` SET `firstName`='$firstName',`lastName`='$lastName',`middleName`='$middleName',`extName`='$extName',`gender`='$gender',`empno`='$empno' WHERE `employees_id` = '$employees_id'";
@@ -213,10 +215,11 @@ if (isset($data->getEmployeeList)) {
     $photo_formatting = json_encode($data->photoFormat);
 
     if ($row = $res->fetch_assoc()) {
-        $sql = "UPDATE `employee_id_cards` SET `text_formatting`='$text_formatting', `photo_formatting`='$photo_formatting' WHERE `ihris_employee_id` = '$employees_id'";
+        $sql = "UPDATE `employee_id_cards` SET `text_formatting`='$text_formatting', `photo_formatting`='$photo_formatting', `date_issued` = '$date_issued', `date_expire` = '$date_expire' WHERE `ihris_employee_id` = '$employees_id'";
         $mysqli->query($sql);
     } else {
-        $sql = "INSERT INTO `employee_id_cards` (`ihris_employee_id`, `text_formatting`, `photo_formatting`, `created_at`, `updated_at`) VALUES ( '$employees_id', '$text_formatting', '$photo_formatting', current_timestamp(), current_timestamp())";
+        $sql = "INSERT INTO `employee_id_cards` (`ihris_employee_id`, `text_formatting`, `photo_formatting`, `date_issued`,
+        `date_expire`, `created_at`, `updated_at`) VALUES ( '$employees_id', '$text_formatting', '$photo_formatting', '$date_issued', '$date_expire', current_timestamp(), current_timestamp())";
         $mysqli->query($sql);
     }
 
