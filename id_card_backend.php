@@ -127,6 +127,7 @@ if (isset($data->getEmployeeList)) {
     // get id text formatting values
     $sql = "SELECT * FROM `employee_id_cards` WHERE `ihris_employee_id` = '$employee_id'";
     $res = $mysqli->query($sql);
+
     $data["text_formatting"] = null;
     $data["photo_formatting"] = null;
     $data["sig_src"] = null;
@@ -138,9 +139,13 @@ if (isset($data->getEmployeeList)) {
         $data["date_expire"] = "2025-06-30";
     }
 
-
     $data["date_expire_formatted"] = "";
     if ($row = $res->fetch_assoc()) {
+
+        if ($row["position"]) {
+            $data["position"] = $row["position"];
+        }
+
         $data["text_formatting"] = json_decode($row["text_formatting"]);
         $data["sig_src"] = json_decode($row["sig_src"]);
         $data["photo_formatting"] = json_decode($row["photo_formatting"]);
@@ -178,6 +183,7 @@ if (isset($data->getEmployeeList)) {
     $extName = $selected_employee_data->extName;
     $gender = $selected_employee_data->gender;
     $empno = $selected_employee_data->empno;
+    $position = $selected_employee_data->position;
 
     $birthdate = $selected_employee_data->birthdate;
     $blood_type = $selected_employee_data->blood_type;
@@ -191,6 +197,7 @@ if (isset($data->getEmployeeList)) {
     $emergency_address = $selected_employee_data->emergency_address;
     $date_issued = $selected_employee_data->date_issued;
     $date_expire = $selected_employee_data->date_expire;
+
 
     // update employees table
     $sql = "UPDATE `employees` SET `firstName`='$firstName',`lastName`='$lastName',`middleName`='$middleName',`extName`='$extName',`gender`='$gender',`empno`='$empno' WHERE `employees_id` = '$employees_id'";
@@ -215,11 +222,11 @@ if (isset($data->getEmployeeList)) {
     $photo_formatting = json_encode($data->photoFormat);
 
     if ($row = $res->fetch_assoc()) {
-        $sql = "UPDATE `employee_id_cards` SET `text_formatting`='$text_formatting', `photo_formatting`='$photo_formatting', `date_issued` = '$date_issued', `date_expire` = '$date_expire' WHERE `ihris_employee_id` = '$employees_id'";
+        $sql = "UPDATE `employee_id_cards` SET `position` ='$position' , `text_formatting`='$text_formatting', `photo_formatting`='$photo_formatting', `date_issued` = '$date_issued', `date_expire` = '$date_expire' WHERE `ihris_employee_id` = '$employees_id'";
         $mysqli->query($sql);
     } else {
-        $sql = "INSERT INTO `employee_id_cards` (`ihris_employee_id`, `text_formatting`, `photo_formatting`, `date_issued`,
-        `date_expire`, `created_at`, `updated_at`) VALUES ( '$employees_id', '$text_formatting', '$photo_formatting', '$date_issued', '$date_expire', current_timestamp(), current_timestamp())";
+        $sql = "INSERT INTO `employee_id_cards` (`ihris_employee_id`, `position`, `text_formatting`, `photo_formatting`, `date_issued`,
+        `date_expire`, `created_at`, `updated_at`) VALUES ( '$employees_id', '$position', '$text_formatting', '$photo_formatting', '$date_issued', '$date_expire', current_timestamp(), current_timestamp())";
         $mysqli->query($sql);
     }
 
@@ -244,10 +251,7 @@ function getEmployeeInformation($mysqli, $employee_id)
         $row["name"] = mb_convert_case($name, MB_CASE_UPPER);
         $row["position"] = getPositionInformation($mysqli, $row["position_id"])["position"];
         $row["position_function"] = getPositionInformation($mysqli, $row["position_id"])["function"];
-
-        // $row["date_expire"] = ""; // blank para sticker nlang 
-        // $row["date_expire"] = $date_expire;
-        // $row["sex"] = $row["gender"];
+        $row["position"] = $row["position"] . " " . $row["position_function"];
         return $row;
     }
 
