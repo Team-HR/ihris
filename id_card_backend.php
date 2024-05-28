@@ -142,7 +142,7 @@ if (isset($data->getEmployeeList)) {
     $data["date_expire_formatted"] = "";
     if ($row = $res->fetch_assoc()) {
 
-        if ($row["position"]) {
+        if (isset($row["position"]) || $row["position"]) {
             $data["position"] = $row["position"];
         }
 
