@@ -251,7 +251,9 @@ function getEmployeeInformation($mysqli, $employee_id)
         $row["name"] = mb_convert_case($name, MB_CASE_UPPER);
         $row["position"] = getPositionInformation($mysqli, $row["position_id"])["position"];
         $row["position_function"] = getPositionInformation($mysqli, $row["position_id"])["function"];
-        $row["position"] = $row["position"] . " " . $row["position_function"];
+        if ($row["employmentStatus"] != 'CASUAL') {
+            $row["position"] = $row["position"] . " " . $row["position_function"];
+        }
         return $row;
     }
 
