@@ -18,10 +18,33 @@
     }
     .gwd-button-11xy {
       top: 48px;
-      left: 14px;w
+      left: 14px;
     }
     #addModal {
       padding: 15px;
+    }
+
+    .container{
+      display: flex;
+      justify-content: space-between;
+      max-width: 75%;
+    }
+    .leaveBalanceLayout {
+      display: flex;
+      flex-direction: column;
+      gap: 1;
+      margin: 0;
+    }
+    .balanceLayoutTitle{
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      margin: 0;
+      margin: .1rem 0 .1rem 0;
+      font-weight: bold;
+    }
+    .leaveBalanceLayout h4{
+      line-height: 0;
     }
   </style>
   <div class="ui segment" id="leaveCont">
@@ -50,7 +73,7 @@
               </div>
               <div class="field">
                 <label>Date of Filing:</label>
-                <input type="date" name="" v-model="date_filed"> 
+                <input type="date" name="" v-model="date_filed" @change="getLeaveBalance()"> 
               </div>
             </div>
           </div> 
@@ -58,7 +81,7 @@
             <div class="two fields">
               <div class="field">
                 <label>Name:</label>
-                <select class="ui fluid search dropdown" id="emp_id" v-model="emp_id">
+                <select class="ui fluid search dropdown" id="emp_id" v-model="emp_id" @change="getLeaveBalance()">
                     <option value="">Employee</option>
                     <template>
                       <option v-for="(employee,index) in Employees" :value="employee.employees_id">{{employee.lastName}}, {{employee.firstName}}</option>
@@ -122,6 +145,48 @@
                 </select>
           </div>
           </template>
+
+          <!-- Remaining Leave Balance -->
+          <template>
+            <div class="container">
+              <div class="leaveBalanceLayout" v-if="emp_id && date_filed">
+                <div class="balanceLayoutTitle">
+                  <div>Balance</div>
+                </div>
+                <div>
+                  Vacation Leave: 
+                  <div :class="['ui tiny input', { disabled: !editMode, transparent: !editMode }]">
+                    <input type="text" style="width: 80px;" v-model="leaveBalances.lm_earning_result.vl_bal">
+                  </div>
+                </div> 
+                <div>
+                  Sick Leave:
+                  <div :class="['ui tiny input', { disabled: !editMode, transparent: !editMode }]">
+                    <input type="text" style="width: 80px;" v-model="leaveBalances.lm_earning_result.sl_bal">
+                  </div>
+                </div> 
+
+                <div>
+                  <button class="ui compact icon button mini primary" @click="toggleEditMode">{{ editMode ? "SAVE" : "EDIT" }}</button>
+                </div>
+
+              </div>
+
+              <div class="leaveBalanceLayout" v-if="emp_id && date_filed">
+                <div class="balanceLayoutTitle">
+                  <div>Special Leave Balance</div>
+                </div>
+                <div>
+                  Special Leave:
+                  <div class="ui tiny input disabled transparent">
+                    <input type="text" style="width: 80px;" v-model="leaveBalances.lm_logs_result.totalDaysSum">
+                  </div>
+                </div> 
+              </div>
+            </div>
+          </template>
+          <!-- Remaining Leave Balance -->
+          
           <div class="ui segment">
               <div id="clndr"></div>    
           </div>
@@ -156,6 +221,7 @@
 
     <div class="ui medium header">Leave Admin Dashboard</div>
     <button class="ui positive button" id="addButton" @click="showAddModal()">Add New</button>
+    <button class="ui blue button" id="addButton">Monetization</button>
     <template v-if="Logs.length">
     <table class="ui celled table gwd-table-16du">
       <thead>
@@ -182,7 +248,7 @@
           <td>{{ log.leaveType }} {{ log.sp_type }} </td>
           <td>{{ log.totalDays }}</td>
           <td>{{ log.remarks }}</td>
-          <td>{{ log.status }}</td>
+          <td>{{ log.Status }}</td>
           <td>
             <button class="circular ui icon button green" id="openButton" onclick="approveModal()">
               <i class="icon check"></i>

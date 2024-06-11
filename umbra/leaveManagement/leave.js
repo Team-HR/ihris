@@ -1,6 +1,16 @@
 var lm_app = new Vue({
     el: "#leaveCont",
     data: {
+        // Updated | New value for sick leave & vacation leave
+        // vacationLeaveBalance: lm_earning_result.vl_bal,
+        // sickLeaveBalance: lm_earning_result.sl_bal,
+        // Edit Leave Balance Var toggle Start
+        editMode: false,
+        // Leave Balances Start
+        leaveBalances: {
+            lm_earning_result: {}, // Initialize with empty object
+            lm_logs_result: {}     // Initialize with empty object
+        },
         Logs: [],
         Employees: "",
         leaveType: "",
@@ -18,9 +28,61 @@ var lm_app = new Vue({
         , numberOfDays: 0
         , leaveCalendar: ''
         , selectedEventsForEdit: []
-
     },
+    computed: {
+        yearFiled() {
+          if (this.date_filed) {
+            const date = new Date(this.date_filed);
+            return date.getFullYear();
+          }
+          return "";
+        }
+      },
     methods: {
+        // Edit mode toggle Start
+        toggleEditMode() {
+            this.editMode = !this.editMode;
+            
+            if(!this.editMode){
+              this.inputChangeEvent();
+            }
+            
+        },
+        inputChangeEvent() {
+            var xml = new XMLHttpRequest();
+            var fd = new FormData();
+            // update query
+            fd.append('updateLeaveBalances', true);
+            fd.append('emp_id', this.emp_id);
+            console.log(this.leaveBalances.lm_earning_result.vl_bal)
+            console.log(this.leaveBalances.lm_earning_result.sl_bal)
+            fd.append('vl_bal', this.leaveBalances.lm_earning_result.vl_bal);
+            fd.append('sl_bal', this.leaveBalances.lm_earning_result.sl_bal);
+
+            xml.onload = () => {
+                console.log(JSON.parse(xml.responseText));
+            }
+            xml.open('POST', 'umbra/leaveManagement/config.php', false)
+            xml.send(fd);
+        },
+        // Edit mode toggle End
+
+        // Query Leave Balance Start
+        getLeaveBalance: function (){
+            var xml = new XMLHttpRequest();
+            var fd = new FormData();
+
+            fd.append('getLeaveBalance', true);
+            fd.append('emp_id', this.emp_id);
+            fd.append('year_filed', this.yearFiled);
+            xml.onload = () => {
+                this.leaveBalances = JSON.parse(xml.responseText);
+            }
+            xml.open('POST', 'umbra/leaveManagement/config.php', false)
+            xml.send(fd);
+        },
+        // Query Leave Balance End
+
         slice_date: (i) => {
 
         },
@@ -147,12 +209,13 @@ var lm_app = new Vue({
             if (this.leaveCalendar) {
                 this.leaveCalendar.destroy();
             }
-            this.leaveCalendar = new FullCalendar.Calendar(clndr, {
-                plugins: ['dayGrid', 'interaction']
-                ,height: "auto"
-                ,selectable: true
-                ,initialView: 'dayGridMonth'
-                ,select: function (info) {
+            this.leaveCalendar = new FullCalendar.Calendar(clndr,  {
+                plugins: ['dayGrid', 'interaction'],
+                height: "auto",
+                selectable: true,
+                initialView: 'dayGridMonth',
+                
+                select: function (info) {
                     e = this.getEvents();
                     if (e.length > 0) {
                         for (c = 0; c < e.length; c++) {
@@ -236,7 +299,7 @@ var lm_app = new Vue({
                     }
                 },
                 events: this_leave.selectedEventsForEdit,
-                editable: true
+                editable: true,
             });
             this.leaveCalendar.render();
         }

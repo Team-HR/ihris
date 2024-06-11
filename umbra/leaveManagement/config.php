@@ -65,6 +65,36 @@
         }   
         echo json_encode($a);
     }
+    elseif (isset($_POST['getLeaveBalance'])) {
+        $emp_id = $_POST['emp_id']; 
+        $year_filed = $_POST['year_filed'];
+
+        // sql query for lm_earning & lm_logs
+        $lm_earning_sql = "SELECT * FROM `lm_earning` WHERE `emp_id` = '$emp_id' ORDER BY `month_earned` LIMIT 1";
+        $lm_logs_sql = "SELECT SUM(`totalDays`) AS totalDaysSum  FROM `lm_logs` WHERE `employees_id` = '$emp_id' AND `leaveType` = 'SP' AND YEAR(`date_filed`) = '$year_filed'";
+
+        // Execute Queries 
+        $lm_earning_query = $mysqli->query($lm_earning_sql);
+        $lm_logs_query = $mysqli->query($lm_logs_sql);
+
+        // Fetch Results
+        $lm_earning_result = $lm_earning_query->fetch_assoc();
+        $lm_logs_result = $lm_logs_query->fetch_assoc();
+
+        $combined_result = array( "lm_earning_result" => $lm_earning_result, "lm_logs_result" => $lm_logs_result);
+
+        // Encode combined result as JSON and return it
+        echo json_encode($combined_result);
+    }elseif (isset($_POST['updateLeaveBalances'])){
+        $emp_id = $_POST['emp_id']; 
+        $vl_bal = $_POST['vl_bal'];
+        $sl_bal = $_POST['sl_bal'];
+
+        // sql
+        $sql = "UPDATE `lm_earning` SET `vl_bal`='$vl_bal',`sl_bal`='$sl_bal' WHERE `emp_id` = '$emp_id'";
+        // execute query
+        $query = $mysqli->query($sql);
+
+        echo json_encode($query);
+    }
 ?> 
-
-
