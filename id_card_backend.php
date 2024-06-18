@@ -173,6 +173,29 @@ if (isset($data->getEmployeeList)) {
 
 
     echo json_encode($data);
+} else if (isset($data->getIdCardsDataCaptured)) {
+    $department_id = isset($data->selectedDepartment->value) ? $data->selectedDepartment->value : null;
+    $departments = getEmployeesByDepartments($department_id, $mysqli);
+    echo json_encode($departments);
+} else if (isset($data->getDepartments)) {
+    $data = [];
+    $sql = "SELECT * FROM `department`";
+    $res = $mysqli->query($sql);
+    $excepts = [23, 27, 28, 33];
+    while ($row = $res->fetch_assoc()) {
+        if (!in_array($row["department_id"], $excepts)) {
+            $data[] = [
+                "label" => $row["department"] . " (" . $row["alias"] . ")",
+                "value" => $row["department_id"],
+            ];
+        }
+    }
+    echo json_encode($data);
+} elseif (isset($data->tagAsPrinted)) {
+    $employees_id = $data->selected_employee_data->employees_id;
+    $sql = "UPDATE  `employee_id_cards` SET `printed_at` = CURRENT_TIMESTAMP WHERE `ihris_employee_id` = '$employees_id'";
+    $mysqli->query($sql);
+    // echo json_encode(date_default_timezone_get() . " " . date('m/d/Y h:i:s a', time()));
 } else if (isset($data->saveEmployeeData)) {
     $selected_employee_data = $data->selected_employee_data;
 
@@ -233,6 +256,36 @@ if (isset($data->getEmployeeList)) {
     echo json_encode($data->textFormat);
 }
 
+
+function getEmployeesByDepartments($department_id, $mysqli)
+{
+    $departments = [];
+    if (!$department_id) {
+        $sql = "SELECT * FROM `department` ORDER BY `department`.`department` ASC";
+    } else {
+        $sql = "SELECT * FROM `department` WHERE `department_id` = $department_id;";
+    }
+
+    $res = $mysqli->query($sql);
+    while ($row = $res->fetch_assoc()) {
+        $row["employees"] = getEmployeesByDepartment($row["department_id"], $mysqli);
+        $departments[] = $row;
+    }
+    return $departments;
+}
+
+function getEmployeesByDepartment($department_id, $mysqli)
+{
+    $employees = [];
+    $sql = "SELECT * FROM `employees` LEFT JOIN `employee_id_cards` ON `employees`.`employees_id` = `employee_id_cards`.`ihris_employee_id` LEFT JOIN `employees_card_number` ON `employees`.`employees_id` = `employees_card_number`.`employees_id` WHERE `employees`.`department_id` = '$department_id' AND `employees`.`status` = 'ACTIVE';";
+    $res = $mysqli->query($sql);
+    while ($row = $res->fetch_assoc()) {
+        $row["full_name"] = formatName($row);
+        $employees[] = $row;
+    }
+    return $employees;
+}
+
 function getEmployeeInformation($mysqli, $employee_id)
 {
     if (!$employee_id) return;
@@ -258,6 +311,16 @@ function getEmployeeInformation($mysqli, $employee_id)
     }
 
     return [];
+}
+
+function formatName($assoc)
+{
+    $name = "";
+    $name .= $assoc["lastName"] . ", " . $assoc["firstName"];
+    $name .= $assoc["middleName"] ? " " . $assoc["middleName"][0] . "." : "";
+    $name .= $assoc["extName"] ? " " . $assoc["extName"] : "";
+    $assoc["middleName"] = $assoc["middleName"] ? $assoc["middleName"] : "";
+    return mb_convert_case($name, MB_CASE_UPPER);
 }
 
 function getPositionInformation($mysqli, $position_id)
