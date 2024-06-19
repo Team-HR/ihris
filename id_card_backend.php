@@ -127,6 +127,7 @@ if (isset($data->getEmployeeList)) {
     // get id text formatting values
     $sql = "SELECT * FROM `employee_id_cards` WHERE `ihris_employee_id` = '$employee_id'";
     $res = $mysqli->query($sql);
+
     $data["text_formatting"] = null;
     $data["photo_formatting"] = null;
     $data["sig_src"] = null;
@@ -138,9 +139,13 @@ if (isset($data->getEmployeeList)) {
         $data["date_expire"] = "2025-06-30";
     }
 
-
     $data["date_expire_formatted"] = "";
     if ($row = $res->fetch_assoc()) {
+
+        if (isset($row["position"]) || $row["position"]) {
+            $data["position"] = $row["position"];
+        }
+
         $data["text_formatting"] = json_decode($row["text_formatting"]);
         $data["sig_src"] = json_decode($row["sig_src"]);
         $data["photo_formatting"] = json_decode($row["photo_formatting"]);
@@ -168,6 +173,29 @@ if (isset($data->getEmployeeList)) {
 
 
     echo json_encode($data);
+} else if (isset($data->getIdCardsDataCaptured)) {
+    $department_id = isset($data->selectedDepartment->value) ? $data->selectedDepartment->value : null;
+    $departments = getEmployeesByDepartments($department_id, $mysqli);
+    echo json_encode($departments);
+} else if (isset($data->getDepartments)) {
+    $data = [];
+    $sql = "SELECT * FROM `department`";
+    $res = $mysqli->query($sql);
+    $excepts = [23, 27, 28, 33];
+    while ($row = $res->fetch_assoc()) {
+        if (!in_array($row["department_id"], $excepts)) {
+            $data[] = [
+                "label" => $row["department"] . " (" . $row["alias"] . ")",
+                "value" => $row["department_id"],
+            ];
+        }
+    }
+    echo json_encode($data);
+} elseif (isset($data->tagAsPrinted)) {
+    $employees_id = $data->selected_employee_data->employees_id;
+    $sql = "UPDATE  `employee_id_cards` SET `printed_at` = CURRENT_TIMESTAMP WHERE `ihris_employee_id` = '$employees_id'";
+    $mysqli->query($sql);
+    // echo json_encode(date_default_timezone_get() . " " . date('m/d/Y h:i:s a', time()));
 } else if (isset($data->saveEmployeeData)) {
     $selected_employee_data = $data->selected_employee_data;
 
@@ -178,6 +206,7 @@ if (isset($data->getEmployeeList)) {
     $extName = $selected_employee_data->extName;
     $gender = $selected_employee_data->gender;
     $empno = $selected_employee_data->empno;
+    $position = $selected_employee_data->position;
 
     $birthdate = $selected_employee_data->birthdate;
     $blood_type = $selected_employee_data->blood_type;
@@ -191,6 +220,7 @@ if (isset($data->getEmployeeList)) {
     $emergency_address = $selected_employee_data->emergency_address;
     $date_issued = $selected_employee_data->date_issued;
     $date_expire = $selected_employee_data->date_expire;
+
 
     // update employees table
     $sql = "UPDATE `employees` SET `firstName`='$firstName',`lastName`='$lastName',`middleName`='$middleName',`extName`='$extName',`gender`='$gender',`empno`='$empno' WHERE `employees_id` = '$employees_id'";
@@ -215,15 +245,45 @@ if (isset($data->getEmployeeList)) {
     $photo_formatting = json_encode($data->photoFormat);
 
     if ($row = $res->fetch_assoc()) {
-        $sql = "UPDATE `employee_id_cards` SET `text_formatting`='$text_formatting', `photo_formatting`='$photo_formatting', `date_issued` = '$date_issued', `date_expire` = '$date_expire' WHERE `ihris_employee_id` = '$employees_id'";
+        $sql = "UPDATE `employee_id_cards` SET `position` ='$position' , `text_formatting`='$text_formatting', `photo_formatting`='$photo_formatting', `date_issued` = '$date_issued', `date_expire` = '$date_expire' WHERE `ihris_employee_id` = '$employees_id'";
         $mysqli->query($sql);
     } else {
-        $sql = "INSERT INTO `employee_id_cards` (`ihris_employee_id`, `text_formatting`, `photo_formatting`, `date_issued`,
-        `date_expire`, `created_at`, `updated_at`) VALUES ( '$employees_id', '$text_formatting', '$photo_formatting', '$date_issued', '$date_expire', current_timestamp(), current_timestamp())";
+        $sql = "INSERT INTO `employee_id_cards` (`ihris_employee_id`, `position`, `text_formatting`, `photo_formatting`, `date_issued`,
+        `date_expire`, `created_at`, `updated_at`) VALUES ( '$employees_id', '$position', '$text_formatting', '$photo_formatting', '$date_issued', '$date_expire', current_timestamp(), current_timestamp())";
         $mysqli->query($sql);
     }
 
     echo json_encode($data->textFormat);
+}
+
+
+function getEmployeesByDepartments($department_id, $mysqli)
+{
+    $departments = [];
+    if (!$department_id) {
+        $sql = "SELECT * FROM `department` ORDER BY `department`.`department` ASC";
+    } else {
+        $sql = "SELECT * FROM `department` WHERE `department_id` = $department_id;";
+    }
+
+    $res = $mysqli->query($sql);
+    while ($row = $res->fetch_assoc()) {
+        $row["employees"] = getEmployeesByDepartment($row["department_id"], $mysqli);
+        $departments[] = $row;
+    }
+    return $departments;
+}
+
+function getEmployeesByDepartment($department_id, $mysqli)
+{
+    $employees = [];
+    $sql = "SELECT * FROM `employees` LEFT JOIN `employee_id_cards` ON `employees`.`employees_id` = `employee_id_cards`.`ihris_employee_id` LEFT JOIN `employees_card_number` ON `employees`.`employees_id` = `employees_card_number`.`employees_id` WHERE `employees`.`department_id` = '$department_id' AND `employees`.`status` = 'ACTIVE';";
+    $res = $mysqli->query($sql);
+    while ($row = $res->fetch_assoc()) {
+        $row["full_name"] = formatName($row);
+        $employees[] = $row;
+    }
+    return $employees;
 }
 
 function getEmployeeInformation($mysqli, $employee_id)
@@ -244,14 +304,23 @@ function getEmployeeInformation($mysqli, $employee_id)
         $row["name"] = mb_convert_case($name, MB_CASE_UPPER);
         $row["position"] = getPositionInformation($mysqli, $row["position_id"])["position"];
         $row["position_function"] = getPositionInformation($mysqli, $row["position_id"])["function"];
-
-        // $row["date_expire"] = ""; // blank para sticker nlang 
-        // $row["date_expire"] = $date_expire;
-        // $row["sex"] = $row["gender"];
+        if ($row["employmentStatus"] != 'CASUAL') {
+            $row["position"] = $row["position"] . " " . $row["position_function"];
+        }
         return $row;
     }
 
     return [];
+}
+
+function formatName($assoc)
+{
+    $name = "";
+    $name .= $assoc["lastName"] . ", " . $assoc["firstName"];
+    $name .= $assoc["middleName"] ? " " . $assoc["middleName"][0] . "." : "";
+    $name .= $assoc["extName"] ? " " . $assoc["extName"] : "";
+    $assoc["middleName"] = $assoc["middleName"] ? $assoc["middleName"] : "";
+    return mb_convert_case($name, MB_CASE_UPPER);
 }
 
 function getPositionInformation($mysqli, $position_id)
