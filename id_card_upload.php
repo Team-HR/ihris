@@ -3,6 +3,7 @@ header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods, Authorization, X-Requested-With');
+require_once "_connect.db.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -36,6 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $uploadFile = $uploadDir . basename($employeeId . "_" . $side . ".{$type}");
 
         if (file_put_contents($uploadFile, $imageData)) {
+            $sql = "UPDATE  `employee_id_cards` SET `printed_at` = CURRENT_TIMESTAMP WHERE `ihris_employee_id` = '$employeeId'";
+            $mysqli->query($sql);
             echo json_encode(['message' => 'File is valid, and was successfully uploaded.']);
         } else {
             echo json_encode(['error' => 'Upload failed.']);
