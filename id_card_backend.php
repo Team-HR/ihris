@@ -141,11 +141,9 @@ if (isset($data->getEmployeeList)) {
 
     $data["date_expire_formatted"] = "";
     if ($row = $res->fetch_assoc()) {
-
-        if (isset($row["position"]) || $row["position"]) {
+        if (isset($row["position"])) {
             $data["position"] = $row["position"];
         }
-
         $data["text_formatting"] = json_decode($row["text_formatting"]);
         $data["sig_src"] = json_decode($row["sig_src"]);
         $data["photo_formatting"] = json_decode($row["photo_formatting"]);
