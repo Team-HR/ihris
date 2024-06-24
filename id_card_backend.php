@@ -245,13 +245,15 @@ if (isset($data->getEmployeeList)) {
     if ($row = $res->fetch_assoc()) {
         $sql = "UPDATE `employee_id_cards` SET `position` ='$position' , `text_formatting`='$text_formatting', `photo_formatting`='$photo_formatting', `date_issued` = '$date_issued', `date_expire` = '$date_expire' WHERE `ihris_employee_id` = '$employees_id'";
         $mysqli->query($sql);
+        echo json_encode($photo_formatting);
     } else {
         $sql = "INSERT INTO `employee_id_cards` (`ihris_employee_id`, `position`, `text_formatting`, `photo_formatting`, `date_issued`,
         `date_expire`, `created_at`, `updated_at`) VALUES ( '$employees_id', '$position', '$text_formatting', '$photo_formatting', '$date_issued', '$date_expire', current_timestamp(), current_timestamp())";
         $mysqli->query($sql);
+        echo json_encode("inserted");
     }
 
-    echo json_encode($data->textFormat);
+    // echo json_encode($data->photoFormat);
 }
 
 
