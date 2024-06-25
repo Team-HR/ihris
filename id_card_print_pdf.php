@@ -28,8 +28,8 @@ $front_id = $employee_id . "_front.jpeg";
 $back_id = $employee_id . "_back.jpeg";
 
 $html = <<<EOD
-    <img height="3.375in" width="2.125in" src="id_cards/$front_id"/>
-    <img height="3.375in" width="2.125in" src="id_cards/$back_id"/>
+    <img height="3.375in" width="2.125in" src="id_cards/$front_id" style="padding-right: 5px; border-right: 1px solid #e2e2e2; border-right-style: dashed;"/>
+    <img height="3.375in" width="2.125in" src="id_cards/$back_id" style="padding-left: 3px;"/>
 EOD;
 
 $mpdf->defaultheaderline = 0;
