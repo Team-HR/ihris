@@ -32,7 +32,13 @@ var lm_app = new Vue({
     leaveCalendar: "",
     selectedEventsForEdit: [],
   },
+
   computed: {
+    date_filed_plus() {
+      var result = new Date(this.date_filed);
+      result.setDate(result.getDate() + 5);
+      return result;
+    },
     yearFiled() {
       if (this.date_filed) {
         const date = new Date(this.date_filed);
@@ -213,12 +219,15 @@ var lm_app = new Vue({
         height: "auto",
         selectable: true,
         initialView: "dayGridMonth",
-
+        validRange: {
+          start: this_leave.date_filed_plus,
+          // end: '2024-06-28'
+        },
+        // unselectAuto: false,
         select: function (info) {
           e = this.getEvents();
           if (e.length > 0) {
             for (c = 0; c < e.length; c++) {
-              console.log(e[c]);
               if (e[c].start.toDateString() == info.start.toDateString()) {
                 evnt = e[c];
                 evnt.remove();
@@ -267,6 +276,8 @@ var lm_app = new Vue({
               this_leave.leaveEvents.push(lvevnts);
             }
           }
+
+          console.log(lvevnts);
           console.log(this_leave.leaveEvents);
         },
         // eventResize: function (info) {
@@ -399,6 +410,12 @@ var lm_app = new Vue({
     this.calendarRender();
   },
   watch: {
+    date_filed(newValue, oldValue) {
+      if (newValue) {
+        console.log("date filed changed");
+        this.calendarRender();
+      }
+    },
     leaveEvents: function () {
       d = this.leaveEvents;
 
