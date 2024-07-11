@@ -1,177 +1,322 @@
 <?php
-    $title = "DTR Management";
-    require_once "header.php";
+$title = "Leave Ledger";
+
+require_once "header.php";
 ?>
 
-<style>
-    th.abc{
-        position:sticky;
-        top: 0;
-    }
-    th.a{
-        position:sticky;
-        top: 45px
-    }
-    th.ab{
-        position:sticky;
-        top: 90px
-    }
-    table{
-        position:relative;
-    }
 
-</style>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.3/dist/semantic.min.css">
+<script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.3/dist/semantic.min.js"></script>
 
 
-<div id="dtr_app">  
-    <div class="ui segment"   style="margin:auto;max-width:35%;min-width:600px;">
-        <div class="ui segment" style="position:fixed;right:0px;width:250px;z-index:10">
-            <table>
-                <tr>
-                    <th style="text-align: right">Total mins Tardy:</th>
-                    <th style="color:red">{{totalMinsTardy}}</th>
-                </tr>
-                <tr>
-                    <th style="text-align: right">No. of times Tardy:</th>
-                    <th style="color:red">{{totalTimesTardy}}</th>
-                </tr>
-                <tr>
-                    <th style="text-align: right">Total mins Undertime:</th>
-                    <th style="color:red">{{totalMinUnderTime}}</th>
-                </tr>
-            </table>
-        </div>
-        <form class="ui form" @submit.prevent="setupData()">
+<div class="ui segment" id="leaveLedger" style="width: 700px; margin: auto">
+    <template>
+
+        <form @submit.prevent="" style="width: 500px; margin: auto; margin-bottom: 5px; margin-top: 20px;">
             <div class="field">
-                <label>Name:</label>
-                <select class="ui fluid search dropdown" v-model="emp_id">
+                <label><b>Employee:</b></label>
+                <select class="ui search clearable dropdown fluid" id="employeeDropdown" v-model="selectedEmployee">
                     <option value="">Select Employee</option>
-                    <option v-for="(employee,index) in Employees" :key="index" :value="employee.employees_id">
-                        {{employee.lastName}} {{employee.firstName}} {{employee.middleName}} {{employee.extName}}
+                    <option v-for="emp, e in employees" :key="e" :value="emp.employees_id">
+                        {{ emp.fullName }}
                     </option>
                 </select>
             </div>
-            <div class="field">
-                <label>Period</label>
-                <input type="month" v-model="period"> 
+
+
+            <div class="field" style="margin-top: 15px;">
+                <label><b>Month-Year:</b></label>
+                <br>
+                <div class="ui input" :class="selectedEmployee ? '' : 'disabled'">
+                    <input type="month" v-model="monthYear">
+                </div>
             </div>
-            <div>
-                <button type="submit" class="ui button positive" id="seachBtn">Search</button>
-            </div>
+
+
+
+            <button type="button" :class="dtrIsSubmitted ? 'green' : 'grey'" class="ui right labeled icon green button" style="margin-bottom: 10px;margin-top: 10px;" @click="dtrSubmitted()" :disabled="isLoading || !selectedEmployee || !monthYear">
+                DTR Submitted
+                <i :class="dtrIsSubmitted ? 'check' : 'question'" class="icon"></i>
+            </button>
+
+
+
         </form>
-        <hr>
-        <div>
-        <div class="ui mini modal" id="modalEdit">
-            <div class="header">DTR Management Form</div>
-            <div class="content">
-                <form class="ui form" id="addTimeForm" @submit.prevent="addDTR()">
-                    <h5>TARDINESS</h5>
+
+
+
+        <!-- <li v-for="(item, index) in rows" :key="index">
+      {{index+1}} || {{item}}
+    </li> -->
+        <!-- {{ monthYear }} -->
+        <!-- <div class="ui active dimmer" style="height: 200px; ">
+      <div class="ui indeterminate text loader">Preparing Files</div>
+    </div> -->
+
+
+
+
+
+        <table v-if="!isLoading && (selectedEmployee && monthYear)" class="ui table mini head stuck compact celled structured" style="width: _500px; margin: auto; ">
+
+            <thead>
+                <tr class="center aligned">
+                    <th rowspan="2">Day</th>
+                    <th colspan="2">Am</th>
+                    <th colspan="2">Pm</th>
+                    <th rowspan="2">Tardiness (mins)</th>
+                    <th rowspan="2">Undertime (mins)</th>
+                    <th rowspan="2">Remarks</th>
+                    <th rowspan="2">Actions</th>
+                </tr>
+                <tr class="center aligned">
+                    <th>In</th>
+                    <th>Out</th>
+                    <th>In</th>
+                    <th>Out</th>
+                </tr>
+            </thead>
+            <!-- #eeff123b -->
+            <template v-for="item, index in rows">
+                <tr :key="index" :style="{backgroundColor: (item.day == 'SUN' || item.day == 'SAT' ?'#eeff123b':'')}">
+                    <td width="55" v-if="item.day != 'SAT' && item.day != 'SUN'">{{index+1}}</td>
+                    <td width="55" v-else>{{item.day}}</td>
+
+                    <template v-if="item.attendDate">
+                        <td width="85" :style="{color: (item.tardyAm?'red':''), backgroundColor: (!item.amIn && item.day != 'SAT' && item.day != 'SUN'?'#bcbcbc57':'')}">
+                            {{item.amIn ? item.amIn : ''}}
+                        </td>
+                        <td width="85" :style="{color: (item.undertimeAm?'red':''), backgroundColor: (!item.amOut && item.day != 'SAT' && item.day != 'SUN' ?'#bcbcbc57':'')}">
+                            {{item.amOut ? item.amOut : ''}}
+                        </td>
+                        <td width="85" :style="{color: (item.tardyPm?'red':''), backgroundColor: (!item.pmIn && item.day != 'SAT' && item.day != 'SUN' ?'#bcbcbc57':'')}">
+                            {{item.pmIn ? item.pmIn : ''}}
+                        </td>
+                        <td width="85" :style="{color: (item.undertimePm?'red':''), backgroundColor: (!item.pmOut && item.day != 'SAT' && item.day != 'SUN' ?'#bcbcbc57':'')}">
+                            {{item.pmOut ? item.pmOut : ''}}
+                        </td>
+                        <td class="center aligned" style="color: red; font-weight: bold;">{{item.isConfirmed ? item.tardies ? item.tardies : '' :''}}</td>
+                        <td class="center aligned" style="color: red; font-weight: bold;">{{item.isConfirmed ? item.undertimes ? item.undertimes : '' : ''}}</td>
+                        <td><b style="color: red;">{{item.other}}</b></td>
+                        <td><button class="ui button mini basic" @click="confirm(item)">Actions</button></td>
+                    </template>
+                    <template v-else>
+                        <td colspan="8">
+                            {{item}}
+                        </td>
+                    </template>
+
+
+                </tr>
+            </template>
+        </table>
+
+        <h1 class="ui header block" v-else-if="isLoading && (selectedEmployee && monthYear)">Loading...</h1>
+
+        <div style="position: fixed; top: 54px; right: 194px; width:200px;" class="ui segment">
+            Total tardiness: <span style="color:red;">{{(summary.totalTardy ? summary.totalTardy + " mins":"---")}}</span> <br />
+            No. of times tardy: <span style="color:red;">{{(summary.timesTardy?summary.timesTardy:"---")}}</span> <br />
+            Total undertime: <span style="color:red;">{{(summary.totalUndertime ? summary.totalUndertime+ " mins":"---")}}</span> <br />
+        </div>
+
+
+
+        <div class="ui modal actions mini">
+            <div class="header">
+                DTR Management Form
+            </div>
+            <div class=" content">
+
+                <form class="ui form" id="actionsForm" @submit.prevent="">
+                    Tardiness
                     <hr>
-                    <div class="two fields">
+                    <div class="two column fields">
                         <div class="field">
-                            <label>AM</label>
-                            <input type="number" placeholder="" v-model="amTardy">
+                            <label for="">AM</label>
+                            <input type="number" name="tardyAm" v-model="selectedRow.tardyAm" placeholder="---">
                         </div>
                         <div class="field">
-                            <label>PM</label>
-                            <input type="number" placeholder="" v-model="pmTardy">
-                        </div>
-                    </div>
-                    <h5>UNDERTIME</h5>
-                    <hr>    
-                    <div class="two fields">
-                        <div class="field">
-                            <label>AM</label>
-                            <input type="number" placeholder="" v-model="amUnder">
-                        </div>
-                        <div class="field">
-                            <label>PM</label>
-                            <input type="number" placeholder="" v-model="pmUnder">
+                            <label for="">PM</label>
+                            <input type="number" name="tardyPm" v-model="selectedRow.tardyPm" placeholder="---">
                         </div>
                     </div>
+                    Undertime
+                    <hr>
+                    <div class="two column fields">
+                        <div class="field">
+                            <label for="">AM</label>
+                            <input type="number" name="undertimeAm" v-model="selectedRow.undertimeAm" placeholder="---">
+                        </div>
+                        <div class="field">
+                            <label for="">PM</label>
+                            <input type="number" name="undertimePm" v-model="selectedRow.undertimePm" placeholder="---">
+                        </div>
+                    </div>
+                    Others
+                    <hr>
                     <div class="field">
-                        <label>Others</label>
-                        <input type="text" v-model="others">
+                        <!-- <label for="">Others:</label> -->
+                        <input type="text" name="other" v-model="selectedRow.other" placeholder="Enter remarks here...">
                     </div>
-                    <!-- <div class="inline field">
-                        <div class="ui checkbox">
-                        <input type="checkbox" tabindex="0" v-model="absent" class="hidden" @change="checkerbox(true)">
-                        <label>ABSENT</label>
-                        </div>
-                    </div>
-                    <div class="inline field">
-                        <div class="ui checkbox">
-                        <input type="checkbox" tabindex="0" v-model="dayoff" class="hidden" @change="checkerbox(false)">
-                        <label>DAY-OFF</label>
-                        </div>
-                    </div> -->
-                    <button class="ui button fluid green">Save</button>
                 </form>
             </div>
+            <div class="actions">
+                <button class="ui black deny button">
+                    Cancel
+                </button>
+                <button class="ui positive right labeled icon button" type="submit" form="actionsForm">
+                    Confirm
+                    <i class="checkmark icon"></i>
+                </button>
+            </div>
         </div>
-            <div v-if="dtr.length">
-                <div v-if="dtrSummary">
-                    <div v-if="dtrSummary.submitted==''||dtrSummary.submitted=='0'">
-                        <button class="ui button yellow" style="float:right" @click="hasSumitted()">Submitted</button>
-                    </div>
-                    <div v-else>
-                        <button class="ui button red" style="float:right" @click="cancelMove()">Cancel</button>
-                    </div>
-                </div>
-                <div v-else>
-                    <button class="ui button yellow" style="float:right" @click="hasSumitted()">Submitted</button>
-                </div>
-                <br>
-                <br>
-                <table class="ui celled table" > 
-                    <thead>
-                        <tr>
-                            <th class="abc" colspan="7" style="text-align:center" >Month of {{period}}</th>
-                        </tr>
-                        <tr>
-                            <th class="a" rowspan="2">Date</th>
-                            <th class="a" colspan="2" style="text-align:center">AM</th>
-                            <th class="a" colspan="2" style="text-align:center">PM</th>
-                            <th class="a" rowspan="2">Remarks</th>
-                            <th class="a" rowspan="2">Options</th>
-                        </tr>
-                        <tr>
-                            <th class="ab">Tardiness</th>
-                            <th class="ab">Undertime</th>
-                            <th class="ab">Tardiness</th>
-                            <th class="ab">Undertime</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(day,index) in dtr" :key="index" style="text-align:center">                                  
-                            <td>{{day.date.split('-')[2]}}</td>
-                            <td style="background-color:#9ec14b70;color:#086d08">{{day.amTardy}}</td>
-                            <td style="background-color:#9ec14b70;color:#086d08">{{day.amUnderTime}}</td>
-                            <td  style="background-color:#7accc078;color:#088dad">{{day.pmTardy}}</td>
-                            <td  style="background-color:#7accc078;color:#088dad">{{day.pmUnderTime}}</td>
-                            <td style="text-align:center;font-weight: bold;color:red">{{day.other}}</td>
-                            <td>
 
-                                <button class="ui icon tiny button green" @click="openModal(index)">
-                                    <i class="edit icon"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>    
-        </div>
-    </div>
+
+
+    </template>
 </div>
-<script type="text/javascript">
-    $(document).ready(function(){
-        $(".dropdown").dropdown({
-            fullTextSearch: true,
-        });
-        $('.ui.checkbox').checkbox();
-    });
+
+<style>
+    th {
+        padding: 3px !important;
+    }
+</style>
+
+
+<script>
+    var leaveLedger = new Vue({
+        el: "#leaveLedger",
+        data: {
+            dtrIsSubmitted: false,
+            summary: {
+                totalTardy: 0,
+                timesTardy: 0,
+                totalUndertime: 0,
+            },
+            isLoading: false,
+            selectedEmployee: 9,
+            monthYear: "2024-03",
+            employees: [],
+            rows: [],
+            selectedRow: {
+                tardyAm: null,
+                tardyPm: null,
+                undertimeAm: null,
+                undertimePm: null,
+                other: null,
+            }
+        },
+        watch: {
+            selectedEmployee(newValue, oldValue) {
+                this.isLoading = true
+                this.getRows()
+            },
+            monthYear(newValue, oldValue) {
+                this.isLoading = true
+                this.getRows()
+            }
+        },
+
+        methods: {
+            confirm(item) {
+                this.selectedRow = item
+                this.selectedRow.tardyAm = this.selectedRow.tardyAm == 0 ? null : this.selectedRow.tardyAm;
+                this.selectedRow.tardyPm = this.selectedRow.tardyPm == 0 ? null : this.selectedRow.tardyPm;
+                this.selectedRow.undertimeAm = this.selectedRow.undertimeAm == 0 ? null : this.selectedRow.undertimeAm;
+                this.selectedRow.undertimePm = this.selectedRow.undertimePm == 0 ? null : this.selectedRow.undertimePm;
+
+                $('.ui.modal.actions').modal({
+                    closable: false,
+                    onApprove: () => {
+                        this.saveActions()
+                    }
+                }).modal('show');
+
+            },
+
+            saveActions() {
+                $.post("dtrManagement.config.php", {
+                        saveActions: true,
+                        employee_id: this.selectedEmployee,
+                        selectedRow: this.selectedRow
+                    },
+                    (data, textStatus, jqXHR) => {
+                        this.getRows()
+                    },
+                    "json"
+                );
+            },
+
+            dtrSubmitted() {
+
+                if (this.dtrIsSubmitted) {
+                    if (confirm("Revert DTR not submitted?") == true) {
+                        $.post("dtrManagement.config.php", {
+                                dtrNotSubmitted: true,
+                                period: this.monthYear,
+                                emp_id: this.selectedEmployee
+                            }, (data, textStatus, jqXHR) => {
+                                this.dtrIsSubmitted = data;
+                            },
+                            "json"
+                        );
+                    }
+                } else {
+                    $.post("dtrManagement.config.php", {
+                            dtrSubmitted: true,
+                            period: this.monthYear,
+                            emp_id: this.selectedEmployee
+                        }, (data, textStatus, jqXHR) => {
+                            this.dtrIsSubmitted = data;
+                        },
+                        "json"
+                    );
+                }
+            },
+
+            getRows() {
+                $.post("dtrManagement.config.php", {
+                        getRows: true,
+                        employee_id: this.selectedEmployee,
+                        monthYear: this.monthYear,
+                    }, (data, textStatus, jqXHR) => {
+                        this.dtrIsSubmitted = data.submitted
+                        this.rows = data.rows
+                        this.summary.totalTardy = data.totalTardy
+                        this.summary.timesTardy = data.timesTardy
+                        this.summary.totalUndertime = data.totalUndertime
+                        this.isLoading = false
+                    },
+                    "json"
+                );
+            },
+
+            getEmployeesList() {
+                $.post("dtrManagement.config.php", {
+                        getEmployeesList: true,
+                    }, (data, textStatus, jqXHR) => {
+                        this.employees = data
+                    },
+                    "json"
+                );
+            }
+        },
+        mounted() {
+            this.getEmployeesList()
+            this.getRows()
+
+            $("#employeeDropdown").dropdown({
+                fullTextSearch: true,
+                duration: 50,
+                forceSelection: false
+            })
+
+        },
+
+    })
 </script>
-<script src="umbra/dtrManagement/config.js"></script>
+
 <?php
-    require_once "footer.php";
+require_once "footer.php";
 ?>
