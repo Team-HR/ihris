@@ -195,8 +195,8 @@ require_once "header.php";
                 totalUndertime: 0,
             },
             isLoading: false,
-            selectedEmployee: 9,
-            monthYear: "2024-03",
+            selectedEmployee: null,
+            monthYear: null,
             employees: [],
             rows: [],
             selectedRow: {
