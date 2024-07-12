@@ -8,8 +8,8 @@ if (isset($_POST['getRows'])) {
     $monthYear = $period =  $_POST['monthYear'];
     $monthYear = explode("-", $monthYear);
 
-    $year = $monthYear[0];
-    $month = $monthYear[1];
+    $year = intval($monthYear[0]);
+    $month = intval($monthYear[1]);
 
     $dtrNo = "";
     $sql = "SELECT * FROM `employees_card_number` WHERE `employees_id` = '$employee_id'";
@@ -36,6 +36,7 @@ if (isset($_POST['getRows'])) {
     $allRemarks = [];
 
     $dtr_issubmitted = false;
+
     $check_dtrissubmitted_qry = "SELECT * FROM `dtrsummary` WHERE `employee_id` = '$employee_id' AND `month` = '$period'";
     $check_dtrissubmitted_res = $mysqli->query($check_dtrissubmitted_qry);
 
@@ -43,8 +44,10 @@ if (isset($_POST['getRows'])) {
         $dtr_issubmitted = $check_dtrissubmitted_row["submitted"] == 1 ? true : false;
     }
 
-    // for DtrSummary vars end
-
+    $url = "http://192.168.50.51:8084/getDtrsFromHRIS_v2.php?dtrNo=$dtrNo&year=$year&month=$month";
+    $dtrs = file_get_contents($url);
+    $dtrs = json_decode($dtrs, true);
+    $dtrs = count($dtrs) > 0 ? $dtrs : [];
 
     for ($i = 1; $i <= $days; $i++) {
 
@@ -60,12 +63,22 @@ if (isset($_POST['getRows'])) {
         $pmIn = '';
         $pmOut = '';
 
+        $month = str_pad($month, 2, "0", STR_PAD_LEFT);
+        $i = str_pad($i, 2, "0", STR_PAD_LEFT);
+
         $dtr_date = "$year-$month-$i";
 
-        $sql = "SELECT * FROM `dtr` WHERE `empID` = '$dtrNo' AND YEAR(`attendDate`) = '$year' AND MONTH(`attendDate`) = '$month' AND DAY(`attendDate`) = '$i' ORDER BY `attendDate` ASC";
-        $res = $mysqli3->query($sql);
-
-        if ($row = $res->fetch_assoc()) {
+        // $sql = "SELECT * FROM `dtr` WHERE `empID` = '$dtrNo' AND YEAR(`attendDate`) = '$year' AND MONTH(`attendDate`) = '$month' AND DAY(`attendDate`) = '$i' ORDER BY `attendDate` ASC";
+        // $res = $mysqli3->query($sql);
+        $row = null;
+        foreach ($dtrs as $key => $dtr) {
+            if ($dtr['attendDate'] == $dtr_date) {
+                $row = $dtr;
+                break;
+            }
+        }
+        //  if ($row = $res->fetch_assoc()) {
+        if ($row) {
 
             $amIn = $row["amIn"];
             $amOut = $row["amOut"];

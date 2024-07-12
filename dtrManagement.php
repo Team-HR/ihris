@@ -304,7 +304,7 @@ require_once "header.php";
         },
         mounted() {
             this.getEmployeesList()
-            this.getRows()
+            // this.getRows()
 
             $("#employeeDropdown").dropdown({
                 fullTextSearch: true,
