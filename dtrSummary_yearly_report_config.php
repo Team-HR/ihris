@@ -139,10 +139,12 @@ function get_employee_dtr($mysqli, $employee_id, $year)
     $res = $mysqli->query($sql);
     $dtrs = [];
     while ($row = $res->fetch_assoc()) {
-        $header_month = explode("-", $row["month"]);
-        $row['dtr_year'] = $header_month[0];
-        $row['dtr_month'] = $header_month[1];
-        $dtrs[] = $row;
+        if (isset($row["month"])) {
+            $header_month = explode("-", $row["month"]);
+            $row['dtr_year'] = $header_month[0];
+            $row['dtr_month'] = $header_month[1];
+            $dtrs[] = $row;
+        }
     }
 
 
