@@ -305,9 +305,17 @@ function getMinutesDifference($time1, $time2)
 
 function updateDtrSummary($mysqli, $data)
 {
+    if (!$data['employee']) {
+        return false;
+    }
     $emp_id = $data['employee'];
     $period = $data['period'];
-
+    
+    $year = explode("-", $period);
+    $year = $year[0];
+    if ($year < 2020) {
+        return false;
+    }
     $totalTimesTardy = $data['timesTardy'];
     $totalMinsTardy = $data['totalTardy'];
     $totalMinUnderTime = $data['totalUndertime'];
