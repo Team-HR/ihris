@@ -193,9 +193,12 @@ if (isset($_POST['getRows'])) {
 
 
     // update DtrSumamry
-    updateDtrSummary($mysqli, $data);
+    // updateDtrSummary($mysqli, $data);
 
     echo json_encode($data);
+} elseif (isset($_POST["saveToDtrsummary"])) {
+    $data = $_POST["data"];
+    updateDtrSummary($mysqli, $data);
 } elseif (isset($_POST["getEmployeesList"])) {
     $sql = "SELECT * FROM `employees` WHERE `status`='ACTIVE' ORDER BY `lastName` ASC";
     $data = [];
@@ -310,7 +313,7 @@ function updateDtrSummary($mysqli, $data)
     }
     $emp_id = $data['employee'];
     $period = $data['period'];
-    
+
     $year = explode("-", $period);
     $year = $year[0];
     if ($year < 2020) {

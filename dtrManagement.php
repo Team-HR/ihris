@@ -210,7 +210,9 @@ require_once "header.php";
         watch: {
             selectedEmployee(newValue, oldValue) {
                 this.isLoading = true
-                this.getRows()
+                if (newValue && this.monthYear) {
+                    this.getRows()
+                }
             },
             monthYear(newValue, oldValue) {
                 this.isLoading = true
@@ -242,7 +244,9 @@ require_once "header.php";
                         selectedRow: this.selectedRow
                     },
                     (data, textStatus, jqXHR) => {
-                        this.getRows()
+                        this.getRows().then(() => {
+                            this.saveToDtrsummary()
+                        })
                     },
                     "json"
                 );
@@ -269,24 +273,44 @@ require_once "header.php";
                             emp_id: this.selectedEmployee
                         }, (data, textStatus, jqXHR) => {
                             this.dtrIsSubmitted = data;
+                            this.saveToDtrsummary()
                         },
                         "json"
                     );
                 }
             },
 
-            getRows() {
-                $.post("dtrManagement.config.php", {
+            async getRows() {
+                await $.post("dtrManagement.config.php", {
                         getRows: true,
                         employee_id: this.selectedEmployee,
                         monthYear: this.monthYear,
                     }, (data, textStatus, jqXHR) => {
                         this.dtrIsSubmitted = data.submitted
                         this.rows = data.rows
-                        this.summary.totalTardy = data.totalTardy
+
+                        this.summary.employee = data.employee
+                        this.summary.period = data.period
                         this.summary.timesTardy = data.timesTardy
+                        this.summary.totalTardy = data.totalTardy
                         this.summary.totalUndertime = data.totalUndertime
+                        this.summary.halfDaysTardy = data.halfDaysTardy
+                        this.summary.halfDaysUndertime = data.halfDaysUndertime
+                        this.summary.allRemarks = data.allRemarks
+
                         this.isLoading = false
+                        // console.log(this.summary);
+                    },
+                    "json"
+                );
+            },
+
+            async saveToDtrsummary() {
+                await $.post("dtrManagement.config.php", {
+                        saveToDtrsummary: true,
+                        data: this.summary,
+                    }, (data, textStatus, jqXHR) => {
+                        console.log("saveToDtrsummary: ", data);
                     },
                     "json"
                 );
