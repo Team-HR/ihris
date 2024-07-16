@@ -97,9 +97,19 @@ if (isset($_POST['getRows'])) {
                 $underTimePm = $dtrmanagement_row["pmUnder"] ? intval($dtrmanagement_row["pmUnder"]) : 0;
                 $other = $dtrmanagement_row["other"];
                 $isConfirmed = true;
-                if ($tardyAm > 0 || $tardyPm > 0) {
+
+                // if ($tardyAm > 0 || $tardyPm > 0) {
+                //     $timesTardy += 1;
+                // }
+
+                if ($tardyAm > 0) {
                     $timesTardy += 1;
                 }
+
+                if ($tardyPm > 0) {
+                    $timesTardy += 1;
+                }
+
                 $totalTardy += ($tardyAm + $tardyPm);
                 $totalUndertime += ($undertimeAm + $underTimePm);
             } else {
@@ -134,9 +144,19 @@ if (isset($_POST['getRows'])) {
                 $underTimePm = $dtrmanagement_row["pmUnder"] ? intval($dtrmanagement_row["pmUnder"]) : 0;
                 $other = $dtrmanagement_row["other"];
                 $isConfirmed = true;
-                if ($tardyAm > 0 || $tardyPm > 0) {
+
+                // if ($tardyAm > 0 || $tardyPm > 0) {
+                //     $timesTardy += 1;
+                // }
+
+                if ($tardyAm > 0) {
                     $timesTardy += 1;
                 }
+
+                if ($tardyPm > 0) {
+                    $timesTardy += 1;
+                }
+
                 $totalTardy += ($tardyAm + $tardyPm);
                 $totalUndertime += ($undertimeAm + $underTimePm);
             }
