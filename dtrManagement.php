@@ -56,7 +56,7 @@ require_once "header.php";
 
 
 
-
+        <!-- <h4 class="ui header block">DTR No: {{dtrno}} | {{fullName}} | {{period}}</h4> -->
 
         <table v-if="!isLoading && (selectedEmployee && monthYear)" class="ui table mini head stuck compact celled structured" style="width: _500px; margin: auto; ">
 
@@ -84,17 +84,17 @@ require_once "header.php";
                     <td width="55" v-else>{{item.day}}</td>
 
                     <template v-if="item.attendDate">
-                        <td width="85" :style="{color: (item.tardyAm?'red':''), backgroundColor: (!item.amIn && item.day != 'SAT' && item.day != 'SUN'?'#bcbcbc57':'')}">
-                            {{item.amIn ? item.amIn : ''}}
+                        <td width="85" :style="{color: (item.tardyAm && item.amIn != '00:00:00' && item.amIn?'red':''), backgroundColor: ((!item.amIn || item.amIn == '00:00:00') && item.day != 'SAT' && item.day != 'SUN'?'#bcbcbc57':'')}">
+                            {{item.amIn && item.amIn != '00:00:00' ? item.amIn : ''}}
                         </td>
-                        <td width="85" :style="{color: (item.undertimeAm?'red':''), backgroundColor: (!item.amOut && item.day != 'SAT' && item.day != 'SUN' ?'#bcbcbc57':'')}">
-                            {{item.amOut ? item.amOut : ''}}
+                        <td width="85" :style="{color: (item.undertimeAm && item.amOut != '00:00:00' && item.amOut?'red':''), backgroundColor: ((!item.amOut || item.amOut == '00:00:00') && item.day != 'SAT' && item.day != 'SUN' ?'#bcbcbc57':'')}">
+                            {{item.amOut && item.amOut != '00:00:00'? item.amOut : ''}}
                         </td>
-                        <td width="85" :style="{color: (item.tardyPm?'red':''), backgroundColor: (!item.pmIn && item.day != 'SAT' && item.day != 'SUN' ?'#bcbcbc57':'')}">
-                            {{item.pmIn ? item.pmIn : ''}}
+                        <td width="85" :style="{color: (item.tardyPm && item.pmIn != '00:00:00' && item.pmIn?'red':''), backgroundColor: ((!item.pmIn || item.pmIn == '00:00:00') && item.day != 'SAT' && item.day != 'SUN' ?'#bcbcbc57':'')}">
+                            {{item.pmIn && item.pmIn != '00:00:00'? item.pmIn : ''}}
                         </td>
-                        <td width="85" :style="{color: (item.undertimePm?'red':''), backgroundColor: (!item.pmOut && item.day != 'SAT' && item.day != 'SUN' ?'#bcbcbc57':'')}">
-                            {{item.pmOut ? item.pmOut : ''}}
+                        <td width="85" :style="{color: (item.undertimePm && item.pmOut != '00:00:00' && item.pmOut ?'red':''), backgroundColor: ((!item.pmOut || item.pmOut == '00:00:00') && item.day != 'SAT' && item.day != 'SUN' ?'#bcbcbc57':'')}">
+                            {{item.pmOut && item.pmOut != '00:00:00'? item.pmOut : ''}}
                         </td>
                         <td class="center aligned" style="color: red; font-weight: bold;">{{item.isConfirmed ? item.tardies ? item.tardies : '' :''}}</td>
                         <td class="center aligned" style="color: red; font-weight: bold;">{{item.isConfirmed ? item.undertimes ? item.undertimes : '' : ''}}</td>
@@ -114,10 +114,46 @@ require_once "header.php";
 
         <h1 class="ui header block" v-else-if="isLoading && (selectedEmployee && monthYear)">Loading...</h1>
 
-        <div style="position: fixed; top: 54px; right: 194px; width:200px;" class="ui segment">
-            Total tardiness: <span style="color:red;">{{(summary.totalTardy ? summary.totalTardy + " mins":"---")}}</span> <br />
+        <div style="position: fixed; top: 54px; left: 13px; width: 384px;" class="ui segment">
+            <!-- DTR No: <span style="color:black;">{{(dtrno ? dtrno : "---")}}</span> <br />
+            Period: <span style="color:black;">{{(dtrno ? fullName : "---")}}</span> <br />
+            Name: <span style="color:black;">{{(dtrno ? period : "---")}}</span> <br /> -->
+            <table class="ui mini celled table">
+                <tr>
+                    <td>Period:</td>
+                    <td>{{(dtrno ? period : "---")}}</td>
+                </tr>
+                <tr>
+                    <td>DTR No:</td>
+                    <td>{{(dtrno ? dtrno : "---")}}</td>
+                </tr>
+                <tr>
+                    <td>Name:</td>
+                    <td>{{(dtrno ? fullName : "---")}}</td>
+                </tr>
+            </table>
+        </div>
+        <!-- <h4 class="ui header block">DTR No: {{dtrno}} | {{fullName}} | {{period}}</h4> -->
+
+        <div style="position: fixed; top: 54px; right: 128px; width:266px;" class="ui segment">
+            <!-- Total tardiness: <span style="color:red;">{{(summary.totalTardy ? summary.totalTardy + " mins":"---")}}</span> <br />
             No. of times tardy: <span style="color:red;">{{(summary.timesTardy?summary.timesTardy:"---")}}</span> <br />
-            Total undertime: <span style="color:red;">{{(summary.totalUndertime ? summary.totalUndertime+ " mins":"---")}}</span> <br />
+            Total undertime: <span style="color:red;">{{(summary.totalUndertime ? summary.totalUndertime+ " mins":"---")}}</span> <br /> -->
+            <table class="ui mini celled table">
+                <tr>
+                    <td>Total tardiness:</td>
+                    <td style="color:red;">{{(summary.totalTardy ? summary.totalTardy + " mins":"---")}}</td>
+                </tr>
+                <tr>
+                    <td>No. of times tardy:</td>
+                    <td style="color:red;">{{(summary.timesTardy?summary.timesTardy:"---")}}</td>
+                </tr>
+                <tr>
+                    <td>Total undertime:</td>
+                    <td style="color:red;">{{(summary.totalUndertime ? summary.totalUndertime+ " mins":"---")}}</td>
+                </tr>
+            </table>
+
         </div>
 
 
@@ -199,6 +235,8 @@ require_once "header.php";
             monthYear: null,
             employees: [],
             rows: [],
+            dtrno: null,
+            fullName: null,
             selectedRow: {
                 tardyAm: null,
                 tardyPm: null,
@@ -210,13 +248,41 @@ require_once "header.php";
         watch: {
             selectedEmployee(newValue, oldValue) {
                 this.isLoading = true
+                // const employeeDropdown = document.getElementById("employeeDropdown");
+                // console.log(employeeDropdown.dropdown('get text'));
+
+                var selectedEmpName = $("#employeeDropdown").dropdown('get text');
+                this.fullName = selectedEmpName;
+
                 if (newValue && this.monthYear) {
+                    this.dtrno = null
                     this.getRows()
                 }
             },
             monthYear(newValue, oldValue) {
                 this.isLoading = true
                 this.getRows()
+            }
+        },
+
+        computed: {
+            period() {
+
+                let date = new Date(this.monthYear);
+
+                // Define an array of month names
+                let monthNames = [
+                    "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"
+                ];
+
+                // Get the full year and month
+                let year = date.getFullYear();
+                let month = monthNames[date.getMonth()]; // getMonth() returns zero-based index
+
+                // Format the date as "Month Year"
+                let formattedDate = `${month} ${year}`;
+
+                return formattedDate;
             }
         },
 
@@ -286,6 +352,8 @@ require_once "header.php";
                         employee_id: this.selectedEmployee,
                         monthYear: this.monthYear,
                     }, (data, textStatus, jqXHR) => {
+                        console.log('getRows: ', data);
+                        this.dtrno = data.dtrno
                         this.dtrIsSubmitted = data.submitted
                         this.rows = data.rows
 
