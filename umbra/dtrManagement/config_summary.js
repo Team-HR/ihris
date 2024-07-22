@@ -49,6 +49,21 @@ var dtrSummary = new Vue({
             })
             ;
         },
+
+        refreshDtrSummary(data){
+            console.log('refresh: ', data.employee_id+" "+data.month);
+            $.post("dtrManagement.config.php", {
+                refreshDtrSummary: true,
+                employee_id: data.employee_id,
+                period: data.month,
+            }, (data, textStatus, jqXHR) => {
+                console.log("refreshDtrSummary: ", data);
+                this.getDataNeeded()
+            },
+            "json"
+        );
+        },
+
         getDepartment:function(){
             this_dtr = this
             var fd = new FormData()

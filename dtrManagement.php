@@ -1,5 +1,5 @@
 <?php
-$title = "Leave Ledger";
+$title = "DTR Management";
 
 require_once "header.php";
 ?>
