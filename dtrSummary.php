@@ -151,10 +151,10 @@ require_once "header.php";
                         <th class="a">Department</th>
                         <th class="a">No. of times</th>
                         <th class="a">Total mins.</th>
-                        <th class="a">Date of half-day</th>
+                        <th class="a">Half-days</th>
                         <th class="a">Equiv.</th>
                         <th class="a">Total mins.</th>
-                        <th class="a">Date of half-day</th>
+                        <th class="a">Half-days</th>
                         <th class="a">Equiv.</th>
                         <th class="a" style="text-align: center">Remarks</th>
                         <th class="a" style="text-align: center">Options</th>
@@ -180,8 +180,11 @@ require_once "header.php";
                         <td style="background-color:#7accc078;color:#088dad">{{ar.totalMinsUndertime}}</td>
                         <td style="background-color:#7accc078;color:#088dad">{{ar.halfDaysUndertime}}</td>
                         <td style="background-color:#7accc078;color:#088dad">{{showEquiv(ar.totalMinsUndertime)}}</td>
-                        <td><span v-html="newLine(ar.remarks,',')"></span></td>
-                        <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(ar)">View</button></td>
+                        <td><span style="font-size: 10px;" v-html="newLine(ar.remarks,',')"></span></td>
+                        <td>
+                            <button style="margin: 2px;" class="ui mini button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(ar)">View</button>
+                            <button style="margin: 2px;" class="ui mini icon button primary" @click="refreshDtrSummary(ar)"><i class="ui icon refresh"></i></button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -212,10 +215,10 @@ require_once "header.php";
                         <th>Department</th>
                         <th>No. of times</th>
                         <th>Total mins.</th>
-                        <th>Date of half-day</th>
+                        <th>Half-days</th>
                         <th>Equiv.</th>
                         <th>Total mins.</th>
-                        <th>Date of half-day</th>
+                        <th>Half-days</th>
                         <th>Equiv.</th>
                         <th style="text-align: center">Remarks</th>
                         <th style="text-align: center">Options</th>
@@ -241,8 +244,11 @@ require_once "header.php";
                         <td style="background-color:#7accc078;color:#088dad">{{ar.totalMinsUndertime}}</td>
                         <td style="background-color:#7accc078;color:#088dad">{{ar.halfDaysUndertime}}</td>
                         <td style="background-color:#7accc078;color:#088dad">{{showEquiv(ar.totalMinsUndertime)}}</td>
-                        <td><span v-html="newLine(ar.remarks,',')"></span></td>
-                        <td><button class="ui button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(ar)">View</button></td>
+                        <td><span style="font-size: 10px;" v-html="newLine(ar.remarks,',')"></span></td>
+                        <td>
+                            <button style="margin: 2px;" class="ui mini button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(ar)">View</button>
+                            <button style="margin: 2px;" class="ui mini icon button primary" @click="refreshDtrSummary(ar)"><i class="ui icon refresh"></i></button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -276,10 +282,10 @@ require_once "header.php";
                         <th class="a">Department</th>
                         <th class="a">No. of times</th>
                         <th class="a">Total mins.</th>
-                        <th class="a">Date of half-day</th>
+                        <th class="a">Half-days</th>
                         <th class="a">Equiv.</th>
                         <th class="a">Total mins.</th>
-                        <th class="a">Date of half-day</th>
+                        <th class="a">Half-days</th>
                         <th class="a">Equiv.</th>
                         <th class="a" style="text-align: center">Remarks</th>
                         <th class="a" style="text-align: center">Options</th>
@@ -305,7 +311,7 @@ require_once "header.php";
                         <td style="background-color:#7accc078;color:#088dad">{{ar.totalMinsUndertime}}</td>
                         <td style="background-color:#7accc078;color:#088dad">{{ar.halfDaysUndertime}}</td>
                         <td style="background-color:#7accc078;color:#088dad">{{showEquiv(ar.totalMinsUndertime)}}</td>
-                        <td><span v-html="newLine(ar.remarks,',')"></span></td>
+                        <td><span style="font-size: 10px;" v-html="newLine(ar.remarks,',')"></span></td>
                         <td><button style="margin: 2px;" class="ui mini button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(ar)">View</button>
                             <button style="margin: 2px;" class="ui mini icon button primary" @click="refreshDtrSummary(ar)"><i class="ui icon refresh"></i></button>
                         </td>
