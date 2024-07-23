@@ -16,6 +16,7 @@ require_once "header.php";
         <form @submit.prevent="" style="width: 500px; margin: auto; margin-bottom: 5px; margin-top: 20px;">
             <div class="field">
                 <label><b>Employee:</b></label>
+                <!-- @change="promptSubmitDtr()" -->
                 <select class="ui search clearable dropdown fluid" id="employeeDropdown" v-model="selectedEmployee">
                     <option value="">Select Employee</option>
                     <option v-for="emp, e in employees" :key="e" :value="emp.employees_id">
@@ -29,21 +30,21 @@ require_once "header.php";
                 <label><b>Month-Year:</b></label>
                 <br>
                 <div class="ui input" :class="selectedEmployee ? '' : 'disabled'">
+                    <!-- @change="promptSubmitDtr()" -->
                     <input type="month" v-model="monthYear">
                 </div>
             </div>
 
-
-
-            <button type="button" :class="dtrIsSubmitted ? 'green' : 'grey'" class="ui right labeled icon green button" style="margin-bottom: 10px;margin-top: 10px;" @click="dtrSubmitted()" :disabled="isLoading || !selectedEmployee || !monthYear">
-                DTR Submitted
-                <i :class="dtrIsSubmitted ? 'check' : 'question'" class="icon"></i>
-            </button>
-
-
-
         </form>
 
+
+        <div class="ui header block center aligned green" v-if="!isLoading && selectedEmployee && monthYear && dtrIsSubmitted">
+            <span><i class="check icon"></i> DTR RECEIVED AND RECORDED</span>
+            <br>
+            <button class="ui mini button basic" @click="dtrSubmitted()" :disabled="isLoading || !selectedEmployee || !monthYear">
+                <i class="icon edit"></i> Make changes</button>
+        </div>
+        <div v-else style="width: 100%; margin-bottom: 20px;"></div>
 
 
         <!-- <li v-for="(item, index) in rows" :key="index">
@@ -99,7 +100,8 @@ require_once "header.php";
                         <td class="center aligned" style="color: red; font-weight: bold;">{{item.isConfirmed ? item.tardies ? item.tardies : '' :''}}</td>
                         <td class="center aligned" style="color: red; font-weight: bold;">{{item.isConfirmed ? item.undertimes ? item.undertimes : '' : ''}}</td>
                         <td><b style="color: red;">{{item.other}}</b></td>
-                        <td><button class="ui button mini basic" @click="confirm(item)">Actions</button></td>
+                        <!-- :disabled="dtrIsSubmitted" -->
+                        <td><button class="ui button mini basic" @click="confirm(item)" :disabled="dtrIsSubmitted">Actions</button></td>
                     </template>
                     <template v-else>
                         <td colspan="8">
@@ -113,6 +115,18 @@ require_once "header.php";
         </table>
 
         <h1 class="ui header block" v-else-if="isLoading && (selectedEmployee && monthYear)">Loading...</h1>
+
+        <template v-if="!isLoading && selectedEmployee && monthYear && !dtrIsSubmitted">
+
+            <button type="button" :class="dtrIsSubmitted ? 'green' : 'warning'" class="ui massive basic green  _right _labeled _icon _fluid button" style="margin-bottom: 10px;margin-top: 10px; position: fixed; top: 223px; right: 134px; width: 251px;" @click="dtrSubmitted()" :disabled="isLoading || !selectedEmployee || !monthYear">
+                <i class="icon check"></i> SUBMITTED
+                <!-- <span v-if="dtrIsSubmitted">(Click to make changes)</span>
+                <i :class="dtrIsSubmitted ? 'check' : 'question'" class="icon"></i> -->
+            </button>
+
+        </template>
+
+
 
         <div style="position: fixed; top: 54px; left: 13px; width: 384px;" class="ui segment">
             <!-- DTR No: <span style="color:black;">{{(dtrno ? dtrno : "---")}}</span> <br />
@@ -155,8 +169,6 @@ require_once "header.php";
             </table>
 
         </div>
-
-
 
         <div class="ui modal actions mini">
             <div class="header">
@@ -208,6 +220,44 @@ require_once "header.php";
             </div>
         </div>
 
+        <div id="confirmSubmitModal" class="ui mini modal">
+            <div class="header">
+                DTR Submitted?
+            </div>
+            <div class="content">
+                <p>Save changes and save DTR?</p>
+            </div>
+            <div class="actions">
+                <button class="ui deny right labeled icon button" style="width: 100px;">
+                    Cancel
+                    <i class="cancel icon"></i>
+                </button>
+                <button class="ui positive right labeled icon button" style="width: 100px;">
+                    Yes
+                    <i class="save icon"></i>
+                </button>
+            </div>
+        </div>
+
+
+        <div id="confirmRevertModal" class="ui mini modal">
+            <div class="header">
+                Revert DTR not submitted?
+            </div>
+            <div class="content">
+                <p>Revert DTR not submitted and make changes?</p>
+            </div>
+            <div class="actions">
+                <button class="ui deny right labeled icon button" style="width: 100px;">
+                    Cancel
+                    <i class="cancel icon"></i>
+                </button>
+                <button class="ui positive right labeled icon button" style="width: 100px;">
+                    Yes
+                    <i class="save icon"></i>
+                </button>
+            </div>
+        </div>
 
 
     </template>
@@ -247,10 +297,13 @@ require_once "header.php";
         },
         watch: {
             selectedEmployee(newValue, oldValue) {
+                if (oldValue && this.monthYear && !this.dtrIsSubmitted) {
+                    this.promptSubmitDtr()
+                }
+
                 this.isLoading = true
                 // const employeeDropdown = document.getElementById("employeeDropdown");
                 // console.log(employeeDropdown.dropdown('get text'));
-
                 var selectedEmpName = $("#employeeDropdown").dropdown('get text');
                 this.fullName = selectedEmpName;
 
@@ -260,6 +313,9 @@ require_once "header.php";
                 }
             },
             monthYear(newValue, oldValue) {
+                if (oldValue && !this.dtrIsSubmitted) {
+                    this.promptSubmitDtr()
+                }
                 this.isLoading = true
                 this.getRows()
             }
@@ -287,6 +343,26 @@ require_once "header.php";
         },
 
         methods: {
+
+            promptSubmitDtr() {
+                const currSummary = JSON.parse(JSON.stringify(this.summary))
+                $("#confirmSubmitModal").modal({
+                    closable: false,
+                    duration: 200,
+                    onApprove() {
+                        // console.log("save dtr! ", currSummary);
+                        $.post("dtrManagement.config.php", {
+                                saveToDtrsummary: true,
+                                data: currSummary,
+                            }, (data, textStatus, jqXHR) => {
+                                console.log("saveToDtrsummary: ", data);
+                            },
+                            "json"
+                        );
+                    }
+                }).modal("show")
+            },
+
             confirm(item) {
                 this.selectedRow = item
                 this.selectedRow.tardyAm = this.selectedRow.tardyAm == 0 ? null : this.selectedRow.tardyAm;
@@ -311,7 +387,7 @@ require_once "header.php";
                     },
                     (data, textStatus, jqXHR) => {
                         this.getRows().then(() => {
-                            this.saveToDtrsummary()
+                            // this.saveToDtrsummary()
                         })
                     },
                     "json"
@@ -321,17 +397,28 @@ require_once "header.php";
             dtrSubmitted() {
 
                 if (this.dtrIsSubmitted) {
-                    if (confirm("Revert DTR not submitted?") == true) {
-                        $.post("dtrManagement.config.php", {
-                                dtrNotSubmitted: true,
-                                period: this.monthYear,
-                                emp_id: this.selectedEmployee
-                            }, (data, textStatus, jqXHR) => {
-                                this.dtrIsSubmitted = data;
-                            },
-                            "json"
-                        );
-                    }
+                    // $("#confirmRevertModal").modal({
+                    //     onApprove: () => {
+                    //         $.post("dtrManagement.config.php", {
+                    //                 dtrNotSubmitted: true,
+                    //                 period: this.monthYear,
+                    //                 emp_id: this.selectedEmployee
+                    //             }, (data, textStatus, jqXHR) => {
+                    //                 this.dtrIsSubmitted = data;
+                    //             },
+                    //             "json"
+                    //         );
+                    //     }
+                    // }).modal("show")
+                    $.post("dtrManagement.config.php", {
+                            dtrNotSubmitted: true,
+                            period: this.monthYear,
+                            emp_id: this.selectedEmployee
+                        }, (data, textStatus, jqXHR) => {
+                            this.dtrIsSubmitted = data;
+                        },
+                        "json"
+                    );
                 } else {
                     $.post("dtrManagement.config.php", {
                             dtrSubmitted: true,
@@ -397,6 +484,8 @@ require_once "header.php";
         mounted() {
             this.getEmployeesList()
             // this.getRows()
+
+            // this.promptSubmitDtr()
 
             $("#employeeDropdown").dropdown({
                 fullTextSearch: true,

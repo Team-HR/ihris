@@ -40,9 +40,15 @@ if (isset($_POST['getRows'])) {
     $check_dtrissubmitted_qry = "SELECT * FROM `dtrsummary` WHERE `employee_id` = '$employee_id' AND `month` = '$period'";
     $check_dtrissubmitted_res = $mysqli->query($check_dtrissubmitted_qry);
 
-    if ($check_dtrissubmitted_row = $check_dtrissubmitted_res->fetch_assoc()) {
-        $dtr_issubmitted = $check_dtrissubmitted_row["submitted"] == 1 ? true : false;
+    if ($check_dtrissubmitted_res->num_rows) {
+        $dtr_issubmitted = true;
     }
+
+    /*
+        if ($check_dtrissubmitted_row = $check_dtrissubmitted_res->fetch_assoc()) {
+            $dtr_issubmitted = $check_dtrissubmitted_row["submitted"] == 1 ? true : false;
+        }
+    */
 
     $url = "http://192.168.50.51:8084/getDtrsFromHRIS_v2.php?dtrNo=$dtrNo&year=$year&month=$month";
     $dtrs = file_get_contents($url);
@@ -236,7 +242,8 @@ if (isset($_POST['getRows'])) {
     echo json_encode($data);
 } elseif (isset($_POST["saveToDtrsummary"])) {
     $data = $_POST["data"];
-    updateDtrSummary($mysqli, $data);
+    $sql = updateDtrSummary($mysqli, $data);
+    echo json_encode($sql);
 } elseif (isset($_POST["getEmployeesList"])) {
     $sql = "SELECT * FROM `employees` WHERE `status`='ACTIVE' ORDER BY `lastName` ASC";
     $data = [];
@@ -362,7 +369,7 @@ function getMinutesDifference($time1, $time2)
 }
 
 function processDtrSummary($mysqli, $employee_id, $period)
-{   
+{
     $period_ = $period;
     $period = explode("-", $period);
     $year = $period[0];
@@ -457,21 +464,22 @@ function updateDtrSummary($mysqli, $data, $is_submitted = true)
     if ($year < 2020) {
         return false;
     }
-    $totalTimesTardy = $data['timesTardy'];
-    $totalMinsTardy = $data['totalTardy'];
-    $totalMinUnderTime = $data['totalUndertime'];
+    $totalTimesTardy = isset($data['timesTardy']) ? $data['timesTardy'] : NULL;
+    $totalMinsTardy = isset($data['totalTardy']) ? $data['totalTardy'] : NULL;
+    $totalMinUnderTime = isset($data['totalUndertime']) ? $data['totalUndertime'] : NULL;
 
-    $halfDaysTardy = $data['halfDaysTardy'];
+    $halfDaysTardy = isset($data['halfDaysTardy']) ? $data['halfDaysTardy'] : [];
+
     if (count($halfDaysTardy)) {
         $halfDaysTardy = implode(",", $halfDaysTardy);
     } else $halfDaysTardy = "";
 
-    $halfDaysUndertime = $data['halfDaysUndertime'];
+    $halfDaysUndertime = isset($data['halfDaysUndertime']) ?  $data['halfDaysUndertime'] : [];
     if (count($halfDaysUndertime)) {
         $halfDaysUndertime = implode(",", $halfDaysUndertime);
     } else $halfDaysUndertime = "";
 
-    $remarksDtr = $data['allRemarks'];
+    $remarksDtr = isset($data['allRemarks']) ? $data['allRemarks'] : [];
     if (count($remarksDtr)) {
         $remarksDtr = implode(",", $remarksDtr);
     } else $remarksDtr = "";
@@ -480,6 +488,7 @@ function updateDtrSummary($mysqli, $data, $is_submitted = true)
     $check = "SELECT * FROM `dtrSummary` where `month`='$period' AND `employee_id`='$emp_id'";
     $check = $mysqli->query($check);
     $count = $check->num_rows;
+    $sql = "";
     if ($count) {
         $datID = $check->fetch_assoc();
         $sql = "UPDATE `dtrSummary` SET 
@@ -490,12 +499,14 @@ function updateDtrSummary($mysqli, $data, $is_submitted = true)
                         `halfDaysUndertime` = '$halfDaysUndertime',
                         `remarks` = '$remarksDtr'
                 WHERE `dtrSummary`.`dtrSummary_id` ='$datID[dtrSummary_id]'";
-        $sql = $mysqli->query($sql);
+        $mysqli->query($sql);
     } else {
         $sql = "INSERT INTO `dtrSummary` (`dtrSummary_id`, `employee_id`, `month`, `totalMinsTardy`, `totalTardy`, `totalMinsUndertime`, `letterOfNotice`,`halfDaysTardy`,`halfDaysUndertime`,`remarks`,`submitted`) 
-                            VALUES (NULL, '$emp_id', '$period', '$totalMinsTardy', '$totalTimesTardy', '$totalMinUnderTime', '0','$halfDaysTardy''$halfDaysUndertime','$remarksDtr','0')";
+                            VALUES (NULL, '$emp_id', '$period', '$totalMinsTardy', '$totalTimesTardy', '$totalMinUnderTime', '0','$halfDaysTardy','$halfDaysUndertime','$remarksDtr','1')";
         if ($is_submitted) {
-            $sql = $mysqli->query($sql);
+            $mysqli->query($sql);
         }
     }
+
+    return $sql;
 }
