@@ -276,8 +276,8 @@ if (isset($_POST['getRows'])) {
     $tardyPm = isset($selectedRow['tardyPm']) ? $selectedRow['tardyPm'] : '';
     $undertimeAm = isset($selectedRow['undertimeAm']) ? $selectedRow['undertimeAm'] : '';
     $undertimePm = isset($selectedRow['undertimePm']) ? $selectedRow['undertimePm'] : '';
-    $other = isset($selectedRow['other']) ? $selectedRow['other'] : '';
-
+    $other = isset($selectedRow['other']) ? mb_convert_case($selectedRow['other'], MB_CASE_UPPER) : '';
+    $other = $mysqli->real_escape_string($other);
 
     $check_qry = "SELECT * FROM `dtrmanagement` WHERE `dtr_date` = '$attendDate' AND `emp_id` = '$employee_id';";
     $res  = $mysqli->query($check_qry);
