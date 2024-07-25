@@ -180,7 +180,7 @@ require_once "header.php";
                         <td style="background-color:#7accc078;color:#088dad">{{ar.totalMinsUndertime}}</td>
                         <td style="background-color:#7accc078;color:#088dad">{{ar.halfDaysUndertime}}</td>
                         <td style="background-color:#7accc078;color:#088dad">{{showEquiv(ar.totalMinsUndertime)}}</td>
-                        <td><span style="font-size: 10px;" v-html="newLine(ar.remarks,',')"></span></td>
+                        <td><span style="font-size: 14px;" v-html="newLine(ar.remarks,',')"></span></td>
                         <td>
                             <button style="margin: 2px;" class="ui mini button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(ar)">View</button>
                             <button style="margin: 2px;" class="ui mini icon button primary" @click="refreshDtrSummary(ar)"><i class="ui icon refresh"></i></button>
@@ -244,7 +244,7 @@ require_once "header.php";
                         <td style="background-color:#7accc078;color:#088dad">{{ar.totalMinsUndertime}}</td>
                         <td style="background-color:#7accc078;color:#088dad">{{ar.halfDaysUndertime}}</td>
                         <td style="background-color:#7accc078;color:#088dad">{{showEquiv(ar.totalMinsUndertime)}}</td>
-                        <td><span style="font-size: 10px;" v-html="newLine(ar.remarks,',')"></span></td>
+                        <td><span style="font-size: 14px;" v-html="newLine(ar.remarks,',')"></span></td>
                         <td>
                             <button style="margin: 2px;" class="ui mini button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(ar)">View</button>
                             <button style="margin: 2px;" class="ui mini icon button primary" @click="refreshDtrSummary(ar)"><i class="ui icon refresh"></i></button>
@@ -311,7 +311,7 @@ require_once "header.php";
                         <td style="background-color:#7accc078;color:#088dad">{{ar.totalMinsUndertime}}</td>
                         <td style="background-color:#7accc078;color:#088dad">{{ar.halfDaysUndertime}}</td>
                         <td style="background-color:#7accc078;color:#088dad">{{showEquiv(ar.totalMinsUndertime)}}</td>
-                        <td><span style="font-size: 10px;" v-html="newLine(ar.remarks,',')"></span></td>
+                        <td><span style="font-size: 14px;" v-html="newLine(ar.remarks,',')"></span></td>
                         <td><button style="margin: 2px;" class="ui mini button primary" v-if="parseInt(ar.totalTardy)>=10" @click="showOptionModal(ar)">View</button>
                             <button style="margin: 2px;" class="ui mini icon button primary" @click="refreshDtrSummary(ar)"><i class="ui icon refresh"></i></button>
                         </td>
