@@ -171,7 +171,7 @@ require_once "header.php";
                             </button>
 
                         </td>
-                        <td>{{ar.lastName}} {{ar.firstName}} {{ar.middleName}} {{ar.extName}}</td>
+                        <td>{{ar.lastName}}, {{ar.firstName}} {{ar.middleName}} {{ar.extName}}</td>
                         <td>{{ar.department}}</td>
                         <td style="background-color:#9ec14b70;color:#086d08">{{ar.totalTardy}}</td>
                         <td style="background-color:#9ec14b70;color:#086d08">{{ar.totalMinsTardy}}</td>
@@ -235,7 +235,7 @@ require_once "header.php";
                             </button>
 
                         </td>
-                        <td>{{ar.lastName}} {{ar.firstName}} {{ar.middleName}} {{ar.extName}} </td>
+                        <td>{{ar.lastName}}, {{ar.firstName}} {{ar.middleName}} {{ar.extName}} </td>
                         <td>{{ar.department}}</td>
                         <td style="background-color:#9ec14b70;color:#086d08">{{ar.totalTardy}}</td>
                         <td style="background-color:#9ec14b70;color:#086d08">{{ar.totalMinsTardy}}</td>
@@ -302,7 +302,7 @@ require_once "header.php";
                             </button>
 
                         </td>
-                        <td>{{ar.lastName}} {{ar.firstName}} {{ar.middleName}} {{ar.extName}}</td>
+                        <td>{{ar.lastName}}, {{ar.firstName}} {{ar.middleName}} {{ar.extName}}</td>
                         <td>{{ar.department}}</td>
                         <td style="background-color:#9ec14b70;color:#086d08">{{ar.totalTardy}}</td>
                         <td style="background-color:#9ec14b70;color:#086d08">{{ar.totalMinsTardy}}</td>
