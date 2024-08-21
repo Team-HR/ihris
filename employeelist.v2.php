@@ -261,6 +261,8 @@ if (isset($_GET["scrollTo"])) {
 						<option value="">Select Status</option>
 						<option value="CASUAL">CASUAL</option>
 						<option value="PERMANENT">PERMANENT</option>
+						<option value="TEMPORARY">TEMPORARY</option>
+						<option value="PROBATIONARY">PROBATIONARY</option>
 						<option value="ELECTIVE">ELECTIVE</option>
 						<option value="COTERMINUS">COTERMINUS</option>
 					</select>

@@ -234,11 +234,13 @@ if (isset($_GET["spms"])) {
                     <input id="employees_idModal" type="text" name="employees_id" readonly="">
                 </div>
                 <div class="four wide field">
-                    <label>Status:</label>
+                    <label>Employment Status:</label>
                     <select id="employmentStatusModal" class="ui fluid dropdown">
                         <option value="">Select Status</option>
                         <option value="CASUAL">CASUAL</option>
                         <option value="PERMANENT">PERMANENT</option>
+                        <option value="TEMPORARY">TEMPORARY</option>
+                        <option value="PROBATIONARY">PROBATIONARY</option>
                         <option value="ELECTIVE">ELECTIVE</option>
                         <option value="COTERMINUS">COTERMINUS</option>
                     </select>
