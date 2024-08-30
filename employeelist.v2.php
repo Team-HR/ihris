@@ -401,6 +401,10 @@ if (isset($_GET["scrollTo"])) {
 						<div class="ui orange empty circular label"></div>
 						Casual
 					</div>
+					<div class="item" data-value="type=COTERMINUS">
+						<div class="ui orange empty circular label"></div>
+						Coterminus
+					</div>
 					<div class="item" data-value="nature=RANK & FILE">
 						<div class="ui green empty circular label"></div>
 						Rank & File
