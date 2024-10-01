@@ -85,8 +85,6 @@ if (isset($_POST['getRows'])) {
             $pmIn = $row["pmIn"];
             $pmOut = $row["pmOut"];
 
-
-
             $dtrmanagement_sql = "SELECT * FROM `dtrmanagement` WHERE `emp_id` = '$employee_id' AND `dtr_date` = '$dtr_date'";
             $dtrmanagement_res = $mysqli->query($dtrmanagement_sql);
             $dtrmanagement_row = "";

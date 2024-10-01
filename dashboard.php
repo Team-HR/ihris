@@ -232,9 +232,6 @@ if (isset($_GET["spms"])) {
                     <a class="item active" data-tab="pds">
                         PDS
                     </a>
-                    <a class="item" data-tab="personality">
-                        Personality
-                    </a>
                     <a class="item" data-tab="competencies">
                         Competencies
                     </a>
@@ -256,20 +253,6 @@ if (isset($_GET["spms"])) {
                 </div>
             </div>
             <div class="thirteen wide stretched column">
-                <div class="ui tab" data-tab="personality">
-                    <div class="ui pointing secondary blue menu fluid" id="competencies">
-                        <a class="item active" data-tab="myersBriggsIndicator">
-                            Myers-Briggs Type Indicator
-                        </a>
-                    </div>
-                    <div class="ui tab segment active" data-tab="myersBriggsIndicator">
-                        <h3 style="text-align: center;">MYERS-BRIGGS TYPE INDICATOR</h3>
-                        <!-- <span>Results will be shown here</span> -->
-                        <?php
-                        require "mbti_dashboard.php"
-                        ?>
-                    </div>
-                </div>
                 <div class="ui tab" data-tab="competencies">
                     <div class="ui pointing secondary blue menu fluid" id="competencies">
                         <a class="item <?php echo $_SESSION['employee_id'] == '21919' ? '' : 'active' ?>" data-tab="self_assessed">
