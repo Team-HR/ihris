@@ -44,8 +44,22 @@ $auth = new Auth;
     <a class="item" href="dashboard.php?employees_id=<?= $_SESSION["employee_id"] ?>"><i class="user icon"></i>
       Dashboard
     </a>
-    <a class="item" href="employeelist.v2.php"><i class="users icon"></i>Employee List</a>
+
+    <!-- <a class="item" href="employeelist.v2.php"><i class="users icon"></i>Employee List</a> -->
+    <!-- temporary&probationary start -->
+    <div id="employees_dropdown" class="ui pointing dropdown link item">
+      <i class="icon users"></i>
+      <span class="text">Employees</span>
+      <i class="dropdown icon"></i>
+      <div class="menu">
+        <a href="employeelist.v2.php" class="item"><i class="icon users"></i> Employee List</a>
+        <a href="employeelist.temp_and_prob_dash.php" class="item"><i class="icon user clock"></i> Temporary/Probationary</a>
+      </div>
+    </div>
+    <!-- temporary&probationary end -->
     <a class="item" onclick="_calendar()"><i class="calendar outline icon"></i>Calendar</a>
+
+
   <?php } else { ?>
 
     <!-- <a class="item ui green segment" style="margin: 5px;"><?= $auth->full_name ?></a> -->
@@ -122,6 +136,10 @@ $auth = new Auth;
 
 <script>
   $(document).ready(function() {
+    $('#employees_dropdown').dropdown({
+      action: 'hide'
+    });
+
     $('#setup_dropdown').dropdown({
       action: 'hide'
     });

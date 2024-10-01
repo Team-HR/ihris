@@ -49,6 +49,33 @@ if (isset($_GET["spms"])) {
         })
     });
 
+
+    function copyName() {
+        const spanElement = document.getElementById('employeeName');
+
+        // Attach a click event handler to the <span> element
+        spanElement.addEventListener('click', () => {
+            // Execute the copy command
+            document.execCommand('copy');
+
+            // Set the clipboard data to the text content of the <span>
+            const textToCopy = spanElement.textContent;
+            navigator.clipboard.writeText(textToCopy)
+                .then(() => {
+                    $.toast({
+                        position: 'top center',
+                        class: 'success',
+                        message: 'Name copied to clipboard.'
+                    });
+                })
+                .catch((err) => {
+                    console.error('Error copying text:', err);
+                });
+        }, {
+            once: true
+        });
+    }
+
     function editModalFunc() {
         $("#editModal").modal({
             onDeny: function() {
@@ -136,6 +163,11 @@ if (isset($_GET["spms"])) {
 
     }
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.3/dist/semantic.min.css">
+<script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.3/dist/semantic.min.js"></script>
+
 <div id="saveMsg" class="" style="top: 15px; display: none; position: fixed; z-index: 10; width: 100%; left: 0; text-align: center;">
     <div class="ui center green inverted aligned segment" style="width: 100px; margin-left: auto; margin-right: auto;">
         <i class="checkmark icon"></i> Saved!
@@ -202,11 +234,13 @@ if (isset($_GET["spms"])) {
                     <input id="employees_idModal" type="text" name="employees_id" readonly="">
                 </div>
                 <div class="four wide field">
-                    <label>Status:</label>
+                    <label>Employment Status:</label>
                     <select id="employmentStatusModal" class="ui fluid dropdown">
                         <option value="">Select Status</option>
                         <option value="CASUAL">CASUAL</option>
                         <option value="PERMANENT">PERMANENT</option>
+                        <option value="TEMPORARY">TEMPORARY</option>
+                        <option value="PROBATIONARY">PROBATIONARY</option>
                         <option value="ELECTIVE">ELECTIVE</option>
                         <option value="COTERMINUS">COTERMINUS</option>
                     </select>
@@ -275,7 +309,7 @@ if (isset($_GET["spms"])) {
 
         </div>
         <div class="item">
-            <h3 style="color: white;"><i class="user circle icon"></i> <i id="employeeName"></i></h3>
+            <h3 style="color: white;"><i class="user circle icon"></i> <i id="employeeName" onclick="copyName()"></i></h3>
         </div>
         <div class="right item">
             <button onclick="editModalFunc()" class="ui right floated blue button" style="padding: 10px 10px; font-size: 10px;"><i class="ui icon edit"></i> Edit</button>
@@ -384,7 +418,7 @@ if (isset($_GET["spms"])) {
                                                 <i class="icon print"></i>
                                                 Appointment Form
                                             </a>
-                                                
+
                                             <a style="margin: 1px;" :href="'form_CS_form32_revision_2017.pdf.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon fluid button">
                                                 <i class="icon print"></i>
                                                 Oath of Office

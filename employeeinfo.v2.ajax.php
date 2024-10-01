@@ -32,7 +32,7 @@ if (isset($_POST["loadProfile"])) {
 	$middleName	=	addslashes($row["middleName"]);
 	$extName	=	addslashes($row["extName"]);
 
-	$fullname = $firstName . " " . $middleName . " " . $lastName . " " . $extName;
+	$fullname = $lastName . ", " . $firstName . " " . $middleName . " " . $extName;
 	// get department name start
 	if ($status === "ACTIVE") {
 		$statusDate = $row["dateActivated"];
@@ -61,7 +61,7 @@ if (isset($_POST["loadProfile"])) {
 		$department = $row2["department"];
 		$department = mb_convert_case($department, MB_CASE_UPPER, "UTF-8");
 	}
-	
+
 	$row3 = [];
 	if (isset($row["position_id"])) {
 		$position_id = $row["position_id"];
@@ -86,9 +86,11 @@ if (isset($_POST["loadProfile"])) {
 	}
 
 
+	$username = getUserName($mysqli, $employees_id);
+
 	$inside_json = array(
 		'employees_id' => $employees_id,
-		'employees_id_padded' => str_pad($employees_id, 5, 0, STR_PAD_LEFT),
+		'employees_id_padded' => str_pad($employees_id, 5, 0, STR_PAD_LEFT) . " ($username)",
 		'status' => strtoupper($status),
 		'statusDate' => $statusDate,
 		'dateIPCR' => $dateIPCR,
@@ -271,4 +273,18 @@ function dateToStr($numeric_date)
 	$strDate = $date->format('F d, Y');
 
 	return strtoupper($strDate);
+}
+
+
+function getUserName($mysqli, $employee_id)
+{
+	$username = "";
+	if (!$employee_id) return null;
+	$sql = "SELECT * FROM `spms_accounts` WHERE `employees_id` = '$employee_id'";
+	$res = $mysqli->query($sql);
+
+	if ($row = $res->fetch_assoc()) {
+		$username = $row["username"];
+	}
+	return $username;
 }

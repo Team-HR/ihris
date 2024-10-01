@@ -686,8 +686,8 @@ if (isset($_GET['getPdsPersonal'])) {
 
     $employee["lastName"] = strtoupper($employee["lastName"]);
     $employee["firstName"] = strtoupper($employee["firstName"]);
-    $employee["middleName"] = $employee["middleName"] && $employee["middleName"] != "." ? strtoupper($employee["middleName"]) : NULL;
-    $employee["extName"] = $employee["extName"] && $employee["extName"] != "." ? strtoupper($employee["extName"]) : NULL;
+    $employee["middleName"] = $employee["middleName"] && $employee["middleName"] != "." && $employee["middleName"] != 'N/A' && $employee["middleName"] != 'n/a' ? strtoupper($employee["middleName"]) : NULL;
+    $employee["extName"] = $employee["extName"] && $employee["extName"] != "." && $employee["extName"] != 'N/A' && $employee["extName"] != 'n/a'? strtoupper($employee["extName"]) : NULL;
 
     $sql = "UPDATE `employees` SET `lastName` = ?, `firstName` = ?, `middleName` = ?, `extName` = ? WHERE `employees_id` = ?";
     $stmt = $mysqli->prepare($sql);

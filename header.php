@@ -22,7 +22,6 @@ $_SERVER["DOCUMENT_ROOT"] = $file_location;
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
   header("location: login.php");
   die();
-
 }
 // else {
 //   $adminDoc = (basename(dirname(__FILE__))== "ihris")?true:false;
@@ -43,7 +42,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 <html>
 
 <head>
-  <title><?php echo isset($title)?$title:"IHRIS"; ?></title>
+  <title><?php echo isset($title) ? $title : "IHRIS"; ?></title>
   <!--  <meta charset="UTF-8" name="google" value="notranslate" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/> -->
   <meta name="viewport" content="width=device-width, height=device-height , initial-scale=1">
 
@@ -58,6 +57,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
   <!-- fomantic-ui -->
   <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
   <script src="semantic/dist/semantic.min.js"></script>
+
   <!-- chart.js ^2.9.3 start -->
   <script src="node_modules/chart.js/dist/Chart.js"></script>
   <script src="node_modules/chart.js/dist/Chart.min.js"></script>
@@ -75,6 +75,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
   <!-- autocompleter -->
   <link rel="stylesheet" type="text/css" href="node_modules/autocompleter/autocomplete.min.css">
   <script src='node_modules/autocompleter/autocomplete.min.js'></script>
+
   <!-- <script src="https://kraaden.github.io/autocomplete/autocomplete.js"></script>
   <link rel="stylesheet" type="text/css" href="https://kraaden.github.io/autocomplete/autocomplete.css"> -->
   <style>

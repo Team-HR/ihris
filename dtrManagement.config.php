@@ -40,9 +40,15 @@ if (isset($_POST['getRows'])) {
     $check_dtrissubmitted_qry = "SELECT * FROM `dtrsummary` WHERE `employee_id` = '$employee_id' AND `month` = '$period'";
     $check_dtrissubmitted_res = $mysqli->query($check_dtrissubmitted_qry);
 
-    if ($check_dtrissubmitted_row = $check_dtrissubmitted_res->fetch_assoc()) {
-        $dtr_issubmitted = $check_dtrissubmitted_row["submitted"] == 1 ? true : false;
+    if ($check_dtrissubmitted_res->num_rows) {
+        $dtr_issubmitted = true;
     }
+
+    /*
+        if ($check_dtrissubmitted_row = $check_dtrissubmitted_res->fetch_assoc()) {
+            $dtr_issubmitted = $check_dtrissubmitted_row["submitted"] == 1 ? true : false;
+        }
+    */
 
     $url = "http://192.168.50.51:8084/getDtrsFromHRIS_v2.php?dtrNo=$dtrNo&year=$year&month=$month";
     $dtrs = file_get_contents($url);
@@ -78,6 +84,8 @@ if (isset($_POST['getRows'])) {
             }
         }
         //  if ($row = $res->fetch_assoc()) {
+
+        # if dtrs found in hris_v2
         if ($row) {
 
             $amIn = $row["amIn"];
@@ -88,6 +96,8 @@ if (isset($_POST['getRows'])) {
             $dtrmanagement_sql = "SELECT * FROM `dtrmanagement` WHERE `emp_id` = '$employee_id' AND `dtr_date` = '$dtr_date'";
             $dtrmanagement_res = $mysqli->query($dtrmanagement_sql);
             $dtrmanagement_row = "";
+
+            # if there is existing day record in dtrmanagement
             if ($dtrmanagement_row = $dtrmanagement_res->fetch_assoc()) {
                 $tardyAm = $dtrmanagement_row["amTardy"] ? intval($dtrmanagement_row["amTardy"]) : 0;
                 $tardyPm = $dtrmanagement_row["pmTardy"] ? intval($dtrmanagement_row["pmTardy"]) : 0;
@@ -95,12 +105,33 @@ if (isset($_POST['getRows'])) {
                 $underTimePm = $dtrmanagement_row["pmUnder"] ? intval($dtrmanagement_row["pmUnder"]) : 0;
                 $other = $dtrmanagement_row["other"];
                 $isConfirmed = true;
-                if ($tardyAm > 0 || $tardyPm > 0) {
+
+                // if ($tardyAm > 0 || $tardyPm > 0) {
+                //     $timesTardy += 1;
+                // }
+
+                if ($tardyAm > 0) {
+                    $timesTardy += 1;
+                    if ($tardyAm == 240) {
+                        $halfDaysTardy[] = str_pad(explode("-", $dtr_date)[2], 2, "0", STR_PAD_LEFT);
+                    }
+                }
+
+                if ($tardyPm > 0) {
                     $timesTardy += 1;
                 }
+
+                if ($underTimePm == 240) {
+                    $halfDaysUndertime[] = str_pad(explode("-", $dtr_date)[2], 2, "0", STR_PAD_LEFT);
+                }
+
                 $totalTardy += ($tardyAm + $tardyPm);
                 $totalUndertime += ($undertimeAm + $underTimePm);
-            } else {
+            }
+
+
+            # if no existing day record in dtrmanagement
+            else {
                 if ($row["amIn"] != '00:00:00' && $row["amOut"] != '00:00:00') {
                     $tardyAm = getMinutesDifference('08:00:00', $row["amIn"]);
                     $undertimeAm = getMinutesDifference($row["amOut"], '12:00:00');
@@ -115,7 +146,11 @@ if (isset($_POST['getRows'])) {
                     $underTimePm = 240;
                 }
             }
-        } else {
+        }
+
+
+        # no dtr in hris_v2 (note: check employee dtr no in employees_card_no table in ihris db
+        else {
 
             $date = "$year-$month-$i";
             $date = new DateTime($date);
@@ -132,9 +167,26 @@ if (isset($_POST['getRows'])) {
                 $underTimePm = $dtrmanagement_row["pmUnder"] ? intval($dtrmanagement_row["pmUnder"]) : 0;
                 $other = $dtrmanagement_row["other"];
                 $isConfirmed = true;
-                if ($tardyAm > 0 || $tardyPm > 0) {
+
+                // if ($tardyAm > 0 || $tardyPm > 0) {
+                //     $timesTardy += 1;
+                // }
+
+                if ($tardyAm > 0) {
+                    $timesTardy += 1;
+                    if ($tardyAm == 240) {
+                        $halfDaysTardy[] = str_pad(explode("-", $dtr_date)[2], 2, "0", STR_PAD_LEFT);
+                    }
+                }
+
+                if ($tardyPm > 0) {
                     $timesTardy += 1;
                 }
+
+                if ($underTimePm == 240) {
+                    $halfDaysUndertime[] = str_pad(explode("-", $dtr_date)[2], 2, "0", STR_PAD_LEFT);
+                }
+
                 $totalTardy += ($tardyAm + $tardyPm);
                 $totalUndertime += ($undertimeAm + $underTimePm);
             }
@@ -144,12 +196,8 @@ if (isset($_POST['getRows'])) {
         }
 
         // for dtr summary start
-        if ($tardyAm == 240) {
-            $halfDaysTardy[] = str_pad(explode("-", $dtr_date)[2], 2, "0", STR_PAD_LEFT);
-        }
-        if ($underTimePm == 240) {
-            $halfDaysUndertime[] = str_pad(explode("-", $dtr_date)[2], 2, "0", STR_PAD_LEFT);
-        }
+
+
 
         if ($other) {
             $allRemarks[] = str_pad(explode("-", $dtr_date)[2], 2, "0", STR_PAD_LEFT) . "-" . $other;
@@ -189,14 +237,11 @@ if (isset($_POST['getRows'])) {
         "submitted" =>  $dtr_issubmitted
     ];
 
-
-    // update DtrSumamry
-    // updateDtrSummary($mysqli, $data);
-
     echo json_encode($data);
 } elseif (isset($_POST["saveToDtrsummary"])) {
     $data = $_POST["data"];
-    updateDtrSummary($mysqli, $data);
+    $sql = updateDtrSummary($mysqli, $data);
+    echo json_encode($sql);
 } elseif (isset($_POST["getEmployeesList"])) {
     $sql = "SELECT * FROM `employees` WHERE `status`='ACTIVE' ORDER BY `lastName` ASC";
     $data = [];
@@ -229,8 +274,8 @@ if (isset($_POST['getRows'])) {
     $tardyPm = isset($selectedRow['tardyPm']) ? $selectedRow['tardyPm'] : '';
     $undertimeAm = isset($selectedRow['undertimeAm']) ? $selectedRow['undertimeAm'] : '';
     $undertimePm = isset($selectedRow['undertimePm']) ? $selectedRow['undertimePm'] : '';
-    $other = isset($selectedRow['other']) ? $selectedRow['other'] : '';
-
+    $other = isset($selectedRow['other']) ? mb_convert_case($selectedRow['other'], MB_CASE_UPPER) : '';
+    $other = $mysqli->real_escape_string($other);
 
     $check_qry = "SELECT * FROM `dtrmanagement` WHERE `dtr_date` = '$attendDate' AND `emp_id` = '$employee_id';";
     $res  = $mysqli->query($check_qry);
@@ -265,16 +310,33 @@ if (isset($_POST['getRows'])) {
 } elseif (isset($_POST['dtrNotSubmitted'])) {
     $period = $_POST['period'];
     $emp_id = $_POST['emp_id'];
-    $check = "SELECT * from dtrSummary where `month`='$period' and `employee_id`='$emp_id'";
-    $check = $mysqli->query($check);
-    $check = $check->fetch_assoc();
-    if ($check) {
-        $sql = "UPDATE `dtrSummary` SET `submitted` = '0' WHERE `dtrSummary_id` = '$check[dtrSummary_id]'";
-    } else {
-        $sql = "INSERT INTO `dtrSummary` (`dtrSummary_id`, `employee_id`, `month`, `submitted`) VALUES (NULL, '$emp_id', '$period','0')";
-    }
-    $sql = $mysqli->query($sql);
+    // $check = "SELECT * from dtrSummary where `month`='$period' and `employee_id`='$emp_id'";
+    // $check = $mysqli->query($check);
+    // $check = $check->fetch_assoc();
+    // if ($check) {
+    //     $sql = "UPDATE `dtrSummary` SET `submitted` = '0' WHERE `dtrSummary_id` = '$check[dtrSummary_id]'";
+    // } else {
+    //     $sql = "INSERT INTO `dtrSummary` (`dtrSummary_id`, `employee_id`, `month`, `submitted`) VALUES (NULL, '$emp_id', '$period','0')";
+    // }
+    $qry = "DELETE FROM dtrSummary where `month`='$period' and `employee_id`='$emp_id'";
+    $sql = $mysqli->query($qry);
     echo json_encode(false);
+} elseif (isset($_POST['refreshDtrSummary'])) {
+    $employee_id = $_POST['employee_id'];
+    $period = $_POST['period'];
+    $dtr_summary = processDtrSummary($mysqli, $employee_id, $period);
+    updateDtrSummary($mysqli, $dtr_summary, false);
+    echo json_encode([
+        $employee_id,
+        $period,
+        $dtr_summary
+    ]);
+    // updateDtrSummary($mysqli, $data)
+    // get empid and month-year
+    // get dtrmanagement data
+    // process data to get totalTardy, timesTardy, totalUndertime, halfDaysTardy, halfDaysUndertime, allRemarks, submitted
+    // update dtrsummary
+    // return dtrsummary record
 }
 
 
@@ -304,7 +366,90 @@ function getMinutesDifference($time1, $time2)
     return $minutes < 0 ? 0 : $minutes;
 }
 
-function updateDtrSummary($mysqli, $data)
+function processDtrSummary($mysqli, $employee_id, $period)
+{
+    $period_ = $period;
+    $period = explode("-", $period);
+    $year = $period[0];
+    $month = $period[1];
+
+    if ($year < 2020) {
+        return false;
+    }
+
+    $timesTardy = 0;
+    $totalTardy = 0;
+    $totalUndertime = 0;
+
+    $halfDaysTardy = [];
+    $halfDaysUndertime = [];
+    $allRemarks = [];
+
+    $dtrmanagement_sql = "SELECT * FROM `dtrmanagement` where emp_id = '$employee_id' and YEAR(dtr_date) = '$year' AND MONTH(dtr_date) = '$month';";
+    $dtrmanagement_res = $mysqli->query($dtrmanagement_sql);
+    $dtrmanagement_row = "";
+
+    # if there is existing day record in dtrmanagement
+    while ($dtrmanagement_row = $dtrmanagement_res->fetch_assoc()) {
+
+        $tardyAm = 0;
+        $tardyPm = 0;
+        $undertimeAm = 0;
+        $underTimePm = 0;
+
+        $dtr_date = $dtrmanagement_row['dtr_date'];
+        $tardyAm = $dtrmanagement_row["amTardy"] ? intval($dtrmanagement_row["amTardy"]) : 0;
+        $tardyPm = $dtrmanagement_row["pmTardy"] ? intval($dtrmanagement_row["pmTardy"]) : 0;
+        $undertimeAm = $dtrmanagement_row["amUnder"] ? intval($dtrmanagement_row["amUnder"]) : 0;
+        $underTimePm = $dtrmanagement_row["pmUnder"] ? intval($dtrmanagement_row["pmUnder"]) : 0;
+        $other = $dtrmanagement_row["other"];
+
+        // $isConfirmed = true;
+
+        // if ($tardyAm > 0 || $tardyPm > 0) {
+        //     $timesTardy += 1;
+        // }
+
+        if ($tardyAm > 0) {
+            $timesTardy += 1;
+            if ($tardyAm == 240) {
+                $halfDaysTardy[] = str_pad(explode("-", $dtr_date)[2], 2, "0", STR_PAD_LEFT);
+            }
+        }
+
+        if ($tardyPm > 0) {
+            $timesTardy += 1;
+        }
+
+        if ($underTimePm == 240) {
+            $halfDaysUndertime[] = str_pad(explode("-", $dtr_date)[2], 2, "0", STR_PAD_LEFT);
+        }
+
+        $totalTardy += ($tardyAm + $tardyPm);
+        $totalUndertime += ($undertimeAm + $underTimePm);
+
+
+        if ($other) {
+            $allRemarks[] = str_pad(explode("-", $dtr_date)[2], 2, "0", STR_PAD_LEFT) . "-" . $other;
+        }
+    }
+
+
+    return  [
+        "employee" => $employee_id,
+        "period" => $period_,
+        "totalTardy" => $totalTardy,
+        "timesTardy" => $timesTardy,
+        "totalUndertime" => $totalUndertime,
+        "halfDaysTardy" => $halfDaysTardy,
+        "halfDaysUndertime" => $halfDaysUndertime,
+        "allRemarks" => $allRemarks,
+        // "dtrSummaryRefreshOnly" =>  true // for refreshing only sumbitted dtr in dtrSummary page
+    ];
+}
+
+# updateOnly if true, no insert executed. only for refreshing only sumbitted dtr in dtrSummary page
+function updateDtrSummary($mysqli, $data, $is_submitted = true)
 {
     if (!$data['employee']) {
         return false;
@@ -317,21 +462,22 @@ function updateDtrSummary($mysqli, $data)
     if ($year < 2020) {
         return false;
     }
-    $totalTimesTardy = $data['timesTardy'];
-    $totalMinsTardy = $data['totalTardy'];
-    $totalMinUnderTime = $data['totalUndertime'];
+    $totalTimesTardy = isset($data['timesTardy']) ? $data['timesTardy'] : NULL;
+    $totalMinsTardy = isset($data['totalTardy']) ? $data['totalTardy'] : NULL;
+    $totalMinUnderTime = isset($data['totalUndertime']) ? $data['totalUndertime'] : NULL;
 
-    $halfDaysTardy = $data['halfDaysTardy'];
+    $halfDaysTardy = isset($data['halfDaysTardy']) ? $data['halfDaysTardy'] : [];
+
     if (count($halfDaysTardy)) {
         $halfDaysTardy = implode(",", $halfDaysTardy);
     } else $halfDaysTardy = "";
 
-    $halfDaysUndertime = $data['halfDaysUndertime'];
+    $halfDaysUndertime = isset($data['halfDaysUndertime']) ?  $data['halfDaysUndertime'] : [];
     if (count($halfDaysUndertime)) {
         $halfDaysUndertime = implode(",", $halfDaysUndertime);
     } else $halfDaysUndertime = "";
 
-    $remarksDtr = $data['allRemarks'];
+    $remarksDtr = isset($data['allRemarks']) ? $data['allRemarks'] : [];
     if (count($remarksDtr)) {
         $remarksDtr = implode(",", $remarksDtr);
     } else $remarksDtr = "";
@@ -340,6 +486,7 @@ function updateDtrSummary($mysqli, $data)
     $check = "SELECT * FROM `dtrSummary` where `month`='$period' AND `employee_id`='$emp_id'";
     $check = $mysqli->query($check);
     $count = $check->num_rows;
+    $sql = "";
     if ($count) {
         $datID = $check->fetch_assoc();
         $sql = "UPDATE `dtrSummary` SET 
@@ -350,9 +497,14 @@ function updateDtrSummary($mysqli, $data)
                         `halfDaysUndertime` = '$halfDaysUndertime',
                         `remarks` = '$remarksDtr'
                 WHERE `dtrSummary`.`dtrSummary_id` ='$datID[dtrSummary_id]'";
+        $mysqli->query($sql);
     } else {
         $sql = "INSERT INTO `dtrSummary` (`dtrSummary_id`, `employee_id`, `month`, `totalMinsTardy`, `totalTardy`, `totalMinsUndertime`, `letterOfNotice`,`halfDaysTardy`,`halfDaysUndertime`,`remarks`,`submitted`) 
-                            VALUES (NULL, '$emp_id', '$period', '$totalMinsTardy', '$totalTimesTardy', '$totalMinUnderTime', '0','$halfDaysTardy','$halfDaysUndertime','$remarksDtr','0')";
+                            VALUES (NULL, '$emp_id', '$period', '$totalMinsTardy', '$totalTimesTardy', '$totalMinUnderTime', '0','$halfDaysTardy','$halfDaysUndertime','$remarksDtr','1')";
+        if ($is_submitted) {
+            $mysqli->query($sql);
+        }
     }
-    $sql = $mysqli->query($sql);
+
+    return $sql;
 }
