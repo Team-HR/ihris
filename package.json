@@ -6,7 +6,7 @@
     "fomantic-ui": "^2.8.5",
     "jquery": "^3.5.1",
     "moment": "^2.24.0",
-    "vue": "^2.6.11"
+    "vue": "^3.0.0"
   },
   "devDependencies": {
     "gulp-build": "^0.5.3"
