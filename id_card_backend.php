@@ -91,7 +91,7 @@ if (isset($data->getEmployeeList)) {
 
         if ($row["birthdate"]) {
             $date = new DateTimeImmutable($row["birthdate"]);
-            $date = $date->format('F d, Y');
+            $date = $date->format('m/d/Y');
             $data["date_of_birth"] = mb_convert_case($date, MB_CASE_UPPER);
         }
 
