@@ -145,7 +145,7 @@ function dateFormat($dateInput)
 <html lang="en">
 
 <head>
-    <title>PrimeVue + CDN</title>
+    <title>LGU BAYAWAN CITY ID Verification</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
 </head>
@@ -157,18 +157,60 @@ function dateFormat($dateInput)
     <link rel="stylesheet" href="https://unpkg.com/primeflex@latest/primeflex.css">
     <link rel="stylesheet" href="https://unpkg.com/primeflex@latest/themes/primeone-light.css">
     <div id="app" class="w-full">
-        <div class="inline-flex w-full">
-            <!-- <div class="hidden md:block bg-primary font-bold align-items-center justify-content-center p-4 border-round mr-3">Hide on a small screen</div> -->
+        <div class="inline-flex w-full align-items-center justify-content-center">
+            <div class="hidden md:block font-bold align-items-center justify-content-center p-4 border-round mr-3">
+
+                <div class="mt-5 w-full flex align-items-center justify-content-center">
+                    <img class="mr-2" src="../assets/images/bayawanSeal.png" style="width: 73px;">
+                    <div class="align-items-center justify-content-center text-center">
+                        <div class="text-2xl">LGU BAYAWAN CITY</div>
+                        <div>ID VERIFICATION</div>
+                    </div>
+                </div>
+                <div class="mt-5 w-full text-center text-xl"><?= $emp->get_name() ?></div>
+                <div class="mt-1 w-full text-center text-md"><?= $emp->get_employment_type() ? $emp->get_employment_type() . " EMPLOYEE" : "" ?></div>
+
+                <?php
+                if ($emp->get_id_validation()) {
+                ?>
+                    <div class="my-3 w-full text-center text-md bg-green-500 text-white py-3 text-3xl">VALIDATED</div>
+                <?php } else { ?>
+                    <div class="my-3 w-full text-center text-md bg-red-500 text-white py-3 text-3xl">NOT VALIDATED</div>
+                <?php } ?>
+                <div class="mt-1 w-full text-center text-md">DATE ISSUED: <?= $emp->get_date_issued() ?></div>
+                <div class="mt-1 w-full text-center text-md">VALID UNTIL: <?= $emp->get_date_expire() ?></div>
+                <div class="mt-3 w-full text-center text-sm">
+                    For inquiries please visit/contact:
+                    <br>
+                    <b>OFFICE OF THE HUMAN RESOURCE MANAGEMENT &
+                        DEVELOPMENT</b>
+                    <br>
+                    1st Floor, Legislative Building, Cabcabon Hills, Banga,
+                    Bayawan City, Negros Oriental
+                    <br>
+                    Tel. No.:
+                    <a href="tel:0354300263">(035) 430-0263 local 1065</a>
+                    <br>
+                    Fax No.:
+                    <a href="tel:0354300222">(035) 430-0222</a>
+                    <br>
+                </div>
+
+
+            </div>
+
+
+            <!-- MOBILE VIEW START -->
             <div class="block md:hidden align-items-center justify-content-center border-round w-full">
                 <div class="mt-5 w-full flex align-items-center justify-content-center">
                     <img class="mr-2" src="../assets/images/bayawanSeal.png" style="width: 73px;">
                     <div class="align-items-center justify-content-center text-center">
-                        <div class="text-2xl">ID VERIFICATION</div>
-                        <div>LGU BAYAWAN CITY</div>
+                        <div class="text-2xl">LGU BAYAWAN CITY</div>
+                        <div>ID VERIFICATION</div>
                     </div>
                 </div>
                 <div class="mt-5 w-full text-center text-xl"><?= $emp->get_name() ?></div>
-                <div class="mt-1 w-full text-center text-md"><?= $emp->get_employment_type() ?></div>
+                <div class="mt-1 w-full text-center text-md"><?= $emp->get_employment_type() ? $emp->get_employment_type() . " EMPLOYEE" : "" ?></div>
 
                 <?php
                 if ($emp->get_id_validation()) {
