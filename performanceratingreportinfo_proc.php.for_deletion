@@ -20,19 +20,19 @@ $counter = substr($year, -2) . "001";
     });
   });
 
-  function addempprr(i) {
-    empid = $('#empidprr').val();
-    if (empid != "") {
-      $.post('umbra/addemppage.php', {
-        addemppage: true,
-        empid: empid,
-        prrid: i
-      }, function(data, textStatus, xhr) {
-        $(load);
+  // function addempprr(i) {
+  //   empid = $('#empidprr').val();
+  //   if (empid != "") {
+  //     $.post('umbra/addemppage.php', {
+  //       addemppage: true,
+  //       empid: empid,
+  //       prrid: i
+  //     }, function(data, textStatus, xhr) {
+  //       $(load);
 
-      });
-    }
-  }
+  //     });
+  //   }
+  // }
 </script>
 <div class="ui sticky noprint" style="background:white;padding: 10px">
 

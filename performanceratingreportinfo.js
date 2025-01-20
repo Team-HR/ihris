@@ -20,6 +20,23 @@ var vue_prr = new Vue({
     },
   },
   methods: {
+
+     addempprr(i) {
+      console.log("addempprr: ", i);
+  
+      const empid = $('#empidprr').val();
+      if (empid != "") {
+        $.post('umbra/addemppage.php', {
+          addemppage: true,
+          empid: empid,
+          prrid: i
+        }, (data, textStatus, xhr) => {
+          this.get_items()
+        });
+      }
+    },
+
+
     do_sort() {
       // console.log("do sort:", this.sort_by + " " + this.is_asc);
       // this.items = []
@@ -115,6 +132,8 @@ var vue_prr = new Vue({
         }
       );
     },
+
+    
     stateColor(prrlist_id, employees_id, prr_id, Scolor) {
       eventColor = event;
       $.post(

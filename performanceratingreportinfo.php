@@ -536,6 +536,8 @@ function title($mysqli)
   }
 
   function addempprr(i) {
+    console.log("addempprr: ", i);
+
     empid = $('#empidprr').val();
     if (empid != "") {
       $.post('umbra/addemppage.php', {
