@@ -49,7 +49,7 @@ require_once "header.php";
 
                                 <div style="text-align:left; margin-top:40px">
                                     <p>
-                                        <b> PRYDE HENRY TEVES<br>
+                                        <b> JOHN T. RAYMOND, JR.<br>
                                             City Mayor<br>
                                             LGU-Bayawan City<br>
                                             <br><br>
