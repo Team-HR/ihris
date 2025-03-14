@@ -20,22 +20,24 @@ var vue_prr = new Vue({
     },
   },
   methods: {
-
-     addempprr(i) {
+    addempprr(i) {
       console.log("addempprr: ", i);
-  
-      const empid = $('#empidprr').val();
+
+      const empid = $("#empidprr").val();
       if (empid != "") {
-        $.post('umbra/addemppage.php', {
-          addemppage: true,
-          empid: empid,
-          prrid: i
-        }, (data, textStatus, xhr) => {
-          this.get_items()
-        });
+        $.post(
+          "umbra/addemppage.php",
+          {
+            addemppage: true,
+            empid: empid,
+            prrid: i,
+          },
+          (data, textStatus, xhr) => {
+            this.get_items();
+          }
+        );
       }
     },
-
 
     do_sort() {
       // console.log("do sort:", this.sort_by + " " + this.is_asc);
@@ -61,6 +63,7 @@ var vue_prr = new Vue({
         return result * sortOrder;
       };
     },
+    
     get_items() {
       this.items = [];
       this.is_loading = true;
@@ -93,12 +96,14 @@ var vue_prr = new Vue({
       //    this.do_sort()
       // }
     },
+
     format_date(date) {
       if (date == "0000-00-00") return "";
       date = date.split("-");
       date = date[1] + "/" + date[2] + "/" + date[0];
       return date;
     },
+
     stage_color(stages) {
       if (!stages || stages == "") return "blue";
       colors = {
@@ -133,7 +138,6 @@ var vue_prr = new Vue({
       );
     },
 
-    
     stateColor(prrlist_id, employees_id, prr_id, Scolor) {
       eventColor = event;
       $.post(
