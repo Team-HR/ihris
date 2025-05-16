@@ -125,7 +125,7 @@ class LeaveRecordsController extends Controller
     }
     private function dtrSummary()
     {
-        $sql = "SELECT * from `dtrsummary` where `employee_id`='$this->employee' ORDER BY `dtrsummary`.`month` ASC";
+        $sql = "SELECT * from `dtrsummary` where `employee_id`='$this->employee' ORDER BY `dtrsummary`.`month` DESC";
         $sql = $this->mysqli->query($sql);
         $a = [];
         while ($dat = $sql->fetch_assoc()) {
@@ -136,8 +136,25 @@ class LeaveRecordsController extends Controller
                 $newDateString = $myDateTime->format('F Y');
                 $dat["month"] = $newDateString;
             }
+            
+            $dat["equiTardy"] = compEquiv($dat["totalMinsTardy"]);
+            $dat["equiUndertime"] = compEquiv($dat["totalMinsUndertime"]);
+
+            $dat["totalTardy"] = $dat["totalTardy"]?$dat["totalTardy"]:"";
+            $dat["totalMinsTardy"] = $dat["totalMinsTardy"]?$dat["totalMinsTardy"]:"";
+            $dat["totalMinsUndertime"] = $dat["totalMinsUndertime"]?$dat["totalMinsUndertime"]:"";
+
             $a[] = $dat;
         }
         $this->summary = $a;
     }
+}
+
+function compEquiv($mins)
+{
+    $equiv = "";
+    if (!$mins) return $equiv;
+    $c = 0.002083333;
+    $equiv = $c * intval($mins);
+    return number_format($equiv, 3);
 }
