@@ -496,7 +496,7 @@ if (isset($_GET["spms"])) {
                         </div>
                         <div class="ui tab segment active" data-tab="attendance_report">
                             <div style="text-align: center;">
-                                <table class="ui celled compact structured table">
+                                <table class="ui selectable celled compact structured table">
                                     <thead>
                                         <tr class="center aligned">
                                             <th rowspan="2">Month - Year</th>
@@ -724,17 +724,21 @@ if (isset($_GET["spms"])) {
     <!-- styles -->
     <style>
         .tardyCols {
-            background-color:#a3f4a3;
+            background-color: rgba(163, 244, 163, 0.1);
         }
+
         .tardyColEquiv {
-            background-color:#00fd00;
+            background-color: #a2e2a273;
         }
+
         .underTimeCols {
-            background-color:#fff13378;
+            background-color: rgba(255, 241, 51, 0.1);
         }
+
         .underTimeColEquiv {
-            background-color:#ffed00;
+            background-color: #f7f1a0e3;
         }
+
         .readOnlyEdu {
             border: 0px solid white !important;
             padding: 0px !important;
