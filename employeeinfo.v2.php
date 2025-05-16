@@ -499,21 +499,37 @@ if (isset($_GET["spms"])) {
                                 <table class="ui celled compact structured table">
                                     <thead>
                                         <tr class="center aligned">
-                                            <th>Month - Year</th>
-                                            <th>Tardy<br>(min)</th>
-                                            <th>Undertime<br>(min)</th>
-                                            <th>Remarks</th>
+                                            <th rowspan="2">Month - Year</th>
+                                            <th colspan="4">Tardy<br>(min)</th>
+                                            <th colspan="3">Undertime<br>(min)</th>
+                                            <th rowspan="2">Remarks</th>
+                                        </tr>
+                                        <tr class="center aligned">
+                                            <th>No. of times</th>
+                                            <th>Total mins.</th>
+                                            <th>Half-days</th>
+                                            <th>Equiv.</th>
+                                            <th>Total mins.</th>
+                                            <th>Half-days</th>
+                                            <th>Equiv.</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="(rec, k) in leave_records" :key="k">
+                                            <!-- <td colspan="9">{{rec}}</td> -->
                                             <td>{{rec.month}}</td>
-                                            <td class="center aligned">{{rec.totalMinsTardy}}</td>
-                                            <td class="center aligned">{{rec.totalMinsUndertime}}</td>
+                                            <td class="tardyCols">{{rec.totalTardy}}</td>
+                                            <td class="tardyCols center aligned">{{rec.totalMinsTardy}}</td>
+                                            <td class="tardyCols">{{rec.halfDaysTardy}}</td>
+                                            <td class="tardyColEquiv">{{rec.equiTardy}}</td>
+
+                                            <td class="underTimeCols center aligned">{{rec.totalMinsUndertime}}</td>
+                                            <td class="underTimeCols">{{rec.halfDaysUndertime}}</td>
+                                            <td class="underTimeColEquiv">{{rec.equiUndertime}}</td>
                                             <td>{{rec.remarks}}</td>
                                         </tr>
                                         <tr v-if="!leave_records.length">
-                                            <td colspan="4" class="center aligned">
+                                            <td colspan="9" class="center aligned">
                                                 <p style="padding: 20px; background-color: lightgrey; color: white;">No Data</p>
                                             </td>
                                         </tr>
@@ -707,6 +723,18 @@ if (isset($_GET["spms"])) {
 
     <!-- styles -->
     <style>
+        .tardyCols {
+            background-color:#a3f4a3;
+        }
+        .tardyColEquiv {
+            background-color:#00fd00;
+        }
+        .underTimeCols {
+            background-color:#fff13378;
+        }
+        .underTimeColEquiv {
+            background-color:#ffed00;
+        }
         .readOnlyEdu {
             border: 0px solid white !important;
             padding: 0px !important;
