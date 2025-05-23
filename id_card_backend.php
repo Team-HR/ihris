@@ -116,6 +116,7 @@ if (isset($data->getEmployeeList)) {
         $data["address_res_city"] = mb_convert_case($row["res_city"], MB_CASE_UPPER);
         $data["address_res_province"] = mb_convert_case($row["res_province"], MB_CASE_UPPER);
         $data["address_res_zip_code"] = mb_convert_case($row["res_zip_code"], MB_CASE_UPPER);
+        $data["address_res_country"] = mb_convert_case($row["res_country"], MB_CASE_UPPER);
         $data["contact_number"] = $row["mobile"];
         $data["emergency_name"] = $row["emergency_name"];
         $data["emergency_address"] = mb_convert_case($row["emergency_address"], MB_CASE_UPPER);
@@ -219,6 +220,11 @@ if (isset($data->getEmployeeList)) {
     $date_issued = $selected_employee_data->date_issued;
     $date_expire = $selected_employee_data->date_expire;
 
+    $frontDataUrl = $data->selected_employee_image_data->frontDataUrl;
+    $backDataUrl = $data->selected_employee_image_data->backDataUrl;
+
+    uploadIdCard($employees_id, $frontDataUrl, "front");
+    uploadIdCard($employees_id, $backDataUrl, "back");
 
     // update employees table
     $sql = "UPDATE `employees` SET `firstName`='$firstName',`lastName`='$lastName',`middleName`='$middleName',`extName`='$extName',`gender`='$gender',`empno`='$empno' WHERE `employees_id` = '$employees_id'";
@@ -254,6 +260,18 @@ if (isset($data->getEmployeeList)) {
     }
 
     // echo json_encode($data->photoFormat);
+}
+
+
+function checkIfCardExists($employees_id)
+{
+    $imagePath1 = "id_cards/" . $employees_id . "_front.jpg";
+    $imagePath2 = "id_cards/" . $employees_id . "_back.jpg";
+
+    if (file_exists($imagePath1) && file_exists($imagePath2)) {
+        return true;
+    }
+    return false;
 }
 
 function getEmployeesByDepartments($department_id, $mysqli)
@@ -300,7 +318,10 @@ function getDepartmentData($department_id, $mysqli)
         $employees[] = [
             // $row["employees_id"],
             "id" => $row["id"],
+            "employees_id" => $row["employees_id"],
             "full_name" => formatName($row),
+            "hasIdCard" => checkIfCardExists($row["employees_id"]),
+            "completionRating" => isset($getPercentageCompletion["percent"]) ? $getPercentageCompletion["percent"] : '',
             "percentageCompletion" => isset($getPercentageCompletion["desc"]) ? $getPercentageCompletion["desc"] : '',
             "empno" => $row["empno"],
             "created_at" => $row["created_at"],
@@ -513,4 +534,16 @@ function dateFormat($dateInput)
     if (!$dateInput) return null;
     $dateFormatted = new DateTimeImmutable($dateInput);
     return $dateFormatted->format('F d, Y');
+}
+
+
+function uploadIdCard($employees_id, $dataUrl, $prefix = "")
+{
+    if (!$dataUrl) return;
+    $img = $dataUrl;
+    $img = str_replace('data:image/jpeg;base64,', '', $img);
+    $img = str_replace(' ', '+', $img);
+    $fileData = base64_decode($img);
+    $fileName = "id_cards/" . $employees_id . "_" . $prefix . ".jpg";
+    file_put_contents($fileName, $fileData);
 }
