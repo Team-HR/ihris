@@ -116,6 +116,7 @@ if (isset($data->getEmployeeList)) {
         $data["address_res_city"] = mb_convert_case($row["res_city"], MB_CASE_UPPER);
         $data["address_res_province"] = mb_convert_case($row["res_province"], MB_CASE_UPPER);
         $data["address_res_zip_code"] = mb_convert_case($row["res_zip_code"], MB_CASE_UPPER);
+        $data["address_res_country"] = mb_convert_case($row["res_country"], MB_CASE_UPPER);
         $data["contact_number"] = $row["mobile"];
         $data["emergency_name"] = $row["emergency_name"];
         $data["emergency_address"] = mb_convert_case($row["emergency_address"], MB_CASE_UPPER);
@@ -219,6 +220,11 @@ if (isset($data->getEmployeeList)) {
     $date_issued = $selected_employee_data->date_issued;
     $date_expire = $selected_employee_data->date_expire;
 
+    $frontDataUrl = $data->selected_employee_image_data->frontDataUrl;
+    $backDataUrl = $data->selected_employee_image_data->backDataUrl;
+
+    uploadIdCard($employees_id, $frontDataUrl, "front");
+    uploadIdCard($employees_id, $backDataUrl, "back");
 
     // update employees table
     $sql = "UPDATE `employees` SET `firstName`='$firstName',`lastName`='$lastName',`middleName`='$middleName',`extName`='$extName',`gender`='$gender',`empno`='$empno' WHERE `employees_id` = '$employees_id'";
@@ -257,8 +263,20 @@ if (isset($data->getEmployeeList)) {
 }
 
 
+function checkIfCardExists($employees_id)
+{
+    $imagePath1 = "id_cards/" . $employees_id . "_front.jpg";
+    $imagePath2 = "id_cards/" . $employees_id . "_back.jpg";
+
+    if (file_exists($imagePath1) && file_exists($imagePath2)) {
+        return true;
+    }
+    return false;
+}
+
 function getEmployeesByDepartments($department_id, $mysqli)
 {
+    // $department_id = 32; // remove after testing
     $departments = [];
     if (!$department_id) {
         $sql = "SELECT * FROM `department` ORDER BY `department`.`department` ASC";
@@ -268,22 +286,189 @@ function getEmployeesByDepartments($department_id, $mysqli)
 
     $res = $mysqli->query($sql);
     while ($row = $res->fetch_assoc()) {
-        $row["employees"] = getEmployeesByDepartment($row["department_id"], $mysqli);
+        $departmentData = getDepartmentData($row["department_id"], $mysqli);
+        $row["employees"]  = $departmentData["employees"];
+        $row["totalAccomplishedEmployee"] = $departmentData["totalAccomplishedEmployee"];
+        $row["totalDepartmentEmployee"] = $departmentData["totalDepartmentEmployee"];
+        $row["perentageCompletion"] = $departmentData["perentageCompletion"];
+        $row["employeesCompleted"] = 0;
         $departments[] = $row;
     }
     return $departments;
 }
 
-function getEmployeesByDepartment($department_id, $mysqli)
+function getDepartmentData($department_id, $mysqli)
 {
     $employees = [];
     $sql = "SELECT * FROM `employees` LEFT JOIN `employee_id_cards` ON `employees`.`employees_id` = `employee_id_cards`.`ihris_employee_id` LEFT JOIN `employees_card_number` ON `employees`.`employees_id` = `employees_card_number`.`employees_id` WHERE `employees`.`department_id` = '$department_id' AND `employees`.`status` = 'ACTIVE';";
+
     $res = $mysqli->query($sql);
+
+    $totalAccomplishedEmployee = 0;
+    $totalDepartmentEmployee = 0;
+
     while ($row = $res->fetch_assoc()) {
+        $totalDepartmentEmployee++;
         $row["full_name"] = formatName($row);
-        $employees[] = $row;
+        $getPercentageCompletion = getPercentageCompletion($row["employees_id"], $mysqli);
+        $percentCompleted = isset($getPercentageCompletion["percent"]) ? $getPercentageCompletion["percent"] : '';
+        if ($percentCompleted == 100) {
+            $totalAccomplishedEmployee++;
+        }
+        $employees[] = [
+            // $row["employees_id"],
+            "id" => $row["id"],
+            "employees_id" => $row["employees_id"],
+            "full_name" => formatName($row),
+            "hasIdCard" => checkIfCardExists($row["employees_id"]),
+            "completionRating" => isset($getPercentageCompletion["percent"]) ? $getPercentageCompletion["percent"] : '',
+            "percentageCompletion" => isset($getPercentageCompletion["desc"]) ? $getPercentageCompletion["desc"] : '',
+            "empno" => $row["empno"],
+            "created_at" => $row["created_at"],
+            "updated_at" => $row["updated_at"],
+            "printed_at" => $row["printed_at"]
+        ];
     }
-    return $employees;
+
+    $perentageCompletion = 0;
+
+    if ($totalAccomplishedEmployee != 0 && $totalDepartmentEmployee != 0) {
+        $perentageCompletion = round(($totalAccomplishedEmployee / $totalDepartmentEmployee) * 100, 0);
+    }
+
+    return [
+        "employees" => $employees,
+        "totalAccomplishedEmployee" => $totalAccomplishedEmployee,
+        "totalDepartmentEmployee" => $totalDepartmentEmployee,
+        "perentageCompletion" => $perentageCompletion
+    ];
+}
+
+function getPercentageCompletion($employee_id, $mysqli)
+{
+
+    if (!$employee_id) return;
+
+    $sql = "SELECT * FROM `pds_personal` WHERE `employee_id` = '$employee_id'";
+    $res = $mysqli->query($sql);
+    $data = [];
+
+    if ($row = $res->fetch_assoc()) {
+        $data = getEmployeeInformation($mysqli, $employee_id);
+
+        $data["date_of_birth"] = "";
+
+        if ($row["birthdate"]) {
+            $date = new DateTimeImmutable($row["birthdate"]);
+            $date = $date->format('m/d/Y');
+            $data["date_of_birth"] = mb_convert_case($date, MB_CASE_UPPER);
+        }
+
+        new DateTimeImmutable('2000-01-01');
+
+        $data["blood_type"] = $row["blood_type"];
+        $data["birthdate"] = $row["birthdate"];
+        $address = "";
+        $address .= $row["res_house_no"] ? $row["res_house_no"] . ", " : "";
+        $address .= $row["res_street"] ? $row["res_street"] . ", " : "";
+        $address .= $row["res_subdivision"] ? $row["res_subdivision"] . ", " : "";
+        $address .= $row["res_barangay"] ? $row["res_barangay"] . ", " : "";
+        $address .= $row["res_city"] ? $row["res_city"] . ", " : "";
+        $address .= $row["res_province"] ? $row["res_province"] . " " : "";
+        $address .= $row["res_zip_code"] ? $row["res_zip_code"] : "";
+        $data["address"] = mb_convert_case($address, MB_CASE_UPPER);
+        $data["address_res_house_no"] = mb_convert_case($row["res_house_no"], MB_CASE_UPPER);
+        $data["address_res_street"] = mb_convert_case($row["res_street"], MB_CASE_UPPER);
+        $data["address_res_subdivision"] = mb_convert_case($row["res_subdivision"], MB_CASE_UPPER);
+        $data["address_res_barangay"] = mb_convert_case($row["res_barangay"], MB_CASE_UPPER);
+        $data["address_res_city"] = mb_convert_case($row["res_city"], MB_CASE_UPPER);
+        $data["address_res_province"] = mb_convert_case($row["res_province"], MB_CASE_UPPER);
+        $data["address_res_zip_code"] = mb_convert_case($row["res_zip_code"], MB_CASE_UPPER);
+        $data["contact_number"] = $row["mobile"];
+        $data["emergency_name"] = $row["emergency_name"];
+        $data["emergency_address"] = mb_convert_case($row["emergency_address"], MB_CASE_UPPER);
+        $data["emergency_number"] = $row["emergency_number"];
+    }
+
+    // get id text formatting values
+    $sql = "SELECT * FROM `employee_id_cards` WHERE `ihris_employee_id` = '$employee_id'";
+    $res = $mysqli->query($sql);
+
+    $data["text_formatting"] = null;
+    $data["photo_formatting"] = null;
+    $data["sig_src"] = null;
+    $data["date_issued"] = date("Y-m-d");
+    $data["date_expire"] = "";
+
+    // if ($data["employmentStatus"] == "CASUAL") {
+    //     $data["date_expire"] = "2024-06-30";
+    // } else {
+    //     $data["date_expire"] = "2025-06-30";
+    // }
+
+    $data["date_expire_formatted"] = "";
+    if ($row = $res->fetch_assoc()) {
+        if (isset($row["position"])) {
+            $data["position"] = $row["position"];
+        }
+        // $data["text_formatting"] = json_decode($row["text_formatting"]);
+        $data["sig_src"] = isset($row["sig_src"]) ? true : null;
+        // $data["photo_formatting"] = json_decode($row["photo_formatting"]);
+        $data["date_issued"] = $row["date_issued"] ? $row["date_issued"] : $data["date_issued"];
+        $data["date_expire"] = $row["date_expire"] ? $row["date_expire"] : $data["date_expire"];
+    }
+
+    $data["date_issued_formatted"] = mb_convert_case(dateFormat($data["date_issued"]), MB_CASE_UPPER);
+    $data["date_expire_formatted"] = mb_convert_case(dateFormat($data["date_expire"]), MB_CASE_UPPER);
+
+    // return $data;
+
+    $details =  [];
+
+    $fields = [
+        "firstName",
+        "lastName",
+        "gender",
+        "position",
+        "position_function",
+        "date_of_birth",
+        "blood_type",
+        "birthdate",
+        "address",
+        "contact_number",
+        "emergency_name",
+        "emergency_number",
+        // "emergency_address"
+        "sig_src",
+    ];
+
+
+    foreach ($fields as $field) {
+        if (isset($data[$field]) && $data[$field] != null) {
+            $details[] = $data[$field];
+        }
+    }
+
+    // return json_encode($details);    
+
+    $totalRequiredDetails = count($fields);
+    $nonEmptyDetails = 0;
+    foreach ($details as $detail) {
+        if ($detail) {
+            $nonEmptyDetails++;
+        }
+    }
+
+    // return $nonEmptyDetails . "/" . $totalRequiredDetails;
+
+    $perentageCompletion = round(($nonEmptyDetails / $totalRequiredDetails) * 100, 0);
+
+    return [
+        "filledOut" => $nonEmptyDetails,
+        "totalFields" => $totalRequiredDetails,
+        "percent" => $perentageCompletion,
+        "desc" => $perentageCompletion . "% Completed (" . $nonEmptyDetails . "/" . $totalRequiredDetails . ")"
+    ];
 }
 
 function getEmployeeInformation($mysqli, $employee_id)
@@ -349,4 +534,16 @@ function dateFormat($dateInput)
     if (!$dateInput) return null;
     $dateFormatted = new DateTimeImmutable($dateInput);
     return $dateFormatted->format('F d, Y');
+}
+
+
+function uploadIdCard($employees_id, $dataUrl, $prefix = "")
+{
+    if (!$dataUrl) return;
+    $img = $dataUrl;
+    $img = str_replace('data:image/jpeg;base64,', '', $img);
+    $img = str_replace(' ', '+', $img);
+    $fileData = base64_decode($img);
+    $fileName = "id_cards/" . $employees_id . "_" . $prefix . ".jpg";
+    file_put_contents($fileName, $fileData);
 }
