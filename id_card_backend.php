@@ -294,7 +294,20 @@ function getEmployeesByDepartments($department_id, $mysqli)
         $row["employeesCompleted"] = 0;
         $departments[] = $row;
     }
-    return $departments;
+
+    $dashChartData = [];
+    $labels = [];
+    $values = [];
+    foreach ($departments as $department) {
+        $labels[] = isset($department["alias"]) ? $department["alias"] : $department["department"];
+        $values[] = $department["perentageCompletion"];
+        $dashChartData = [
+            "labels" => $labels,
+            "values" => $values
+        ];
+    }
+
+    return ["rows" => $departments, "dashChartData" => $dashChartData];
 }
 
 function getDepartmentData($department_id, $mysqli)
