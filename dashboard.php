@@ -434,7 +434,7 @@ if (isset($_GET["spms"])) {
                         <div class="ui pointing secondary blue menu fluid">
                             <a id="rsp" class="item active" data-tab="first">RSP</a>
                             <a class="item" data-tab="second">L&D</a>
-                            <a id="spms" class="item" data-tab="third">SPMS</a>
+                            <!-- <a id="spms" class="item" data-tab="third">SPMS</a> -->
                             <a class="item" data-tab="fourth">R&R</a>
                         </div>
                         <div id="rsp0" class="ui bottom attached tab segment active" data-tab="first">
@@ -531,7 +531,7 @@ if (isset($_GET["spms"])) {
                                 ?>
                             </div>
                         </div>
-                        <div id="spms0" class="ui bottom attached tab segment" data-tab="third">
+                        <div id="spms0" class="ui bottom attached tab segment" data-tab="third" style="display: none;">
                             <h3 class="ui header block primary">Strategic Performance Management System</h3>
                             <div class="ui pointing secondary blue menu">
                                 <!-- <a id="spms01" class="item active" data-tab="third/a">Individual Development Plan</a> -->
