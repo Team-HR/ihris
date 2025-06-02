@@ -135,9 +135,9 @@ if (isset($data->getEmployeeList)) {
     $data["date_issued"] = date("Y-m-d");
     $data["date_expire"] = "";
     if ($data["employmentStatus"] == "CASUAL") {
-        $data["date_expire"] = "2024-06-30";
+        $data["date_expire"] = "2025-12-31";
     } else {
-        $data["date_expire"] = "2025-06-30";
+        $data["date_expire"] = "2028-06-30";
     }
 
     $data["date_expire_formatted"] = "";
