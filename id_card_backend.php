@@ -135,9 +135,9 @@ if (isset($data->getEmployeeList)) {
     $data["date_issued"] = date("Y-m-d");
     $data["date_expire"] = "";
     if ($data["employmentStatus"] == "CASUAL") {
-        $data["date_expire"] = "2024-06-30";
+        $data["date_expire"] = "2025-12-31";
     } else {
-        $data["date_expire"] = "2025-06-30";
+        $data["date_expire"] = "2028-06-30";
     }
 
     $data["date_expire_formatted"] = "";
@@ -294,7 +294,20 @@ function getEmployeesByDepartments($department_id, $mysqli)
         $row["employeesCompleted"] = 0;
         $departments[] = $row;
     }
-    return $departments;
+
+    $dashChartData = [];
+    $labels = [];
+    $values = [];
+    foreach ($departments as $department) {
+        $labels[] = isset($department["alias"]) ? $department["alias"] : $department["department"];
+        $values[] = $department["perentageCompletion"];
+        $dashChartData = [
+            "labels" => $labels,
+            "values" => $values
+        ];
+    }
+
+    return ["rows" => $departments, "dashChartData" => $dashChartData];
 }
 
 function getDepartmentData($department_id, $mysqli)
