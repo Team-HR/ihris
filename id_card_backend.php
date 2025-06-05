@@ -300,6 +300,7 @@ function getEmployeesByDepartments($department_id, $mysqli)
         $row["totalAccomplishedEmployee"] = $departmentData["totalAccomplishedEmployee"];
         $row["totalDepartmentEmployee"] = $departmentData["totalDepartmentEmployee"];
         $row["perentageCompletion"] = $departmentData["perentageCompletion"];
+        $row["perentageCompletionInputs"] = $departmentData["perentageCompletionInputs"];
         $row["employeesCompleted"] = 0;
         $departments[] = $row;
     }
@@ -309,7 +310,7 @@ function getEmployeesByDepartments($department_id, $mysqli)
     $values = [];
     foreach ($departments as $department) {
         $labels[] = isset($department["alias"]) ? $department["alias"] : $department["department"];
-        $values[] = $department["perentageCompletion"];
+        $values[] = $department["perentageCompletionInputs"];
         $dashChartData = [
             "labels" => $labels,
             "values" => $values
@@ -360,12 +361,17 @@ function getDepartmentData($department_id, $mysqli)
         $perentageCompletion = round(($totalAccomplishedEmployee / $totalDepartmentEmployee) * 100, 0);
     }
 
+    $totalRequiredInputs = $totalDepartmentEmployee * 13;
+
+    $perentageCompletionInputs = $totalRequiredInputs ? number_format($totalAccomplishedInputs / $totalRequiredInputs * 100,0) : 0;
+
     return [
         "employees" => $employees,
         "totalAccomplishedEmployee" => $totalAccomplishedEmployee,
         "totalDepartmentEmployee" => $totalDepartmentEmployee,
         "totalAccomplishedInputs" => $totalAccomplishedInputs,
-        "totalRequiredInputs" => $totalDepartmentEmployee * 13,
+        "totalRequiredInputs" => $totalRequiredInputs,
+        "perentageCompletionInputs" => $perentageCompletionInputs,
         "perentageCompletion" => $perentageCompletion
     ];
 }
