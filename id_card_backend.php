@@ -203,6 +203,10 @@ if (isset($data->getEmployeeList)) {
     $selected_employee_data = $data->selected_employee_data;
 
     $employees_id = $selected_employee_data->employees_id;
+
+    // echo json_encode(getCardFileName($employees_id, $mysqli));
+    // return null;
+
     $firstName = $selected_employee_data->firstName;
     $lastName = $selected_employee_data->lastName;
     $middleName = $selected_employee_data->middleName;
@@ -228,8 +232,11 @@ if (isset($data->getEmployeeList)) {
     $frontDataUrl = $data->selected_employee_image_data->frontDataUrl;
     $backDataUrl = $data->selected_employee_image_data->backDataUrl;
 
-    uploadIdCard($employees_id, $frontDataUrl, "front");
-    uploadIdCard($employees_id, $backDataUrl, "back");
+    // uploadIdCard($employees_id, $frontDataUrl, "front");
+    $name = getCardFileName($employees_id, $mysqli);
+    _uploadIdCard($name, $frontDataUrl, "a");
+    _uploadIdCard($name, $backDataUrl, "b");
+    // uploadIdCard($employees_id, $backDataUrl, "back");
 
     // update employees table
     $sql = "UPDATE `employees` SET `firstName`='$firstName',`lastName`='$lastName',`middleName`='$middleName',`extName`='$extName',`gender`='$gender',`empno`='$empno' WHERE `employees_id` = '$employees_id'";
@@ -267,11 +274,12 @@ if (isset($data->getEmployeeList)) {
     // echo json_encode($data->photoFormat);
 }
 
-
-function checkIfCardExists($employees_id)
+function checkIfCardExists($employees_id, $mysqli)
 {
-    $imagePath1 = "id_cards/" . $employees_id . "_front.jpg";
-    $imagePath2 = "id_cards/" . $employees_id . "_back.jpg";
+    $name = getCardFileName($employees_id, $mysqli);
+
+    $imagePath1 = "id_cards/" . $name . "/a.jpg";
+    $imagePath2 = "id_cards/" . $name . "/b.jpg";
 
     if (file_exists($imagePath1) && file_exists($imagePath2)) {
         return true;
@@ -345,7 +353,7 @@ function getDepartmentData($department_id, $mysqli)
             "id" => $row["id"],
             "employees_id" => $row["employees_id"],
             "full_name" => formatName($row),
-            "hasIdCard" => checkIfCardExists($row["employees_id"]),
+            "hasIdCard" => checkIfCardExists($row["employees_id"], $mysqli),
             "completionRating" => isset($getPercentageCompletion["percent"]) ? $getPercentageCompletion["percent"] : '',
             "percentageCompletion" => isset($getPercentageCompletion["desc"]) ? $getPercentageCompletion["desc"] : '',
             "empno" => $row["empno"],
@@ -363,7 +371,7 @@ function getDepartmentData($department_id, $mysqli)
 
     $totalRequiredInputs = $totalDepartmentEmployee * 13;
 
-    $perentageCompletionInputs = $totalRequiredInputs ? number_format($totalAccomplishedInputs / $totalRequiredInputs * 100,0) : 0;
+    $perentageCompletionInputs = $totalRequiredInputs ? number_format($totalAccomplishedInputs / $totalRequiredInputs * 100, 0) : 0;
 
     return [
         "employees" => $employees,
@@ -560,7 +568,6 @@ function getPositionInformation($mysqli, $position_id)
     return $data;
 }
 
-
 function dateFormat($dateInput)
 {
     if (!$dateInput) return null;
@@ -568,6 +575,37 @@ function dateFormat($dateInput)
     return $dateFormatted->format('F d, Y');
 }
 
+// function _uploadIdCard($name, $dataUrl, $face="")
+// {
+//     if (!$dataUrl) return;
+//     $img = $dataUrl;
+//     $img = str_replace('data:image/jpeg;base64,', '', $img);
+//     $img = str_replace(' ', '+', $img);
+//     $fileData = base64_decode($img);
+//     $fileName = "id_cards/" . $name . "/" .$face. ".jpg";
+//     file_put_contents($fileName, $fileData);
+// }
+function _uploadIdCard($name, $dataUrl, $face = "")
+{
+    if (!$dataUrl) return;
+
+    // Decode base64 image
+    $img = str_replace('data:image/jpeg;base64,', '', $dataUrl);
+    $img = str_replace(' ', '+', $img);
+    $fileData = base64_decode($img);
+
+    // Define directory and file path
+    $dir = "id_cards/" . $name;
+    $fileName = $dir . "/" . $face . ".jpg";
+
+    // Create directory if it doesn't exist
+    if (!is_dir($dir)) {
+        mkdir($dir, 0755, true); // true for recursive, 0755 permissions
+    }
+
+    // Save the file
+    file_put_contents($fileName, $fileData);
+}
 
 function uploadIdCard($employees_id, $dataUrl, $prefix = "")
 {
@@ -578,4 +616,80 @@ function uploadIdCard($employees_id, $dataUrl, $prefix = "")
     $fileData = base64_decode($img);
     $fileName = "id_cards/" . $employees_id . "_" . $prefix . ".jpg";
     file_put_contents($fileName, $fileData);
+}
+
+function getCardFileName_($employee_id, $mysqli)
+{
+    $data = [];
+    $sql = "SELECT * FROM `employees`";
+    $res = $mysqli->query($sql);
+
+
+    while ($employee = $res->fetch_assoc()) {
+        $firstName = $employee["firstName"];
+        $lastName = $employee["lastName"];
+        $middleName = $employee["middleName"];
+        $extName = $employee["extName"];
+
+
+        $nameParts = [$lastName, $firstName];
+
+        if ($middleName) {
+            $nameParts[] = $middleName;
+        }
+
+        if ($extName) {
+            $nameParts[] = $extName;
+        }
+
+        $nameParts = array_map(function ($part) {
+            return str_replace(' ', '_', $part);
+        }, array_filter([$lastName, $firstName, $middleName, $extName]));
+
+        $name = implode('_', $nameParts);
+        $name = cleanNamePart($name);
+        $data[] = $name;
+    }
+
+
+    return $data;
+}
+
+
+function getCardFileName($employee_id, $mysqli)
+{
+    $name = "";
+    $sql = "SELECT * FROM `employees` WHERE `employees_id` = '$employee_id'";
+    $res = $mysqli->query($sql);
+    if ($employee = $res->fetch_assoc()) {
+        $firstName = $employee["firstName"];
+        $lastName = $employee["lastName"];
+        $middleName = $employee["middleName"];
+        $extName = $employee["extName"];
+
+        $nameParts = [$lastName, $firstName];
+
+        if ($middleName) {
+            $nameParts[] = $middleName;
+        }
+
+        if ($extName) {
+            $nameParts[] = $extName;
+        }
+
+        $nameParts = array_map(function ($part) {
+            return str_replace(' ', '_', $part);
+        }, array_filter([$lastName, $firstName, $middleName, $extName]));
+
+        $name = implode('_', $nameParts);
+        $name = cleanNamePart($name);
+    }
+    return $name;
+}
+
+function cleanNamePart($str)
+{
+    $str = str_replace(' ', '_', $str);   // Replace spaces with underscores
+    $str = str_replace('.', '', $str);    // Remove periods
+    return $str;
 }
