@@ -122,6 +122,7 @@ if (isset($data->getEmployeeList)) {
         $data["emergency_address"] = mb_convert_case($row["emergency_address"], MB_CASE_UPPER);
         // $data["emergency_address"] = $data["emergency_address"] ? substr($data["emergency_address"], 0, 37) . '...' : '';
         $data["emergency_number"] = $row["emergency_number"];
+        $data["all"] = $row;
     }
 
 
@@ -139,12 +140,15 @@ if (isset($data->getEmployeeList)) {
     } else {
         $data["date_expire"] = "2028-06-30";
     }
-
+    $data["department"] = "";
+    $data["section"] = "";
     $data["date_expire_formatted"] = "";
     if ($row = $res->fetch_assoc()) {
         if (isset($row["position"])) {
             $data["position"] = $row["position"];
         }
+        $data["department"] = $row["department"];
+        $data["section"] = $row["section"];
         $data["text_formatting"] = json_decode($row["text_formatting"]);
         $data["sig_src"] = json_decode($row["sig_src"]);
         $data["photo_formatting"] = json_decode($row["photo_formatting"]);
@@ -206,7 +210,8 @@ if (isset($data->getEmployeeList)) {
     $gender = $selected_employee_data->gender;
     $empno = $selected_employee_data->empno;
     $position = $selected_employee_data->position;
-
+    $department = $selected_employee_data->department;
+    $section = $selected_employee_data->section;
     $birthdate = $selected_employee_data->birthdate;
     $blood_type = $selected_employee_data->blood_type;
     $address_res_barangay = $selected_employee_data->address_res_barangay;
@@ -249,12 +254,12 @@ if (isset($data->getEmployeeList)) {
     $photo_formatting = json_encode($data->photoFormat);
 
     if ($row = $res->fetch_assoc()) {
-        $sql = "UPDATE `employee_id_cards` SET `position` ='$position' , `text_formatting`='$text_formatting', `photo_formatting`='$photo_formatting', `date_issued` = '$date_issued', `date_expire` = '$date_expire' WHERE `ihris_employee_id` = '$employees_id'";
+        $sql = "UPDATE `employee_id_cards` SET `position` ='$position', `department` = '$department', `section` = '$section' , `text_formatting`='$text_formatting', `photo_formatting`='$photo_formatting', `date_issued` = '$date_issued', `date_expire` = '$date_expire' WHERE `ihris_employee_id` = '$employees_id'";
         $mysqli->query($sql);
         echo json_encode($photo_formatting);
     } else {
-        $sql = "INSERT INTO `employee_id_cards` (`ihris_employee_id`, `position`, `text_formatting`, `photo_formatting`, `date_issued`,
-        `date_expire`, `created_at`, `updated_at`) VALUES ( '$employees_id', '$position', '$text_formatting', '$photo_formatting', '$date_issued', '$date_expire', current_timestamp(), current_timestamp())";
+        $sql = "INSERT INTO `employee_id_cards` (`ihris_employee_id`, `position`, `department`, `section` , `text_formatting`, `photo_formatting`, `date_issued`,
+        `date_expire`, `created_at`, `updated_at`) VALUES ( '$employees_id', '$position', '$department', '$section', '$text_formatting', '$photo_formatting', '$date_issued', '$date_expire', current_timestamp(), current_timestamp())";
         $mysqli->query($sql);
         echo json_encode("inserted");
     }
@@ -287,6 +292,10 @@ function getEmployeesByDepartments($department_id, $mysqli)
     $res = $mysqli->query($sql);
     while ($row = $res->fetch_assoc()) {
         $departmentData = getDepartmentData($row["department_id"], $mysqli);
+
+        $row["totalAccomplishedInputs"] = $departmentData["totalAccomplishedInputs"];
+        $row["totalRequiredInputs"] = $departmentData["totalRequiredInputs"];
+
         $row["employees"]  = $departmentData["employees"];
         $row["totalAccomplishedEmployee"] = $departmentData["totalAccomplishedEmployee"];
         $row["totalDepartmentEmployee"] = $departmentData["totalDepartmentEmployee"];
@@ -312,6 +321,7 @@ function getEmployeesByDepartments($department_id, $mysqli)
 
 function getDepartmentData($department_id, $mysqli)
 {
+    $totalAccomplishedInputs = 0;
     $employees = [];
     $sql = "SELECT * FROM `employees` LEFT JOIN `employee_id_cards` ON `employees`.`employees_id` = `employee_id_cards`.`ihris_employee_id` LEFT JOIN `employees_card_number` ON `employees`.`employees_id` = `employees_card_number`.`employees_id` WHERE `employees`.`department_id` = '$department_id' AND `employees`.`status` = 'ACTIVE';";
 
@@ -324,6 +334,7 @@ function getDepartmentData($department_id, $mysqli)
         $totalDepartmentEmployee++;
         $row["full_name"] = formatName($row);
         $getPercentageCompletion = getPercentageCompletion($row["employees_id"], $mysqli);
+        $totalAccomplishedInputs += isset($getPercentageCompletion["filledOut"]) ? $getPercentageCompletion["filledOut"] : 0;
         $percentCompleted = isset($getPercentageCompletion["percent"]) ? $getPercentageCompletion["percent"] : '';
         if ($percentCompleted == 100) {
             $totalAccomplishedEmployee++;
@@ -353,6 +364,8 @@ function getDepartmentData($department_id, $mysqli)
         "employees" => $employees,
         "totalAccomplishedEmployee" => $totalAccomplishedEmployee,
         "totalDepartmentEmployee" => $totalDepartmentEmployee,
+        "totalAccomplishedInputs" => $totalAccomplishedInputs,
+        "totalRequiredInputs" => $totalDepartmentEmployee * 13,
         "perentageCompletion" => $perentageCompletion
     ];
 }
