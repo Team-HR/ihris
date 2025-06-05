@@ -1,19 +1,5 @@
 <?php
-require "vendor/autoload.php";
-require 'libs/PlantillaPermanent.php';
 require "_connect.db.php";
-
-$mpdf = new \Mpdf\Mpdf([
-    'mode' => 'utf-8',
-    'format' => 'A4',
-    'margin_top' => 5,
-    'margin_left' => 3,
-    'margin_right' => 3,
-    'margin_bottom' => 5,
-    'margin_footer' => 1,
-    'default_font' => 'helvetica'
-]);
-
 
 $employeeIds = $_GET["employeeIds"];
 $departmentId = $_GET["departmentId"];
@@ -21,32 +7,110 @@ $departmentId = $_GET["departmentId"];
 $sql = "SELECT * FROM `department` WHERE `department_id` = '$departmentId'";
 $res = $mysqli->query($sql);
 $row = $res->fetch_assoc();
-$department = isset($row["alias"]) ? $row["alias"] : '';
-
+$department = isset($row["alias"]) ? $row["alias"] : $row["department"];
 
 $employeeIds = explode(",", $employeeIds);
 
-$mpdf->Bookmark('Start of the document');
+$folders = [];
 
-$html = "";
-foreach ($employeeIds as $key => $employee_id) {
-    $front_id = $employee_id . "_front.jpg";
-    $back_id = $employee_id . "_back.jpg";
-    $html .= <<<EOD
-    <div style="display: block">
-        <img height="3.375in" width="2.125in" src="id_cards/$front_id" style="padding-right: 5px; border-right: 1px solid #e2e2e2; border-right-style: dashed;"/>
-        <img height="3.375in" width="2.125in" src="id_cards/$back_id" style="padding-left: 3px;"/>
-    </div>
-EOD;
+foreach ($employeeIds as $employee_id) {
+    if ($name = getCardFileName($employee_id, $mysqli)) {
+        $folders [] = 'id_cards/'.$name;
+    }
 }
 
+$tempZipPath = __DIR__ . '/tmp_folders.zip';
+$timestamp = date('Y-m-d-H-i');
 
-$mpdf->defaultheaderline = 0;
-$mpdf->defaultfooterline = 0;
-$mpdf->defaultfooterline = 0;
+if (zipMultipleFolders($folders, $tempZipPath)) {
+    downloadZip($tempZipPath, 'IDs_'.$department.'-'.$timestamp.'.zip');
+} else {
+    echo "Failed to create ZIP.";
+}
 
-$mpdf->WriteHTML($html);
+function getCardFileName($employee_id, $mysqli)
+{
+    $name = "";
+    $sql = "SELECT * FROM `employees` WHERE `employees_id` = '$employee_id'";
+    $res = $mysqli->query($sql);
+    if ($employee = $res->fetch_assoc()) {
+        $firstName = $employee["firstName"];
+        $lastName = $employee["lastName"];
+        $middleName = $employee["middleName"];
+        $extName = $employee["extName"];
 
-$timestamp = time();
+        $nameParts = [$lastName, $firstName];
 
-$mpdf->Output($department . "_" . $timestamp . ".pdf", 'I');
+        if ($middleName) {
+            $nameParts[] = $middleName;
+        }
+
+        if ($extName) {
+            $nameParts[] = $extName;
+        }
+
+        $nameParts = array_map(function ($part) {
+            return str_replace(' ', '_', $part);
+        }, array_filter([$lastName, $firstName, $middleName, $extName]));
+
+        $name = implode('_', $nameParts);
+        $name = cleanNamePart($name);
+    }
+    return $name;
+}
+
+function cleanNamePart($str)
+{
+    $str = str_replace(' ', '_', $str);   // Replace spaces with underscores
+    $str = str_replace('.', '', $str);    // Remove periods
+    return $str;
+}
+
+function zipMultipleFolders(array $folders, string $zipFilePath): bool
+{
+    $zip = new ZipArchive();
+    if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+        return false;
+    }
+
+    foreach ($folders as $folder) {
+        $folderPath = realpath($folder);
+        if ($folderPath === false || !is_dir($folderPath)) {
+            continue;
+        }
+
+        $folderName = basename($folderPath);
+
+        $files = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($folderPath),
+            RecursiveIteratorIterator::LEAVES_ONLY
+        );
+
+        foreach ($files as $name => $file) {
+            if (!$file->isDir()) {
+                $filePath = $file->getRealPath();
+                $relativePath = $folderName . '/' . substr($filePath, strlen($folderPath) + 1);
+                $zip->addFile($filePath, $relativePath);
+            }
+        }
+    }
+
+    return $zip->close();
+}
+
+function downloadZip(string $zipFilePath, string $downloadName = 'folders.zip'): void
+{
+    if (!file_exists($zipFilePath)) {
+        http_response_code(404);
+        echo "ZIP file not found.";
+        exit;
+    }
+
+    header('Content-Type: application/zip');
+    header('Content-Disposition: attachment; filename="' . $downloadName . '"');
+    header('Content-Length: ' . filesize($zipFilePath));
+    readfile($zipFilePath);
+
+    // Clean up
+    unlink($zipFilePath);
+}
