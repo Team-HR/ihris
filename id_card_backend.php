@@ -272,6 +272,38 @@ if (isset($data->getEmployeeList)) {
     }
 
     // echo json_encode($data->photoFormat);
+} else if (isset($data->getOfficeNamesForAutocomplete)) {
+    $data =  getOfficeNamesForAutocomplete($mysqli);
+    echo json_encode($data);
+    return json_encode($data);
+}
+
+function getOfficeNamesForAutocomplete($mysqli)
+{
+    $data = [
+        'departments' => [],
+        'sections' => []
+    ];
+
+    // Use associative arrays as sets to prevent duplicates
+    $departmentsSet = [];
+    $sectionsSet = [];
+
+    $sql = "SELECT `department`, `section` FROM `employee_id_cards`";
+    $res = $mysqli->query($sql);
+
+    while ($row = $res->fetch_assoc()) {
+        if (!empty($row['department']) && !isset($departmentsSet[$row['department']])) {
+            $departmentsSet[$row['department']] = true;
+            $data['departments'][] = $row['department'];
+        }
+        if (!empty($row['section']) && !isset($sectionsSet[$row['section']])) {
+            $sectionsSet[$row['section']] = true;
+            $data['sections'][] = $row['section'];
+        }
+    }
+
+    return $data;
 }
 
 function checkIfCardExists($employees_id, $mysqli)
