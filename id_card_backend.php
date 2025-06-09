@@ -261,15 +261,66 @@ if (isset($data->getEmployeeList)) {
     $photo_formatting = json_encode($data->photoFormat);
 
     if ($row = $res->fetch_assoc()) {
-        $sql = "UPDATE `employee_id_cards` SET `position` ='$position', `department` = '$department', `section` = '$section' , `text_formatting`='$text_formatting', `photo_formatting`='$photo_formatting', `date_issued` = '$date_issued', `date_expire` = '$date_expire' WHERE `ihris_employee_id` = '$employees_id'";
-        $mysqli->query($sql);
+        // UPDATE query with prepared statement
+        $stmt = $mysqli->prepare("UPDATE `employee_id_cards` 
+        SET `position` = ?, 
+            `department` = ?, 
+            `section` = ?, 
+            `text_formatting` = ?, 
+            `photo_formatting` = ?, 
+            `date_issued` = ?, 
+            `date_expire` = ? 
+        WHERE `ihris_employee_id` = ?");
+
+        $stmt->bind_param(
+            "ssssssss",
+            $position,
+            $department,
+            $section,
+            $text_formatting,
+            $photo_formatting,
+            $date_issued,
+            $date_expire,
+            $employees_id
+        );
+
+        $stmt->execute();
+        $stmt->close();
+
         echo json_encode($photo_formatting);
     } else {
-        $sql = "INSERT INTO `employee_id_cards` (`ihris_employee_id`, `position`, `department`, `section` , `text_formatting`, `photo_formatting`, `date_issued`,
-        `date_expire`, `created_at`, `updated_at`) VALUES ( '$employees_id', '$position', '$department', '$section', '$text_formatting', '$photo_formatting', '$date_issued', '$date_expire', current_timestamp(), current_timestamp())";
-        $mysqli->query($sql);
+        // INSERT query with prepared statement
+        $stmt = $mysqli->prepare("INSERT INTO `employee_id_cards` (
+        `ihris_employee_id`, 
+        `position`, 
+        `department`, 
+        `section`, 
+        `text_formatting`, 
+        `photo_formatting`, 
+        `date_issued`, 
+        `date_expire`, 
+        `created_at`, 
+        `updated_at`
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, current_timestamp(), current_timestamp())");
+
+        $stmt->bind_param(
+            "ssssssss",
+            $employees_id,
+            $position,
+            $department,
+            $section,
+            $text_formatting,
+            $photo_formatting,
+            $date_issued,
+            $date_expire
+        );
+
+        $stmt->execute();
+        $stmt->close();
+
         echo json_encode("inserted");
     }
+
 
     // echo json_encode($data->photoFormat);
 } else if (isset($data->getOfficeNamesForAutocomplete)) {
