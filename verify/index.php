@@ -169,7 +169,7 @@ function dateFormat($dateInput)
                 </div>
                 <div class="mt-5 w-full text-center text-xl"><?= $emp->get_name() ?></div>
                 <div class="mt-1 w-full text-center text-md"><?= $emp->get_employment_type() ? $emp->get_employment_type() . " EMPLOYEE" : "" ?></div>
-
+                <div class="mt-1 w-full text-center text-lg" style="font-weight: 500; font-family: monospace;"><?= $emp->get_office()?$emp->get_office() : "" ?></div>
                 <?php
                 if ($emp->get_id_validation()) {
                 ?>
