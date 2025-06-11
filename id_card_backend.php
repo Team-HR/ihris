@@ -327,6 +327,10 @@ if (isset($data->getEmployeeList)) {
     $data =  getOfficeNamesForAutocomplete($mysqli);
     echo json_encode($data);
     return json_encode($data);
+} else if (isset($data->getAddressesForAutocomplete)) {
+    $data =  getAddressesForAutocomplete($mysqli);
+    echo json_encode($data);
+    return json_encode($data);
 }
 
 function getOfficeNamesForAutocomplete($mysqli)
@@ -356,6 +360,53 @@ function getOfficeNamesForAutocomplete($mysqli)
 
     return $data;
 }
+
+function getAddressesForAutocomplete($mysqli)
+{
+    $data = [
+        'res_barangays' => [],
+        'res_citys' => [],
+        'res_provinces' => [],
+        'res_zip_codes' => []
+    ];
+
+    // Use associative arrays as sets to prevent duplicates
+    $res_barangaySet = [];
+    $res_citySet = [];
+    $res_provinceSet = [];
+    $res_zip_codeSet = [];
+
+    $sql = "SELECT `res_barangay`,`res_city`,`res_province`, `res_zip_code` FROM `pds_personal`";
+    $res = $mysqli->query($sql);
+
+    while ($row = $res->fetch_assoc()) {
+        $barangay = strtoupper($row['res_barangay']);
+        $city = strtoupper($row['res_city']);
+        $province = strtoupper($row['res_province']);
+        $zip_code = strtoupper($row['res_zip_code']); // in case zip codes are alphanumeric
+
+        if (!empty($barangay) && !isset($res_barangaySet[$barangay])) {
+            $res_barangaySet[$barangay] = true;
+            $data['res_barangays'][] = $barangay;
+        }
+        if (!empty($city) && !isset($res_citySet[$city])) {
+            $res_citySet[$city] = true;
+            $data['res_citys'][] = $city;
+        }
+        if (!empty($province) && !isset($res_provinceSet[$province])) {
+            $res_provinceSet[$province] = true;
+            $data['res_provinces'][] = $province;
+        }
+        if (!empty($zip_code) && !isset($res_zip_codeSet[$zip_code])) {
+            $res_zip_codeSet[$zip_code] = true;
+            $data['res_zip_codes'][] = $zip_code;
+        }
+    }
+
+    return $data;
+}
+
+
 
 function checkIfCardExists($employees_id, $mysqli)
 {
