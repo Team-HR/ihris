@@ -503,7 +503,7 @@ function getDepartmentData($department_id, $mysqli)
         $perentageCompletion = round(($totalAccomplishedEmployee / $totalDepartmentEmployee) * 100, 0);
     }
 
-    $totalRequiredInputs = $totalDepartmentEmployee * 13;
+    $totalRequiredInputs = $totalDepartmentEmployee * 12;
 
     $perentageCompletionInputs = $totalRequiredInputs ? number_format($totalAccomplishedInputs / $totalRequiredInputs * 100, 0) : 0;
 
@@ -604,7 +604,7 @@ function getPercentageCompletion($employee_id, $mysqli)
         "lastName",
         "gender",
         "position",
-        "position_function",
+        // "position_function",
         "date_of_birth",
         "blood_type",
         "birthdate",
