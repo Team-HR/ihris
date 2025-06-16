@@ -29,7 +29,7 @@ class Personnel
         $res = $this->mysqli->query($sql);
         if ($res = $res->fetch_assoc()) {
             $name = $res["firstName"] . " ";
-            $name .= isset($res["middleName"]) ? $res["middleName"][0] . ". " : "";
+            $name .= isset($res["middleName"]) && strlen($res["middleName"]) > 0? $res["middleName"][0] . ". " : "";
             $name .= $res["lastName"];
             $name .= isset($res["extName"]) ? " " . $res["extName"] : "";
             return $name;
