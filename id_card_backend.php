@@ -323,6 +323,35 @@ if (isset($data->getEmployeeList)) {
 
 
     // echo json_encode($data->photoFormat);
+} else if (isset($data->saveForm)) {
+    $selected_employee_data = $data->selected_employee_data;
+    $employees_id = $selected_employee_data->employees_id;
+
+    $gender = $selected_employee_data->gender;
+    $birthdate = $selected_employee_data->birthdate;
+    $blood_type = $selected_employee_data->blood_type;
+    $address_res_barangay = $selected_employee_data->address_res_barangay;
+    $address_res_city = $selected_employee_data->address_res_city;
+    $address_res_zip_code = $selected_employee_data->address_res_zip_code;
+    $address_res_province = $selected_employee_data->address_res_province;
+    $contact_number = $selected_employee_data->contact_number;
+    $emergency_name = $selected_employee_data->emergency_name;
+    $emergency_number = $selected_employee_data->emergency_number;
+
+    $sql = "SELECT * FROM `pds_personal` WHERE `employee_id` = '$employees_id'";
+    $res = $mysqli->query($sql);
+
+    // if ($row = $res->fetch_assoc()) {
+    //     echo json_encode(["SAVED",$selected_employee_data]);
+    // }
+
+    if ($row = $res->fetch_assoc()) {
+        $query = "UPDATE `pds_personal` SET `birthdate` = '$birthdate', `blood_type` = '$blood_type', `res_barangay` = '$address_res_barangay', `res_city` = '$address_res_city', `res_zip_code` = '$address_res_zip_code', `res_province` = '$address_res_province', `mobile` = '$contact_number', `emergency_name` = '$emergency_name', `emergency_number` = '$emergency_number' WHERE `employee_id` = '$employees_id'";
+    } else {
+        $query = "INSERT INTO `pds_personal` (`employee_id`, `birthdate`, `blood_type`, `res_barangay`, `res_city`, `res_zip_code`, `res_province`, `mobile`, `emergency_name`,  `emergency_number`) VALUES ('$employees_id', '$birthdate', '$blood_type','$address_res_barangay', '$address_res_city', '$address_res_zip_code',  '$address_res_province', '$contact_number', '$emergency_name', '$emergency_number')";
+    }
+    $mysqli->query($query); // uncomment to execute query
+
 } else if (isset($data->getOfficeNamesForAutocomplete)) {
     $data =  getOfficeNamesForAutocomplete($mysqli);
     echo json_encode($data);
