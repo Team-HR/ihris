@@ -86,6 +86,7 @@ $auth = new Auth;
         <a href="salary_adjustment.php" class="item"><i class="icon money check alternate"></i> Salary Schedule</a>
         <a href="qualification_standards.php" class="item"><i class="icon graduation cap"></i> Qualification Standards</a>
         <a href="signatories.php" class="item"><i class="icon pen fancy"></i> Signatories</a>
+        <a href="hris_v2_tools.php" class="item"><i class="icon database"></i>HRIS_V2 Tools</a>
       </div>
     </div>
 
