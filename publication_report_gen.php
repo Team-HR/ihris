@@ -164,6 +164,11 @@ function getMonthlySalary($mysqli,$sg,$step,$schedule) {
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();
     $parent_id = 0;
+
+    if (!isset($row["id"])) {
+        return "No SG/STEP/SCHED matched";
+    }
+    
     $parent_id = $row["id"];
     $stmt->close();
     if (empty($parent_id)) return false;
