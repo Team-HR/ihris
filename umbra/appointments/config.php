@@ -37,9 +37,11 @@ if (isset($_POST['Employees'])) {
     $sql = "SELECT
                 plantillas.id as plantilla_id, 
                 plantillas.item_no, 
+                plantillas.department_id, 
                 plantillas.step, 
                 plantillas.schedule, 
                 plantillas.incumbent,
+                plantillas.position_id,
                 positiontitles.position, 
                 positiontitles.functional, 
                 positiontitles.salaryGrade, 
@@ -113,7 +115,8 @@ if (isset($_POST['Employees'])) {
     // check if plantilla has already an incumbent
     $incumbent_appointment = get_incumbent_appointment($mysqli, $dat["incumbent"]);
     $dat["incumbent_appointment"] = $incumbent_appointment;
-
+    $dat["step"]  = intval($dat["step"]);
+    $dat["reason_of_vacancy"]  = mb_convert_case($dat["reason_of_vacancy"], MB_CASE_UPPER);
     // echo $mysqli->error;
     $salary_sql = $salary_sql->fetch_assoc();
     $dat['monthly_salary'] = $salary_sql['monthly_salary'];
@@ -317,7 +320,85 @@ if (isset($_POST['Employees'])) {
     }
 
     echo json_encode($d);
+} elseif (isset($_POST["getPositionList"])) {
+    $sql = "SELECT * FROM `positiontitles`";
+    $res = $mysqli->query($sql);
+    $data = [];
+    while ($row = $res->fetch_assoc()) {
+        $data[] = [
+            "id" => $row["position_id"],
+            "position" => $row["position"],
+            "functional" => $row["functional"],
+            "sg" => $row["salaryGrade"],
+        ];
+    }
+    echo json_encode($data);
+    return;
+} elseif (isset($_POST["getDepartmentList"])) {
+    $sql = "SELECT * FROM `department`";
+    $res = $mysqli->query($sql);
+    $data = [];
+    while ($row = $res->fetch_assoc()) {
+        $data[] = [
+            "id" => $row["department_id"],
+            "department" => $row["department"],
+        ];
+    }
+    echo json_encode($data);
+    return;
+} elseif (isset($_POST["getMonthlySalary"])) {
+
+    $step = $_POST["step"];
+    $sg = $_POST["sg"];
+    $schedule = 1;
+
+    // get parent_id from 
+    $sql = "SELECT * FROM `setup_salary_adjustments` WHERE `active` = '1' AND `schedule` = '1' ORDER BY `setup_salary_adjustments`.`id` ASC";
+    $res = $mysqli->query($sql);
+
+    $parent_id = null;
+    $data = "No Active Schedule set";
+
+    if ($row = $res->fetch_assoc()) {
+        $parent_id = $row["id"];
+    }
+
+    if (!$parent_id) {
+        echo json_encode($parent_id);
+        return;
+    }
+
+    $sql = "SELECT * FROM `setup_salary_adjustments_setup` WHERE `parent_id` = '$parent_id' AND `salary_grade` = '$sg' AND `step_no` = '$step'";
+    $res = $mysqli->query($sql);
+
+    if ($row = $res->fetch_assoc()) {
+        $data = [
+            "monthly" => $row["monthly_salary"] ? "Php " . number_format($row["monthly_salary"], 0, ".", ",") : "",
+            "annual" => $row["monthly_salary"] ? "Php " . number_format(($row["monthly_salary"] * 12), 0, ".", ",") : ""
+        ];
+    }
+
+    echo json_encode($data);
+    return;
+} elseif (isset($_POST["savePlantillaEdit"])) {
+    $plantillaEdit = $_POST["plantillaEdit"];
+
+    $id = $plantillaEdit["plantilla_id"];
+    $itemNo = $plantillaEdit["itemNo"];
+    $department_id = $plantillaEdit["department_id"];
+    $position_id = $plantillaEdit["position_id"];
+    $sg = $plantillaEdit["sg"];
+    $step = $plantillaEdit["step"];
+    $schedule = $plantillaEdit["schedule"];
+
+    $sql = "UPDATE `plantillas` SET `item_no`='$itemNo',`department_id`='$department_id',`position_id`='$position_id',`step`='$step',`schedule`='$schedule' WHERE `id` = '$id'";
+    $res = $mysqli->query($sql);
+
+    echo json_encode($res);
+    return;
 }
+
+// getMonthlySalary
 
 ############## Service Record Auto Start ######################
 function service_record_update($employees_id, $plantilla_id, $status_of_appointment, $date_of_appointment, $nature_of_appointment)

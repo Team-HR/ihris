@@ -51,7 +51,7 @@ require_once "_connect.db.php";
         Plantilla Information
       </h4>
 
-      <table class="pInfoTable" border="1" style="border-collapse: collapse;">
+      <!-- <table class="pInfoTable" border="1" style="border-collapse: collapse;">
         <tr>
           <td class="tLabel" style="min-width: 150px;">Item No.:</td>
           <td style="min-width: 200px;">{{Plantilla['item_no']}}</td>
@@ -87,8 +87,84 @@ require_once "_connect.db.php";
           <td>{{Plantilla['reason_of_vacancy']}}</td>
           <td class="tLabel"></td>
           <td></td>
-      </table>
+      </table> -->
 
+      <!-- Plantilla Editor Start -->
+      <div class="ui form" style="padding: 20px;">
+        <div class="fields">
+          <div class="field" style="_width: 200px;">
+            <label for="itemNo">Item No:</label>
+            <input name="itemNo" v-model="plantillaEdit.itemNo" style="background-color: white;">
+          </div>
+          <div class="field">
+            <label for="positionDropdown">Position & Functional:</label>
+            <select name="positionDropdown" class="ui fluid search selection dropdown" id="positionDropdown" v-model="plantillaEdit.position_id">
+              <option value="">Select Position</option>
+              <template v-for="position in positionOptions">
+                <option :key="position.id" :value="position.id">{{position.position}}{{position.functional ? ' --- (' + position.functional + ')' : ''}}</option>
+              </template>
+            </select>
+          </div>
+          <div class="field">
+            <label for="departmentDropdown">Department:</label>
+            <select name="departmentDropdown" class="ui fluid search selection dropdown" id="departmentDropdown" v-model="plantillaEdit.department_id">
+              <option value="">Select Department</option>
+              <template v-for="department in departmentOptions">
+                <option :key="department.id" :value="department.id">{{department.department}}</option>
+              </template>
+            </select>
+          </div>
+        </div>
+        <div class="fields">
+
+          <div class="field">
+            <label for="stepDropdown">Step:</label>
+            <input name="step" v-model="plantillaEdit.step" type="number" min="1" max="8">
+          </div>
+
+          <div class="field">
+            <label for="salaryGrade">Salary Grade:</label>
+            <input name="salaryGrade" v-model="plantillaEdit.sg" readonly style="background: #efefef;">
+          </div>
+
+          <div class="field">
+            <label for="salarySchedule">Salary Schedule:</label>
+            <input name="salarySchedule" value="1st Class" readonly style="background: #efefef;">
+          </div>
+
+          <div class="field">
+            <label for="monthlySalary">Monthly Salary:</label>
+            <input name="monthlySalary" v-model="plantillaEdit.monthlySalary" readonly style="background: #efefef;">
+          </div>
+
+          <div class="field">
+            <label for="annualSalary">Annual Salary:</label>
+            <input name="annualSalary" v-model="plantillaEdit.annualSalary" readonly style="background: #efefef;">
+          </div>
+
+        </div>
+        <div class="fields">
+          <div class="field">
+            <label for="vacatedByInput">Vacated by:</label>
+            <input name="vacatedByInput" :value="Plantilla['vac_lastName']+' '+Plantilla['vac_firstName']+' '+Plantilla['vac_middleName']+' '+Plantilla['vac_extName']" readonly style="background: #efefef; width: 512px;">
+          </div>
+
+          <div class="field">
+            <label for="reasonForVacancyInput">Reason of Vacancy:</label>
+            <input name="reasonForVacancyInput" :value="Plantilla['reason_of_vacancy']" readonly style="background: #efefef;">
+          </div>
+        </div>
+
+        <button type="button" @click="savePlantillaEdit()" class="ui primary button"><i class="ui icon save"></i> Save Plantilla Info</button>
+
+      </div>
+      <!-- <select name="stepDropdown" class="ui fluid search selection dropdown" v-model="plantillaEdit.step" id="stepDropdown">
+        <option value="">Select Department</option>
+        <template v-for="step,i in stepOptions">
+          <option :key="i" :value="step">{{step}}</option>
+        </template>
+      </select> -->
+      <!-- Plantilla Editor End -->
       <h4 class="ui dividing header" style="color: #00000066">Appointment</h4>
       <div class="four fields">
         <div class="field">
@@ -247,7 +323,8 @@ require_once "_connect.db.php";
           <input type="date" v-model="casual_promotion" />
         </div>
       </div>
-      <input type="submit" class="ui button primary" value="Save" />
+      <button type="submit" class="ui button primary"><i class="ui save icon"></i> Save Appointment</button>
+      <!-- <input type="submit" class="ui button primary" value="Save"/> -->
     </form>
   </template>
 </div>

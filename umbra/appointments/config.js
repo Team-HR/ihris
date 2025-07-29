@@ -1,12 +1,28 @@
 new Vue({
   el: "#app",
   data: {
+    plantillaEdit: {
+      plantilla_id: null,
+      itemNo: null,
+      position_id: null,
+      department_id: null,
+      step: null,
+      monthlySalary: null,
+      annualSalary: null,
+      schedule: null
+    },
+
+    positionOptions: [],
+    departmentOptions: [],
+    stepOptions: [1, 2, 3, 4, 5, 6, 7, 8],
+
     Employees: [],
     All_Employees: [],
     Plantilla: [],
     employees_id: null,
     waitLoad: "loading",
     // employees_id: "",
+    itemNo: "",
     plantilla_id: "",
     reason_of_vacancy: "",
     status_of_appointment: "",
@@ -40,7 +56,38 @@ new Vue({
   watch: {
     Plantilla(val) {
       this.reason_of_vacancy = val.reason_of_vacancy;
+      this.itemNo = val.item_no
     },
+
+    'plantillaEdit.position_id': {
+      handler(newVal, oldVal) {
+        // this.$nextTick(() => {
+
+        this.positionOptions.forEach(position => {
+          if (position.id == newVal) {
+            console.log(position.sg);
+            // setTimeout(() => {
+            //   $("#positionDropdown").dropdown("set text", position.position)
+            // }, 500);
+            this.plantillaEdit.sg = position.sg
+            this.getMonthlySalary()
+          }
+          // });
+
+        })
+      },
+      deep: true
+    },
+
+    'plantillaEdit.step': {
+      handler(newVal, oldVal) {
+        this.getMonthlySalary()
+      },
+      deep: true
+    }
+
+
+
   },
   computed: {
     isVacant() {
@@ -49,16 +96,17 @@ new Vue({
     incumbentName() {
       return this.Plantilla.incumbent_appointment
         ? this.Plantilla.incumbent_appointment.lastName +
-            ", " +
-            this.Plantilla.incumbent_appointment.firstName +
-            " " +
-            this.Plantilla.incumbent_appointment.middleName +
-            " " +
-            this.Plantilla.incumbent_appointment.extName
+        ", " +
+        this.Plantilla.incumbent_appointment.firstName +
+        " " +
+        this.Plantilla.incumbent_appointment.middleName +
+        " " +
+        this.Plantilla.incumbent_appointment.extName
         : "";
     },
   },
   methods: {
+
     getEmployees() {
       $.post(
         "umbra/appointments/config.php",
@@ -73,6 +121,7 @@ new Vue({
         }
       );
     },
+
     get_plantilla() {
       const dataId =
         document.getElementById("appointments_form").attributes["data-id"]
@@ -83,7 +132,19 @@ new Vue({
         const res = JSON.parse(data);
         // console.log(res);
         if (res.status) {
+          // console.log(res);
           this.Plantilla = res.dat;
+          // plantillaEdit start
+          // plantilla_id
+          this.plantillaEdit.plantilla_id = res.dat.plantilla_id
+          this.plantillaEdit.itemNo = res.dat.item_no
+          this.plantillaEdit.position_id = res.dat.position_id
+          this.plantillaEdit.department_id = res.dat.department_id
+          this.plantillaEdit.step = res.dat.step
+          this.plantillaEdit.sg = res.dat.salaryGrade
+          this.plantillaEdit.schedule = res.dat.schedule
+          // plantillaEdit end
+
           this.employees_id = this.Plantilla.incumbent_appointment
             ? this.Plantilla.incumbent_appointment.employees_id
             : null;
@@ -181,9 +242,11 @@ new Vue({
         }
       });
     },
+
     formatNumber(num) {
       return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
     },
+
     saveAppointment() {
       if (!this.employees_id) {
         $("body").toast({
@@ -284,19 +347,79 @@ new Vue({
         );
       }
     },
+
+    getPositionList() {
+      $.post("umbra/appointments/config.php", { getPositionList: true }, (data) => {
+        console.log('positions: ', JSON.parse(data));
+        if (data) {
+          this.positionOptions = JSON.parse(data)
+        }
+      })
+    },
+
+    getDepartmentList() {
+      $.post("umbra/appointments/config.php", { getDepartmentList: true }, (data) => {
+        console.log('positions: ', JSON.parse(data));
+        if (data) {
+          this.departmentOptions = JSON.parse(data)
+        }
+      })
+    },
+
+    getMonthlySalary() {
+      $.post("umbra/appointments/config.php", { getMonthlySalary: true, sg: this.plantillaEdit.sg, step: this.plantillaEdit.step }, (data) => {
+        if (data) {
+          console.log('getMonthlySalary: ', JSON.parse(data));
+          const salary = JSON.parse(data);
+          this.plantillaEdit.monthlySalary = salary?.monthly
+          this.plantillaEdit.annualSalary = salary?.annual
+        }
+      })
+      // this.plantillaEdit.monthlySalary = ''
+    },
+
+    savePlantillaEdit() {
+      this.waitLoad = "loading";
+      try {
+        $.post(
+          "umbra/appointments/config.php",
+          {
+            savePlantillaEdit: true,
+            plantillaEdit: this.plantillaEdit
+          }).then(() => {
+            this.waitLoad = "";
+            $("body").toast({
+              position: "top center",
+              class: "success",
+              title: "Saved!",
+              message: "Changes saved successfully!",
+            });
+          })
+      } catch (error) {
+        this.waitLoad = "";
+      }
+
+    }
+
   },
 
   mounted() {
-    var interval = setInterval(() => {
-      if (document.readyState == "complete") {
-        this.getEmployees();
-        this.get_plantilla();
-        // console.log("mounted(): ", this.Plantilla);
-        clearInterval(interval);
-      }
-    }, 1000);
+    // var interval = setInterval(() => {
+    //   if (document.readyState == "complete") {
+    this.getEmployees();
+    this.get_plantilla();
+    this.getPositionList();
+    this.getDepartmentList();
+    // console.log("mounted(): ", this.Plantilla);
+    // $('#positionDropdown')
+    //   .dropdown("set selected", 9);
+    //     clearInterval(interval);
+    //   }
+    // }, 1000);
+
     $(".dropdown").dropdown({
       fullTextSearch: true,
     });
+
   },
 });

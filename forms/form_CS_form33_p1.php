@@ -25,12 +25,15 @@
  */
 
 // Include the main TCPDF library (search for installation path).
-require_once('TCPDF-master/tcpdf.php');
-require_once('_connect.db.php');
+require_once('../TCPDF-master/tcpdf.php');
+require_once('../_connect.db.php');
 
+
+
+return;
 // create new PDF document
-$width=215.9;
-$height=330.2;
+$width = 215.9;
+$height = 330.2;
 $pageLayout = array($width, $height); //  or array($height, $width) 
 // $pdf = new TCPDF('p', 'pt', $pageLayout, true, 'UTF-8', false);
 // $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -38,20 +41,20 @@ $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, $pageLayout, true, 'UTF-8', fal
 
 
 // set some language-dependent strings (optional)
-if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
-  require_once(dirname(__FILE__).'/lang/eng.php');
+if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
+  require_once(dirname(__FILE__) . '/lang/eng.php');
   $pdf->setLanguageArray($l);
 }
 
 // ---------------------------------------------------------
-$where ="";
-$file_title ="";
+$where = "";
+$file_title = "";
 
 
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
 $pdf->SetAuthor('FranzDev');
-$pdf->SetTitle($file_title.'CS FORM NO. 33-B');
+$pdf->SetTitle($file_title . 'CS FORM NO. 33-B');
 
 // $pdf->SetSubject('TCPDF Tutorial');
 // $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
@@ -60,8 +63,8 @@ $pdf->SetTitle($file_title.'CS FORM NO. 33-B');
 // $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 048', PDF_HEADER_STRING);
 
 // set header and footer fonts
-$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+$pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+$pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 
 // set default monospaced font
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
@@ -174,7 +177,7 @@ $tbl = <<<EOD
 
                      <table><tr>
                         <td width="80%" > 
-                           <img src="csc logo.png" style="width:150px; margin-left:20px">
+                           <img src="assets/images/forms/csc logo.jpg" style="width:150px; margin-left:20px">
                         </td>
                         <td width="20%" > 
                           <br><br><br><br><br><br><br><br><br><br><br><br>
@@ -358,22 +361,21 @@ $pdf->writeHTML($tbl, true, false, false, false, '');
 // -----------------------------------------------------------------------------
 
 //Close and output PDF document
-$pdf->Output($file_title.'Certificate Form No. 33.pdf', 'I');
+$pdf->Output($file_title . 'Certificate Form No. 33.pdf', 'I');
 
 //============================================================+
 // END OF FILE
 //============================================================+
-function lister($arr){
-  $item ="";
+function lister($arr)
+{
+  $item = "";
   if (isset($arr)) {
     foreach ($arr as $key => $value) {
-      $item .= " *".$value;
+      $item .= " *" . $value;
     }
   } else {
-    $item ="*None Required";
+    $item = "*None Required";
   }
-  
-  return $item;
 
+  return $item;
 }
-   

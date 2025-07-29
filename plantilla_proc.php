@@ -209,6 +209,24 @@ if (isset($_POST["load"])) {
 			$date_of_last_promotion = $_POST['date_of_last_promotion'];
 			$originalAppointmentDate = $_POST['originalAppointmentDate'];
 			$casualPromotion = $_POST['casualPromotion'];
+
+			// echo json_encode([
+			// 	$id,
+			// 	$position,
+			// 	$incumbent,
+			// 	$department,
+			// 	$step,
+			// 	$schedule,
+			// 	$item_no,
+			// 	$abolish,
+			// 	["incumbent" => $incumbent],
+			// 	$date_of_last_promotion,
+			// 	$originalAppointmentDate,
+			// 	$casualPromotion
+			// ]);
+
+			// return;
+
 			$sql = "UPDATE `plantillas` SET `position_id` = '$position', 
 											 `department_id` = '$department', 		
 											 `step` = '$step',
@@ -221,11 +239,14 @@ if (isset($_POST["load"])) {
 				die($mysqli->error);
 			}
 
+			if (!$incumbent) return;
+
 			$sql2 = "UPDATE `appointments` SET `date_of_appointment` = '$originalAppointmentDate',
 												`casual_promotion` = '$casualPromotion',
 												`date_of_last_promotion` = '$date_of_last_promotion'
 												where `appointment_id`='$incumbent'";
 			$mysqli->query($sql2);
+
 			if ($mysqli->error) {
 				die($mysqli->error);
 			}
