@@ -1,19 +1,29 @@
 <?php
-class NameFormatter
+class EmployeeInfo
 {
 	private $firstName;
 	private $lastName;
 	private $middleName;
 	private $extName;
 	private $exts = array('JR', 'SR');
+	private $mysqli;
 
-	function __construct($firstName, $lastName, $middleName, $extName)
+	function __construct($employees_id, $mysqli)
 
 	{
-		$this->firstName = $firstName ? $firstName : '';
-		$this->lastName = $lastName ? $lastName : '';
-		$this->middleName = $middleName ? $middleName : '';
-		$this->extName = $extName ? $extName : '';
+		$this->mysqli = $mysqli;
+		$employeeInfo = null;
+
+		$sql = "SELECT * FROM `employees` WHERE `employees_id` = '$employees_id'";
+		$res = $this->mysqli->query($sql);
+
+		if ($row = $res->fetch_assoc()) {
+			$employeeInfo = $row;
+			$this->firstName = $employeeInfo["firstName"] ? $employeeInfo["firstName"] : '';
+			$this->lastName = $employeeInfo["lastName"] ? $employeeInfo["lastName"] : '';
+			$this->middleName = $employeeInfo["middleName"] ? $employeeInfo["middleName"] : '';
+			$this->extName = $employeeInfo["extName"] ? $employeeInfo["extName"] : '';
+		}
 	}
 
 	public function getFullName()
@@ -51,6 +61,9 @@ class NameFormatter
 
 	public function getFullNameStandardUpper()
 	{
+		if (!$this->firstName || !$this->lastName) {
+			return " ";
+		}
 
 		$firstName = $this->firstName;
 		$lastName = $this->lastName;
@@ -105,7 +118,7 @@ class NameFormatter
 			$extName = " " . $extName;
 		}
 
-		$fullname =  mb_convert_case($firstName.$middleName.$lastName, MB_CASE_TITLE, "UTF-8") . $extName;
+		$fullname =  mb_convert_case($firstName . $middleName . $lastName, MB_CASE_TITLE, "UTF-8") . $extName;
 
 		return $fullname;
 	}
