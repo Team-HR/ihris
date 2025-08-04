@@ -156,6 +156,7 @@ if (isset($_POST['Employees'])) {
     $casual_promotion = $_POST['casual_promotion'];
     $probationary_period = $_POST['probationary_period'];
     $date_of_last_promotion = $_POST['date_of_last_promotion'];
+    $address = $_POST['address'];
     ############## mysqli_real_escape fix start ######################
     $status_of_appointment = $mysqli->real_escape_string($status_of_appointment);
     $csc_authorized_official = $mysqli->real_escape_string($csc_authorized_official);
@@ -184,10 +185,12 @@ if (isset($_POST['Employees'])) {
     $casual_promotion = $mysqli->real_escape_string($casual_promotion);
     $probationary_period = $mysqli->real_escape_string($probationary_period);
     $date_of_last_promotion = $mysqli->real_escape_string($date_of_last_promotion);
+    $address = $mysqli->real_escape_string($address);
     ############## mysqli_real_escape fix end ######################
     if (!$appointment_id) {
         $sql = "INSERT INTO `appointments` (
             `appointment_id`,
+            `address`,
             `employee_id`,
             `plantilla_id`,
             `reason_of_vacancy`,
@@ -220,6 +223,7 @@ if (isset($_POST['Employees'])) {
             `date_of_last_promotion`
         ) VALUES (
             NULL,
+            '$address',
             '$employees_id',
             '$plantilla_id',
             '$reason_of_vacancy',
@@ -273,7 +277,7 @@ if (isset($_POST['Employees'])) {
         }
     } else {
         // update only the appointment with appointment_id
-        $sql = "UPDATE `appointments` SET `status_of_appointment` = '$status_of_appointment',
+        $sql = "UPDATE `appointments` SET `address` = '$address',`status_of_appointment` = '$status_of_appointment',
         `csc_authorized_official` = '$csc_authorized_official',
         `date_signed_by_csc` = '$date_signed_by_csc',
         `committee_chair` = '$committee_chair',

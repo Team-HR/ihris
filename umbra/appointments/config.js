@@ -52,6 +52,7 @@ new Vue({
     casual_promotion: "",
     probationary_period: "",
     date_of_last_promotion: "",
+    address: ""
   },
   watch: {
     Plantilla(val) {
@@ -65,7 +66,7 @@ new Vue({
 
         this.positionOptions.forEach(position => {
           if (position.id == newVal) {
-            console.log(position.sg);
+            // console.log(position.sg);
             // setTimeout(() => {
             //   $("#positionDropdown").dropdown("set text", position.position)
             // }, 500);
@@ -223,6 +224,10 @@ new Vue({
               this.Plantilla.incumbent_appointment.probationary_period;
             this.date_of_last_promotion =
               this.Plantilla.incumbent_appointment.date_of_last_promotion;
+            this.address =
+              this.Plantilla.incumbent_appointment.address;
+            console.log("this.address: ", this.Plantilla.incumbent_appointment.address);
+
             // edit input end
           }
 
@@ -298,6 +303,7 @@ new Vue({
           {
             saveAppointment: true,
             appointment_id: this.Plantilla.incumbent,
+            address: this.address,
             employees_id: this.employees_id,
             plantilla_id: this.plantilla_id,
             reason_of_vacancy: this.reason_of_vacancy,
@@ -338,7 +344,8 @@ new Vue({
             });
             if (res.status) {
               // setTimeout(() => {
-              window.location.href = "plantilla.php";
+              // window.location.href = "plantilla.php";
+              window.location.reload();
               // }, 3000);
             } else {
               this.waitLoad = "";
@@ -350,7 +357,7 @@ new Vue({
 
     getPositionList() {
       $.post("umbra/appointments/config.php", { getPositionList: true }, (data) => {
-        console.log('positions: ', JSON.parse(data));
+        // console.log('positions: ', JSON.parse(data));
         if (data) {
           this.positionOptions = JSON.parse(data)
         }
@@ -359,7 +366,7 @@ new Vue({
 
     getDepartmentList() {
       $.post("umbra/appointments/config.php", { getDepartmentList: true }, (data) => {
-        console.log('positions: ', JSON.parse(data));
+        // console.log('positions: ', JSON.parse(data));
         if (data) {
           this.departmentOptions = JSON.parse(data)
         }
@@ -369,7 +376,7 @@ new Vue({
     getMonthlySalary() {
       $.post("umbra/appointments/config.php", { getMonthlySalary: true, sg: this.plantillaEdit.sg, step: this.plantillaEdit.step }, (data) => {
         if (data) {
-          console.log('getMonthlySalary: ', JSON.parse(data));
+          // console.log('getMonthlySalary: ', JSON.parse(data));
           const salary = JSON.parse(data);
           this.plantillaEdit.monthlySalary = salary?.monthly
           this.plantillaEdit.annualSalary = salary?.annual
