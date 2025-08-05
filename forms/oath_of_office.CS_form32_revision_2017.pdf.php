@@ -20,11 +20,11 @@
  */
 
 // Include the main TCPDF library (search for installation path).
-require_once('TCPDF-master/tcpdf.php');
-require "vendor/autoload.php";
-require_once('_connect.db.php');
-require "libs/models/Employee.php";
-require "libs/models/Plantilla.php";
+require_once('../TCPDF-master/tcpdf.php');
+require "../vendor/autoload.php";
+require_once('../_connect.db.php');
+require "../libs/models/Employee.php";
+require "../libs/models/Plantilla.php";
 // require "libs/NumberToWords.php";
 
 $appointment_id = $_GET["appointment_id"];

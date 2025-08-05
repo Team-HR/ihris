@@ -8,7 +8,7 @@ if (isset($_POST["get_data"])) {
     LEFT JOIN `plantillas` ON `appointments`.`plantilla_id` = `plantillas`.`id`
     LEFT JOIN `department` ON `plantillas`.`department_id` = `department`.`department_id`
     LEFT JOIN `positiontitles` ON `plantillas`.`position_id` = `positiontitles`.`position_id`
-    WHERE `appointments`.`employee_id` = '$employee_id'";
+    WHERE `appointments`.`employee_id` = '$employee_id' ORDER BY `appointments`.`date_of_appointment` DESC";
     $result = $mysqli->query($sql);
 
 while ($row = $result->fetch_assoc()) {

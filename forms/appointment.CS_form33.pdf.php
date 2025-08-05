@@ -432,7 +432,7 @@ ob_start();
             The nature of this appointment is <u><?= $nature_of_appointment ?></u> vice <?= $vacated_by_name ? "<u>" . $vacated_by_name . "</u>" : "_____________________________" ?>, who <?= $reason_of_vacancy ? "<u>" . $reason_of_vacancy . "</u>" : "_____________" ?> with Plantilla Item No. <u><?= $item_no ?></u> Page ____.</p>
 
           <p style="font-size:14px; text-align: justify; text-indent:30px; font-weight:bold;" class="small">
-            This appointmet shall take effect on the date of signiing by the appointing officer/authority.
+            This appointmet shall take effect on the date of signing by the appointing officer/authority.
           </p>
         </td>
       </tr>

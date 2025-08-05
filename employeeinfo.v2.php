@@ -407,19 +407,20 @@ if (isset($_GET["spms"])) {
                             </thead>
                             <tbody>
                                 <template v-for="(appointment,key) in appointments">
-                                    <tr class="center aligned" :key="key">
+                                    <tr class="center aligned" :key="key" :style="key == 0 ?'background-color: #d1ffdc;':''">
                                         <td>{{appointment.department}}</td>
                                         <td>{{appointment.position}}</td>
                                         <td>{{appointment.functional}}</td>
                                         <td>{{appointment.date_of_appointment}}</td>
                                         <td>{{appointment.nature_of_appointment}}</td>
                                         <td>
-                                            <a style="margin: 1px;" :href="'form_CS_form33B.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon fluid button">
+
+                                            <a style="margin: 1px;" :href="'/forms/appointment.CS_form33.pdf.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon fluid button">
                                                 <i class="icon print"></i>
                                                 Appointment Form
                                             </a>
 
-                                            <a style="margin: 1px;" :href="'form_CS_form32_revision_2017.pdf.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon fluid button">
+                                            <a style="margin: 1px;" :href="'forms/oath_of_office.CS_form32_revision_2017.pdf.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon fluid button">
                                                 <i class="icon print"></i>
                                                 Oath of Office
                                             </a>

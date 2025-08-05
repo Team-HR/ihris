@@ -164,7 +164,8 @@ require_once "_connect.db.php";
   <tr>
     <td class="tLabel">Deliberation Date:</td>
     <td><input type="date" v-model="deliberation_date_from" /></td>
-    <td colspan="2" class="tLabel"></td>
+    <td class="tLabel">Sworn Date:</td>
+    <td><input type="date" v-model="deliberation_date_from" /></td>
   </tr>
 </table>
 
