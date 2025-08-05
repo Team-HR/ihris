@@ -20,12 +20,12 @@
  */
 
 // Include the main TCPDF library (search for installation path).
-require_once('TCPDF-master/tcpdf.php');
-require "vendor/autoload.php";
-require_once('_connect.db.php');
-require "libs/models/Employee.php";
-require "libs/models/Plantilla.php";
-require "libs/models/Position.php";
+require_once('../TCPDF-master/tcpdf.php');
+require "../vendor/autoload.php";
+require_once('../_connect.db.php');
+require "../libs/models/Employee.php";
+require "../libs/models/Plantilla.php";
+require "../libs/models/Position.php";
 // require "libs/NumberToWords.php";
 
 $appointment_id = $_GET["appointment_id"];
@@ -129,8 +129,8 @@ HTML;
 
 // printf($html);
 $mpdf->WriteHTML($html);
-$mpdf->Output("CS Form No32.pdf - Oath of Office.pdf", 'I');
-
+$file_title = $data["name_for_file_title"];
+$mpdf->Output($file_title."_Certificate_of_Assumption-CS_Form_No_4.pdf", 'I');
 
 function get_data($mysqli, $appointment_id)
 {
@@ -162,6 +162,7 @@ function get_data($mysqli, $appointment_id)
   $res = $mysqli->query($sql);
   if ($row = $res->fetch_assoc()) {
     $data["name"] = $employee->get_full_name_upper_std($row["employee_id"]);
+    $data["name_for_file_title"] = $employee->get_full_name_upper_underscored($row["employee_id"]);
     $data["address"] = $row["address"];
     $plantilla = $plantilla_->get_plantilla_data($row["plantilla_id"]);
     $data["position_title"] = $plantilla["position"]["position"];

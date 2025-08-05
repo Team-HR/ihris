@@ -43,6 +43,12 @@ $mpdf = new \Mpdf\Mpdf([
 $data = get_data($mysqli, $appointment_id);
 
 $name = $data["name"] ? blanks() . "$data[name]" . blanks() : blanks(20);
+
+// echo "<pre>";
+// print_r($data);
+// echo "</pre>";
+// return;
+
 $address = $data["address"] ? blanks() . "$data[address]" . blanks() : blanks(20);
 $position_title = $data["position_title"] ? blanks() . "$data[position_title]" . blanks() : blanks(20);
 $printed_name =  $data["name"] ? blanks() . "$data[name]" . blanks() : blanks(20);
@@ -126,11 +132,10 @@ $html = <<<HTML
 
 HTML;
 
-
 // printf($html);
 $mpdf->WriteHTML($html);
-$mpdf->Output("CS Form No32.pdf - Oath of Office.pdf", 'I');
-
+$file_title = $data["name_for_file_title"] . "_Oath_of_Office-CS_Form_No_32";
+$mpdf->Output($file_title . ".pdf", 'I');
 
 function get_data($mysqli, $appointment_id)
 {
@@ -156,6 +161,7 @@ function get_data($mysqli, $appointment_id)
   $res = $mysqli->query($sql);
   if ($row = $res->fetch_assoc()) {
     $data["name"] = $employee->get_full_name_upper_std($row["employee_id"]);
+    $data["name_for_file_title"] = $employee->get_full_name_upper_underscored($row["employee_id"]);
     $data["address"] = $row["address"];
     $plantilla = $plantilla->get_plantilla_data($row["plantilla_id"]);
     $data["position_title"] = $plantilla["position"]["position"];

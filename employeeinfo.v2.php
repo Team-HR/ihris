@@ -425,7 +425,7 @@ if (isset($_GET["spms"])) {
                                                 Oath of Office
                                             </a>
 
-                                            <a style="margin: 1px;" :href="'form_CS_form4_revision_2017.pdf.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon fluid button">
+                                            <a style="margin: 1px;" :href="'forms/cert_of_assumption.CS_form4_revision_2017.pdf.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon fluid button">
                                                 <i class="icon print"></i>
                                                 Cert of Assump...
                                             </a>

@@ -348,7 +348,7 @@ if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
 
 // ---------------------------------------------------------
 $where = "";
-$file_title = $lastName . " " . $firstName . ($extName ? " " . $extName : "") . " APPOINTMENT CS FORM NO 33-B";
+$file_title = $lastName . " " . $firstName . ($extName ? " " . $extName : "") . " Appointment-CS_Form_No_33-B";
 
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
