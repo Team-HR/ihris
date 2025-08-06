@@ -133,25 +133,49 @@ if (isset($_POST['getRows'])) {
             # if no existing day record in dtrmanagement
             else {
                 // added && $row["amIn"] && $row["amOut"] condition due to incorrect min diff due to null time logs
-                if ($row["amIn"] != '00:00:00' && $row["amOut"] != '00:00:00' && $row["amIn"] && $row["amOut"]) {
+                // if ($row["amIn"] != '00:00:00' && $row["amOut"] != '00:00:00' && $row["amIn"] && $row["amOut"]) {
+                //     $tardyAm = getMinutesDifference('08:00:00', $row["amIn"]);
+                //     $undertimeAm = getMinutesDifference($row["amOut"], '12:00:00');
+                // } else if ($row["amIn"] == '00:00:00' && $row["amOut"] == '00:00:00' || !$row["amIn"] && !$row["amOut"]) {
+                //     $tardyAm = 240;
+                // } else if ($row["amIn"] && (!$row["amOut"] || $row["amOut"] == "00:00:00")) { //if no amOut but with late amIn 
+                //     $tardyAm = getMinutesDifference('08:00:00', $row["amIn"]);
+                // } else if ($row["amOut"] && (!$row["amIn"] || $row["amIn"] == "00:00:00")) { //if no amIn but with early amOut
+                //     $undertimeAm = getMinutesDifference($row["amOut"], '12:00:00');
+                // }
+                // // added && $row["pmIn"] && $row["pmOut"] condition due to incorrect min diff due to null time logs
+                // if ($row["pmIn"] != '00:00:00' && $row["pmOut"] != '00:00:00' && $row["pmIn"] && $row["pmOut"]) {
+                //     $tardyPm = getMinutesDifference('13:00:00', $row["pmIn"]);
+                //     $underTimePm = getMinutesDifference($row["pmOut"], '17:00:00');
+                // } else if ($row["pmIn"] == '00:00:00' && $row["pmOut"] == '00:00:00' || !$row["pmIn"] && !$row["pmOut"]) {
+                //     $underTimePm = 240;
+                // } else if ($row["pmIn"] && (!$row["pmOut"] || $row["pmOut"] == "00:00:00")) { //if no pmOut but with late pmIn 
+                //     $tardyPm = getMinutesDifference('13:00:00', $row["pmIn"]);
+                // } else if ($row["pmOut"] && (!$row["pmIn"] || $row["pmIn"] == "00:00:00")) { //if no pmIn but with early pmOut
+                //     $underTimePm = getMinutesDifference($row["pmOut"], '17:00:00');
+                // }
+
+                // AM Session
+                if (isValidTime($row["amIn"]) && isValidTime($row["amOut"])) {
                     $tardyAm = getMinutesDifference('08:00:00', $row["amIn"]);
                     $undertimeAm = getMinutesDifference($row["amOut"], '12:00:00');
-                } else if ($row["amIn"] == '00:00:00' && $row["amOut"] == '00:00:00' || !$row["amIn"] && !$row["amOut"]) {
+                } else if (isMissingTime($row["amIn"], $row["amOut"])) {
                     $tardyAm = 240;
-                } else if ($row["amIn"] && (!$row["amOut"] || $row["amOut"] == "00:00:00")) { //if no amOut but with late amIn 
+                } else if (isValidTime($row["amIn"]) && !isValidTime($row["amOut"])) {
                     $tardyAm = getMinutesDifference('08:00:00', $row["amIn"]);
-                } else if ($row["amOut"] && (!$row["amIn"] || $row["amIn"] == "00:00:00")) { //if no amIn but with early amOut
+                } else if (isValidTime($row["amOut"]) && !isValidTime($row["amIn"])) {
                     $undertimeAm = getMinutesDifference($row["amOut"], '12:00:00');
                 }
-                // added && $row["pmIn"] && $row["pmOut"] condition due to incorrect min diff due to null time logs
-                if ($row["pmIn"] != '00:00:00' && $row["pmOut"] != '00:00:00' && $row["pmIn"] && $row["pmOut"]) {
+
+                // PM Session
+                if (isValidTime($row["pmIn"]) && isValidTime($row["pmOut"])) {
                     $tardyPm = getMinutesDifference('13:00:00', $row["pmIn"]);
                     $underTimePm = getMinutesDifference($row["pmOut"], '17:00:00');
-                } else if ($row["pmIn"] == '00:00:00' && $row["pmOut"] == '00:00:00' || !$row["pmIn"] && !$row["pmOut"]) {
+                } else if (isMissingTime($row["pmIn"], $row["pmOut"])) {
                     $underTimePm = 240;
-                } else if ($row["pmIn"] && (!$row["pmOut"] || $row["pmOut"] == "00:00:00")) { //if no pmOut but with late pmIn 
+                } else if (isValidTime($row["pmIn"]) && !isValidTime($row["pmOut"])) {
                     $tardyPm = getMinutesDifference('13:00:00', $row["pmIn"]);
-                } else if ($row["pmOut"] && (!$row["pmIn"] || $row["pmIn"] == "00:00:00")) { //if no pmIn but with early pmOut
+                } else if (isValidTime($row["pmOut"]) && !isValidTime($row["pmIn"])) {
                     $underTimePm = getMinutesDifference($row["pmOut"], '17:00:00');
                 }
             }
@@ -382,6 +406,16 @@ function getMinutesDifference($time1, $time2)
     }
 
     return $minutes < 0 ? 0 : $minutes;
+}
+
+function isValidTime($time)
+{
+    return $time && $time !== '00:00:00';
+}
+
+function isMissingTime($in, $out)
+{
+    return (!$in && !$out) || ($in === '00:00:00' && $out === '00:00:00');
 }
 
 function processDtrSummary($mysqli, $employee_id, $period)
