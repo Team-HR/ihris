@@ -132,18 +132,27 @@ if (isset($_POST['getRows'])) {
 
             # if no existing day record in dtrmanagement
             else {
-                if ($row["amIn"] != '00:00:00' && $row["amOut"] != '00:00:00') {
+                // added && $row["amIn"] && $row["amOut"] condition due to incorrect min diff due to null time logs
+                if ($row["amIn"] != '00:00:00' && $row["amOut"] != '00:00:00' && $row["amIn"] && $row["amOut"]) {
                     $tardyAm = getMinutesDifference('08:00:00', $row["amIn"]);
                     $undertimeAm = getMinutesDifference($row["amOut"], '12:00:00');
-                } else if ($row["amIn"] == '00:00:00' && $row["amOut"] == '00:00:00') {
+                } else if ($row["amIn"] == '00:00:00' && $row["amOut"] == '00:00:00' || !$row["amIn"] && !$row["amOut"]) {
                     $tardyAm = 240;
+                } else if ($row["amIn"] && (!$row["amOut"] || $row["amOut"] == "00:00:00")) { //if no amOut but with late amIn 
+                    $tardyAm = getMinutesDifference('08:00:00', $row["amIn"]);
+                } else if ($row["amOut"] && (!$row["amIn"] || $row["amIn"] == "00:00:00")) { //if no amIn but with early amOut
+                    $undertimeAm = getMinutesDifference($row["amOut"], '12:00:00');
                 }
-
-                if ($row["pmIn"] != '00:00:00' && $row["pmOut"] != '00:00:00') {
+                // added && $row["pmIn"] && $row["pmOut"] condition due to incorrect min diff due to null time logs
+                if ($row["pmIn"] != '00:00:00' && $row["pmOut"] != '00:00:00' && $row["pmIn"] && $row["pmOut"]) {
                     $tardyPm = getMinutesDifference('13:00:00', $row["pmIn"]);
                     $underTimePm = getMinutesDifference($row["pmOut"], '17:00:00');
-                } else if ($row["pmIn"] == '00:00:00' && $row["pmOut"] == '00:00:00') {
+                } else if ($row["pmIn"] == '00:00:00' && $row["pmOut"] == '00:00:00' || !$row["pmIn"] && !$row["pmOut"]) {
                     $underTimePm = 240;
+                } else if ($row["pmIn"] && (!$row["pmOut"] || $row["pmOut"] == "00:00:00")) { //if no pmOut but with late pmIn 
+                    $tardyPm = getMinutesDifference('13:00:00', $row["pmIn"]);
+                } else if ($row["pmOut"] && (!$row["pmIn"] || $row["pmIn"] == "00:00:00")) { //if no pmIn but with early pmOut
+                    $underTimePm = getMinutesDifference($row["pmOut"], '17:00:00');
                 }
             }
         }
@@ -238,7 +247,16 @@ if (isset($_POST['getRows'])) {
     ];
 
     echo json_encode($data);
-} elseif (isset($_POST["saveToDtrsummary"])) {
+}
+
+/**
+ * 
+ * 
+ * 
+ * 
+ * */
+
+elseif (isset($_POST["saveToDtrsummary"])) {
     $data = $_POST["data"];
     $sql = updateDtrSummary($mysqli, $data);
     echo json_encode($sql);
