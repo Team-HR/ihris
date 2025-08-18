@@ -43,6 +43,11 @@ $mpdf = new \Mpdf\Mpdf([
 
 $data = get_data($mysqli, $appointment_id);
 
+// echo "<pre>";
+// print_r($data);
+// echo "</pre>";
+// return;
+
 $name = $data["name"] ? blanks() . "$data[name]" . blanks() : blanks(20);
 $address = $data["address"] ? blanks() . "$data[address]" . blanks() : blanks(20);
 $position_title = $data["position_title"] ? blanks() . "$data[position_title]" . blanks() : blanks(20);
@@ -130,7 +135,7 @@ HTML;
 // printf($html);
 $mpdf->WriteHTML($html);
 $file_title = $data["name_for_file_title"];
-$mpdf->Output($file_title."_Certificate_of_Assumption-CS_Form_No_4.pdf", 'I');
+$mpdf->Output($file_title . "_Certificate_of_Assumption-CS_Form_No_4.pdf", 'I');
 
 function get_data($mysqli, $appointment_id)
 {
@@ -181,7 +186,7 @@ function get_data($mysqli, $appointment_id)
     $data["sworn_month"] = $date->format("F");
     $data["sworn_year"] = $date->format("Y");
     $data["sworn_in"] = $row["sworn_in"];
-    $data["appointing_authority"] = $row["appointing_authority"];
+    $data["appointing_authority"] = $employee->get_full_name_upper_std($row["city_mayor"]);
     $data["hrmo"] = $employee->get_full_name_upper_std($row["HRMO"]);
     $data["hrmo_position"] = $position->get_position_data($row["hrmo_position_id"]);
 

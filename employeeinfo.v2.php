@@ -414,16 +414,31 @@ if (isset($_GET["spms"])) {
                                         <td>{{appointment.date_of_appointment}}</td>
                                         <td>{{appointment.nature_of_appointment}}</td>
                                         <td>
-
-                                            <a style="margin: 1px;" :href="'/forms/appointment.CS_form33.pdf.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon fluid button">
+                                            <?php
+                                            // require_once("forms/modals/appointment.php")
+                                            ?>
+                                            <a style="width: 150px; margin-bottom: 2px;" :href="'/forms/appointment.CS_form33.pdf.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon fluid button">
                                                 <i class="icon print"></i>
                                                 Appointment Form
                                             </a>
 
-                                            <a style="margin: 1px;" :href="'forms/oath_of_office.CS_form32_revision_2017.pdf.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon fluid button">
+                                            <?php
+                                            require_once("forms/modals/oathOfOffice.php")
+                                            ?>
+
+                                            <button style="width: 150px; margin-bottom: 2px;" class="ui mini green button" @click="editOathOfOfficeModal(appointment)"><i class="ui icon print"></i> Oath of Office</button>
+                                            <!-- <a style="margin: 1px;" :href="'forms/oath_of_office.CS_form32_revision_2017.pdf.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon fluid button">
                                                 <i class="icon print"></i>
                                                 Oath of Office
-                                            </a>
+                                            </a> -->
+
+
+
+                                            <?php
+                                            // require_once("forms/modals/oathOfOffice.php")
+                                            ?>
+
+                                            <!-- <button style="width: 150px; margin-bottom: 2px;" class="ui mini green button" @click="editAssumptionModal()"><i class="ui icon print"></i>Cert of Assumption</button> -->
 
                                             <a style="margin: 1px;" :href="'forms/cert_of_assumption.CS_form4_revision_2017.pdf.php?appointment_id='+appointment.appointment_id" target="blank" class="ui mini green icon fluid button">
                                                 <i class="icon print"></i>
@@ -487,7 +502,6 @@ if (isset($_GET["spms"])) {
                             <?php require_once "service_record.php"; ?>
                         </table>
                     </div>
-
                 </div>
                 <!-- leave records start -->
                 <div id="dashboard_leave_records" class="ui tab" data-tab="leave_records">
@@ -640,7 +654,6 @@ if (isset($_GET["spms"])) {
                                 }
                                 require_once "employeeinfo_ldn_lsa.php";
                                 ?>
-
                             </div>
                         </div>
                         <div class="ui bottom attached tab segment" data-tab="second">
@@ -711,9 +724,7 @@ if (isset($_GET["spms"])) {
                             </div>
                         </div>
                     </div>
-
                     <!-- </div> -->
-
                 </div>
             </div>
         </div>

@@ -37,7 +37,7 @@ $mpdf = new \Mpdf\Mpdf([
   'margin_right' => 20.54,
   'margin_bottom' => 0.95,
   'margin_footer' => 1,
-  'default_font' => 'times'
+  'default_font' => 'Arial'
 ]);
 
 $data = get_data($mysqli, $appointment_id);
@@ -70,36 +70,33 @@ $appointing_authority_div_width = $data['appointing_authority'] ? intval(strlen(
 
 
 $html = <<<HTML
-    <b style="font-size:11pt;">SS Porma Blg. 32</b><br>
-    <i style="font-size:9pt;">CS Form No. 32</i><br><br>
-    <b style="font-size:11pt;">Narebisa 2025</b><br>
-    <i style="font-size:9pt;">Revised 2025</i>
-    <br><br>
+    <i style="font-size:12pt;">CS Form No.32</i><br>
+    <i style="font-size:9pt;">Revised 2017</i>
+    <br><br><br>
    <div style="text-align:center;">
-    <div style="font-size:14pt"><b>REPUBLIKA NG PILIPINAS</b></div>
-    <div style="font-size:9pt"><i>REPUBLIC OF THE PHILIPPINES</i></div><br>
-    <div style="font-size:12pt"><u>LGU Bayawan City</u></div>
-    <div style="font-size:9pt"><i>Name of Agency</i></div>
+    <div style="font-size:14pt"><b>REPUBLIC OF THE PHILIPPINES</b></div>
+    <div style="font-size:13pt"> Province of Negros Oriental</div>
+    <div>City of Bayawan</div>
     <br><br>
-    <div style="font-size:16pt"><b>PANUNUMPA SA KATUNGKULAN</b></div>
-    <div style="font-size:9pt"><i>OATH OF OFFICE</i></div>
+    <div style="font-size:16pt"><b>OATH OF OFFICE</b></div>
+    <br><br>
     <br><br>
   </div>
-
-
-                     <p style="text-align: justify; text-indent:30px; line-height: 2em;"> Ako si <u>{$name}</u> ng <u>{$address}</u>, na itinilaga bilang <u>{$position_title}</u>, ay taimtim na nanunumpa na tutuparin ko nang buong husay at katapatan, sa abot ng aking kakayahan, ang mga katungkulang pinagtalagahan sa akin at dapat gampanan sa iba pang pagkaraan nito'y gagampanan ko sa ilalim ng Republika ng Pilipinas; na aking itataguyod at ipagtatanggol ang Saligang Batas ng Pilipinas; na tunay na mananalig at tatalima ako rito; na susundin ko ang mga batas at mga kautusang legal, at mga dekretong pinaiiral ng mga sadyang itinakdang maykapangyarihan ng Republika ng Pilipinas; at kusa kong babalikatin ang pananagutang ito nang walang ano mang pasubali o hangaring umiwas.
+                     <p style="text-align: justify; text-indent:30px; line-height: 2em;"> I, <u>{$name}</u> of <u>{$address}</u>  having been appointed to the position of <u>{$position_title}</u> hereby solemnly swear, that I will faithfully discharge to the best of my ability, the duties of my present position and of all others that I may hereafter hold under the Republic of the Philippines; that I will bear true faith and allegiance to the same; that I will obey the laws, legal orders, and decrees promulgated by the duly constituted authorities of the Republic of the Philippines; and that I impose this obligation upon myself voluntarily, without mental reservation or purpose of evasion.
                     </p>
-
-                    <p style="text-align: justify; text-indent:30px" >KASIHAN NAWA AKO NG DIYOS.</p>
+                    <p style="text-align: justify; text-indent:30px" >SO HELP ME GOD.</p>
                     <br>
+                    <br> 
 
                     <div style="width: {$printed_name_div_width}cm; float: right; text-align:center; ">
                       <u>{$printed_name}</u>
                       <br>
-                      (Lagda sa itaas ng pangalan ng hinirang)
+                      (Signature over Printed Name of the Appointee)
                   </div>
 
                   <div style="clear:both "></div>
+
+                  <br>
                   <br>
 <table style="font-size:12px;">
   <tr>
@@ -107,17 +104,20 @@ $html = <<<HTML
     <td><u>{$gov_id_type}</u></td>
   </tr>
   <tr>
-    <td>Numero ng ID:</td>
+    <td>ID NUmber:</td>
     <td><u>{$gov_id_num}</u></td>  
   </tr>
   <tr>
-    <td>Araw ng Pagkakaloob:</td>
+    <td>Date Issued:</td>
     <td><u>{$gov_id_date_issued}</u></td>
   </tr>
 </table>
 <br>
 <div style="border: 1px solid black; border-style: solid double; height: 4px;"></div>
-    <p style="text-align: justify; text-indent:30px; line-height: 2em;"> Nilagdaan at pinanumpaan sa harap ko ngayong ika <u>{$sworn_day}</u> ng <u>{$sworn_month}</u>, 20<u>{$sworn_year}</u> sa <u>{$sworn_in}</u>, Pilipinas.</p>
+<br>
+    <p style="text-align: justify; text-indent:30px; line-height: 2em;"> Subscribed and sworn to before me this <u>{$sworn_day}</u> day of <u>{$sworn_month}</u>, 20<u>{$sworn_year}</u> in <u>{$sworn_in}</u>.</p>
+<br>
+<br>
 <br>
 <br>
 
@@ -170,33 +170,11 @@ function get_data($mysqli, $appointment_id)
     $data["gov_id_num"] = $row["govId_no"];
     $data["gov_id_date_issued"] = $row["govId_issued_date"];
 
-
-    $months = [
-      1 => "Enero",
-      2 => "Pebrero",
-      3 => "Marso",
-      4 => "Abril",
-      5 => "Mayo",
-      6 => "Hunyo",
-      7 => "Hulyo",
-      8 => "Agosto",
-      9 => "Setyembre",
-      10 => "Oktubre",
-      11 => "Nobyembre",
-      12 => "Disyembre"
-    ];
-
-    $data["sworn_day"] = "";
-    $data["sworn_month"] = "";
-    $data["sworn_year"] = "";
-
     $date = DateTime::createFromFormat("Y-m-d", $row["sworn_date"]);
-    if ($date) {
-      $data["sworn_day"] = $date->format("j");
-      $data["sworn_month"] = $months[(int)$date->format("n")];
-      $data["sworn_year"] = $date->format("y");
-    }
 
+    $data["sworn_day"] = $date->format("jS");
+    $data["sworn_month"] = $date->format("F");
+    $data["sworn_year"] = $date->format("y");
     $data["sworn_in"] = $row["sworn_in"];
     $data["appointing_authority"] = $row["appointing_authority"];
   }

@@ -143,7 +143,7 @@ class Employee
         $exts = $this->exts;
 
         if (in_array(substr($extName, 0, 2), $exts)) {
-            $extName = " ," . mb_convert_case($extName, MB_CASE_TITLE, "UTF-8");
+            $extName = " ," . mb_convert_case($extName, MB_CASE_UPPER, "UTF-8");
         } else {
             $extName = "" . $extName;
         }
