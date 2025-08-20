@@ -114,7 +114,7 @@ function convertDateAppraised($date)
 			<div class="seven wide field">
 				<label>Appraisal Type</label>
 				<?php
-				if ($row['appraisal_type']) {
+				if (isset($row['appraisal_type'])) {
 				?>
 					<input type="text" name="appraisalType" value="<?= $row['appraisal_type'] ?>">
 				<?php
@@ -133,21 +133,21 @@ function convertDateAppraised($date)
 		<div class="fields">
 			<div class="seven wide field">
 				<label>Numerical Rating</label>
-				<input type="text" name="numericalRating" value="<?= $file_status['numerical'] ?>" onkeyup="adrate(this)">
+				<input type="text" name="numericalRating" value="<?= isset($file_status['numerical']) ? $file_status['numerical'] : '' ?>" onkeyup="adrate(this)">
 			</div>
 			<div class="seven wide field">
 				<label>Adjective Rating</label>
-				<input type="text" id="adjectiveRate" name="adjectiveRating" value="<?= $file_status['adjectival'] ?>" readonly>
+				<input type="text" id="adjectiveRate" name="adjectiveRating" value="<?= isset($file_status['adjectival']) ? $file_status['adjectival'] : '' ?>" readonly>
 			</div>
 		</div>
 		<div class="field">
 			<label>Remarks</label>
-			<input type="text" name="remark" value="<?= $row['remarks'] ?>">
+			<input type="text" name="remark" value="<?= isset($row['remarks'])?$row['remarks']:'' ?>">
 		</div>
 		<div class="field">
 			<label>Comments and Reccomendations</label>
 			<!-- <input type="text" > -->
-			<textarea name="comment"><?= $row['comments'] ?></textarea>
+			<textarea name="comment"><?= isset($row['comments'])?$row['comments']:'' ?></textarea>
 		</div>
 		<div class="field">
 			<div class="actions">

@@ -60,7 +60,7 @@ if (isset($_POST['Scolor'])) {
 		# date_appraised update also date certified in spm_performancereviewstatus
 		$date_approved = $appraisalDate;
 		$period_id = getSpmsMfoPeriodId($mysqli, $prr_id);
-		$sql2 = "UPDATE spms_performancereviewstatus SET approved = '$date_approved' WHERE employees_id = $empId AND period_id = '$period_id'";
+		$sql2 = "UPDATE spms_performancereviewstatus SET approved = '$date_approved', final_numerical_rating = '$numericalRating' WHERE employees_id = $empId AND period_id = '$period_id'";
 
 		if ($empId && $period_id) {
 			$mysqli->query($sql2);
