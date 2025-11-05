@@ -86,6 +86,8 @@ $auth = new Auth;
         <a href="salary_adjustment.php" class="item"><i class="icon money check alternate"></i> Salary Schedule</a>
         <a href="qualification_standards.php" class="item"><i class="icon graduation cap"></i> Qualification Standards</a>
         <a href="signatories.php" class="item"><i class="icon pen fancy"></i> Signatories</a>
+        <div class="ui divider"></div>
+        <a href="nosa.php" class="item"><i class="icon print"></i> Notice of Salary Adjustment (Casual)</a>
       </div>
     </div>
 

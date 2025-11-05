@@ -113,9 +113,9 @@ if (isset($data->getEmployeeList)) {
         $data["address_res_street"] = mb_convert_case($row["res_street"], MB_CASE_UPPER);
         $data["address_res_subdivision"] = mb_convert_case($row["res_subdivision"], MB_CASE_UPPER);
         $data["address_res_barangay"] = mb_convert_case($row["res_barangay"], MB_CASE_UPPER);
-        $data["address_res_city"] = mb_convert_case($row["res_city"], MB_CASE_UPPER);
-        $data["address_res_province"] = mb_convert_case($row["res_province"], MB_CASE_UPPER);
-        $data["address_res_zip_code"] = mb_convert_case($row["res_zip_code"], MB_CASE_UPPER);
+        $data["address_res_city"] = $row["res_city"] ? mb_convert_case($row["res_city"], MB_CASE_UPPER) : 'BAYAWAN CITY';
+        $data["address_res_province"] = $row["res_province"] ? mb_convert_case($row["res_province"], MB_CASE_UPPER) : 'NEGROS ORIENTAL';
+        $data["address_res_zip_code"] = $row["res_zip_code"] ? mb_convert_case($row["res_zip_code"], MB_CASE_UPPER) : '6221';
         $data["address_res_country"] = mb_convert_case($row["res_country"], MB_CASE_UPPER);
         $data["contact_number"] = $row["mobile"];
         $data["emergency_name"] = $row["emergency_name"];
@@ -124,7 +124,6 @@ if (isset($data->getEmployeeList)) {
         $data["emergency_number"] = $row["emergency_number"];
         $data["all"] = $row;
     }
-
 
     // get id text formatting values
     $sql = "SELECT * FROM `employee_id_cards` WHERE `ihris_employee_id` = '$employee_id'";

@@ -10,6 +10,9 @@ if (isset($_POST["getFolders"])) {
 
     while ($row = $res->fetch_assoc()) {
         $row["dateString"] = dateToString($row["date"]);
+        $row['default_new_salary'] = number_format($row['default_new_salary'], 2, '.', ',');
+        $row['default_salary'] = number_format($row['default_salary'], 2, '.', ',');
+        $row["date_effective"] = dateToString($row["date_effective"]);
         $data[] = $row;
     }
 
@@ -42,7 +45,7 @@ if (isset($_POST["getFolders"])) {
     $ihris_employees = [];
     while ($row = $res->fetch_assoc()) {
         $nameFormatter = new NameFormatter($row["firstName"], $row["lastName"], $row["middleName"], $row["extName"]);
-        $row["full_name"] = $nameFormatter->getFullNameStandardTitle();
+        $row["full_name"] = mb_convert_case($nameFormatter->getFullNameStandardTitle(),MB_CASE_UPPER);
         $ihris_employees[] = $row;
     }
 
@@ -59,9 +62,9 @@ if (isset($_POST["getFolders"])) {
         if (!in_array($emp['employees_id'], $nosa_employee_ids)) {
             $honorific = "";
             if ($emp["gender"] == 'MALE') {
-                $honorific =  'Mr.';
+                $honorific =  'MR.';
             } else {
-                $honorific = 'Ms.';
+                $honorific = 'MS.';
             }
 
             $sql = "INSERT INTO `notice_of_salary_adjustment_records` (`notice_of_salary_adjustment_id`, `employee_id`, `honorific`,`lastName`, `firstName`, `middleName`, `extName`,`full_name`, `new_salary`, `old_salary`, `position_title`, `salary_grade`) VALUES ('$notice_of_salary_adjustment_id', '$emp[employees_id]','$honorific','$emp[lastName]','$emp[firstName]','$emp[middleName]','$emp[extName]','$emp[full_name]', '$nosa[default_new_salary]', '$nosa[default_salary]', '$nosa[default_position_title]', '$nosa[default_salary_grade]')";
@@ -76,11 +79,34 @@ if (isset($_POST["getFolders"])) {
     while ($row = $res->fetch_assoc()) {
         $nameFormatter = new NameFormatter($row["firstName"], $row["lastName"], $row["middleName"], $row["extName"]);
         $row['full_name_upper'] = mb_convert_case($row['honorific']." ".$nameFormatter->getFullName(), MB_CASE_UPPER);
+        $row['new_salary'] = number_format($row['new_salary'], 2, '.', ',');
+        $row['old_salary'] = number_format($row['old_salary'], 2, '.', ',');
+        $row["is_checked"] = $row["is_checked"]==1?true:false;
         $data[] = $row;
     }
 
     echo json_encode($data);
     // echo json_encode($nosa_employee_ids);
+} elseif (isset($_POST['changeCheck'])) {
+    $id = $_POST["id"];
+    $is_checked = $_POST["is_checked"];
+
+    if ($is_checked=='true') {
+        $is_checked = 1;
+    } else {
+        $is_checked = 0;
+    }
+
+    $sql = "UPDATE notice_of_salary_adjustment_records SET is_checked = '$is_checked' WHERE id = '$id';";
+    // echo json_encode($is_checked);
+    $mysqli->query($sql);
+
+} elseif (isset($_POST['saveEdit'])) {
+    $details = $_POST["details"];
+
+    $sql = "UPDATE notice_of_salary_adjustment_records SET honorific = '$details[honorific]', full_name = '$details[full_name]', new_salary = '$details[new_salary]', old_salary = '$details[old_salary]' WHERE id = '$details[id]';";
+    $res = $mysqli->query($sql);
+    echo json_encode($res);
 }
 
 
