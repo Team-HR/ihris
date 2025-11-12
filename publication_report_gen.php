@@ -109,6 +109,21 @@ $spreadsheet->getActiveSheet()->getStyle('K' . ($aRow + 16) . ':K' . ($aRow + 17
 $data = array();
 
 require "_connect.db.php";
+
+
+
+/**
+ * 
+ * Add date of publication and date of deadline to the publication table
+ * 
+ * */ 
+
+ $sql = "UPDATE `publications` SET `date_published` = ?, `date_deadline` = ?";
+ $stmt = $mysqli->prepare($sql);
+ $stmt->bind_param('ss', $date_of_publication, $date_of_deadline);
+ $stmt->execute();
+
+
 $sql = "SELECT-- *
 positiontitles.position,
 positiontitles.functional,
@@ -156,31 +171,39 @@ while ($row = $result->fetch_assoc()) {
 
 function getMonthlySalary($mysqli, $sg, $step, $schedule)
 {
-    $monthly_salary = 0;
-    if (empty($sg) || empty($step) || empty($schedule)) return "No SG/STEP/SCHED provided in plantilla";
+    if (empty($sg) || empty($step) || empty($schedule)) {
+        return "No SG/STEP/SCHED provided in plantilla";
+    }
+
+    // Get parent_id from setup_salary_adjustments
     $sql = "SELECT id FROM `setup_salary_adjustments` WHERE schedule = ? AND active = '1'";
     $stmt = $mysqli->prepare($sql);
     $stmt->bind_param('i', $schedule);
     $stmt->execute();
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();
-    $parent_id = 0;
+    $stmt->close();
 
-    if (!isset($row["id"])) {
+    if (!isset($row["id"]) || empty($row["id"])) {
         return "No SG/STEP/SCHED matched";
     }
 
     $parent_id = $row["id"];
-    $stmt->close();
-    if (empty($parent_id)) return false;
+
+    // Get monthly_salary from setup_salary_adjustments_setup
     $sql = "SELECT monthly_salary FROM `setup_salary_adjustments_setup` WHERE parent_id = ? AND salary_grade = ? AND step_no = ?";
     $stmt = $mysqli->prepare($sql);
     $stmt->bind_param('iii', $parent_id, $sg, $step);
     $stmt->execute();
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();
-    $monthly_salary = $row["monthly_salary"];
-    return $monthly_salary ? number_format($monthly_salary, 2, '.', ',') : "No SG/STEP/SCHED matched";
+    $stmt->close();
+
+    if (!isset($row["monthly_salary"]) || empty($row["monthly_salary"])) {
+        return "No SG/STEP/SCHED matched";
+    }
+
+    return number_format($row["monthly_salary"], 2, '.', ',');
 }
 
 $no = 0;
