@@ -15,7 +15,7 @@
     </div>
     <div class="right item">
     <div class="ui right input">
-      <a href="publication_report_gen.php" target="_blank" class="ui mini green button" style="margin-right: 5px;" title="Generate File for Publication"><i class="icon file excel outline"></i>Generate File</a>
+      <a href="publication_report_gen.php" target="_blank" class="ui mini green button" style="margin-right: 5px;" title="Generate File for Publication"><i class="icon file excel outline"></i>Generate File</a>/
     </div>
     </div>
   </div>

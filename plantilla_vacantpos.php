@@ -16,10 +16,10 @@ require_once "header.php";
       <div class="right item">
         <div class="ui right input">
           <!-- <a href="publication_report_gen.php" target="_blank" class="ui mini green button" style="margin-right: 5px;" title="Generate File for Publication"><i class="icon file excel outline"></i>Generate File</a> -->
-          <button :disabled="plantillas.length == 0" class="ui mini green button" style="margin-right: 5px;" title="Generate File for Publication" @click="generateFile"><i class="icon file excel outline"></i>Create Publication</button>
+          <button :disabled="plantillas.length == 0" class="ui mini green button" style="margin-right: 5px;" title="Generate File for Publication" @click="generateFile"><i class="icon setting"></i>Setup Publication</button>
           <!-- generate file modal start -->
           <div class="ui mini modal" id="generateFileModal">
-            <div class="header">Generate Publication Xlsx File</div>
+            <div class="header">Setup Publication</div>
             <div class="content">
               <div class="ui form">
                 <div class="field">
@@ -27,13 +27,18 @@ require_once "header.php";
                   <input type="date" v-model="date_of_publication" value="<?= Date("yy-m-d"); ?>">
                 </div>
                 <div class="field">
-                  <label>Requirements Submission Deadline:</label>
+                  <label>Deadline:</label>
                   <input type="date" v-model="date_of_deadline" value="<?= Date("yy-m-d"); ?>">
+                </div>
+                <div class="field">
+                  <label>Date Approved by CSC:</label>
+                  <input type="date" v-model="date_reviewed" value="<?= Date("yy-m-d"); ?>">
                 </div>
               </div>
             </div>
             <div class="actions">
-              <div class="ui green mini approve button">Generate</div>
+              <div class="ui primary mini button" @click="saveDates()">Save</div>
+              <div class="ui green mini approve button">Save & Print</div>
               <div class="ui red mini cancel button">Cancel</div>
             </div>
           </div>
@@ -50,7 +55,7 @@ require_once "header.php";
     </div>
 
     <table class="ui selectable very compact mini striped structured celled table">
-      <thead>
+      <thead> 
         <tr>
           <th class="center aligned" style="padding: 0px;" rowspan="2">#</th>
           <th style="padding: 0px;" rowspan="2" class="center aligned" width="120">Options</th>

@@ -3,6 +3,7 @@ require "vendor/autoload.php";
 
 $date_of_publication = $_GET["date_of_publication"];
 $date_of_deadline = $_GET["date_of_deadline"];
+$date_reviewed = $_GET["date_reviewed"] && $_GET["date_reviewed"] !== '0000-00-00' ? $_GET["date_reviewed"] : null;
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -116,12 +117,12 @@ require "_connect.db.php";
  * 
  * Add date of publication and date of deadline to the publication table
  * 
- * */ 
+ * */
 
- $sql = "UPDATE `publications` SET `date_published` = ?, `date_deadline` = ?";
- $stmt = $mysqli->prepare($sql);
- $stmt->bind_param('ss', $date_of_publication, $date_of_deadline);
- $stmt->execute();
+$sql = "UPDATE `publications` SET `date_published` = ?, `date_deadline` = ?, `date_reviewed` = ?";
+$stmt = $mysqli->prepare($sql);
+$stmt->bind_param('sss', $date_of_publication, $date_of_deadline, $date_reviewed);
+$stmt->execute();
 
 
 $sql = "SELECT-- *

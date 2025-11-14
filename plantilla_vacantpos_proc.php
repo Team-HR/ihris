@@ -1,7 +1,7 @@
 <?php
 require_once "_connect.db.php";
 
-if(isset($_POST["load"])){
+if (isset($_POST["load"])) {
 	$data = array();
 	$sql = "SELECT
 	*,
@@ -20,13 +20,13 @@ WHERE
 ORDER BY
 	`positiontitles`.`position` ASC";
 
-$result = $mysqli->query($sql);
-// echo $mysqli->error;
-while ($row = $result->fetch_assoc()) {
+	$result = $mysqli->query($sql);
+	// echo $mysqli->error;
+	while ($row = $result->fetch_assoc()) {
 		$id = $row["plantillas_id"];
 		$datum = array(
 			"id" => $id,
-			"isPublished" => !empty($row["inPublication"])?true:false,
+			"isPublished" => !empty($row["inPublication"]) ? true : false,
 			"item_no" => $row["item_no"],
 			"page_no" => "",
 			"position" => $row["position"],
@@ -39,30 +39,53 @@ while ($row = $result->fetch_assoc()) {
 			"vacated_by" => $row["vacated_by"]
 		);
 		// $index = 'pla'.$id;
-		$data['id_'.$id] = $datum;
+		$data['id_' . $id] = $datum;
 	}
 
 	echo json_encode($data);
-}
-
-elseif (isset($_POST["publish"])) {
+} elseif (isset($_POST["publish"])) {
 	$plantilla_id = $_POST["plantilla_id"];
 	$sql = "INSERT INTO `publications` (`plantilla_id`, `date_created`, `date_updated`) VALUES (?, current_timestamp(), current_timestamp())";
 	$stmt = $mysqli->prepare($sql);
-	$stmt->bind_param('i',$plantilla_id);
+	$stmt->bind_param('i', $plantilla_id);
 	$stmt->execute();
 	echo json_encode($stmt->error_list);
-}
-
-elseif (isset($_POST["restore"])) {
+} elseif (isset($_POST["restore"])) {
 	$plantilla_id = $_POST["plantilla_id"];
 	$sql = "DELETE FROM `publications` WHERE `publications`.`plantilla_id` = ?";
 	$stmt = $mysqli->prepare($sql);
-	$stmt->bind_param('i',$plantilla_id);
+	$stmt->bind_param('i', $plantilla_id);
 	$stmt->execute();
 	echo json_encode($stmt->error_list);
 }
 
+// getCurrentDates
+
+elseif (isset($_POST["getCurrentDates"])) {
+	$sql = "SELECT * FROM publications LIMIT 1";
+	$res = $mysqli->query($sql);
+
+	if ($res->num_rows < 1) {
+		echo json_encode([
+			"date_deadline" => null,
+			"date_published" => null,
+			"date_reviewed" => null
+		]);
+		return null;
+	}
+
+	$row = $res->fetch_assoc();
+	echo json_encode($row);
+} elseif (isset($_POST["saveDates"])) {
+	$date_of_publication = $_POST["date_published"];
+	$date_of_deadline = $_POST["date_deadline"];
+	$date_reviewed = $_POST["date_reviewed"];
+
+	$sql = "UPDATE `publications` SET `date_published` = ?, `date_deadline` = ?, `date_reviewed` = ?";
+	$stmt = $mysqli->prepare($sql);
+	$stmt->bind_param('sss', $date_of_publication, $date_of_deadline, $date_reviewed);
+	$stmt->execute();
+}
 // elseif (isset($_POST["checkIfPublished"])) {
 // 	$plantilla_id = $_POST["plantilla_id"];
 // 	$sql = "SELECT * FROM `publications` WHERE `plantilla_id` = ?";
@@ -71,9 +94,7 @@ elseif (isset($_POST["restore"])) {
 // 	$stmt->execute();
 // 	$stmt->store_result();
 // 	$num_rows = $stmt->num_rows;
-	
-// 	echo json_encode('num_rows');
-	
-// }
 
-?>
+// 	echo json_encode('num_rows');
+
+// }
