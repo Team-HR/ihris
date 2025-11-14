@@ -377,10 +377,10 @@ if (isset($_GET["spms"])) {
                     <a class="item" data-tab="service_records">
                         Service Records
                     </a>
-                    <a class="item" data-tab="leave_records">
+                    <a class="item active" data-tab="leave_records">
                         Leave Records
                     </a>
-                    <a class="item active" data-tab="hr_cores">
+                    <a class="item" data-tab="hr_cores">
                         HR CORES
                     </a>
                 </div>
@@ -504,7 +504,7 @@ if (isset($_GET["spms"])) {
                     </div>
                 </div>
                 <!-- leave records start -->
-                <div id="dashboard_leave_records" class="ui tab" data-tab="leave_records">
+                <div id="dashboard_leave_records" class="ui tab active" data-tab="leave_records">
                     <template>
                         <div class="ui pointing secondary blue menu fluid" id="">
                             <a class="item active" data-tab="attendance_report">Attendance Report</a>
@@ -514,6 +514,7 @@ if (isset($_GET["spms"])) {
                                 <table class="ui selectable celled compact structured table">
                                     <thead>
                                         <tr class="center aligned">
+                                            <th rowspan="2">Posted</th>
                                             <th rowspan="2">Month - Year</th>
                                             <th colspan="4">Tardy<br>(min)</th>
                                             <th colspan="3">Undertime<br>(min)</th>
@@ -532,6 +533,12 @@ if (isset($_GET["spms"])) {
                                     <tbody>
                                         <tr v-for="(rec, k) in leave_records" :key="k">
                                             <!-- <td colspan="9">{{rec}}</td> -->
+                                            <td>
+                                                <div class="ui checkbox" @click="changeColor(rec.dtrSummary_id, rec.isPosted)">
+                                                    <input type="checkbox" :name="`check${rec.dtrSummary_id}`" v-model="rec.isPosted" readonly>
+                                                </div>
+                                                <!-- {{rec.isPosted}} -->
+                                            </td>
                                             <td>{{rec.month}}</td>
                                             <td class="tardyCols">{{rec.totalTardy}}</td>
                                             <td class="tardyCols center aligned">{{rec.totalMinsTardy}}</td>
@@ -558,7 +565,7 @@ if (isset($_GET["spms"])) {
                 <!-- leave records end -->
 
 
-                <div class="ui tab active" data-tab="hr_cores">
+                <div class="ui tab" data-tab="hr_cores">
 
 
                     <!-- <div class="ui container segment" style="min-height: 500px;"> -->

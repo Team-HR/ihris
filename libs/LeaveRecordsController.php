@@ -129,6 +129,7 @@ class LeaveRecordsController extends Controller
         $sql = $this->mysqli->query($sql);
         $a = [];
         while ($dat = $sql->fetch_assoc()) {
+
             $dateString = $dat["month"];
             $dat["month"] = "";
             if ($dateString) {
@@ -136,14 +137,15 @@ class LeaveRecordsController extends Controller
                 $newDateString = $myDateTime->format('F Y');
                 $dat["month"] = $newDateString;
             }
-            
+
             $dat["equiTardy"] = compEquiv($dat["totalMinsTardy"]);
             $dat["equiUndertime"] = compEquiv($dat["totalMinsUndertime"]);
 
-            $dat["totalTardy"] = $dat["totalTardy"]?$dat["totalTardy"]:"";
-            $dat["totalMinsTardy"] = $dat["totalMinsTardy"]?$dat["totalMinsTardy"]:"";
-            $dat["totalMinsUndertime"] = $dat["totalMinsUndertime"]?$dat["totalMinsUndertime"]:"";
-
+            $dat["totalTardy"] = $dat["totalTardy"] ? $dat["totalTardy"] : "";
+            $dat["totalMinsTardy"] = $dat["totalMinsTardy"] ? $dat["totalMinsTardy"] : "";
+            $dat["totalMinsUndertime"] = $dat["totalMinsUndertime"] ? $dat["totalMinsUndertime"] : "";
+            $dat["isPosted"] = $dat["color"] ? 1 : 0;
+            // $dat["dtrSummary_id"] = $da
             $a[] = $dat;
         }
         $this->summary = $a;
