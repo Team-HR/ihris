@@ -533,9 +533,10 @@ if (isset($_GET["spms"])) {
                                     <tbody>
                                         <tr v-for="(rec, k) in leave_records" :key="k">
                                             <!-- <td colspan="9">{{rec}}</td> -->
-                                            <td>
-                                                <div class="ui checkbox" @click="changeColor(rec.dtrSummary_id, rec.isPosted)">
-                                                    <input type="checkbox" :name="`check${rec.dtrSummary_id}`" v-model="rec.isPosted" readonly>
+                                            <td style="text-align: center;">
+                                                <div class="ui_checkbox" @click="changeColor(rec.dtrSummary_id, rec.isPosted)">
+                                                    <i v-if="rec.isPosted" class="ui icon check"></i>
+                                                    <i v-else class="ui icon square outline"></i>
                                                 </div>
                                                 <!-- {{rec.isPosted}} -->
                                             </td>
